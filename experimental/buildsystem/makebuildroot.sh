@@ -48,9 +48,9 @@ make install-gcc > /dev/null
 
 echo "Compiling crt.." && cd ../../mingw/mingw-w64-crt
 make prefix=$PF > /dev/null
-cp -pv CRT_fp10.o CRT_fp8.o binmode.o txtmode.o crtbegin.o crtend.o crt1.o crt2.o dllcrt1.o dllcrt2.o /tmp/myroot/$TGT/lib
+cp -pv CRT_fp10.o CRT_fp8.o binmode.o txtmode.o crtbegin.o crtend.o crt1.o crt2.o dllcrt1.o dllcrt2.o $PF/$TGT/lib
 for i in `find . -name "*.a"`; do
-  cp -pv $i /tmp/myroot/$TGT/lib
+  cp -pv $i $PF/$TGT/lib
 done
 
 echo "Compiling full gcc.." && cd ../../gcc-svn/build64
