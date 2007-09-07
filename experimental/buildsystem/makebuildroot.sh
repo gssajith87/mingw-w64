@@ -4,7 +4,7 @@ TGT=x86_64-pc-mingw32
 opt=$1 && shift
 gmpver=gmp-4.2.1
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
-mpfrver=mpfr-2.2.1
+mpfrver=mpfr-2.3.0
 mpfr=http://www.mpfr.org/mpfr-current/${mpfrver}.tar.bz2
 
 [ -h mingw ] || ln -s $TGT mingw
