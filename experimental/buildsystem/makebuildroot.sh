@@ -7,6 +7,36 @@ gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
 mpfrver=mpfr-2.3.0
 mpfr=http://www.mpfr.org/mpfr-current/${mpfrver}.tar.bz2
 
+if [[ $opt == "--help" ]]; then
+  cat << EOF
+    This build script will setup an entire buildroot environment consisting of binutils, gcc (and the
+    required gmp / mpfr), and the mingw-w64 crt.  It will download all major dependencies, create
+    the directory structure, and will optionally build the binaries as well.  The syntax is quite simple:
+
+      $0 [ --help | --build ]
+      
+    The --help argument causes all other arguments to be ignored and results in the display of
+    this text.
+    
+    The --build argument will continue past the downloading stage and begin building.  First it builds
+    binutils, and then a bootstrap compiler.  Both binutils and gcc use the same basic options, with gcc
+    requiring an additional argument to specify the desired languages.  Third in the build process is the
+    crt, which is installed into (buildroot)/x86_64-pc-mingw32/lib.  The mingw symlink will hopefully go
+    away in future versions.  With the crt installed, the full gcc toolchain can be build and installed, and 
+    this script takes care of it.
+    
+    Without providing the --build option, all components are downloaded and the headers are installed in
+    the basic directory structure.  Running the command multiple times will update everything to the latest
+    versions.  Using the --build command repeatedly will update any files that have changed, and reinstall
+    fresh copies of everything.
+    
+    Keep in mind that this is all very temporary, and is provided as a convenience.  Please direct all inquiries
+    to the sourceforge project at: https://sourceforge.net/projects/mingw-w64/
+    
+EOF
+  exit
+fi
+
 [ -h mingw ] || ln -s $TGT mingw
 
 for i in $TGT build build/binutils build/binutils/build64 build/gcc-svn build/gcc-svn/build64 build/mingw build/mingw/build64; do
@@ -60,4 +90,4 @@ make > /dev/null
 make install > /dev/null
 
 cd $PF
-echo "\nDone."
+echo "Done."
