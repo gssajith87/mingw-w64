@@ -1,8 +1,3 @@
-/**
- * This file has no copyright assigned and is placed in the Public Domain.
- * This file is part of the w64 mingw-runtime package.
- * No warranty is given; refer to the file DISCLAIMER within this package.
- */
 /* sys/termios.h
 
    Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003 Red Hat, Inc.
