@@ -1,23 +1,32 @@
 #!/bin/bash
-PF=`pwd`
+PF=`pwd`/root
+BD=`pwd`/build
 TGT=x86_64-pc-mingw32
-opt=$1 && shift
-gmpver=gmp-4.2.1
+DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build64 $BD/gcc-svn $BD/gcc-svn/build64 $BD/mingw $BD/mingw/build64"
+EXE=
+build="false"
+gmpver=gmp-4.2.2
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
 mpfrver=mpfr-2.3.0
 mpfr=http://www.mpfr.org/mpfr-current/${mpfrver}.tar.bz2
 
-if [[ $opt == "--help" ]]; then
-  cat << EOF
+while opt=$1 && shift; do
+  case "$opt" in
+    "--help" )
+      cat << EOF
     This build script will setup an entire buildroot environment consisting of binutils, gcc (and the
     required gmp / mpfr), and the mingw-w64 crt.  It will download all major dependencies, create
     the directory structure, and will optionally build the binaries as well.  The syntax is quite simple:
 
-      $0 [ --help | --build ]
+      $0 [ --help ] [ --build ] [ --noexe ]
       
     The --help argument causes all other arguments to be ignored and results in the display of
     this text.
-    
+
+    The --noexe argument is for systems where executable files do not have ".exe" at the end.  The build
+    system is not fully automatic yet, so this is a temporary thing which will be deprecated and removed
+    once the autotools build system is complete.
+
     The --build argument will continue past the downloading stage and begin building.  First it builds
     binutils, and then a bootstrap compiler.  Both binutils and gcc use the same basic options, with gcc
     requiring an additional argument to specify the desired languages.  Third in the build process is the
@@ -34,50 +43,64 @@ if [[ $opt == "--help" ]]; then
     to the sourceforge project at: https://sourceforge.net/projects/mingw-w64/
     
 EOF
-  exit
-fi
+    exit
+    ;;
 
-[ -h mingw ] || ln -s $TGT mingw
+    "--build" )
+      build="true"
+      ;;
 
-for i in $TGT build build/binutils build/binutils/build64 build/gcc-svn build/gcc-svn/build64 build/mingw build/mingw/build64; do
-  [ -d $i ] && echo $i preexisting || mkdir $i
+    "--noexe" )
+      EXE="EXEEXT="
+      ;;
+
+    "--help" )
+  esac
 done
 
-cd build
+echo "Creating directory tree:"
+echo "$PF -- sysroot directory tree"
+echo "$BD -- build directory tree"
+echo ""
 
-echo "Downloading binutils.." && cd binutils
+for i in $DIRS; do
+  [ -d $i ] && echo "Warning: $i preexisting, skipping directory creation" || mkdir $i
+done
+[ -h mingw ] || ln -s $TGT $PF/mingw
+
+
+echo "Downloading binutils.." && cd $BD/binutils
 cvs -Qz 9 -d :pserver:anoncvs@sourceware.org:/cvs/src co binutils
 
-echo "Downloading gcc.." && cd ../gcc-svn
+echo "Downloading gcc.." && cd $BD/gcc-svn
 svn -q checkout svn://gcc.gnu.org/svn/gcc/trunk gcc
 
-echo "Downloading additional required libraries for gcc.."
-cd gcc
+echo "Downloading additional required libraries for gcc.." && cd gcc
 for i in gmp mpfr; do
   ver=${i}ver
-  [ -d $i ] && echo $i preexisting || ( wget -qO- ${!i} | tar xjf - && mv ${!ver} $i )
+  [ -d $i ] && echo "Warning: $i preexisting, skipping download" || ( wget -qO- ${!i} | tar xjf - && mv ${!ver} $i )
 done
 cd ..
 
-echo "Downloading crt and headers.." && cd ../mingw
+echo "Downloading crt and headers.." && cd $BD/mingw
 svn -q co https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/trunk .
 [ -d $PF/$TGT/include ] && echo $PF/$TGT/include already exists || mv mingw-w64-headers/include $PF/$TGT
 
 echo "Root setup complete."
 
 
-[[ $opt != "build" ]] && exit
+[[ $build == "false" ]] && exit
 
-echo "Compiling binutils.." && cd ../binutils/build64
-../src/configure --prefix=$PF --with-sysroot=$PF --disable-nls --target=$TGT $* > /dev/null && make > /dev/null
+echo "Compiling binutils.." && cd $BD/binutils/build64
+../src/configure --prefix=$PF --with-sysroot=$PF --disable-nls --target=$TGT > /dev/null && make > /dev/null
 make install > /dev/null
 
-echo "Compiling bootstrap gcc.." && cd ../../gcc-svn/build64
-../gcc/configure --prefix=$PF --with-sysroot=$PF --target=$TGT --disable-nls $* > /dev/null && make all-gcc > /dev/null
+echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build64
+../gcc/configure --prefix=$PF --with-sysroot=$PF --target=$TGT --disable-nls > /dev/null && make all-gcc > /dev/null
 make install-gcc > /dev/null
 
-echo "Compiling crt.." && cd ../../mingw/mingw-w64-crt
-make prefix=$PF > /dev/null
+echo "Compiling crt.." && cd $BD/mingw/mingw-w64-crt
+make prefix=$PF $EXE > /dev/null
 echo "Installing crt.."
 cp -pv CRT_fp10.o CRT_fp8.o binmode.o txtmode.o crtbegin.o crtend.o crt1.o crt2.o dllcrt1.o dllcrt2.o $PF/$TGT/lib
 echo "Installing libs.."
@@ -85,7 +108,7 @@ for i in `find . -name "*.a"`; do
   cp -p $i $PF/$TGT/lib
 done
 
-echo "Compiling full gcc.." && cd ../../gcc-svn/build64
+echo "Compiling full gcc.." && cd $BD/gcc-svn/build64
 make > /dev/null
 make install > /dev/null
 
