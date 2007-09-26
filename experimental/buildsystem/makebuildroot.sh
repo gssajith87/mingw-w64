@@ -5,6 +5,7 @@ TGT=x86_64-pc-mingw32
 DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build64 $BD/gcc-svn $BD/gcc-svn/build64 $BD/mingw $BD/mingw/build64"
 EXE=
 build="false"
+usecvs="true"
 gmpver=gmp-4.2.2
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
 mpfrver=mpfr-2.3.0
@@ -18,29 +19,35 @@ while opt=$1 && shift; do
     required gmp / mpfr), and the mingw-w64 crt.  It will download all major dependencies, create
     the directory structure, and will optionally build the binaries as well.  The syntax is quite simple:
 
-      $0 [ --help ] [ --build ] [ --noexe ]
+      $0 [ --help ] [ --build ] [ --noexe ] [--nocvs]
       
-    The --help argument causes all other arguments to be ignored and results in the display of
-    this text.
+    --help	Causes all other arguments to be ignored and results in the display of
+		this text.
 
-    The --noexe argument is for systems where executable files do not have ".exe" at the end.  The build
-    system is not fully automatic yet, so this is a temporary thing which will be deprecated and removed
-    once the autotools build system is complete.
+    --noexe 	For systems where executable files do not have ".exe" at the end.  The build
+		system is not fully automatic yet, so this is a temporary thing which will be 
+		deprecated and removed once the autotools build system is complete.
 
-    The --build argument will continue past the downloading stage and begin building.  First it builds
-    binutils, and then a bootstrap compiler.  Both binutils and gcc use the same basic options, with gcc
-    requiring an additional argument to specify the desired languages.  Third in the build process is the
-    crt, which is installed into (buildroot)/x86_64-pc-mingw32/lib.  The mingw symlink will hopefully go
-    away in future versions.  With the crt installed, the full gcc toolchain can be build and installed, and 
-    this script takes care of it.
+    --nocvs 	When cvs is otherwise unavailable, items that require cvs have alternate means by which to
+		acquire the source code.  For instance, binutils offers a daily snapshot archive.  Non-cvs
+		downloads will not be as up to date as the cvs repository, and as such this is provided
+		only as a fallback.
+
+    --build	Continue past the downloading stage and begin building.  First it builds binutils,
+		and then a bootstrap compiler.  Both binutils and gcc use the same basic options,
+		with gcc requiring an additional argument to specify the desired languages.  Third 
+		in the build process is the crt, which is installed into (buildroot)/x86_64-pc-mingw32/lib.
+		The mingw symlink will hopefully go away in future versions.  With the crt installed,
+		the full gcc toolchain can be build and installed, and this script takes care of it.
+
+		Without providing the --build option, all components are downloaded and the headers are
+		installed in the basic directory structure.  Running the command multiple times will update
+		everything to the latest versions.  Using the --build command repeatedly will update any
+		source files that have changed, and reinstall fresh copies of the sysroot.
     
-    Without providing the --build option, all components are downloaded and the headers are installed in
-    the basic directory structure.  Running the command multiple times will update everything to the latest
-    versions.  Using the --build command repeatedly will update any files that have changed, and reinstall
-    fresh copies of everything.
-    
-    Keep in mind that this is all very temporary, and is provided as a convenience.  Please direct all inquiries
-    to the sourceforge project at: https://sourceforge.net/projects/mingw-w64/
+		Keep in mind that this is all very temporary, and is provided as a convenience.  Please
+		direct all inquiries to the sourceforge project at:
+		https://sourceforge.net/projects/mingw-w64/
     
 EOF
     exit
@@ -52,6 +59,10 @@ EOF
 
     "--noexe" )
       EXE="EXEEXT="
+      ;;
+
+    "--nocvs" )
+      usecvs="false"
       ;;
 
     "--help" )
@@ -70,7 +81,11 @@ done
 
 
 echo "Downloading binutils.." && cd $BD/binutils
-cvs -Qz 9 -d :pserver:anoncvs@sourceware.org:/cvs/src co binutils
+if [[ $usecvs == "true" ]]; then
+  cvs -Qz 9 -d :pserver:anoncvs@sourceware.org:/cvs/src co binutils
+else
+  wget -qO- ftp://sourceware.org/pub/binutils/snapshots/binutils.tar.bz2 | tar xjf - && mv binutils-* src
+fi
 
 echo "Downloading gcc.." && cd $BD/gcc-svn
 svn -q checkout svn://gcc.gnu.org/svn/gcc/trunk gcc
