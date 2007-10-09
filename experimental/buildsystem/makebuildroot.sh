@@ -107,25 +107,25 @@ echo "Root setup complete."
 [[ $build == "false" ]] && exit
 
 echo "Compiling binutils.." && cd $BD/binutils/build64
-../src/configure --prefix=$PF --with-sysroot=$PF --disable-nls --target=$TGT > /dev/null && make > /dev/null
-make install > /dev/null
+../src/configure --prefix=$PF --with-sysroot=$PF --disable-nls --target=$TGT > /dev/null && make > /dev/null || exit
+make install > /dev/null || exit
 
 echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build64
-../gcc/configure --prefix=$PF --with-sysroot=$PF --target=$TGT --disable-nls > /dev/null && make all-gcc > /dev/null
-make install-gcc > /dev/null
+../gcc/configure --prefix=$PF --with-sysroot=$PF --target=$TGT --disable-nls > /dev/null && make all-gcc > /dev/null || exit
+make install-gcc > /dev/null || exit
 
 echo "Compiling crt.." && cd $BD/mingw/mingw-w64-crt
-make prefix=$PF $EXE > /dev/null
+make prefix=$PF $EXE > /dev/null || exit
 echo "Installing crt.."
-cp -pv CRT_fp10.o CRT_fp8.o binmode.o txtmode.o crtbegin.o crtend.o crt1.o crt2.o dllcrt1.o dllcrt2.o $PF/$TGT/lib
+cp -pv CRT_fp10.o CRT_fp8.o binmode.o txtmode.o crtbegin.o crtend.o crt1.o crt2.o dllcrt1.o dllcrt2.o $PF/$TGT/lib || exit
 echo "Installing libs.."
-for i in `find . -name "*.a"`; do
+for i in `find . -name "*.a"`; do || exit
   cp -p $i $PF/$TGT/lib
 done
 
 echo "Compiling full gcc.." && cd $BD/gcc-svn/build64
-make > /dev/null
-make install > /dev/null
+make > /dev/null || exit
+make install > /dev/null || exit
 
 cd $PF
 echo "Done."
