@@ -119,8 +119,8 @@ make prefix=$PF $EXE > /dev/null || exit
 echo "Installing crt.."
 cp -pv CRT_fp10.o CRT_fp8.o binmode.o txtmode.o crtbegin.o crtend.o crt1.o crt2.o dllcrt1.o dllcrt2.o $PF/$TGT/lib || exit
 echo "Installing libs.."
-for i in `find . -name "*.a"`; do || exit
-  cp -p $i $PF/$TGT/lib
+for i in `find . -name "*.a"`; do 
+  cp -p $i $PF/$TGT/lib || exit
 done
 
 echo "Compiling full gcc.." && cd $BD/gcc-svn/build64
