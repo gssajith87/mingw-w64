@@ -1,8 +1,8 @@
 #!/bin/bash -e
+TGT=x86_64-pc-mingw32
 PF=`pwd`/root
 BD=`pwd`/build
-TGT=x86_64-pc-mingw32
-DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build64 $BD/gcc-svn $BD/gcc-svn/build64 $BD/mingw $BD/mingw/build64"
+DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/$TGT $BD/gcc-svn $BD/gcc-svn/$TGT $BD/mingw $BD/mingw/$TGT"
 EXE=
 build="false"
 usecvs="true"
@@ -114,17 +114,18 @@ if [[ $update == "true" ]]; then
 
   echo "Downloading crt and headers.." && cd $BD/mingw
   svn -q co https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/trunk .
-  [ -d $PF/$TGT/include ] && echo $PF/$TGT/include already exists || mv mingw-w64-headers/include $PF/$TGT
+  dest=$PF/$TGT/include
+  [ -d $dest ] && echo $dest already exists || ( mv mingw-w64-headers/include $dest && find $dest -name ".svn" | xargs rm -rf )
 
   echo "Root setup complete."
 fi
 
 if [[ $build == "true" ]]; then
-  echo "Compiling binutils.." && cd $BD/binutils/build64
+  echo "Compiling binutils.." && cd $BD/binutils/$TGT
   ../src/configure --prefix=$PF --with-sysroot=$PF --disable-nls --target=$TGT > /dev/null && make > /dev/null || exit
   make install > /dev/null || exit
 
-  echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build64
+  echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/$TGT
   ../gcc/configure --prefix=$PF --with-sysroot=$PF --target=$TGT --disable-nls > /dev/null && make all-gcc > /dev/null || exit
   make install-gcc > /dev/null || exit
 
@@ -137,7 +138,7 @@ if [[ $build == "true" ]]; then
     cp -p $i $PF/$TGT/lib || exit
   done
 
-  echo "Compiling full gcc.." && cd $BD/gcc-svn/build64
+  echo "Compiling full gcc.." && cd $BD/gcc-svn/$TGT
   make > /dev/null || exit
   make install > /dev/null || exit
 
@@ -147,5 +148,5 @@ fi
 
 if [[ $makedist == "true" ]]; then
   cd $PF/..
-  tar cjf mingw-w64-bin-`uname`-`$PF/bin/$TGT-gcc --version | head -1 | awk '{print $4}'`.tar.bz2 --owner root --group root root
+  tar cjf mingw-w64-bin-`uname`-`$PF/bin/$TGT-gcc --version | head -1 | awk '{print $4}'`.tar.bz2 --owner root --group root $PF
 fi
