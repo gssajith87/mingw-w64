@@ -1,6 +1,6 @@
 #!/bin/bash -e
 TGT=x86_64-pc-mingw32
-PF=`pwd`/root
+PF=`pwd`/root-$TGT
 BD=`pwd`/build
 DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$TGT $BD/gcc-svn $BD/gcc-svn/build-$TGT $BD/mingw $BD/mingw/build-$TGT"
 EXE=
