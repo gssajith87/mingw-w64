@@ -121,11 +121,11 @@ if [[ $update == "true" ]]; then
 fi
 
 if [[ $build == "true" ]]; then
-  echo "Compiling binutils.." && cd $BD/binutils/$TGT
+  echo "Compiling binutils.." && cd $BD/binutils/build-$TGT
   ../src/configure --prefix=$PF --with-sysroot=$PF --target=$TGT > /dev/null && make > /dev/null || exit
   make install > /dev/null || exit
 
-  echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/$TGT
+  echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$TGT
   ../gcc/configure --prefix=$PF --with-sysroot=$PF --target=$TGT  > /dev/null && make all-gcc > /dev/null || exit
   make install-gcc > /dev/null || exit
 
@@ -138,7 +138,7 @@ if [[ $build == "true" ]]; then
     cp -p $i $PF/$TGT/lib || exit
   done
 
-  echo "Compiling full gcc.." && cd $BD/gcc-svn/$TGT
+  echo "Compiling full gcc.." && cd $BD/gcc-svn/build-$TGT
   make > /dev/null || exit
   make install > /dev/null || exit
 
