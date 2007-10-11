@@ -122,11 +122,11 @@ fi
 
 if [[ $build == "true" ]]; then
   echo "Compiling binutils.." && cd $BD/binutils/$TGT
-  ../src/configure --prefix=$PF --with-sysroot=$PF --disable-nls --target=$TGT > /dev/null && make > /dev/null || exit
+  ../src/configure --prefix=$PF --with-sysroot=$PF --target=$TGT > /dev/null && make > /dev/null || exit
   make install > /dev/null || exit
 
   echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/$TGT
-  ../gcc/configure --prefix=$PF --with-sysroot=$PF --target=$TGT --disable-nls > /dev/null && make all-gcc > /dev/null || exit
+  ../gcc/configure --prefix=$PF --with-sysroot=$PF --target=$TGT  > /dev/null && make all-gcc > /dev/null || exit
   make install-gcc > /dev/null || exit
 
   echo "Compiling crt.." && cd $BD/mingw/mingw-w64-crt
