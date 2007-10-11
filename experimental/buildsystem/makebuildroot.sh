@@ -2,7 +2,7 @@
 TGT=x86_64-pc-mingw32
 PF=`pwd`/root
 BD=`pwd`/build
-DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/$TGT $BD/gcc-svn $BD/gcc-svn/$TGT $BD/mingw $BD/mingw/$TGT"
+DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$TGT $BD/gcc-svn $BD/gcc-svn/build-$TGT $BD/mingw $BD/mingw/build-$TGT"
 EXE=
 build="false"
 usecvs="true"
@@ -21,7 +21,7 @@ while opt=$1 && shift; do
     required gmp / mpfr), and the mingw-w64 crt.  It will download all major dependencies, create
     the directory structure, and will optionally build the binaries as well.  The syntax is quite simple:
 
-      $0 [ --help ] [ --build ] [ --noexe ] [--nocvs]
+      $0 [ --help ] [ --build ] [ --noexe ] [ --nocvs ] [ --noupdate ]
       
     --help	Causes all other arguments to be ignored and results in the display of
 		this text.
