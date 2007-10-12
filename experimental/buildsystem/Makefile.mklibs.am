@@ -349,10 +349,12 @@ liblargeint_a_SOURCES = lib/largeint.c
 libscrnsavw_a_SOURCES = lib/scrnsave.c
 libscrnsavw_a_CFLAGS  = -DUNICODE
 libkernel32_a_SOURCES = lib/kernel32.c
-libshell32_a_SOURCES = lib/shell32.c
+libshell32_a_SOURCES  = lib/shell32.c
 libkernel32_a_AR = \
 	$(DLLTOOL) --as=$(AS) -k --output-lib $@ --def $(top_srcdir)/lib/kernel32.def; \
 	$(AR) $(ARFLAGS)
 libshell32_a_AR = \
 	$(DLLTOOL) --as=$(AS) -k --output-lib $@ --def $(top_srcdir)/lib/shell32.def; \
 	$(AR) $(ARFLAGS)
+
+
