@@ -55,7 +55,7 @@ libmingw32_a_SOURCES = \
   xncommod.c _newmode.c xthdloc.c mingw_helpers.c dllentry.c
 
 libmoldname_a_SOURCES = \
-  isascii.c iscsym.c iscsymf.c toascii.c strcasecmp.c strncasecmp.c wcscmpi.c
+  isascii.c iscsym.c iscsymf.c toascii.c strcasecmp.c strncasecmp.c wcscmpi.
 libmoldname_a_AR = \
   $(DLLTOOL) --as $(AS) -k -U --dllname msvcrt.dll --def $(top_srcdir)/moldname-msvcrt.def --output-lib $@ ; \
   $(AR) $(ARFLAGS)
