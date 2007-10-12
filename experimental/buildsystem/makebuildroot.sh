@@ -12,6 +12,8 @@ gmpver=gmp-4.2.2
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
 mpfrver=mpfr-2.3.0
 mpfr=http://www.mpfr.org/mpfr-current/${mpfrver}.tar.bz2
+out=/dev/null
+baseopts="--prefix=$PF --with-sysroot=$PF --target=$TGT"
 
 while opt=$1 && shift; do
   case "$opt" in
@@ -79,8 +81,6 @@ EOF
     "--makedist" )
       makedist="true"
       ;;
-
-    "--help" )
   esac
 done
 
@@ -122,15 +122,13 @@ fi
 
 if [[ $build == "true" ]]; then
   echo "Compiling binutils.." && cd $BD/binutils/build-$TGT
-  ../src/configure --prefix=$PF --with-sysroot=$PF --target=$TGT > /dev/null && make > /dev/null || exit
-  make install > /dev/null || exit
+  ../src/configure $baseopts > $out && make > $out && make install > $out || exit
 
   echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$TGT
-  ../gcc/configure --prefix=$PF --with-sysroot=$PF --target=$TGT  > /dev/null && make all-gcc > /dev/null || exit
-  make install-gcc > /dev/null || exit
+  ../gcc/configure $baseopts > $out && make all-gcc > $out && make install-gcc > $out || exit
 
   echo "Compiling crt.." && cd $BD/mingw/mingw-w64-crt
-  make prefix=$PF $EXE > /dev/null || exit
+  make prefix=$PF $EXE > $out || exit
   echo "Installing crt.."
   cp -pv CRT_fp10.o CRT_fp8.o binmode.o txtmode.o crtbegin.o crtend.o crt1.o crt2.o dllcrt1.o dllcrt2.o $PF/$TGT/lib || exit
   echo "Installing libs.."
@@ -139,8 +137,7 @@ if [[ $build == "true" ]]; then
   done
 
   echo "Compiling full gcc.." && cd $BD/gcc-svn/build-$TGT
-  make > /dev/null || exit
-  make install > /dev/null || exit
+  make > $out && make install > $out || exit
 
   cd $PF
   echo "Done building."
