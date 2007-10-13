@@ -4,7 +4,7 @@ HST=x86_64-pc-linux
 TGT=x86_64-pc-mingw32
 PF=`pwd`/root-$HST
 BD=`pwd`/build
-DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$TGT $BD/gcc-svn $BD/gcc-svn/build-$TGT $BD/mingw $BD/mingw/build-$TGT"
+DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$HST $BD/gcc-svn $BD/gcc-svn/build-$HST $BD/mingw $BD/mingw/build-$HST"
 EXE=
 build="false"
 usecvs="true"
@@ -123,10 +123,10 @@ if [[ $update == "true" ]]; then
 fi
 
 if [[ $build == "true" ]]; then
-  echo "Compiling binutils.." && cd $BD/binutils/build-$TGT
+  echo "Compiling binutils.." && cd $BD/binutils/build-$HST
   ../src/configure $baseopts > $out && make > $out && make install > $out || exit
 
-  echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$TGT
+  echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$HST
   ../gcc/configure $baseopts > $out && make all-gcc > $out && make install-gcc > $out || exit
 
   echo "Compiling crt.." && cd $BD/mingw/mingw-w64-crt
@@ -138,7 +138,7 @@ if [[ $build == "true" ]]; then
     cp -p $i $PF/$TGT/lib || exit
   done
 
-  echo "Compiling full gcc.." && cd $BD/gcc-svn/build-$TGT
+  echo "Compiling full gcc.." && cd $BD/gcc-svn/build-$HST
   make > $out && make install > $out || exit
 
   cd $PF
