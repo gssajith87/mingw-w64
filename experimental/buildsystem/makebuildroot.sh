@@ -1,6 +1,8 @@
 #!/bin/bash -e
+#Set this to your host!!
+HST=x86_64-pc-linux
 TGT=x86_64-pc-mingw32
-PF=`pwd`/root-$TGT
+PF=`pwd`/root-$HST
 BD=`pwd`/build
 DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$TGT $BD/gcc-svn $BD/gcc-svn/build-$TGT $BD/mingw $BD/mingw/build-$TGT"
 EXE=
