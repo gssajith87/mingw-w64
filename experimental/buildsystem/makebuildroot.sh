@@ -2,7 +2,8 @@
 #Set this to your host!!
 HST=x86_64-pc-linux
 TGT=x86_64-pc-mingw32
-PF=`pwd`/root-$HST
+RT=root-$HST
+PF=`pwd`/$RT
 BD=`pwd`/build
 DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$HST $BD/gcc-svn $BD/gcc-svn/build-$HST $BD/mingw $BD/mingw/build-$HST"
 EXE=
@@ -147,5 +148,5 @@ fi
 
 if [[ $makedist == "true" ]]; then
   cd $PF/..
-  tar cjf mingw-w64-bin_`uname`_`$PF/bin/$TGT-gcc --version | head -1 | awk '{print $4}'`.tar.bz2 --owner 0 --group 0 $PF
+  tar cjf mingw-w64-bin_`uname`_`$PF/bin/$TGT-gcc --version | head -1 | awk '{print $4}'`.tar.bz2 --owner 0 --group 0 $RT
 fi
