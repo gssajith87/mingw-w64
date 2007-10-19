@@ -23,10 +23,10 @@ _libm_dummy.c:
 # These targets require special handling that automake can't
 # yet support (or that I don't know how to do properly)
 crtdir=$(prefix)/$(target)/lib
-crt_SCRIPTS = \
+
+crt_DATA = \
   crt1.o crt2.o dllcrt1.o dllcrt2.o CRT_fp8.o CRT_fp10.o txtmode.o binmode.o crtbegin.o crtend.o \
   libcrtdll.a libmsvcrt.a libmsvcr80.a
-
 crt1.o:
 	$(COMPILE) -c $(top_srcdir)/crtexe.c -o $@ -D__CRTDLL__ -U__MSVCRT__
 crt2.o:
@@ -35,6 +35,7 @@ dllcrt1.o:
 	$(COMPILE) -c $(top_srcdir)/crtdll.c -o $@ -D__CRTDLL__ -U__MSVCRT__
 dllcrt2.o:
 	$(COMPILE) -c $(top_srcdir)/crtdll.c -o $@ -D__MSVCRT__ -U__CRTDLL__
+
 libcrtdll.a libmsvcrt.a libmsvcr80.a:
 	base=`echo $@ | sed -e 's/\.a//' -e 's/^lib//'`; \
 	$(DLLTOOL) $(DLLOPTS) --dllname $${base}.dll --def $(top_srcdir)/$${base}.def
@@ -45,7 +46,7 @@ libcrtdll.a libmsvcrt.a libmsvcr80.a:
 #libmsvcr80.a:
 #	$(DLLTOOL) --as=$(AS) -k --dllname msvcr80.dll --output-lib $@ --def $(top_srcdir)/msvcr80.def
 
-crt_SCRIPTS += \
+crt_DATA += \
   lib6to4svc.a    libCINTIME.a    libCmdEvTgProv.a libPS5UI.a     libPSCRIPT5.a   libUNIDRV.a     \
   libUNIDRVUI.a   libaaaamon.a    libacgen64.a    libacledit.a    libaclui.a      libactiveds.a   \
   libactxprxy.a   libadmparse.a   libadmwprox.a   libadptif.a     libadrot.a      libadsiis.a     \
@@ -528,7 +529,7 @@ libmingwex_a_SOURCES = \
 
 
 
-CLEANFILES = $(BUILT_SOURCES) $(crt_SCRIPTS)
+CLEANFILES = $(BUILT_SOURCES) $(crt_SCRIPTS) $(crt_DATA)
 EXTRA_DIST = crtdll.def msvcrt.def msvcr80.def crtexe.c crtdll.c lib
 noinst_HEADERS = \
   misc/mb_wc_common.h internal.h oscalls.h sect_attribs.h math/fp_consts.h \
