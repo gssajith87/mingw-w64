@@ -36,9 +36,13 @@ dllcrt1.o:
 dllcrt2.o:
 	$(COMPILE) -c $(top_srcdir)/crtdll.c -o $@ -D__MSVCRT__ -U__CRTDLL__
 
-libcrtdll.a libmsvcrt.a libmsvcr80.a:
-	base=`echo $@ | sed -e 's/\.a//' -e 's/^lib//'`; \
-	$(DLLTOOL) $(DLLOPTS) --dllname $${base}.dll --def $(top_srcdir)/$${base}.def
+#libcrtdll.a libmsvcrt.a libmsvcr80.a:
+#	base=`echo $@ | sed -e 's/\.a//' -e 's/^lib//'`; \
+#	$(DLLTOOL) $(DLLOPTS) --dllname $${base}.dll --def $(top_srcdir)/$${base}.def
+
+lib%.a: %.def
+	$(DLLTOOL) $(DLLOPTS) --dllname $*.dll --def=$(top_srcdir)/$*.def
+
 #libcrtdll.a:
 #	$(DLLTOOL) --as=$(AS) -k --dllname crtdll.dll --output-lib $@ --def $(top_srcdir)/crtdll.def
 #libmsvcrt.a:
