@@ -10,7 +10,7 @@ else
   sysincludes=
 endif
 
-AM_CPPFLAGS=-D_CRTBLD -D_SYSCRT=1 -DCRTDLL=1 -DWINHEAP=1 $(sysincludes)
+AM_CPPFLAGS=-D_CRTBLD -D_SYSCRT=1 -DCRTDLL=1 -DWINHEAP=1 -pipe $(sysincludes)
 DLLOPTS=-k --as=$(AS) --output-lib $@
 
 #######
@@ -404,13 +404,13 @@ libm_a_SOURCES = _libm_dummy.c
 crtlibs_LIBRARIES += libkernel32.a
 libkernel32_a_SOURCES = lib/kernel32.c
 libkernel32_a_AR = \
-        $(DLLTOOL) --as=$(AS) -k --output-lib $@ --def $(top_srcdir)/lib/kernel32.def; \
+        $(DLLTOOL) $(DLLOPTS) --def $(top_srcdir)/lib/kernel32.def; \
         $(AR) $(ARFLAGS)
 
 crtlibs_LIBRARIES += libshell32.a
 libshell32_a_SOURCES = lib/shell32.c
 libshell32_a_AR = \
-        $(DLLTOOL) --as=$(AS) -k --output-lib $@ --def $(top_srcdir)/lib/shell32.def; \
+        $(DLLTOOL) $(DLLOPTS) --def $(top_srcdir)/lib/shell32.def; \
         $(AR) $(ARFLAGS)
 
 crtlibs_LIBRARIES += liblargeint.a
