@@ -24,7 +24,7 @@ _libm_dummy.c:
 # yet support (or that I don't know how to do properly)
 crtdir=$(prefix)/$(target)/lib
 
-crt_DATA = \
+crt_SCRIPTS = \
   crt1.o crt2.o dllcrt1.o dllcrt2.o CRT_fp8.o CRT_fp10.o txtmode.o binmode.o crtbegin.o crtend.o \
   libcrtdll.a libmsvcrt.a libmsvcr80.a
 crt1.o:
@@ -50,7 +50,7 @@ lib%.a: %.def
 #libmsvcr80.a:
 #	$(DLLTOOL) --as=$(AS) -k --dllname msvcr80.dll --output-lib $@ --def $(top_srcdir)/msvcr80.def
 
-crt_DATA += \
+crt_SCRIPTS += \
   lib6to4svc.a    libCINTIME.a    libCmdEvTgProv.a libPS5UI.a     libPSCRIPT5.a   libUNIDRV.a     \
   libUNIDRVUI.a   libaaaamon.a    libacgen64.a    libacledit.a    libaclui.a      libactiveds.a   \
   libactxprxy.a   libadmparse.a   libadmwprox.a   libadptif.a     libadrot.a      libadsiis.a     \
@@ -533,7 +533,7 @@ libmingwex_a_SOURCES = \
 
 
 
-CLEANFILES = $(BUILT_SOURCES) $(crt_SCRIPTS) $(crt_DATA)
+CLEANFILES = $(BUILT_SOURCES) $(crt_SCRIPTS) $(crt_SCRIPTS)
 EXTRA_DIST = crtdll.def msvcrt.def msvcr80.def crtexe.c crtdll.c lib
 noinst_HEADERS = \
   misc/mb_wc_common.h internal.h oscalls.h sect_attribs.h math/fp_consts.h \
