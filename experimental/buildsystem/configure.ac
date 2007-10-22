@@ -1,11 +1,15 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
-
 # Use AM_MAINTANER_MODE somewhere in this file once reconfigurations settle down.
 
 AC_PREREQ(2.61)
 AC_INIT([x86_64-mingw-runtime],[3.9.1],[mingw-w64-public@lists.sourceforge.net])
-AC_CANONICAL_SYSTEM
+
+#AC_CANONICAL_SYSTEM is apparently obsolete.. should use AC_CANONICAL_BUILD, _HOST, and _TARGET
+#as needed.  Also, they seem to be hierarchical -- _TARGET includes _HOST, and _HOST includes
+#_BUILD.  For the runtime, we only need a build and a host, as target has no meaning.
+
+AC_CANONICAL_HOST
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_SRCDIR([atonexit.c])
 AC_CONFIG_HEADER([config.h])
