@@ -261,7 +261,7 @@ crt_SCRIPTS += \
   libwdeskadp.a   libwdeskmon.a   libwdeskperf.a  libwdevenum.a   libwdfsshlex.a  libwdgconfig.a  \
   libwdgnet.a     libwdgsetup.a   libwdhcpcsvc.a  libwdhcpmon.a   libwdhcpsapi.a  libwdiactfrm.a  \
   libwdigest.a    libwdigiinf.a   libwdigirlpt.a  libwdimap.a     libwdimsntfy.a  libwdimsroam.a  \
-  libwdinput.a    libwdinput8.a   libwdirectdb.a  libwdiskcopy.a  libwdispex.a    libwdisrvci.a   \
+  libwdinput.a    libwdinput8.a   libwdirectdb.a  libwdiskcopy.a  libwdispex.a    libwdisrvci.a   libwdmaud.a \
   libwdmband.a    libwdmcompos.a  libwdmime.a     libwdmloader.a  libwdmocx.a     libwdmscript.a  \
   libwdmstyle.a   libwdmsynth.a   libwdmusic.a    libwdnsapi.a    libwdnsrslvr.a  libwdocprop.a   \
   libwdocprop2.a  libwdplay.a     libwdplayx.a    libwdpmodemx.a  libwdpnaddr.a   libwdpnet.a     \
@@ -295,7 +295,7 @@ crt_SCRIPTS += \
   libwimlang.a    libwimm32.a     libwimskdic.a   libwimskf.a     libwin32spl.a   libwinetcfg.a   \
   libwinetcomm.a  libwinetmgr.a   libwinetmib1.a  libwinetpp.a    libwinetppui.a  libwinfax.a     \
   libwinfoadmn.a  libwinfoctrs.a  libwinfosoft.a  libwininet.a    libwinipsec.a   libwinitpki.a   \
-  libwinmm.a      libwinntbbu.a   libwinput.a     libwinrnr.a     libwinscard.a   libwinseng.a    \
+  libwinmm.a      libwinntbbu.a   libwinput.a     libwinrnr.a     libwinscard.a   libwinseng.a    libwinspool.a \
   libwinsrv.a     libwinsta.a     libwintrust.a   libwiphlpapi.a  libwipmontr.a   libwipnathlp.a  \
   libwippromon.a  libwiprip.a     libwiprop.a     libwiprtprio.a  libwiprtrmgr.a  libwipsecsnp.a  \
   libwipsecsvc.a  libwipsmsnap.a  libwipv6mon.a   libwipxsap.a    libwir41_qc.a   libwir41_qcx.a  \
@@ -389,7 +389,7 @@ crt_SCRIPTS += \
   libwsecur32.a   libwsecurity.a  libwsendcmsg.a  libwsendmail.a  libwsens.a      libwsensapi.a   \
   libwsenscfg.a   libwseo.a       libwserialui.a  libwservdeps.a  libwserwvdrv.a  libwsetupapi.a  \
   libwsfc.a       libwsfc_os.a    libwsfcfiles.a  libwsfmapi.a    libwshatm.a     libwshbth.a     \
-  libwshcon.a     libzoneoc.a
+  libwshcon.a     libwwdmaud.a    libwwinspool.a  libzoneoc.a
 
 lib%.a:
 	$(DLLTOOL) $(DLLOPTS) --def $(top_srcdir)/lib/$*.def

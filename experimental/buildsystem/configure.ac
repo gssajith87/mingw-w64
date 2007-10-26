@@ -31,6 +31,7 @@ AM_CONDITIONAL(WITHSYSROOT, test x$TARGET_SYSTEM_ROOT != x)
 AC_SUBST(TARGET_SYSTEM_ROOT)
 
 # Checks for programs.
+# Checks for headers, libs, etc need to utilize the sysroot... no idea how
 AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -61,7 +62,7 @@ AC_CHECK_TYPES([ptrdiff_t])
 
 # Checks for library functions.
 #AC_PROG_GCC_TRADITIONAL
-#AC_FUNC_MALLOC
+AC_FUNC_MALLOC
 #AC_FUNC_MBRTOWC
 #AC_FUNC_REALLOC
 #AC_FUNC_STRTOD
