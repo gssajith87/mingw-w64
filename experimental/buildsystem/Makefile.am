@@ -533,7 +533,7 @@ libmingwex_a_SOURCES = \
 
 
 
-CLEANFILES = $(BUILT_SOURCES) $(crt_SCRIPTS) $(crt_SCRIPTS)
+CLEANFILES = $(BUILT_SOURCES) $(crt_SCRIPTS)
 EXTRA_DIST = crtdll.def msvcrt.def msvcr80.def crtexe.c crtdll.c lib
 noinst_HEADERS = \
   misc/mb_wc_common.h internal.h oscalls.h sect_attribs.h math/fp_consts.h \
