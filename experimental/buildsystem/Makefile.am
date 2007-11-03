@@ -438,7 +438,7 @@ libmingw32_a_SOURCES = \
 
 crtlibs_LIBRARIES += libmoldname.a
 libmoldname_a_SOURCES = \
-  isascii.c iscsym.c iscsymf.c toascii.c strcasecmp.c strncasecmp.c wcscmpi.
+  isascii.c iscsym.c iscsymf.c toascii.c strcasecmp.c strncasecmp.c wcscmpi.c
 libmoldname_a_AR = \
   $(DLLTOOL) $(DLLOPTS) -U --dllname msvcrt.dll --def $(top_srcdir)/moldname-msvcrt.def; \
   $(AR) $(ARFLAGS)
