@@ -398,7 +398,7 @@ lib%.a:
 
 
 crtlibsdir=$(crtdir)
-crtlibs_LIBRARIES = libm.a libmingwex.a
+crtlibs_LIBRARIES = libm.a
 libm_a_SOURCES = _libm_dummy.c
 
 crtlibs_LIBRARIES += libkernel32.a
