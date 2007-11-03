@@ -35,7 +35,6 @@ AC_SUBST(TARGET_SYSTEM_ROOT)
 AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_INSTALL
-AC_PROG_RANLIB
 AC_LIBTOOL_WIN32_DLL
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
@@ -50,7 +49,6 @@ AM_PROG_AS
 #AC_CHECK_HEADERS([fcntl.h fenv.h float.h inttypes.h limits.h locale.h malloc.h stddef.h stdint.h stdlib.h string.h sys/ioctl.h sys/time.h sys/timeb.h termios.h unistd.h wchar.h wctype.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
 AC_C_INLINE
 AC_TYPE_INT32_T
 AC_TYPE_PID_T
@@ -61,7 +59,6 @@ AC_C_VOLATILE
 AC_CHECK_TYPES([ptrdiff_t])
 
 # Checks for library functions.
-#AC_PROG_GCC_TRADITIONAL
 AC_FUNC_MALLOC
 #AC_FUNC_MBRTOWC
 #AC_FUNC_REALLOC
