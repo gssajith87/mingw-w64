@@ -6,7 +6,6 @@ RT=root-$HST
 PF=`pwd`/$RT
 BD=`pwd`/build
 DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$HST $BD/gcc-svn $BD/gcc-svn/build-$HST $BD/mingw $BD/mingw/build-$HST"
-EXE=
 build="false"
 usecvs="true"
 update="true"
@@ -26,14 +25,10 @@ while opt=$1 && shift; do
     required gmp / mpfr), and the mingw-w64 crt.  It will download all major dependencies, create
     the directory structure, and will optionally build the binaries as well.  The syntax is quite simple:
 
-      $0 [ --help ] [ --build ] [ --noexe ] [ --nocvs ] [ --noupdate ]
+      $0 [ --help ] [ --build ] [ --nocvs ] [ --noupdate ]
       
     --help	Causes all other arguments to be ignored and results in the display of
 		this text.
-
-    --noexe 	For systems where executable files do not have ".exe" at the end.  The build
-		system is not fully automatic yet, so this is a temporary thing which will be 
-		deprecated and removed once the autotools build system is complete.
 
     --nocvs 	When cvs is otherwise unavailable, items that require cvs have alternate means by which to
 		acquire the source code.  For instance, binutils offers a daily snapshot archive.  Non-cvs
@@ -67,10 +62,6 @@ EOF
 
     "--build" )
       build="true"
-      ;;
-
-    "--noexe" )
-      EXE="EXEEXT="
       ;;
 
     "--nocvs" )
@@ -129,15 +120,10 @@ if [[ $build == "true" ]]; then
 
   echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$HST
   ../gcc/configure $baseopts > $out && make all-gcc > $out && make install-gcc > $out || exit
+  export PATH=$PF/bin:$PATH
 
-  echo "Compiling crt.." && cd $BD/mingw/mingw-w64-crt
-  make prefix=$PF $EXE > $out || exit
-  echo "Installing crt.."
-  cp -pv CRT_fp10.o CRT_fp8.o binmode.o txtmode.o crtbegin.o crtend.o crt1.o crt2.o dllcrt1.o dllcrt2.o $PF/$TGT/lib || exit
-  echo "Installing libs.."
-  for i in `find . -name "*.a"`; do 
-    cp -p $i $PF/$TGT/lib || exit
-  done
+  echo "Compiling crt.." && cd $BD/mingw/build-$HST
+  ../mingw-w64-crt/configure --prefix=$PF --with-sysroot=$PF --host=$TGT > $out && make > $out && make install > $out || exit
 
   echo "Compiling full gcc.." && cd $BD/gcc-svn/build-$HST
   make > $out && make install > $out || exit
