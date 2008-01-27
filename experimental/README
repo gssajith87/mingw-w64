@@ -1,0 +1,4 @@
+All files within this directory are not part of the mingw-w64 crt.
+These files are maintance files or contributions not merged with our
+runtime. Be aware, that some of those contributions may have a copyright
+not covered by the public domain.
