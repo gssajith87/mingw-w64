@@ -12,7 +12,7 @@ update="true"
 makedist="false"
 gmpver=gmp-4.2.2
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
-mpfrver=mpfr-2.3.0
+mpfrver=mpfr-2.3.1
 mpfr=http://www.mpfr.org/mpfr-current/${mpfrver}.tar.bz2
 out=/dev/null
 baseopts="--prefix=$PF --with-sysroot=$PF --target=$TGT"
