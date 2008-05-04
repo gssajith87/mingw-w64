@@ -87,7 +87,7 @@ if [[ $update == "true" ]]; then
   for i in $DIRS; do
     [ -d $i ] && echo "Warning: $i preexisting, skipping directory creation" || mkdir $i
   done
-  [ -h mingw ] || ln -s $TGT $PF/mingw
+  [ -h $PF/mingw ] || ln -s $TGT $PF/mingw
 
   echo "Downloading binutils.." && cd $BD/binutils
   if [[ $usecvs == "true" ]]; then
