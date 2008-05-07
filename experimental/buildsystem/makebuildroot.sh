@@ -156,4 +156,5 @@ if [[ $makedist == "true" ]]; then
   tarname=mingw-w64-bin_`uname`_`$PF/bin/$TGT-gcc --version | head -1 | awk '{print $4}'`.tar.bz2
   tar cjf ../$tarname --owner 0 --group 0 * || exit 1
   echo "Distribution: $tarname"
+  cd ..
 fi
