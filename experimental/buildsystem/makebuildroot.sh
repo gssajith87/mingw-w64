@@ -6,16 +6,21 @@ RT=root-$HST
 PF=`pwd`/$RT
 BD=`pwd`/build
 DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$HST $BD/gcc-svn $BD/gcc-svn/build-$HST $BD/mingw $BD/mingw/build-$HST"
+baseopts="--prefix=$PF --with-sysroot=$PF --target=$TGT"
+
+#Option defaults
 build="false"
 usecvs="true"
 update="true"
 makedist="false"
+gccrev="HEAD"
+out=/dev/null
+
+#Third part packages
 gmpver=gmp-4.2.2
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
 mpfrver=mpfr-2.3.1
 mpfr=http://www.mpfr.org/mpfr-current/${mpfrver}.tar.bz2
-out=/dev/null
-baseopts="--prefix=$PF --with-sysroot=$PF --target=$TGT"
 
 while opt=$1 && shift; do
   case "$opt" in
@@ -25,7 +30,7 @@ while opt=$1 && shift; do
     required gmp / mpfr), and the mingw-w64 crt.  It will download all major dependencies, create
     the directory structure, and will optionally build the binaries as well.  The syntax is quite simple:
 
-      $0 [ --help ] [ --build ] [ --nocvs ] [ --noupdate ]
+      $0 [ --help ] [ --build ] [ --makedist ] [ --gccrev N ] [ --nocvs ] [ --noupdate ]
       
     --help	Causes all other arguments to be ignored and results in the display of
 		this text.
@@ -56,6 +61,11 @@ while opt=$1 && shift; do
 
     --makedist  This will tar up the root directory for purposes of distribution.
     
+    --gccrev N  Specify a particular gcc revision to pull.  Since gcc is an oft-changing product, it may be 
+                desirable to pull a version that is not HEAD, for instance if the trunk breaks or if testing
+                older versions.  Whatever number is specified for N will be grabbed from svn.  Only numbers
+                will work in this field, and the default if not specified is "HEAD".
+
 EOF
     exit
     ;;
@@ -74,6 +84,15 @@ EOF
 
     "--makedist" )
       makedist="true"
+      ;;
+
+    "--gccrev" )
+      gccrev=$1
+      if [ ! $gccrev -gt 0 ] ; then
+        echo "Bad GCC revision $gccrev" >&2
+        exit 1
+      fi
+      shift
       ;;
   esac
 done
@@ -97,7 +116,7 @@ if [[ $update == "true" ]]; then
   fi
 
   echo "Downloading gcc.." && cd $BD/gcc-svn
-  svn -q checkout svn://gcc.gnu.org/svn/gcc/trunk gcc
+  svn -q checkout svn://gcc.gnu.org/svn/gcc/trunk gcc -r $gccrev
 
   echo "Downloading additional required libraries for gcc.." && cd gcc
   for i in gmp mpfr; do
@@ -109,24 +128,24 @@ if [[ $update == "true" ]]; then
   echo "Downloading crt and headers.." && cd $BD/mingw
   svn -q co https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/trunk .
   dest=$PF/$TGT/include
-  [ -d $dest ] && echo $dest already exists || ( mv mingw-w64-headers/include $dest && find $dest -name ".svn" | xargs rm -rf )
+  [ -d $dest ] && echo $dest already exists || ( cp -prf mingw-w64-headers/include $dest && find $dest -name ".svn" | xargs rm -rf )
 
   echo "Root setup complete."
 fi
 
 if [[ $build == "true" ]]; then
   echo "Compiling binutils.." && cd $BD/binutils/build-$HST
-  ../src/configure $baseopts > $out && make > $out && make install > $out || exit
+  ../src/configure $baseopts > $out && make -s > $out && make install > $out || exit
 
   echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$HST
-  ../gcc/configure $baseopts > $out && make all-gcc > $out && make install-gcc > $out || exit
+  ../gcc/configure $baseopts > $out && make -s all-gcc > $out && make install-gcc > $out || exit
   export PATH=$PF/bin:$PATH
 
   echo "Compiling crt.." && cd $BD/mingw/build-$HST
-  ../mingw-w64-crt/configure --prefix=$PF --with-sysroot=$PF --host=$TGT > $out && make > $out && make install > $out || exit
+  ../mingw-w64-crt/configure --prefix=$PF --with-sysroot=$PF --host=$TGT > $out && make -s > $out && make install > $out || exit
 
   echo "Compiling full gcc.." && cd $BD/gcc-svn/build-$HST
-  make > $out && make install > $out || exit
+  make -s > $out && make install > $out || exit
 
   cd $PF
   echo "Done building."
