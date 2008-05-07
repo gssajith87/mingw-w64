@@ -135,23 +135,25 @@ fi
 
 if [[ $build == "true" ]]; then
   echo "Compiling binutils.." && cd $BD/binutils/build-$HST
-  ../src/configure $baseopts > $out && make -s > $out && make install > $out || exit
+  ../src/configure $baseopts > $out && make -s > $out && make install > $out || exit 1
 
   echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$HST
-  ../gcc/configure $baseopts > $out && make -s all-gcc > $out && make install-gcc > $out || exit
+  ../gcc/configure $baseopts > $out && make -s all-gcc > $out && make install-gcc > $out || exit 1
   export PATH=$PF/bin:$PATH
 
   echo "Compiling crt.." && cd $BD/mingw/build-$HST
-  ../mingw-w64-crt/configure --prefix=$PF --with-sysroot=$PF --host=$TGT > $out && make -s > $out && make install > $out || exit
+  ../mingw-w64-crt/configure --prefix=$PF --with-sysroot=$PF --host=$TGT > $out && make -s > $out && make install > $out || exit 1
 
   echo "Compiling full gcc.." && cd $BD/gcc-svn/build-$HST
-  make -s > $out && make install > $out || exit
+  make -s > $out && make install > $out || exit 1
 
   cd $PF
   echo "Done building."
 fi
 
 if [[ $makedist == "true" ]]; then
-  cd $PF/..
-  tar cjf mingw-w64-bin_`uname`_`$PF/bin/$TGT-gcc --version | head -1 | awk '{print $4}'`.tar.bz2 --owner 0 --group 0 $RT
+  cd $PF
+  tarname=mingw-w64-bin_`uname`_`$PF/bin/$TGT-gcc --version | head -1 | awk '{print $4}'`.tar.bz2
+  tar cjf ../$tarname --owner 0 --group 0 * || exit 1
+  echo "Distribution: $tarname"
 fi
