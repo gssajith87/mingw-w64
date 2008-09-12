@@ -19,7 +19,7 @@ out=/dev/null
 #Third part packages
 gmpver=gmp-4.2.2
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
-mpfrver=mpfr-2.3.1
+mpfrver=mpfr-2.3.2
 mpfr=http://www.mpfr.org/mpfr-current/${mpfrver}.tar.bz2
 
 while opt=$1 && shift; do
