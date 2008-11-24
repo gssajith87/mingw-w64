@@ -28,9 +28,10 @@ while opt=$1 && shift; do
       cat << EOF
     This build script will setup an entire buildroot environment consisting of binutils, gcc (and the
     required gmp / mpfr), and the mingw-w64 crt.  It will download all major dependencies, create
-    the directory structure, and will optionally build the binaries as well.  The syntax is quite simple:
+    the directory structure, and will optionally build the binaries as well.  The syntax is [Ed. note: 
+    in all honesty, it used to be a lot simpler...] quite simple:
 
-      $0 [ --help ] [ --build ] [ --makedist ] [ --gccrev N ] [ --nocvs ] [ --noupdate ]
+      $0 [ --help ] [ --nocvs ] [ --noupdate ] [ --build ] [ --makedist ] [ --gccrev N ] [ --jobs N ]
       
     --help	Causes all other arguments to be ignored and results in the display of
 		this text.
@@ -66,6 +67,9 @@ while opt=$1 && shift; do
                 older versions.  Whatever number is specified for N will be grabbed from svn.  Only numbers
                 will work in this field, and the default if not specified is "HEAD".
 
+    --jobs N    Specify the number of jobs to submit to make.  This translates into the -j number supplied
+                to make for each built project.  Not specifying N is the same as not specifying --jobs at all.
+
 EOF
     exit
     ;;
@@ -87,10 +91,23 @@ EOF
       ;;
 
     "--gccrev" )
-      gccrev=$1
-      if [ ! $gccrev -gt 0 ] ; then
-        echo "Bad GCC revision $gccrev" >&2
-        exit 1
+      if [[ "$1" != --* ]]; then
+        if [ ! $1 -gt 0 ] ; then
+          echo "Bad GCC revision: $1" >&2
+          exit 1
+        fi
+        gccrev=$1
+      fi
+      shift
+      ;;
+
+    "--jobs" )
+      if [[ "$1" != --* ]]; then
+        if [ ! $1 -gt 0 ] ; then
+          echo "Bad job count: $1" >&2
+          exit 1
+        fi
+        j="-j $1"
       fi
       shift
       ;;
@@ -135,17 +152,17 @@ fi
 
 if [[ $build == "true" ]]; then
   echo "Compiling binutils.." && cd $BD/binutils/build-$HST
-  ../src/configure $baseopts > $out && make -s > $out && make install > $out || exit 1
+  ../src/configure $baseopts > $out && make -s $j > $out && make install > $out || exit 1
 
   echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$HST
-  ../gcc/configure $baseopts > $out && make -s all-gcc > $out && make install-gcc > $out || exit 1
+  ../gcc/configure $baseopts > $out && make -s $j all-gcc > $out && make install-gcc > $out || exit 1
   export PATH=$PF/bin:$PATH
 
   echo "Compiling crt.." && cd $BD/mingw/build-$HST
-  ../mingw-w64-crt/configure --prefix=$PF --with-sysroot=$PF --host=$TGT > $out && make -s > $out && make install > $out || exit 1
+  ../mingw-w64-crt/configure --prefix=$PF --with-sysroot=$PF --host=$TGT > $out && make -s $j > $out && make install > $out || exit 1
 
   echo "Compiling full gcc.." && cd $BD/gcc-svn/build-$HST
-  make -s > $out && make install > $out || exit 1
+  make -s $j > $out && make install > $out || exit 1
 
   cd $PF
   echo "Done building."
