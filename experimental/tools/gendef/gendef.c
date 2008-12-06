@@ -42,7 +42,7 @@ enum {
   c_ill=-1,c_EG,c_lb,c_lv,c_1,c_2,c_3,c_4,
   c_0f,c_ad,c_op,c_EGlv,c_EGlb,c_jxx,c_jxxv,
   c_O,
-  c_g4,
+  c_g4, c_EGg3b, c_EGg3v,
   c_jmpnjb,c_jmpfap,
   c_jmpnjv,c_calljv,c_callfar,
   c_iret,c_int3,
@@ -514,11 +514,11 @@ static int opMap1[256] = {
   c_lv,c_lv,c_lv,c_lv,c_lv,c_lv,c_lv,c_lv, /* 0xb8-0xbf */
   c_EGlb,c_EGlb,c_retnlw,c_retn,c_EG,c_EG,c_EGlb,c_EGlv, /* 0xc0-0xc7 */
   c_4,c_1,c_retflw,c_retf,c_int3,c_2,c_1,c_iret, /* 0xc8-0xcf */
-  c_EG,c_EG,c_EG,c_EG,c_2,c_2,c_ill,c_1, /* 0xd0-0xd7 */
+  c_EG,c_EG,c_EG,c_EG,c_2,c_2,c_1,c_1, /* 0xd0-0xd7 */
   c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0xd8-0xdf */
   c_jxx,c_jxx,c_jxx,c_jxx,c_2,c_2,c_2,c_2, /* 0xe0-0xe7 */
   c_calljv,c_jmpnjv,c_jmpfap,c_jmpnjb,c_1,c_1,c_1,c_1, /* 0xe8-0xef */
-  c_1,c_1,c_1,c_1, c_1,c_1,c_EG,c_EG, /* 0xf0-0xf7 */
+  c_1,c_1,c_1,c_1, c_1,c_1,c_EGg3b,c_EGg3v, /* 0xf0-0xf7 */
   c_1,c_1,c_1,c_1,c_1,c_1,c_g4,c_g4 /* 0xf8-0xff */
 };
 
@@ -566,7 +566,7 @@ redo_switch:
     if (addr_mode) sz+=4;
     else sz+=2;
     *aCode=tb1; return sz;
-  case c_EG: case c_EGlv: case c_EGlb: case c_g4:
+  case c_EG: case c_EGlv: case c_EGlb: case c_g4: case c_EGg3v: case c_EGg3b:
     p = (unsigned char*)map_va(pc + sz);
     sz++;
     if (!p) { *aCode=c_ill; return 0; }
@@ -594,6 +594,12 @@ sib_done:
     else if(tb1==c_g4) {
       if ((b&0x38)==0x20 || (b&0x38)==0x28)
 	tb1=c_int3;
+    } else if (tb1==c_EGg3v || tb1==c_EGg3b) {
+      switch (((b&0x38)>>3)) {
+      case 1:
+      case 0: sz+= (tb1==c_EGg3v ? (oper_mode ? 4 : 2) : 1); break;
+      default: break;
+      }
     }
     *aCode=tb1; return sz;
   case c_jxx: case c_jmpnjb:
