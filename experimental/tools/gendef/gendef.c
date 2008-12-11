@@ -4,7 +4,7 @@
 #include <memory.h>
 #include <string.h>
 
-#if 0
+#if 1
 #define PRDEBUG(ARG...)  fprintf(stderr,ARG)
 #else
 #define PRDEBUG(ARG...) do { } while(0)
@@ -573,7 +573,7 @@ redo_switch:
     b = p[0];
     if (addr_mode) {
       if((b&0xc0)==0 && (b&7)==5) { sz+=4; goto sib_done; }
-      if((b&0x7)==4)
+      if((b&0xc0)!=0xc0 && (b&0x7)==4)
 	sz++;
       if((b&0xc0)==0x40)
 	sz+=1;
