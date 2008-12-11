@@ -260,9 +260,9 @@ static void do_export_read(DWORD va_exp,DWORD sz_exp,int be64)
   if (va_exp == 0 || sz_exp==0)
     return;
   exp_dir = (PIMAGE_EXPORT_DIRECTORY) map_va(va_exp);
-  PRDEBUG(" * export directory at VA = 0x%x size=0x%x\n", va_exp,sz_exp);
+  PRDEBUG(" * export directory at VA = 0x%x size=0x%x\n", (unsigned int) va_exp, (unsigned int) sz_exp);
   fndllname = strdup((char*) map_va(exp_dir->Name));
-  PRDEBUG(" * Name: %s\n * Base: %u\n", fndllname, exp_dir->Base);
+  PRDEBUG(" * Name: %s\n * Base: %u\n", fndllname, (unsigned int) exp_dir->Base);
   functions = (PDWORD) map_va(exp_dir->AddressOfFunctions);
   ordinals = (PWORD) map_va(exp_dir->AddressOfNameOrdinals);
   name = (PDWORD) map_va(exp_dir->AddressOfNames);
@@ -329,7 +329,7 @@ dump_def(void)
   while ((exp = gExp) != NULL) {
     gExp = exp->next;
     if (exp->name[0]==0)
-      fprintf(fp,"ord_%u",exp->ord,exp->ord);
+      fprintf(fp,"ord_%u", (unsigned int) exp->ord,exp->ord);
     else
       fprintf(fp,"%s",exp->name);
     if (!exp->beData && !exp->be64 && exp->func!=0)
@@ -337,12 +337,12 @@ dump_def(void)
     if (exp->retpop != (DWORD) -1)
       {
         if (exp->name[0]=='?')
-          fprintf(fp," ; has WINAPI (@%u)", exp->retpop);
+          fprintf(fp," ; has WINAPI (@%u)", (unsigned int) exp->retpop);
         else
-          fprintf(fp,"@%u",exp->retpop);
+          fprintf(fp,"@%u", (unsigned int) exp->retpop);
       }
     if (exp->name[0]==0)
-      fprintf(fp," @%u",exp->ord);
+      fprintf(fp," @%u", (unsigned int) exp->ord);
     if (exp->beData)
       fprintf(fp," DATA");
     fprintf(fp,"\n");
@@ -434,7 +434,7 @@ static int disassmbleRetIntern(DWORD pc,DWORD *retpop,sAddresses *seen,sAddresse
     if (!push_addr(seen,pc)) return 0;    
     sz=getMemonic(&code,pc,&tojmp,name);
     if (!sz || code == c_ill) {
-      PRDEBUG(" %s = 0x%x ILL (%Ix) at least one==%d\n",name,pc, sz,atleast_one[0]);
+      PRDEBUG(" %s = 0x%x ILL (%Ix) at least one==%d\n",name,(unsigned int) pc, sz,atleast_one[0]);
       break;
     }
     atleast_one[0]+=1;
@@ -548,7 +548,7 @@ static void print_save_insn(const char *name, unsigned char *s)
   PRDEBUG("From %s: ",name);
   for (i=0;i<MAX_INSN_SAVE;i++)
   {
-    PRDEBUG("%s0x%x",(i!=0 ? "," : ""), (DWORD)s[i]);
+    PRDEBUG("%s0x%x",(i!=0 ? "," : ""), (unsigned int) s[i]);
   }
 }
 #else
@@ -586,7 +586,7 @@ redo_switch:
   case c_ill:
 #if ENABLE_DEBUG == 1
     print_save_insn (name, lw);
-    PRDEBUG(" 0x%x illegal ", (DWORD)b);
+    PRDEBUG(" 0x%x illegal ", (unsigned int) b);
 #endif
     *aCode=c_ill; return 0;
   case c_4: sz++;
@@ -671,8 +671,9 @@ sib_done:
 #if ENABLE_DEBUG == 1
     if ((jmp_pc[0]&0xff000000)!=0) {
       print_save_insn (name, lw);
-      PRDEBUG(" 0x%x illegal ", (DWORD)b);
-      PRDEBUG("jmp(cond) 0x%x (sz=%x,pc=%x,off=%x) ", jmp_pc[0], (DWORD)sz,pc,(DWORD) (jmp_pc[0]-(sz+pc)));
+      PRDEBUG(" 0x%x illegal ", (unsigned int) b);
+      PRDEBUG("jmp(cond) 0x%x (sz=%x,pc=%x,off=%x) ", jmp_pc[0], (unsigned int) sz,(unsigned int) pc,
+              (unsigned int) (jmp_pc[0]-(sz+pc)));
     }
 #endif
     *aCode=(tb1==c_jxxv ? c_jxx : tb1); return sz;
@@ -698,13 +699,13 @@ sib_done:
 #if ENABLE_DEBUG == 1
     if (jmp_pc[0]>0x100) {
       print_save_insn (name, lw);
-      PRDEBUG(" 0x%x illegal ", (DWORD)b);
-      PRDEBUG("ret dw 0x%x (sz=%x) ", jmp_pc[0], (DWORD)sz);
+      PRDEBUG(" 0x%x illegal ", (unsigned int) b);
+      PRDEBUG("ret dw 0x%x (sz=%x) ", (unsigned int) jmp_pc[0], (unsigned int) sz);
     }
 #endif
     return sz;
   default:
-    PRDEBUG(" * opcode 0x%x (tbl=%d) unknown\n", b, tb1);
+    PRDEBUG(" * opcode 0x%x (tbl=%d) unknown\n", (unsigned int) b, tb1);
     sz=0; *aCode=c_ill; break;
   }
   return sz;
