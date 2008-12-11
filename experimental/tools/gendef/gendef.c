@@ -4,7 +4,7 @@
 #include <memory.h>
 #include <string.h>
 
-#if 1
+#if 0 
 #define PRDEBUG(ARG...)  fprintf(stderr,ARG)
 #else
 #define PRDEBUG(ARG...) do { } while(0)
