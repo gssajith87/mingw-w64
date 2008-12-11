@@ -4,7 +4,9 @@
 #include <memory.h>
 #include <string.h>
 
-#if 0 
+#define ENABLE_DEBUG 0
+
+#if ENABLE_DEBUG == 1
 #define PRDEBUG(ARG...)  fprintf(stderr,ARG)
 #else
 #define PRDEBUG(ARG...) do { } while(0)
@@ -57,7 +59,7 @@ static void do_export_read(DWORD va_exp,DWORD sz_exp,int be64);
 static void add_export_list(DWORD ord,DWORD func,const char *name, const char *forward,int be64,int beData);
 static void dump_def(void);
 static int disassembleRet(DWORD func,DWORD *retpop,const char *name);
-static size_t getMemonic(int *aCode,DWORD pc,DWORD *jmp_pc);
+static size_t getMemonic(int *aCode,DWORD pc,DWORD *jmp_pc,const char *name);
 
 static void *map_va(DWORD va);
 static int is_data(DWORD va);
@@ -430,7 +432,7 @@ static int disassmbleRetIntern(DWORD pc,DWORD *retpop,sAddresses *seen,sAddresse
   DWORD tojmp;
   while(1) {
     if (!push_addr(seen,pc)) return 0;    
-    sz=getMemonic(&code,pc,&tojmp);
+    sz=getMemonic(&code,pc,&tojmp,name);
     if (!sz || code == c_ill) {
       PRDEBUG(" %s = 0x%x ILL (%Ix) at least one==%d\n",name,pc, sz,atleast_one[0]);
       break;
@@ -461,10 +463,10 @@ static int opMap2[256] = {
   c_EG,c_EG,c_EG,c_EG,c_1,c_1,c_ill,c_ill, /* 0x00-0x07 */
   c_1,c_1,c_ill,c_ill,c_ill,c_ill,c_ill,c_ill, /* 0x08-0x0f */
   c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0x10-0x17 */
-  c_EG,c_ill,c_ill,c_ill,c_ill,c_ill,c_ill,c_ill, /* 0x18-0x1f */
+  c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0x18-0x1f */
   c_EG,c_EG,c_EG,c_EG,c_EG,c_ill,c_EG,c_ill, /* 0x20-0x27 */
   c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0x28-0x2f */
-  c_1,c_1,c_1,c_1,c_1,c_1,c_ill,c_ill, /* 0x30-0x37 */
+  c_1,c_1,c_1,c_1,c_1,c_1,c_ill,c_1, /* 0x30-0x37 */
   c_ill,c_ill,c_ill,c_ill,c_ill,c_ill,c_ill,c_ill, /* 0x38-0x3f */
   c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0x40-0x47 */
   c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0x48-0x4f */
@@ -481,10 +483,10 @@ static int opMap2[256] = {
   c_1,c_1,c_1,c_EG,c_EGlb,c_EG,c_ill,c_ill, /* 0xa0-0xa7 */
   c_1,c_1,c_1,c_EG,c_EGlb,c_EG,c_EG,c_EG, /* 0xa8-0xaf */
   c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0xb0-0xb7 */
-  c_ill,c_ill,c_EGlb,c_EG, c_EG,c_EG,c_EG,c_EG, /* 0xb8-0xbf */
-  c_EG,c_EG,c_EG,c_EG,c_EGlb,c_EGlb,c_EGlb,c_EGlb, /* 0xc0-0xc7 */
+  c_EG,c_1,c_EGlb,c_EG, c_EG,c_EG,c_EG,c_EG, /* 0xb8-0xbf */
+  c_EG,c_EG,c_EGlb,c_EG,c_EGlb,c_EGlb,c_EGlb,c_EG, /* 0xc0-0xc7 */
   c_1,c_1,c_1,c_1,c_1,c_1,c_1,c_1, /* 0xc8-0xcf */
-  c_ill,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0xd0-0xd7 */
+  c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0xd0-0xd7 */
   c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0xd8-0xdf */
   c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0xe0-0xe7 */
   c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG,c_EG, /* 0xe8-0xef */
@@ -527,9 +529,36 @@ static int opMap1[256] = {
   c_1,c_1,c_1,c_1,c_1,c_1,c_g4,c_g4 /* 0xf8-0xff */
 };
 
-static size_t getMemonic(int *aCode,DWORD pc,DWORD *jmp_pc)
+#if ENABLE_DEBUG == 1
+
+#define MAX_INSN_SAVE	20
+
+static int enter_save_insn(unsigned char *s, unsigned char b)
 {
-  static unsigned char lw[4];
+  int i;
+  for (i=0;i<MAX_INSN_SAVE-1;i++)
+    s[i]=s[i+1];
+  s[MAX_INSN_SAVE-1]=b;
+}
+
+static void print_save_insn(const char *name, unsigned char *s)
+{
+  int i;
+  
+  PRDEBUG("From %s: ",name);
+  for (i=0;i<MAX_INSN_SAVE;i++)
+  {
+    PRDEBUG("%s0x%x",(i!=0 ? "," : ""), (DWORD)s[i]);
+  }
+}
+#else
+#endif
+
+static size_t getMemonic(int *aCode,DWORD pc,DWORD *jmp_pc,const char *name)
+{
+#if ENABLE_DEBUG == 1
+  static unsigned char lw[MAX_INSN_SAVE];
+#endif
   unsigned char *p;
   int addr_mode = 1;
   int oper_mode = 1;
@@ -550,10 +579,15 @@ static size_t getMemonic(int *aCode,DWORD pc,DWORD *jmp_pc)
   sz++;
   tb1=opMap1[(unsigned int) b];
 redo_switch:
-  if (tb1!=c_ill) { lw[0]=lw[1]; lw[1]=lw[2]; lw[2]=lw[3]; lw[3]=b; }
+#if ENABLE_DEBUG == 1
+  if (tb1!=c_ill) { enter_save_insn(lw,b); }
+#endif
   switch (tb1) {
   case c_ill:
-    PRDEBUG(" 0x%x (0x%x,0x%x,0x%x,0x%x last) illegal ", (DWORD)b, (DWORD)lw[0], (DWORD)lw[1],(DWORD)lw[2],(DWORD)lw[3]);
+#if ENABLE_DEBUG == 1
+    print_save_insn (name, lw);
+    PRDEBUG(" 0x%x illegal ", (DWORD)b);
+#endif
     *aCode=c_ill; return 0;
   case c_4: sz++;
   case c_3: sz++;
@@ -576,10 +610,18 @@ redo_switch:
     sz++;
     if (!p) { *aCode=c_ill; return 0; }
     b = p[0];
+#if ENABLE_DEBUG == 1
+    enter_save_insn(lw,b);
+#endif
     if (addr_mode) {
-      if((b&0xc0)==0 && (b&7)==5) { sz+=4; goto sib_done; }
       if((b&0xc0)!=0xc0 && (b&0x7)==4)
-	sz++;
+        {
+          p = (unsigned char*)map_va(pc + sz);
+          if (!p) { *aCode=c_ill; return 0; }
+          b&=~0x7; b|=(p[0]&7);
+	  sz+=1;
+	}
+      if((b&0xc0)==0 && (b&7)==5) { sz+=4; goto sib_done; }
       if((b&0xc0)==0x40)
 	sz+=1;
       else if((b&0xc0)==0x80)
@@ -626,10 +668,13 @@ sib_done:
       sz+=2;
     }
     jmp_pc[0]+=pc+sz;
+#if ENABLE_DEBUG == 1
     if ((jmp_pc[0]&0xff000000)!=0) {
-      PRDEBUG(" 0x%x (0x%x,0x%x,0x%x,0x%x last) illegal ", (DWORD)b, (DWORD)lw[0], (DWORD)lw[1],(DWORD)lw[2],(DWORD)lw[3]);
+      print_save_insn (name, lw);
+      PRDEBUG(" 0x%x illegal ", (DWORD)b);
       PRDEBUG("jmp(cond) 0x%x (sz=%x,pc=%x,off=%x) ", jmp_pc[0], (DWORD)sz,pc,(DWORD) (jmp_pc[0]-(sz+pc)));
     }
+#endif
     *aCode=(tb1==c_jxxv ? c_jxx : tb1); return sz;
   case c_0f:
     p = (unsigned char*)map_va(pc + sz);
@@ -650,6 +695,13 @@ sib_done:
     *jmp_pc=*((unsigned short*)p);
     sz+=2;
     *aCode=tb1;
+#if ENABLE_DEBUG == 1
+    if (jmp_pc[0]>0x100) {
+      print_save_insn (name, lw);
+      PRDEBUG(" 0x%x illegal ", (DWORD)b);
+      PRDEBUG("ret dw 0x%x (sz=%x) ", jmp_pc[0], (DWORD)sz);
+    }
+#endif
     return sz;
   default:
     PRDEBUG(" * opcode 0x%x (tbl=%d) unknown\n", b, tb1);
