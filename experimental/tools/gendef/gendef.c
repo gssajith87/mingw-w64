@@ -184,7 +184,7 @@ static int is_data(DWORD va)
 {
   PIMAGE_SECTION_HEADER sec;
   DWORD sec_cnt,i;
-  char *dptr;
+  
   if(gPEDta) {
     sec_cnt = gPEDta->FileHeader.NumberOfSections;
     sec = IMAGE_FIRST_SECTION(gPEDta);
@@ -214,6 +214,7 @@ static void *map_va(DWORD va)
   PIMAGE_SECTION_HEADER sec;
   DWORD sec_cnt,i;
   char *dptr;
+
   if(gPEDta) {
     sec_cnt = gPEDta->FileHeader.NumberOfSections;
     sec = IMAGE_FIRST_SECTION(gPEDta);
@@ -329,7 +330,7 @@ dump_def(void)
   while ((exp = gExp) != NULL) {
     gExp = exp->next;
     if (exp->name[0]==0)
-      fprintf(fp,"ord_%u", (unsigned int) exp->ord,exp->ord);
+      fprintf(fp,"ord_%u", (unsigned int) exp->ord);
     else
       fprintf(fp,"%s",exp->name);
     if (!exp->beData && !exp->be64 && exp->func!=0)
@@ -434,7 +435,8 @@ static int disassmbleRetIntern(DWORD pc,DWORD *retpop,sAddresses *seen,sAddresse
     if (!push_addr(seen,pc)) return 0;    
     sz=getMemonic(&code,pc,&tojmp,name);
     if (!sz || code == c_ill) {
-      PRDEBUG(" %s = 0x%x ILL (%Ix) at least one==%d\n",name,(unsigned int) pc, sz,atleast_one[0]);
+      PRDEBUG(" %s = 0x%x ILL (%Ix) at least one==%d\n",name,
+		(unsigned int) pc, sz,atleast_one[0]);
       break;
     }
     atleast_one[0]+=1;
@@ -533,7 +535,8 @@ static int opMap1[256] = {
 
 #define MAX_INSN_SAVE	20
 
-static int enter_save_insn(unsigned char *s, unsigned char b)
+static void
+enter_save_insn(unsigned char *s, unsigned char b)
 {
   int i;
   for (i=0;i<MAX_INSN_SAVE-1;i++)
@@ -541,7 +544,8 @@ static int enter_save_insn(unsigned char *s, unsigned char b)
   s[MAX_INSN_SAVE-1]=b;
 }
 
-static void print_save_insn(const char *name, unsigned char *s)
+static void
+print_save_insn(const char *name, unsigned char *s)
 {
   int i;
   
@@ -551,7 +555,6 @@ static void print_save_insn(const char *name, unsigned char *s)
     PRDEBUG("%s0x%x",(i!=0 ? "," : ""), (unsigned int) s[i]);
   }
 }
-#else
 #endif
 
 static size_t getMemonic(int *aCode,DWORD pc,DWORD *jmp_pc,const char *name)
@@ -562,7 +565,7 @@ static size_t getMemonic(int *aCode,DWORD pc,DWORD *jmp_pc,const char *name)
   unsigned char *p;
   int addr_mode = 1;
   int oper_mode = 1;
-  DWORD sz = 0;
+  size_t sz = 0;
   unsigned char b;
   int tb1;
   for(;;) {
@@ -654,8 +657,8 @@ sib_done:
     if (!p) { *aCode=c_ill; return 0; }
     b = p[0];
     sz++;
-    if ((b&80)!=0) jmp_pc[0]=pc+sz+(((DWORD) b)|0xffffff00);
-    else jmp_pc[0]=pc+sz+(DWORD) b;
+    if ((b&80)!=0) jmp_pc[0]=((DWORD) pc)+((DWORD) sz)+(((DWORD) b)|0xffffff00);
+    else jmp_pc[0]=(DWORD)pc+(DWORD)sz+(DWORD) b;
     *aCode=tb1; return sz;
   case c_jmpnjv:
   case c_jxxv: 
@@ -667,12 +670,13 @@ sib_done:
       if ((jmp_pc[0]&0x8000)!=0) jmp_pc[0]|=0xffff0000;
       sz+=2;
     }
-    jmp_pc[0]+=pc+sz;
+    jmp_pc[0]+=(DWORD) pc+(DWORD) sz;
 #if ENABLE_DEBUG == 1
     if ((jmp_pc[0]&0xff000000)!=0) {
       print_save_insn (name, lw);
       PRDEBUG(" 0x%x illegal ", (unsigned int) b);
-      PRDEBUG("jmp(cond) 0x%x (sz=%x,pc=%x,off=%x) ", jmp_pc[0], (unsigned int) sz,(unsigned int) pc,
+      PRDEBUG("jmp(cond) 0x%x (sz=%x,pc=%x,off=%x) ",
+	      jmp_pc[0], (unsigned int) sz,(unsigned int) pc,
               (unsigned int) (jmp_pc[0]-(sz+pc)));
     }
 #endif
