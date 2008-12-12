@@ -333,6 +333,10 @@ dump_def(void)
       fprintf(fp,"ord_%u", (unsigned int) exp->ord);
     else
       fprintf(fp,"%s",exp->name);
+    if (exp->name[0]=='?' && exp->name[1]=='?')
+      {
+        if (!strncmp(exp->name,"??_7",4)) exp->beData=1;
+      }
     if (!exp->beData && !exp->be64 && exp->func!=0)
       exp->beData = disassembleRet(exp->func, &exp->retpop,exp->name);
     if (exp->retpop != (DWORD) -1)
@@ -360,7 +364,7 @@ typedef struct sAddresses {
   DWORD idx;
 } sAddresses;
 
-static int disassmbleRetIntern(DWORD pc,DWORD *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name);
+static int disassembleRetIntern(DWORD pc,DWORD *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name);
 static sAddresses*init_addr(void);
 static void dest_addr(sAddresses *ad);
 static int push_addr(sAddresses *ad,DWORD val);
@@ -419,26 +423,37 @@ static int disassembleRet(DWORD func,DWORD *retpop,const char *name)
   push_addr(stack,func);
 
   while (!hasret && pop_addr(stack,&pc)) {
-    disassmbleRetIntern(pc,retpop,seen,stack,&hasret,&atleast_one,name);
+    if (disassembleRetIntern(pc,retpop,seen,stack,&hasret,&atleast_one,name))
+      break;
   }
   dest_addr(seen);
   dest_addr(stack);
   return (atleast_one ? 0 : 1);
 }
 
-static int disassmbleRetIntern(DWORD pc,DWORD *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name)
+static int disassembleRetIntern(DWORD pc,DWORD *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name)
 {
   size_t sz;
   int code,break_it;
   DWORD tojmp;
   while(1) {
     if (!push_addr(seen,pc)) return 0;    
-    sz=getMemonic(&code,pc,&tojmp,name);
+    sz=getMemonic(&code,pc,&tojmp,name)&0xffffffff;
     if (!sz || code == c_ill) {
-      PRDEBUG(" %s = 0x%x ILL (%Ix) at least one==%d\n",name,
-		(unsigned int) pc, sz,atleast_one[0]);
+      PRDEBUG(" %s = 0x%x ILL (%x) at least one==%d\n",name,
+		(unsigned int) pc, (unsigned int) sz,atleast_one[0]);
       break;
     }
+/*    {
+      unsigned char *ppc = (unsigned char*) map_va (pc);
+      size_t i;
+      fprintf(stderr,"%s(0x%x): ",name, (unsigned int) pc);
+      for (i=0;i<sz;i++)
+        {
+          fprintf (stderr,"%s0x%x", (i==0 ? " ":","), ppc[i]);
+        }
+      fprintf(stderr,"\n");
+    } */
     atleast_one[0]+=1;
     break_it=0;
     pc+=sz;
@@ -451,9 +466,9 @@ static int disassmbleRetIntern(DWORD pc,DWORD *retpop,sAddresses *seen,sAddresse
     case c_jmpfap: case c_int3:
       break_it=1; break;
     case c_iret: case c_retf: case c_retn:
-      *hasret = 1; return 0;
+      *hasret = 1; return 1;
     case c_retflw: case c_retnlw:
-      *hasret=1; *retpop=tojmp; return 0;
+      *hasret=1; *retpop=tojmp; return 1;
     }
     if (break_it) break;
   }
@@ -581,6 +596,7 @@ static size_t getMemonic(int *aCode,DWORD pc,DWORD *jmp_pc,const char *name)
   }
   sz++;
   tb1=opMap1[(unsigned int) b];
+  
 redo_switch:
 #if ENABLE_DEBUG == 1
   if (tb1!=c_ill) { enter_save_insn(lw,b); }
@@ -621,16 +637,17 @@ redo_switch:
         {
           p = (unsigned char*)map_va(pc + sz);
           if (!p) { *aCode=c_ill; return 0; }
+#if ENABLE_DEBUG == 1
+    enter_save_insn(lw,p[0]);
+#endif
           b&=~0x7; b|=(p[0]&7);
 	  sz+=1;
 	}
-      if((b&0xc0)==0 && (b&7)==5) { sz+=4; goto sib_done; }
-      if((b&0xc0)==0x40)
+      if((b&0xc0)==0 && (b&7)==5) { sz+=4; }
+      else if((b&0xc0)==0x40)
 	sz+=1;
       else if((b&0xc0)==0x80)
 	sz+=4;
-sib_done:
-      ;
     } else {
       if((b&0xc0)==0) {
 	if((b&0x07)==6) sz+=2;
@@ -644,6 +661,8 @@ sib_done:
     else if(tb1==c_g4) {
       if ((b&0x38)==0x20 || (b&0x38)==0x28)
 	tb1=c_int3;
+      else if((b&0x38)==0x38)
+        tb1=c_ill;
     } else if (tb1==c_EGg3v || tb1==c_EGg3b) {
       switch (((b&0x38)>>3)) {
       case 1:
@@ -664,7 +683,7 @@ sib_done:
   case c_jxxv: 
     p = (unsigned char*)map_va(pc + sz);
     if (!p) { *aCode=c_ill; return 0; }
-    if (addr_mode) { jmp_pc[0]=*((DWORD *)p); sz+=4; }
+    if (oper_mode) { jmp_pc[0]=*((DWORD *)p); sz+=4; }
     else {
       jmp_pc[0]=(DWORD) *((unsigned short *)p);
       if ((jmp_pc[0]&0x8000)!=0) jmp_pc[0]|=0xffff0000;
@@ -689,10 +708,10 @@ sib_done:
     tb1=opMap2[b];
     goto redo_switch;
   case c_jmpfap:
-    sz+=4; if(addr_mode) sz+=2;
+    sz+=4; if(oper_mode) sz+=2;
     *aCode=tb1; return sz;
   case c_callfar:
-    sz+=4; if(addr_mode) sz+=2;
+    sz+=4; if(oper_mode) sz+=2;
     *aCode=tb1; return sz;
   case c_retflw: case c_retnlw:
     p = (unsigned char*)map_va(pc + sz);
@@ -701,7 +720,7 @@ sib_done:
     sz+=2;
     *aCode=tb1;
 #if ENABLE_DEBUG == 1
-    if (jmp_pc[0]>0x100) {
+    if (jmp_pc[0]>0x100 || jmp_pc[0]&3) {
       print_save_insn (name, lw);
       PRDEBUG(" 0x%x illegal ", (unsigned int) b);
       PRDEBUG("ret dw 0x%x (sz=%x) ", (unsigned int) jmp_pc[0], (unsigned int) sz);
