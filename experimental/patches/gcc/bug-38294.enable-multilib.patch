@@ -1,26 +1,25 @@
 Index: gcc/config/i386/t-mingw32
 ===================================================================
---- gcc/config/i386/t-mingw32   (revision 142523)
-+++ gcc/config/i386/t-mingw32   (working copy)
-@@ -1,5 +1,14 @@
+--- gcc/config/i386/t-mingw32	(revision 142850)
++++ gcc/config/i386/t-mingw32	(working copy)
+@@ -1,5 +1,13 @@
  # Match SYSTEM_INCLUDE_DIR
  NATIVE_SYSTEM_HEADER_DIR = /mingw/include
-
+ 
 +MULTILIB_OPTIONS = m64/m32
 +MULTILIB_DIRNAMES = 64 32
 +MULTILIB_OSDIRNAMES = ../lib64 ../lib
-+#if TARGET_64BIT_DEFAULT
-+#define MULTILIB_DEFAULTS { "m64" }
-+#else
-+#define MULTILIB_DEFAULTS { "m32" }
-+#endif
 +
  # MinGW-specific parts of LIB_SPEC
  SHLIB_LC = -lmingw32 -lmingwex -lmoldname -lmsvcrt -luser32 -lkernel32 -ladvapi32 -lshell32
++
++LIBGCC = stmp-multilib
++INSTALL_LIBGCC = install-multilib
++
 Index: gcc/config/i386/mingw32.h
 ===================================================================
---- gcc/config/i386/mingw32.h   (revision 142523)
-+++ gcc/config/i386/mingw32.h   (working copy)
+--- gcc/config/i386/mingw32.h	(revision 142850)
++++ gcc/config/i386/mingw32.h	(working copy)
 @@ -50,10 +50,24 @@
  /* Override the standard choice of /usr/include as the default prefix
     to try when searching for header files.  */
@@ -48,9 +47,9 @@ Index: gcc/config/i386/mingw32.h
  #undef STANDARD_INCLUDE_COMPONENT
  #define STANDARD_INCLUDE_COMPONENT "MINGW"
 @@ -80,7 +94,19 @@
- #define SUBTARGET_EXTRA_SPECS                                          \
+ #define SUBTARGET_EXTRA_SPECS						\
    { "shared_libgcc_undefs", SHARED_LIBGCC_UNDEFS_SPEC }
-
+ 
 -#define LINK_SPEC "%{mwindows:--subsystem windows} \
 +#if TARGET_64BIT_DEFAULT
 +#define SUB_LINK_SPEC "%{" SPEC_64 ":-m i386pep} %{" SPEC_32 ":-m i386pe}"
@@ -58,7 +57,14 @@ Index: gcc/config/i386/mingw32.h
 +#define SUB_LINK_SPEC ""
 +#endif
 +
++#if TARGET_64BIT_DEFAULT
++#define MULTILIB_DEFAULTS { "m64" }
++#else
++#define MULTILIB_DEFAULTS { "m32" }
++#endif
++
 +#define LINK_SPEC SUB_LINK_SPEC "%{mwindows:--subsystem windows} \
    %{mconsole:--subsystem console} \
    %{shared: %{mdll: %eshared and mdll are not compatible}} \
    %{shared: --shared} %{mdll:--dll} \
+
