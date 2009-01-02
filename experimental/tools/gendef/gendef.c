@@ -1,8 +1,8 @@
-#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
 #include <string.h>
+#include "gendef.h"
 
 #define ENABLE_DEBUG 0
 
@@ -13,7 +13,7 @@
 #endif
 
 #ifndef IMAGE_FIRST_SECTION
-#define IMAGE_FIRST_SECTION(ntheader) ((PIMAGE_SECTION_HEADER) ((ULONG_PTR)ntheader + FIELD_OFFSET(IMAGE_NT_HEADERS,OptionalHeader) + ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader))
+#define IMAGE_FIRST_SECTION(ntheader) ((PIMAGE_SECTION_HEADER) ((uintptr_t)ntheader + FIELD_OFFSET(IMAGE_NT_HEADERS,OptionalHeader) + ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader))
 #endif
 
 #ifndef IMAGE_SIZEOF_NT_OPTIONAL32_HEADER
@@ -33,9 +33,9 @@ typedef struct sExportname {
   struct sExportname *next;
   char *name;
   char *forward;
-  DWORD ord;
-  DWORD func;
-  DWORD retpop;
+  uint32_t ord;
+  uint32_t func;
+  uint32_t retpop;
   int be64;
   int beData;
 } sExportName;
@@ -52,17 +52,82 @@ enum {
   c_retn,c_retnlw,
 };
 
+typedef enum eSPNA {
+  SPNA_OPER_MINUSEQ=0,SPNA_OPER_PLUSEQ, SPNA_OPER_MULEQ,SPNA_OPER_OROR,SPNA_OPER_ANDAND,SPNA_OPER_OR,SPNA_OPER_XOR,
+  SPNA_OPER_INV, SPNA_OPER_COMMA,SPNA_OPER_CAST, SPNA_OPER_SHR,SPNA_OPER_SHL,SPNA_OPER_SHREQ,SPNA_OPER_SHLEQ,
+  SPNA_OPER_NOT,SPNA_OPER_EQEQ,SPNA_OPER_NOTEQ,SPNA_OPER_ARRAY,
+  SPNA_OPER_RETURNTYPE,SPNA_OPER_POINTTO,SPNA_OPER_MUL,
+  SPNA_OPER_PLUSPLUS,SPNA_OPER_MINUSMINUS,SPNA_OPER_MINUS,SPNA_OPER_PLUS,
+  SPNA_OPER_AND,SPNA_OPER_POINTTOSTAR,SPNA_OPER_DIV,SPNA_OPER_MOD,
+  SPNA_OPER_NEW_ARRAY,SPNA_OPER_DELETE_ARRAY,
+  SPNA_CONSTRUCTOR,SPNA_DESTRUCTOR,SPNA_OPER_NEW,SPNA_OPER_DELETE,
+  SPNA_OPER_EQ,
+  SPNA_OPER_GREATEQ,SPNA_OPER_GREAT,SPNA_OPER_LESSEQ,SPNA_OPER_LESS,
+  SPNA_OPER_DIVEQ,SPNA_OPER_MODEQ,SPNA_OPER_ANDEQ,SPNA_OPER_OREQ,SPNA_OPER_XOREQ,
+
+  SPNA_RTTI_CLASS_HIERACHY_DESCRIPTOR,SPNA_RTTI_COMPLETE_OBJECT_LOCATOR,
+  SPNA_LOCAL_VFTABLE,SPNA_LOCAL_VFTABLE_CONSTRUCTOR_CLOSURE,
+  SPNA_PLACEMENT_DELETE_CLOSURE,SPNA_PLACEMENT_DELETE_ARRAY_CLOSURE,
+  SPNA_VECTOR_DESTRUCTOR_ITER,SPNA_VECTOR_VBASE_CONSTRUCTOR_ITER,
+  SPNA_VIRTUAL_DISPLACEMENT_MAP,SPNA_EH_VECTOR_CONSTRUCTOR_ITER,
+  SPNA_EH_VECTOR_DESTRUCTOR_ITER,SPNA_EH_VECTOR_VBASE_CONSTRUCTOR_ITER,
+  SPNA_COPY_CONSTRUCTOR_CLOSURE,SPNA_UDT_RETURNING,
+  SPNA_RTTI_TYPE_DESCRIPTOR,SPNA_RTTI_BASE_CLASS_DESCRIPTOR,
+  SPNA_RTTI_CLASS_ARRAY,
+  SPNA_MANAGED_VECTOR_CONSTRUCTOR_ITER,SPNA_MANAGED_VECTOR_DESTRUCTOR_ITER,
+  SPNA_EH_VECTOR_COPY_CONSTRUCTOR_ITER,SPNA_EH_VECTOR_VBASE_COPY_CONSTRUCTOR_ITER,
+  SPNA_VFTABLE,SPNA_VBTABLE,SPNA_VCALL,SPNA_TYPEOF,SPNA_LOCAL_STATIC_GUARD,
+  SPNA_STRING,SPNA_VBASE_DESTRUCTOR,SPNA_VECTOR_DELETING_DESTRUCTOR,
+  SPNA_VECTOR_DEFAULT_CONSTRUCTOR_CLOSURE,SPNA_SCALAR_DELETEING_DESTRUCTOR,
+  SPNA_VECTOR_CONSTRUCTOR_ITER,
+  SPNA_UNKNOWN,SPNA_MAX
+} eSPNA;
+
+static const char *spna_names[SPNA_MAX] = {
+  "-=","+=", "*=","||","&&","|","^",
+  "~",",","operand ()", ">>","<<",">>=","<<=",
+  "!","==","!=","operand []",
+  "return type","->","operand *",
+  "++","--","-","+",
+  "&","->*","/","%",
+  "new []","delete []", "()","~()","new","delete",
+  "=",
+  ">=",">","<=","<",
+  "/=","%=","&=","|=","^=",
+
+  "RTTI_CLASS_HIERACHY_DESCRIPTOR","RTTI_COMPLETE_OBJECT_LOCATOR",
+  "LOCAL_VFTABLE","LOCAL_VFTABLE_CONSTRUCTOR_CLOSURE",
+  "PLACEMENT_DELETE_CLOSURE","PLACEMENT_DELETE_ARRAY_CLOSURE",
+  "VECTOR_DESTRUCTOR_ITER","VECTOR_VBASE_CONSTRUCTOR_ITER",
+  "VIRTUAL_DISPLACEMENT_MAP","EH_VECTOR_CONSTRUCTOR_ITER",
+  "EH_VECTOR_DESTRUCTOR_ITER","EH_VECTOR_VBASE_CONSTRUCTOR_ITER",
+  "COPY_CONSTRUCTOR_CLOSURE","UDT_RETURNING",
+  "RTTI_TYPE_DESCRIPTOR","RTTI_BASE_CLASS_DESCRIPTOR",
+  "RTTI_CLASS_ARRAY",
+
+  "MANAGED_VECTOR_CONSTRUCTOR_ITER","MANAGED_VECTOR_DESTRUCTOR_ITER",
+  "EH_VECTOR_COPY_CONSTRUCTOR_ITER","EH_VECTOR_VBASE_COPY_CONSTRUCTOR_ITER",
+  "VFTABLE","VBTABLE","VCALL","TYPEOF","LOCAL_STATIC_GUARD",
+  "STRING","VBASE_DESTRUCTOR","VECTOR_DELETING_DESTRUCTOR",
+  "VECTOR_DEFAULT_CONSTRUCTOR_CLOSURE","SCALAR_DELETEING_DESTRUCTOR",
+  "VECTOR_CONSTRUCTOR_ITER",
+
+  "unknown"
+};
+
+void decode_mangle(const char *n);
+
 static int load_pep(void);
 static void do_pedef(void);
 static void do_pepdef(void);
-static void do_export_read(DWORD va_exp,DWORD sz_exp,int be64);
-static void add_export_list(DWORD ord,DWORD func,const char *name, const char *forward,int be64,int beData);
+static void do_export_read(uint32_t va_exp,uint32_t sz_exp,int be64);
+static void add_export_list(uint32_t ord,uint32_t func,const char *name, const char *forward,int be64,int beData);
 static void dump_def(void);
-static int disassembleRet(DWORD func,DWORD *retpop,const char *name);
-static size_t getMemonic(int *aCode,DWORD pc,DWORD *jmp_pc,const char *name);
+static int disassembleRet(uint32_t func,uint32_t *retpop,const char *name);
+static size_t getMemonic(int *aCode,uint32_t pc,uint32_t *jmp_pc,const char *name);
 
-static void *map_va(DWORD va);
-static int is_data(DWORD va);
+static void *map_va(uint32_t va);
+static int is_data(uint32_t va);
 
 static sExportName *gExp = NULL;
 static sExportName *gExpTail = NULL;
@@ -146,7 +211,7 @@ load_pep(void)
   gMZDta = (PIMAGE_DOS_HEADER) gDta;
   if (gDta_size < sizeof(IMAGE_DOS_HEADER) || gDta[0]!='M' || gDta[1]!='Z'
       || gMZDta->e_lfanew <= 0
-      || gMZDta->e_lfanew >= (LONG) gDta_size)
+      || gMZDta->e_lfanew >= (int32_t) gDta_size)
   {
     fprintf(stderr,"*** not a PE(+) file\n");
     free(gDta);
@@ -180,10 +245,10 @@ load_pep(void)
   return 1;
 }
 
-static int is_data(DWORD va)
+static int is_data(uint32_t va)
 {
   PIMAGE_SECTION_HEADER sec;
-  DWORD sec_cnt,i;
+  uint32_t sec_cnt,i;
   
   if(gPEDta) {
     sec_cnt = gPEDta->FileHeader.NumberOfSections;
@@ -209,10 +274,10 @@ static int is_data(DWORD va)
   return 1;
 }
 
-static void *map_va(DWORD va)
+static void *map_va(uint32_t va)
 {
   PIMAGE_SECTION_HEADER sec;
-  DWORD sec_cnt,i;
+  uint32_t sec_cnt,i;
   char *dptr;
 
   if(gPEDta) {
@@ -239,41 +304,41 @@ static void *map_va(DWORD va)
 /* For pep we can take the exports itself, there is no additional decoration necessary.  */
 static void do_pepdef(void)
 {
-  DWORD va_exp = gPEPDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
-  DWORD sz_exp = gPEPDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].Size;
+  uint32_t va_exp = gPEPDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+  uint32_t sz_exp = gPEPDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].Size;
   do_export_read(va_exp,sz_exp,1);
 }
 
 static void do_pedef(void)
 {
-  DWORD va_exp = gPEDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
-  DWORD sz_exp = gPEDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].Size;
+  uint32_t va_exp = gPEDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+  uint32_t sz_exp = gPEDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].Size;
   do_export_read(va_exp,sz_exp,0);
 }
 
-static void do_export_read(DWORD va_exp,DWORD sz_exp,int be64)
+static void do_export_read(uint32_t va_exp,uint32_t sz_exp,int be64)
 {
-  DWORD i;
+  uint32_t i;
   PIMAGE_EXPORT_DIRECTORY exp_dir;
-  PDWORD functions;
-  PWORD ordinals;
-  PDWORD name;
+  uint32_t *functions;
+  uint16_t *ordinals;
+  uint32_t *name;
   if (va_exp == 0 || sz_exp==0)
     return;
   exp_dir = (PIMAGE_EXPORT_DIRECTORY) map_va(va_exp);
   PRDEBUG(" * export directory at VA = 0x%x size=0x%x\n", (unsigned int) va_exp, (unsigned int) sz_exp);
   fndllname = strdup((char*) map_va(exp_dir->Name));
   PRDEBUG(" * Name: %s\n * Base: %u\n", fndllname, (unsigned int) exp_dir->Base);
-  functions = (PDWORD) map_va(exp_dir->AddressOfFunctions);
-  ordinals = (PWORD) map_va(exp_dir->AddressOfNameOrdinals);
-  name = (PDWORD) map_va(exp_dir->AddressOfNames);
+  functions = (uint32_t *) map_va(exp_dir->AddressOfFunctions);
+  ordinals = (uint16_t *) map_va(exp_dir->AddressOfNameOrdinals);
+  name = (uint32_t *) map_va(exp_dir->AddressOfNames);
   
   for(i=0;i<exp_dir->NumberOfFunctions;i++)
   {
-    DWORD entryPointRVA = functions[i];
-    DWORD j;
+    uint32_t entryPointRVA = functions[i];
+    uint32_t j;
     char *fname;
-    DWORD ord;
+    uint32_t ord;
     fname = NULL;
     if(!entryPointRVA)
       continue;
@@ -290,7 +355,7 @@ static void do_export_read(DWORD va_exp,DWORD sz_exp,int be64)
 }
 
 static void
-add_export_list(DWORD ord,DWORD func,const char *name, const char *forward,int be64,int beData)
+add_export_list(uint32_t ord,uint32_t func,const char *name, const char *forward,int be64,int beData)
 {
   sExportName *exp = NULL;
   if (!name) name="";
@@ -306,7 +371,7 @@ add_export_list(DWORD ord,DWORD func,const char *name, const char *forward,int b
   exp->func=func;
   exp->be64=be64;
   exp->beData=beData;
-  exp->retpop = (DWORD)-1;
+  exp->retpop = (uint32_t)-1;
   if (gExpTail) gExpTail->next=exp;
   else gExp=exp;
   gExpTail = exp;
@@ -333,13 +398,16 @@ dump_def(void)
       fprintf(fp,"ord_%u", (unsigned int) exp->ord);
     else
       fprintf(fp,"%s",exp->name);
+    if (exp->name[0]=='?') {
+      decode_mangle(exp->name);
+    }
     if (exp->name[0]=='?' && exp->name[1]=='?')
       {
         if (!strncmp(exp->name,"??_7",4)) exp->beData=1;
       }
     if (!exp->beData && !exp->be64 && exp->func!=0)
       exp->beData = disassembleRet(exp->func, &exp->retpop,exp->name);
-    if (exp->retpop != (DWORD) -1)
+    if (exp->retpop != (uint32_t) -1)
       {
         if (exp->name[0]=='?')
           fprintf(fp," ; has WINAPI (@%u)", (unsigned int) exp->retpop);
@@ -358,24 +426,24 @@ dump_def(void)
 }
 
 typedef struct sAddresses {
-  DWORD max;
-  DWORD cnt;
-  DWORD *ptrs;
-  DWORD idx;
+  uint32_t max;
+  uint32_t cnt;
+  uint32_t *ptrs;
+  uint32_t idx;
 } sAddresses;
 
-static int disassembleRetIntern(DWORD pc,DWORD *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name);
+static int disassembleRetIntern(uint32_t pc,uint32_t *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name);
 static sAddresses*init_addr(void);
 static void dest_addr(sAddresses *ad);
-static int push_addr(sAddresses *ad,DWORD val);
-static int pop_addr(sAddresses *ad,DWORD *val);
+static int push_addr(sAddresses *ad,uint32_t val);
+static int pop_addr(sAddresses *ad,uint32_t *val);
 
 static sAddresses*init_addr(void)
 {
   sAddresses *r = (sAddresses*)malloc(sizeof(sAddresses));
   r->max=8;
   r->cnt=0;
-  r->ptrs = (DWORD *) malloc(sizeof(DWORD)*8);
+  r->ptrs = (uint32_t *) malloc(sizeof(uint32_t)*8);
   r->idx=0;
   return r;
 }
@@ -386,15 +454,15 @@ static void dest_addr(sAddresses *ad)
   free (ad);
 }
 
-static int push_addr(sAddresses *ad,DWORD val)
+static int push_addr(sAddresses *ad,uint32_t val)
 {
-  DWORD i;
+  uint32_t i;
   for (i=0;i<ad->cnt;i++) {
     if (ad->ptrs[i]==val) return 0;
   }
   if (ad->max == ad->cnt) {
-    DWORD *p=(DWORD *) malloc(sizeof(DWORD)*(ad->max + 8));
-    memcpy (p,ad->ptrs,sizeof(DWORD)*ad->max);
+    uint32_t *p=(uint32_t *) malloc(sizeof(uint32_t)*(ad->max + 8));
+    memcpy (p,ad->ptrs,sizeof(uint32_t)*ad->max);
     ad->max+=8;
     free (ad->ptrs);
     ad->ptrs=p;
@@ -403,7 +471,7 @@ static int push_addr(sAddresses *ad,DWORD val)
   return 1;
 }
 
-static int pop_addr(sAddresses *ad,DWORD *val)
+static int pop_addr(sAddresses *ad,uint32_t *val)
 {
   if (!ad || ad->idx==ad->cnt) return 0;
   ad->idx++;
@@ -412,14 +480,14 @@ static int pop_addr(sAddresses *ad,DWORD *val)
 }
 
 /* exp->beData */
-static int disassembleRet(DWORD func,DWORD *retpop,const char *name)
+static int disassembleRet(uint32_t func,uint32_t *retpop,const char *name)
 {
   sAddresses *seen = init_addr();
   sAddresses *stack = init_addr();
-  DWORD pc;
+  uint32_t pc;
   int hasret=0;
   int atleast_one = 0;
-  *retpop = (DWORD) -1;
+  *retpop = (uint32_t) -1;
   push_addr(stack,func);
 
   while (!hasret && pop_addr(stack,&pc)) {
@@ -431,11 +499,11 @@ static int disassembleRet(DWORD func,DWORD *retpop,const char *name)
   return (atleast_one ? 0 : 1);
 }
 
-static int disassembleRetIntern(DWORD pc,DWORD *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name)
+static int disassembleRetIntern(uint32_t pc,uint32_t *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name)
 {
   size_t sz;
   int code,break_it;
-  DWORD tojmp;
+  uint32_t tojmp;
   while(1) {
     if (!push_addr(seen,pc)) return 0;    
     sz=getMemonic(&code,pc,&tojmp,name)&0xffffffff;
@@ -572,7 +640,7 @@ print_save_insn(const char *name, unsigned char *s)
 }
 #endif
 
-static size_t getMemonic(int *aCode,DWORD pc,DWORD *jmp_pc,const char *name)
+static size_t getMemonic(int *aCode,uint32_t pc,uint32_t *jmp_pc,const char *name)
 {
 #if ENABLE_DEBUG == 1
   static unsigned char lw[MAX_INSN_SAVE];
@@ -676,20 +744,20 @@ redo_switch:
     if (!p) { *aCode=c_ill; return 0; }
     b = p[0];
     sz++;
-    if ((b&80)!=0) jmp_pc[0]=((DWORD) pc)+((DWORD) sz)+(((DWORD) b)|0xffffff00);
-    else jmp_pc[0]=(DWORD)pc+(DWORD)sz+(DWORD) b;
+    if ((b&80)!=0) jmp_pc[0]=((uint32_t) pc)+((uint32_t) sz)+(((uint32_t) b)|0xffffff00);
+    else jmp_pc[0]=(uint32_t)pc+(uint32_t)sz+(uint32_t) b;
     *aCode=tb1; return sz;
   case c_jmpnjv:
   case c_jxxv: 
     p = (unsigned char*)map_va(pc + sz);
     if (!p) { *aCode=c_ill; return 0; }
-    if (oper_mode) { jmp_pc[0]=*((DWORD *)p); sz+=4; }
+    if (oper_mode) { jmp_pc[0]=*((uint32_t *)p); sz+=4; }
     else {
-      jmp_pc[0]=(DWORD) *((unsigned short *)p);
+      jmp_pc[0]=(uint32_t) *((uint16_t *)p);
       if ((jmp_pc[0]&0x8000)!=0) jmp_pc[0]|=0xffff0000;
       sz+=2;
     }
-    jmp_pc[0]+=(DWORD) pc+(DWORD) sz;
+    jmp_pc[0]+=(uint32_t) pc+(uint32_t) sz;
 #if ENABLE_DEBUG == 1
     if ((jmp_pc[0]&0xff000000)!=0) {
       print_save_insn (name, lw);
@@ -716,7 +784,7 @@ redo_switch:
   case c_retflw: case c_retnlw:
     p = (unsigned char*)map_va(pc + sz);
     if (!p) { *aCode=c_ill; return 0; }
-    *jmp_pc=*((unsigned short*)p);
+    jmp_pc[0]=*((uint16_t*) p);
     sz+=2;
     *aCode=tb1;
 #if ENABLE_DEBUG == 1
@@ -732,4 +800,131 @@ redo_switch:
     sz=0; *aCode=c_ill; break;
   }
   return sz;
+}
+
+int get_special_name(const char **np);
+
+void decode_mangle(const char *n)
+{
+  if(!n || *n!='?') return;
+  fprintf(stderr,"Decode ,%s'\n",n);
+  n++;
+  if(*n=='?') {
+    int ret;
+    n++;
+    ret=get_special_name(&n);
+    fprintf(stderr," %s (%s)\n",spna_names[ret],n);
+  }
+}
+
+int get_special_name(const char **np)
+{
+  int ret = SPNA_UNKNOWN;
+  const char *n = *np;
+  if(*n=='_' && n[1]=='_') {
+    n+=2;
+    switch(n[0]) {
+    case 'A': ret=SPNA_MANAGED_VECTOR_CONSTRUCTOR_ITER; break;
+    case 'B': ret=SPNA_MANAGED_VECTOR_DESTRUCTOR_ITER; break;
+    case 'C': ret=SPNA_EH_VECTOR_COPY_CONSTRUCTOR_ITER; break;
+    case 'D': ret=SPNA_EH_VECTOR_VBASE_COPY_CONSTRUCTOR_ITER; break;
+    default: fprintf(stderr,"SPNA __%c is unknown\n",n[0]); break;
+    }
+    n+=1;
+  } else if(n[0]=='_') {
+    n+=1;
+    switch(n[0]) {
+    case '0': ret=SPNA_OPER_DIVEQ; break;
+    case '1': ret=SPNA_OPER_MODEQ; break;
+    case '2': ret=SPNA_OPER_SHREQ; break;
+    case '3': ret=SPNA_OPER_SHLEQ; break;
+    case '4': ret=SPNA_OPER_ANDEQ; break;
+    case '5': ret=SPNA_OPER_OREQ; break;
+    case '6': ret=SPNA_OPER_XOREQ; break;
+    case '7': ret=SPNA_VFTABLE; break;
+    case '8': ret=SPNA_VBTABLE; break;
+    case '9': ret=SPNA_VCALL; break;
+    case 'A': ret=SPNA_TYPEOF; break;
+    case 'B': ret=SPNA_LOCAL_STATIC_GUARD; break;
+    case 'C': ret=SPNA_STRING; break;
+    case 'D': ret=SPNA_VBASE_DESTRUCTOR; break;
+    case 'E': ret=SPNA_VECTOR_DELETING_DESTRUCTOR; break;
+    case 'F': ret=SPNA_VECTOR_DEFAULT_CONSTRUCTOR_CLOSURE; break;
+    case 'G': ret=SPNA_SCALAR_DELETEING_DESTRUCTOR; break;
+    case 'H': ret=SPNA_VECTOR_CONSTRUCTOR_ITER; break;
+    case 'I': ret=SPNA_VECTOR_DESTRUCTOR_ITER; break;
+    case 'J': ret=SPNA_VECTOR_VBASE_CONSTRUCTOR_ITER; break;
+    case 'K': ret=SPNA_VIRTUAL_DISPLACEMENT_MAP; break;
+    case 'L': ret=SPNA_EH_VECTOR_CONSTRUCTOR_ITER; break;
+    case 'M': ret=SPNA_EH_VECTOR_DESTRUCTOR_ITER; break;
+    case 'N': ret=SPNA_EH_VECTOR_VBASE_CONSTRUCTOR_ITER; break;
+    case 'O': ret=SPNA_COPY_CONSTRUCTOR_CLOSURE; break;
+    case 'P': ret=SPNA_UDT_RETURNING; break;
+    case 'R':
+      n+=1;
+      switch(n[0]) {
+      case '0': ret=SPNA_RTTI_TYPE_DESCRIPTOR; break;
+      case '1': ret=SPNA_RTTI_BASE_CLASS_DESCRIPTOR; break;
+      case '2': ret=SPNA_RTTI_CLASS_ARRAY; break;
+      case '3': ret=SPNA_RTTI_CLASS_HIERACHY_DESCRIPTOR; break;
+      case '4': ret=SPNA_RTTI_COMPLETE_OBJECT_LOCATOR; break;
+      default:
+	fprintf(stderr,"SPNA _R%c is unknown\n",n[0]); break;
+      }
+      break;
+    case 'S': ret=SPNA_LOCAL_VFTABLE; break;
+    case 'T': ret=SPNA_LOCAL_VFTABLE_CONSTRUCTOR_CLOSURE; break;
+    case 'U': ret=SPNA_OPER_NEW_ARRAY; break;
+    case 'V': ret=SPNA_OPER_DELETE_ARRAY; break;
+    case 'X': ret=SPNA_PLACEMENT_DELETE_CLOSURE; break;
+    case 'Y': ret=SPNA_PLACEMENT_DELETE_ARRAY_CLOSURE; break;
+    default:
+      fprintf(stderr,"SPNA _%c unknown\n",n[0]); break;
+    }
+    n+=1;
+  } else {
+    switch(n[0]) {
+    case '0': ret=SPNA_CONSTRUCTOR; break;
+    case '1': ret=SPNA_DESTRUCTOR; break;
+    case '2': ret=SPNA_OPER_NEW; break;
+    case '3': ret=SPNA_OPER_DELETE; break;
+    case '4': ret=SPNA_OPER_EQ; break;
+    case '5': ret=SPNA_OPER_SHR; break;
+    case '6': ret=SPNA_OPER_SHL; break;
+    case '7': ret=SPNA_OPER_NOT; break;
+    case '8': ret=SPNA_OPER_EQEQ; break;
+    case '9': ret=SPNA_OPER_NOTEQ; break;
+    case 'A': ret=SPNA_OPER_ARRAY; break;
+    case 'B': ret=SPNA_OPER_RETURNTYPE; break;
+    case 'C': ret=SPNA_OPER_POINTTO; break;
+    case 'D': ret=SPNA_OPER_MUL; break;
+    case 'E': ret=SPNA_OPER_PLUSPLUS; break;
+    case 'F': ret=SPNA_OPER_MINUSMINUS; break;
+    case 'G': ret=SPNA_OPER_MINUS; break;
+    case 'H': ret=SPNA_OPER_PLUS; break;
+    case 'I': ret=SPNA_OPER_AND; break;
+    case 'J': ret=SPNA_OPER_POINTTOSTAR; break;
+    case 'K': ret=SPNA_OPER_DIV; break;
+    case 'L': ret=SPNA_OPER_MOD; break;
+    case 'M': ret=SPNA_OPER_LESS; break;
+    case 'N': ret=SPNA_OPER_LESSEQ; break;
+    case 'O': ret=SPNA_OPER_GREAT; break;
+    case 'P': ret=SPNA_OPER_GREATEQ; break;
+    case 'Q': ret=SPNA_OPER_COMMA; break;
+    case 'R': ret=SPNA_OPER_CAST; break;
+    case 'S': ret=SPNA_OPER_INV; break;
+    case 'T': ret=SPNA_OPER_XOR; break;
+    case 'U': ret=SPNA_OPER_OR; break;
+    case 'V': ret=SPNA_OPER_ANDAND; break;
+    case 'W': ret=SPNA_OPER_OROR; break;
+    case 'X': ret=SPNA_OPER_MULEQ; break;
+    case 'Y': ret=SPNA_OPER_PLUSEQ; break;
+    case 'Z': ret=SPNA_OPER_MINUSEQ; break;
+    default:
+      fprintf(stderr,"SPNA %c unknown\n",n[0]); break;
+    }
+    n+=1;
+  }
+  *np=n;
+  return ret;
 }
