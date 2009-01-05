@@ -290,7 +290,7 @@ static void *map_va(uint32_t va)
   for (i=0;i<sec_cnt;i++) {
     if (va >= sec[i].VirtualAddress && va < (sec[i].VirtualAddress+sec[i].Misc.VirtualSize))
     {
-      dptr = &gDta[va-sec[i].VirtualAddress+sec[i].PointerToRawData];
+      dptr = (char*) &gDta[va-sec[i].VirtualAddress+sec[i].PointerToRawData];
       return (void *)dptr;
     }
   }
