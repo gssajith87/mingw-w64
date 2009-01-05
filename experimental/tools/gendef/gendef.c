@@ -399,7 +399,7 @@ dump_def(void)
     else
       fprintf(fp,"%s",exp->name);
     if (exp->name[0]=='?') {
-      decode_mangle(exp->name);
+      /* decode_mangle(exp->name); */
     }
     if (exp->name[0]=='?' && exp->name[1]=='?')
       {
