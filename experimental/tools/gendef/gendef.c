@@ -40,6 +40,14 @@ typedef struct sExportname {
   int beData;
 } sExportName;
 
+typedef struct gendefopts
+{
+  char *fninput;
+  char *fnoutput;
+  struct gendefopts *next;
+} Gendefopts;
+
+
 enum {
   c_ill=-1,c_EG,c_lb,c_lv,c_1,c_2,c_3,c_4,
   c_0f,c_ad,c_op,c_EGlv,c_EGlb,c_jxx,c_jxxv,
@@ -141,48 +149,92 @@ PIMAGE_DOS_HEADER gMZDta;
 PIMAGE_NT_HEADERS32 gPEDta;
 PIMAGE_NT_HEADERS64 gPEPDta;
 
+static int std_output = 0;
+
+static Gendefopts *chain_ptr = NULL;
+
+void opt_chain (const char *);
+
+void opt_chain (const char *opts)
+{
+  static Gendefopts *prev, *current;
+  char *r1, *r2;
+  
+  if (!strncmp (opts, "-", 2))
+    {
+      std_output = 1;
+      return;
+    }
+
+  current = malloc (sizeof(Gendefopts));
+  if (current)
+    {
+      memset (current, 0, sizeof (Gendefopts));
+      current->next = NULL;
+
+      if (!prev)
+        chain_ptr = current;
+      else
+        prev->next = current;
+      r1 = strrchr (opts,'/');
+      r2 = strrchr (opts,'\\');
+      current->fninput = strdup (opts);
+      
+      if (!r1 && r2 != NULL)
+        r1 = r2 + 1;
+      else if(r1 == NULL && r2 == NULL)
+        r1 = current->fninput;
+      else if (r2 != NULL && r1 != NULL && r1 < r2)
+        r1 = r2 + 1;
+      else
+        r1++;
+      current->fnoutput = (char*) malloc (strlen (current->fninput) + 5);
+      strcpy (current->fnoutput,r1);
+
+      r1 = strrchr (current->fnoutput,'.');
+      if (r1)
+        strcpy (r1,".def");
+      else
+        strcat (current->fnoutput,".def");
+      prev = current;
+   }
+  return;
+}
+
 int main(int argc,char **argv)
 {
   int i;
+  Gendefopts *opt;
+
   if (argc < 2)
   {
     fprintf (stderr,"gendef.exe input-dll-files ...\n");
     return 0;
   }
-  for (i=1;i<argc;i++)
-  {
-    char *r1,*r2;
-    fninput = strdup(argv[i]);
-    r1 = strrchr (fninput,'/');
-    r2 = strrchr (fninput,'\\');
-    if (!r1 && r2!=NULL) r1=r2+1;
-    else if(r1==NULL && r2==NULL)
-      r1 = fninput;
-    else if (r2!=NULL && r1!=NULL && r1 < r2)
-      r1=r2+1;
-    else r1++;
-    fnoutput = (char*) malloc(strlen(fninput)+5);
-    strcpy (fnoutput,r1);
 
-    r1 = strrchr(fnoutput,'.');
-    if (r1) strcpy(r1,".def");
-    else strcat(fnoutput,".def");
-    fprintf(stderr,"Loading %s ...\n", fninput);
-    if (load_pep()) {
-      fprintf(stderr,"Generating from %s definition file %s ...\n", fninput,fnoutput);
+  for (i = 1; i < argc; i++)
+    opt_chain (argv[i]);
+  opt = chain_ptr;
+  while (opt)
+    {
+      fninput = opt->fninput;
+      fnoutput = opt->fnoutput;
+
+      load_pep();
       if (gPEDta)
-	do_pedef();
+	do_pedef ();
       else
-	do_pepdef();
+	do_pepdef ();
       dump_def ();
       if (fndllname)
 	free (fndllname);
       fndllname = NULL;
       free (gDta);
+      free(opt->fninput);
+      free(opt->fnoutput);
+      free(opt);
+      opt = opt->next;
     }
-    free (fnoutput);
-    free (fninput);
-  }
   return 0;
 }
 
@@ -190,58 +242,64 @@ static int
 load_pep(void)
 {
   FILE *fp = fopen (fninput, "rb");
-  if (!fp) {
-    fprintf(stderr,"*** failed to open()\n"); return 0;
-  }
-  fseek(fp,0,SEEK_END);
-  gDta_size = (size_t) ftell(fp);
+
+  if (!fp)
+    {
+      fprintf (stderr, "*** [%s] failed to open()\n", fninput);
+      return 0;
+    }
+  fseek (fp, 0, SEEK_END);
+  gDta_size = (size_t) ftell (fp);
   if (gDta_size > 0) {
     fseek(fp,0,SEEK_SET);
     gDta = (unsigned char*)malloc(gDta_size + 1);
-    if (gDta) {
-      fread (gDta,1,gDta_size,fp);
-      gDta[gDta_size]=0;
+    if (gDta)
+      {
+        fread (gDta, 1, gDta_size, fp);
+        gDta[gDta_size] = 0;
     }
   }
-  fclose(fp);
-  if (!gDta) {
-    fprintf(stderr,"*** unable to allocate %Iu bytes\n", gDta_size);
-    return 0;
-  }
+  fclose (fp);
+  if (!gDta)
+    {
+      fprintf (stderr, "*** [%s] unable to allocate %Iu bytes\n" ,fninput ,gDta_size);
+      return 0;
+    }
   gMZDta = (PIMAGE_DOS_HEADER) gDta;
   if (gDta_size < sizeof(IMAGE_DOS_HEADER) || gDta[0]!='M' || gDta[1]!='Z'
       || gMZDta->e_lfanew <= 0
       || gMZDta->e_lfanew >= (int32_t) gDta_size)
   {
-    fprintf(stderr,"*** not a PE(+) file\n");
+    fprintf(stderr,"*** [%s] not a PE(+) file\n", fninput);
     free(gDta);
     return 0;
   }
   gPEDta = (PIMAGE_NT_HEADERS32) &gDta[gMZDta->e_lfanew];
   gPEPDta = (PIMAGE_NT_HEADERS64) gPEDta;
   if (gPEDta->Signature != IMAGE_NT_SIGNATURE)
-  {
-    fprintf(stderr,"*** no PE(+) signature\n");
-    free(gDta);
-    return 0;
-  }
+    {
+      fprintf (stderr, "*** [%s] no PE(+) signature\n", fninput);
+      free (gDta);
+      return 0;
+    }
   if (gPEDta->FileHeader.SizeOfOptionalHeader == IMAGE_SIZEOF_NT_OPTIONAL32_HEADER
-    && gPEDta->OptionalHeader.Magic == IMAGE_NT_OPTIONAL_HDR32_MAGIC)
-  {
-    gPEPDta=NULL;
-    fprintf(stderr," * Found PE image\n");
-  }
+      && gPEDta->OptionalHeader.Magic == IMAGE_NT_OPTIONAL_HDR32_MAGIC)
+    {
+      gPEPDta = NULL;
+      fprintf (stderr, " * [%s] Found PE image\n", fninput);
+    }
   else if (gPEPDta->FileHeader.SizeOfOptionalHeader == IMAGE_SIZEOF_NT_OPTIONAL64_HEADER
     && gPEPDta->OptionalHeader.Magic == IMAGE_NT_OPTIONAL_HDR64_MAGIC)
-  {
-    gPEDta=NULL;
-    fprintf(stderr," * Found PE+ image\n");
-  }
-  else {
-    free(gDta);
-    fprintf(stderr,"*** no PE(+) optional header\n");
-    return 0;
-  }
+    {
+      gPEDta = NULL;
+      fprintf (stderr, " * [%s] Found PE+ image\n", fninput);
+    }
+  else
+    {
+      free (gDta);
+      fprintf (stderr, "*** [%s] no PE(+) optional header\n", fninput);
+      return 0;
+    }
   return 1;
 }
 
@@ -383,8 +441,12 @@ dump_def(void)
   sExportName *exp;
   FILE *fp;
 
-  if (!fndllname || gExp == NULL) return;
-  fp = fopen(fnoutput,"wt");
+  if (!fndllname || gExp == NULL)
+    return;
+  if (!std_output)
+    fp = fopen(fnoutput,"wt");
+  else
+    fp = stdout;
   if(!fp) {
     fprintf(stderr," * failed to create %s ...\n",fnoutput);
     return;
@@ -392,37 +454,40 @@ dump_def(void)
   fprintf (fp,";\n; Definition file of %s\n; Automatic generated by gendef\n; written by Kai Tietz 2008\n;\n",
     fndllname);
   fprintf (fp,"LIBRARY \"%s\"\nEXPORTS\n",fndllname);
-  while ((exp = gExp) != NULL) {
-    gExp = exp->next;
-    if (exp->name[0]==0)
-      fprintf(fp,"ord_%u", (unsigned int) exp->ord);
-    else
-      fprintf(fp,"%s",exp->name);
-    if (exp->name[0]=='?') {
-      /* decode_mangle(exp->name); */
+  while ((exp = gExp) != NULL)
+    {
+      gExp = exp->next;
+      if (exp->name[0]==0)
+        fprintf(fp,"ord_%u", (unsigned int) exp->ord);
+      else
+        fprintf(fp,"%s",exp->name);
+      if (exp->name[0]=='?')
+        {
+          /* decode_mangle(exp->name); */
+        }
+      if (exp->name[0]=='?' && exp->name[1]=='?')
+        {
+          if (!strncmp(exp->name,"??_7",4)) exp->beData=1;
+        }
+      if (!exp->beData && !exp->be64 && exp->func != 0)
+        exp->beData = disassembleRet (exp->func, &exp->retpop,exp->name);
+      if (exp->retpop != (uint32_t) -1)
+        {
+          if (exp->name[0]=='?')
+            fprintf(fp," ; has WINAPI (@%u)", (unsigned int) exp->retpop);
+          else
+            fprintf(fp,"@%u", (unsigned int) exp->retpop);
+        }
+      if (exp->name[0]==0)
+        fprintf(fp," @%u", (unsigned int) exp->ord);
+      if (exp->beData)
+        fprintf(fp," DATA");
+      fprintf(fp,"\n");
+      free (exp);
     }
-    if (exp->name[0]=='?' && exp->name[1]=='?')
-      {
-        if (!strncmp(exp->name,"??_7",4)) exp->beData=1;
-      }
-    if (!exp->beData && !exp->be64 && exp->func!=0)
-      exp->beData = disassembleRet(exp->func, &exp->retpop,exp->name);
-    if (exp->retpop != (uint32_t) -1)
-      {
-        if (exp->name[0]=='?')
-          fprintf(fp," ; has WINAPI (@%u)", (unsigned int) exp->retpop);
-        else
-          fprintf(fp,"@%u", (unsigned int) exp->retpop);
-      }
-    if (exp->name[0]==0)
-      fprintf(fp," @%u", (unsigned int) exp->ord);
-    if (exp->beData)
-      fprintf(fp," DATA");
-    fprintf(fp,"\n");
-    free (exp);
-  }
   gExpTail=NULL;
-  fclose(fp);
+  if (!std_output)
+    fclose(fp);
 }
 
 typedef struct sAddresses {
@@ -640,7 +705,8 @@ print_save_insn(const char *name, unsigned char *s)
 }
 #endif
 
-static size_t getMemonic(int *aCode,uint32_t pc,uint32_t *jmp_pc,const char *name)
+static size_t
+getMemonic(int *aCode,uint32_t pc,uint32_t *jmp_pc, __attribute__((unused)) const char *name)
 {
 #if ENABLE_DEBUG == 1
   static unsigned char lw[MAX_INSN_SAVE];
@@ -651,6 +717,7 @@ static size_t getMemonic(int *aCode,uint32_t pc,uint32_t *jmp_pc,const char *nam
   size_t sz = 0;
   unsigned char b;
   int tb1;
+
   for(;;) {
     p = (unsigned char*)map_va(pc + sz);
     if (!p) { *aCode=c_ill; return 0; }

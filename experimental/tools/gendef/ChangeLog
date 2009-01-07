@@ -1,0 +1,14 @@
+2009-01-07  jonY  <10walls@gmail.com>
+
+	* gendef.c (struct gendefopts): New.
+	(opt_chain): New.
+	(std_output): New.
+	(main): Use opt_chain.
+	(dump_def): Treat std_output.
+	(load_pep): Adjust error messages.
+
+2009-01-07  Kai Tietz  <kai.tietz@onevision.com>
+
+	* gendef.c: New.
+	* gendef.h: New.
+
