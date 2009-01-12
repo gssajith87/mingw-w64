@@ -503,108 +503,136 @@ static void dest_addr(sAddresses *ad);
 static int push_addr(sAddresses *ad,uint32_t val);
 static int pop_addr(sAddresses *ad,uint32_t *val);
 
-static sAddresses*init_addr(void)
+static sAddresses *
+init_addr (void)
 {
-  sAddresses *r = (sAddresses*)malloc(sizeof(sAddresses));
-  r->max=8;
-  r->cnt=0;
-  r->ptrs = (uint32_t *) malloc(sizeof(uint32_t)*8);
-  r->idx=0;
+  sAddresses *r = (sAddresses*) malloc (sizeof (sAddresses));
+  r->max = 8;
+  r->cnt = 0;
+  r->ptrs = (uint32_t *) malloc (sizeof (uint32_t) * 8);
+  r->idx = 0;
   return r;
 }
 
-static void dest_addr(sAddresses *ad)
+static void
+dest_addr (sAddresses *ad)
 {
   free (ad->ptrs);
   free (ad);
 }
 
-static int push_addr(sAddresses *ad,uint32_t val)
+static int
+push_addr (sAddresses *ad, uint32_t val)
 {
   uint32_t i;
-  for (i=0;i<ad->cnt;i++) {
-    if (ad->ptrs[i]==val) return 0;
-  }
-  if (ad->max == ad->cnt) {
-    uint32_t *p=(uint32_t *) malloc(sizeof(uint32_t)*(ad->max + 8));
-    memcpy (p,ad->ptrs,sizeof(uint32_t)*ad->max);
-    ad->max+=8;
-    free (ad->ptrs);
-    ad->ptrs=p;
-  }
-  ad->ptrs[ad->cnt++]=val;
+
+  for (i = 0;i < ad->cnt; i++)
+    {
+      if (ad->ptrs[i] == val)
+        return 0;
+    }
+  if (ad->max == ad->cnt)
+    {
+      uint32_t *p = (uint32_t *) malloc (sizeof (uint32_t) * (ad->max + 8));
+
+      memcpy (p, ad->ptrs, sizeof (uint32_t) * ad->max);
+      ad->max += 8;
+      free (ad->ptrs);
+      ad->ptrs = p;
+    }
+  ad->ptrs[ad->cnt++] = val;
   return 1;
 }
 
-static int pop_addr(sAddresses *ad,uint32_t *val)
+static int
+pop_addr (sAddresses *ad, uint32_t *val)
 {
-  if (!ad || ad->idx==ad->cnt) return 0;
+  if (!ad || ad->idx == ad->cnt)
+    return 0;
   ad->idx++;
-  *val=ad->ptrs[ad->idx-1];
+  *val = ad->ptrs[ad->idx-1];
   return 1;
 }
 
 /* exp->beData */
-static int disassembleRet(uint32_t func,uint32_t *retpop,const char *name)
+static int
+disassembleRet (uint32_t func, uint32_t *retpop, const char *name)
 {
-  sAddresses *seen = init_addr();
-  sAddresses *stack = init_addr();
+  sAddresses *seen = init_addr ();
+  sAddresses *stack = init_addr ();
   uint32_t pc;
-  int hasret=0;
+  int hasret = 0;
   int atleast_one = 0;
   *retpop = (uint32_t) -1;
-  push_addr(stack,func);
+  push_addr (stack, func);
 
-  while (!hasret && pop_addr(stack,&pc)) {
-    if (disassembleRetIntern(pc,retpop,seen,stack,&hasret,&atleast_one,name))
-      break;
-  }
-  dest_addr(seen);
-  dest_addr(stack);
+  while (!hasret && pop_addr(stack,&pc))
+    {
+      if (disassembleRetIntern (pc, retpop, seen, stack, &hasret, &atleast_one,name))
+        break;
+    }
+  dest_addr (seen);
+  dest_addr (stack);
   return (atleast_one ? 0 : 1);
 }
 
-static int disassembleRetIntern(uint32_t pc,uint32_t *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name)
+static int
+disassembleRetIntern(uint32_t pc, uint32_t *retpop, sAddresses *seen, sAddresses *stack,
+		     int *hasret, int *atleast_one, const char *name)
 {
   size_t sz;
   int code,break_it;
   uint32_t tojmp;
-  while(1) {
-    if (!push_addr(seen,pc)) return 0;    
-    sz=getMemonic(&code,pc,&tojmp,name)&0xffffffff;
-    if (!sz || code == c_ill) {
-      PRDEBUG(" %s = 0x%x ILL (%x) at least one==%d\n",name,
-		(unsigned int) pc, (unsigned int) sz,atleast_one[0]);
-      break;
-    }
-/*    {
-      unsigned char *ppc = (unsigned char*) map_va (pc);
-      size_t i;
-      fprintf(stderr,"%s(0x%x): ",name, (unsigned int) pc);
-      for (i=0;i<sz;i++)
+
+  while(1)
+    {
+      if (!push_addr (seen, pc))
+        return 0;
+      sz = getMemonic (&code, pc, &tojmp, name) & 0xffffffff;
+      if (!sz || code == c_ill)
         {
-          fprintf (stderr,"%s0x%x", (i==0 ? " ":","), ppc[i]);
+          PRDEBUG(" %s = 0x%x ILL (%x) at least one==%d\n",name,
+	 	  (unsigned int) pc, (unsigned int) sz,atleast_one[0]);
+          break;
         }
-      fprintf(stderr,"\n");
-    } */
-    atleast_one[0]+=1;
-    break_it=0;
-    pc+=sz;
-    switch(code) {
-    case c_jmpnjb: case c_jmpnjv:
-      pc = tojmp; break;
-    case c_jxx:
-      push_addr(stack,tojmp);
-      break;
-    case c_jmpfap: case c_int3:
-      break_it=1; break;
-    case c_iret: case c_retf: case c_retn:
-      *hasret = 1; return 1;
-    case c_retflw: case c_retnlw:
-      *hasret=1; *retpop=tojmp; return 1;
+/*
+      {
+        unsigned char *ppc = (unsigned char*) map_va (pc);
+        size_t i;
+
+        fprintf (stderr, "%s(0x%x): ",name, (unsigned int) pc);
+        for (i = 0;i < sz; i++)
+          {
+            fprintf (stderr, "%s0x%x", (i == 0 ? " ":","), ppc[i]);
+          }
+        fprintf (stderr, "\n");
+      }
+*/
+      atleast_one[0] += 1;
+      break_it = 0;
+      pc += sz;
+      switch(code)
+        {
+        case c_jmpnjb: case c_jmpnjv:
+          pc = tojmp;
+          break;
+        case c_jxx:
+          push_addr (stack, tojmp);
+          break;
+        case c_jmpfap: case c_int3:
+          break_it = 1;
+          break;
+        case c_iret: case c_retf: case c_retn:
+          *hasret = 1;
+          return 1;
+        case c_retflw: case c_retnlw:
+          *hasret = 1;
+          *retpop = tojmp;
+          return 1;
+        }
+      if (break_it)
+        break;
     }
-    if (break_it) break;
-  }
 
   return 0;
 }
