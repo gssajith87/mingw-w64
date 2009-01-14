@@ -263,4 +263,43 @@ typedef struct _IMAGE_EXPORT_DIRECTORY {
   uint32_t AddressOfNameOrdinals;
 } IMAGE_EXPORT_DIRECTORY,*PIMAGE_EXPORT_DIRECTORY;
 
+typedef struct gendefopts
+{
+  char *fninput;
+  char *fnoutput;
+  struct gendefopts *next;
+} Gendefopts;
+
+typedef struct sExportname
+{
+  struct sExportname *next;
+  char *name;
+  char *forward;
+  uint32_t ord;
+  uint32_t func;
+  uint32_t retpop;
+  int be64;
+  int beData;
+} sExportName;
+
+
+typedef enum eOpCodeKind {
+  c_ill=-1,c_EG,c_lb,c_lv,c_1,c_2,c_3,c_4,
+  c_0f,c_ad,c_op,c_EGlv,c_EGlb,c_jxx,c_jxxv,
+  c_O,
+  c_g4, c_EGg3b, c_EGg3v,
+  c_jmpnjb,c_jmpfap,
+  c_jmpnjv,c_calljv,c_callfar,
+  c_iret,c_int3,
+  c_retf,c_retflw,
+  c_retn,c_retnlw,
+} eOpCodeKind;
+
+typedef struct sAddresses {
+  uint32_t max;
+  uint32_t cnt;
+  uint32_t *ptrs;
+  uint32_t idx;
+} sAddresses;
+
 #endif

@@ -1,7 +1,15 @@
 2009-01-14  Kai Tietz  <kai.tietz@onevision.com>
 
 	* gendef.h (IMAGE_FIRST_SECTION): Added.
-	* gendef.c: Remove unused nacri defubutuibs,
+	(Gendefopts): Added.
+	(sExportName): Moved from gendef.c.
+	(eOpCodeKind): Likewise.
+	(sAddresses): Likewise.
+	* gendef.c: Remove unused nacro,
+	(IMAGE_DIRECTORY_ENTRY_EXPORT): Removed.
+	(sExportName): Moved to header.
+	(eOpCodeKind): Likewise.
+	(sAddresses): Likewise.
 
 2009-01-07  jonY  <10walls@gmail.com>
 

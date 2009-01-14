@@ -12,37 +12,6 @@
 #define PRDEBUG(ARG...) do { } while(0)
 #endif
 
-typedef struct sExportname {
-  struct sExportname *next;
-  char *name;
-  char *forward;
-  uint32_t ord;
-  uint32_t func;
-  uint32_t retpop;
-  int be64;
-  int beData;
-} sExportName;
-
-typedef struct gendefopts
-{
-  char *fninput;
-  char *fnoutput;
-  struct gendefopts *next;
-} Gendefopts;
-
-
-enum {
-  c_ill=-1,c_EG,c_lb,c_lv,c_1,c_2,c_3,c_4,
-  c_0f,c_ad,c_op,c_EGlv,c_EGlb,c_jxx,c_jxxv,
-  c_O,
-  c_g4, c_EGg3b, c_EGg3v,
-  c_jmpnjb,c_jmpfap,
-  c_jmpnjv,c_calljv,c_callfar,
-  c_iret,c_int3,
-  c_retf,c_retflw,
-  c_retn,c_retnlw,
-};
-
 typedef enum eSPNA {
   SPNA_OPER_MINUSEQ=0,SPNA_OPER_PLUSEQ, SPNA_OPER_MULEQ,SPNA_OPER_OROR,SPNA_OPER_ANDAND,SPNA_OPER_OR,SPNA_OPER_XOR,
   SPNA_OPER_INV, SPNA_OPER_COMMA,SPNA_OPER_CAST, SPNA_OPER_SHR,SPNA_OPER_SHL,SPNA_OPER_SHREQ,SPNA_OPER_SHLEQ,
@@ -119,6 +88,12 @@ static size_t getMemonic(int *aCode,uint32_t pc,uint32_t *jmp_pc,const char *nam
 
 static void *map_va(uint32_t va);
 static int is_data(uint32_t va);
+
+static int disassembleRetIntern(uint32_t pc,uint32_t *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name);
+static sAddresses*init_addr(void);
+static void dest_addr(sAddresses *ad);
+static int push_addr(sAddresses *ad,uint32_t val);
+static int pop_addr(sAddresses *ad,uint32_t *val);
 
 static sExportName *gExp = NULL;
 static sExportName *gExpTail = NULL;
@@ -286,135 +261,152 @@ load_pep(void)
   return 1;
 }
 
-static int is_data(uint32_t va)
+static int
+is_data (uint32_t va)
 {
   PIMAGE_SECTION_HEADER sec;
   uint32_t sec_cnt,i;
   
-  if(gPEDta) {
-    sec_cnt = gPEDta->FileHeader.NumberOfSections;
-    sec = IMAGE_FIRST_SECTION(gPEDta);
-  } else {
-    sec_cnt = gPEPDta->FileHeader.NumberOfSections;
-    sec = IMAGE_FIRST_SECTION(gPEPDta);
-  }
-  if(!sec) return 0;
-  for (i=0;i<sec_cnt;i++) {
-    if (va >= sec[i].VirtualAddress && va < (sec[i].VirtualAddress+sec[i].Misc.VirtualSize))
-      break;
-  }
-  if (i == sec_cnt) return 0; 
-  if ((sec[i].Characteristics&(IMAGE_SCN_MEM_EXECUTE | IMAGE_SCN_CNT_CODE))!=0)
+  if (gPEDta)
+    {
+      sec_cnt = gPEDta->FileHeader.NumberOfSections;
+      sec = IMAGE_FIRST_SECTION(gPEDta);
+    }
+  else
+    {
+      sec_cnt = gPEPDta->FileHeader.NumberOfSections;
+      sec = IMAGE_FIRST_SECTION(gPEPDta);
+    }
+  if (!sec)
     return 0;
-  if ((sec[i].Characteristics&IMAGE_SCN_MEM_DISCARDABLE)!=0)
+  for (i = 0;i < sec_cnt;i++)
+    {
+      if (va >= sec[i].VirtualAddress && va < (sec[i].VirtualAddress+sec[i].Misc.VirtualSize))
+        break;
+    }
+  if (i == sec_cnt)
+    return 0; 
+  if ((sec[i].Characteristics & (IMAGE_SCN_MEM_EXECUTE | IMAGE_SCN_CNT_CODE)) != 0)
+    return 0;
+  if ((sec[i].Characteristics & IMAGE_SCN_MEM_DISCARDABLE) != 0)
     return 1;
-  if ((sec[i].Characteristics&IMAGE_SCN_MEM_READ)==0)
+  if ((sec[i].Characteristics & IMAGE_SCN_MEM_READ) ==0)
     return 0;
-  if ((sec[i].Characteristics&(IMAGE_SCN_CNT_INITIALIZED_DATA|IMAGE_SCN_CNT_UNINITIALIZED_DATA|IMAGE_SCN_LNK_COMDAT))!=0)
+  if ((sec[i].Characteristics & (IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_CNT_UNINITIALIZED_DATA | IMAGE_SCN_LNK_COMDAT)) != 0)
     return 1;
   return 1;
 }
 
-static void *map_va(uint32_t va)
+static void *
+map_va (uint32_t va)
 {
   PIMAGE_SECTION_HEADER sec;
   uint32_t sec_cnt,i;
   char *dptr;
 
-  if(gPEDta) {
-    sec_cnt = gPEDta->FileHeader.NumberOfSections;
-    sec = IMAGE_FIRST_SECTION(gPEDta);
-  } else {
-    sec_cnt = gPEPDta->FileHeader.NumberOfSections;
-    sec = IMAGE_FIRST_SECTION(gPEPDta);
-  }
-  for (i=0;i<sec_cnt;i++) {
-    if (va >= sec[i].VirtualAddress && va < (sec[i].VirtualAddress+sec[i].Misc.VirtualSize))
+  if (gPEDta)
     {
-      dptr = (char*) &gDta[va-sec[i].VirtualAddress+sec[i].PointerToRawData];
-      return (void *)dptr;
+      sec_cnt = gPEDta->FileHeader.NumberOfSections;
+      sec = IMAGE_FIRST_SECTION(gPEDta);
     }
-  }
+  else
+    {
+      sec_cnt = gPEPDta->FileHeader.NumberOfSections;
+      sec = IMAGE_FIRST_SECTION(gPEPDta);
+    }
+  for (i = 0;i < sec_cnt;i++)
+    {
+      if (va >= sec[i].VirtualAddress && va < (sec[i].VirtualAddress+sec[i].Misc.VirtualSize))
+        {
+          dptr = (char*) &gDta[va-sec[i].VirtualAddress+sec[i].PointerToRawData];
+          return (void *)dptr;
+        }
+    }
   return NULL;
 }
 
-#ifndef IMAGE_DIRECTORY_ENTRY_EXPORT
-#define IMAGE_DIRECTORY_ENTRY_EXPORT 0
-#endif
-
 /* For pep we can take the exports itself, there is no additional decoration necessary.  */
-static void do_pepdef(void)
+static void
+do_pepdef (void)
 {
   uint32_t va_exp = gPEPDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
   uint32_t sz_exp = gPEPDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].Size;
-  do_export_read(va_exp,sz_exp,1);
+  do_export_read (va_exp, sz_exp,1);
 }
 
-static void do_pedef(void)
+static void
+do_pedef (void)
 {
   uint32_t va_exp = gPEDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
   uint32_t sz_exp = gPEDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].Size;
-  do_export_read(va_exp,sz_exp,0);
+  do_export_read (va_exp, sz_exp, 0);
 }
 
-static void do_export_read(uint32_t va_exp,uint32_t sz_exp,int be64)
+static void
+do_export_read (uint32_t va_exp, uint32_t sz_exp, int be64)
 {
   uint32_t i;
   PIMAGE_EXPORT_DIRECTORY exp_dir;
   uint32_t *functions;
   uint16_t *ordinals;
   uint32_t *name;
-  if (va_exp == 0 || sz_exp==0)
+
+  if (va_exp == 0 || sz_exp == 0)
     return;
   exp_dir = (PIMAGE_EXPORT_DIRECTORY) map_va(va_exp);
   PRDEBUG(" * export directory at VA = 0x%x size=0x%x\n", (unsigned int) va_exp, (unsigned int) sz_exp);
-  fndllname = strdup((char*) map_va(exp_dir->Name));
+  fndllname = strdup ((char*) map_va (exp_dir->Name));
   PRDEBUG(" * Name: %s\n * Base: %u\n", fndllname, (unsigned int) exp_dir->Base);
-  functions = (uint32_t *) map_va(exp_dir->AddressOfFunctions);
-  ordinals = (uint16_t *) map_va(exp_dir->AddressOfNameOrdinals);
-  name = (uint32_t *) map_va(exp_dir->AddressOfNames);
+  functions = (uint32_t *) map_va (exp_dir->AddressOfFunctions);
+  ordinals = (uint16_t *) map_va (exp_dir->AddressOfNameOrdinals);
+  name = (uint32_t *) map_va (exp_dir->AddressOfNames);
   
-  for(i=0;i<exp_dir->NumberOfFunctions;i++)
-  {
-    uint32_t entryPointRVA = functions[i];
-    uint32_t j;
-    char *fname;
-    uint32_t ord;
-    fname = NULL;
-    if(!entryPointRVA)
-      continue;
-    ord = i + exp_dir->Base;
-    for(j=0;j<exp_dir->NumberOfNames;j++)
-      if(ordinals[j]==i)
-	fname = (char*) map_va(name[j]);
-    if(entryPointRVA >= va_exp && entryPointRVA <= (va_exp+sz_exp))
+  for (i = 0;i < exp_dir->NumberOfFunctions;i++)
     {
-      add_export_list(ord,0,fname,(char*) map_va(entryPointRVA),be64,0);
-    } else
-      add_export_list(ord,entryPointRVA,fname,NULL,be64,is_data(entryPointRVA));
-  }
+      uint32_t entryPointRVA = functions[i];
+      uint32_t j;
+      char *fname;
+      uint32_t ord;
+      fname = NULL;
+      if (!entryPointRVA)
+        continue;
+      ord = i + exp_dir->Base;
+      for (j = 0;j < exp_dir->NumberOfNames;j++)
+        if (ordinals[j]==i)
+          fname = (char*) map_va (name[j]);
+      if (entryPointRVA >= va_exp && entryPointRVA <= (va_exp + sz_exp))
+        add_export_list (ord, 0, fname,(char*) map_va (entryPointRVA), be64, 0);
+      else
+        add_export_list(ord, entryPointRVA, fname, NULL, be64, is_data (entryPointRVA));
+    }
 }
 
 static void
 add_export_list(uint32_t ord,uint32_t func,const char *name, const char *forward,int be64,int beData)
 {
   sExportName *exp = NULL;
-  if (!name) name="";
-  if (!forward) forward="";
-  exp = (sExportName *) malloc(sizeof(sExportName)+strlen(name)+strlen(forward)+2);
-  if(!exp) return;
+
+  if (!name)
+    name = "";
+  if (!forward)
+    forward = "";
+  exp = (sExportName *) malloc (sizeof (sExportName) + strlen (name) + strlen (forward) + 2);
+  if (!exp)
+    return;
   exp->name = (char *) &exp[1];
-  exp->forward = exp->name + strlen(name) + 1;
-  strcpy(exp->name,name);
-  strcpy(exp->forward,forward);
-  exp->next=NULL;
-  exp->ord=ord;
-  exp->func=func;
-  exp->be64=be64;
-  exp->beData=beData;
+  exp->forward = exp->name + strlen (name) + 1;
+  strcpy (exp->name, name);
+  strcpy (exp->forward, forward);
+  exp->next = NULL;
+  exp->ord = ord;
+  exp->func = func;
+  exp->be64 = be64;
+  exp->beData = beData;
   exp->retpop = (uint32_t)-1;
-  if (gExpTail) gExpTail->next=exp;
-  else gExp=exp;
+  if (gExpTail)
+    gExpTail->next = exp;
+  else
+    gExp = exp;
   gExpTail = exp;
 }
 
@@ -472,19 +464,6 @@ dump_def(void)
   if (!std_output)
     fclose(fp);
 }
-
-typedef struct sAddresses {
-  uint32_t max;
-  uint32_t cnt;
-  uint32_t *ptrs;
-  uint32_t idx;
-} sAddresses;
-
-static int disassembleRetIntern(uint32_t pc,uint32_t *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name);
-static sAddresses*init_addr(void);
-static void dest_addr(sAddresses *ad);
-static int push_addr(sAddresses *ad,uint32_t val);
-static int pop_addr(sAddresses *ad,uint32_t *val);
 
 static sAddresses *
 init_addr (void)
