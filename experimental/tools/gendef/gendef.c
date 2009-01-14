@@ -12,23 +12,6 @@
 #define PRDEBUG(ARG...) do { } while(0)
 #endif
 
-#ifndef IMAGE_FIRST_SECTION
-#define IMAGE_FIRST_SECTION(ntheader) ((PIMAGE_SECTION_HEADER) ((uintptr_t)ntheader + FIELD_OFFSET(IMAGE_NT_HEADERS,OptionalHeader) + ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader))
-#endif
-
-#ifndef IMAGE_SIZEOF_NT_OPTIONAL32_HEADER
-#define IMAGE_SIZEOF_NT_OPTIONAL32_HEADER 224
-#endif
-#ifndef IMAGE_SIZEOF_NT_OPTIONAL64_HEADER
-#define IMAGE_SIZEOF_NT_OPTIONAL64_HEADER 240
-#endif
-#ifndef IMAGE_NT_OPTIONAL_HDR32_MAGIC
-#define IMAGE_NT_OPTIONAL_HDR32_MAGIC 0x10b
-#endif
-#ifndef IMAGE_NT_OPTIONAL_HDR64_MAGIC
-#define IMAGE_NT_OPTIONAL_HDR64_MAGIC 0x20b
-#endif
-
 typedef struct sExportname {
   struct sExportname *next;
   char *name;

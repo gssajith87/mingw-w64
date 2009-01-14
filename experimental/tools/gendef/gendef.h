@@ -12,6 +12,9 @@
 
 #define FIELD_OFFSET(type,field) ((int32_t)(intptr_t)&(((type *)0)->field))
 
+#define IMAGE_FIRST_SECTION(ntheader) \
+  ((PIMAGE_SECTION_HEADER) ((uintptr_t)ntheader + FIELD_OFFSET(IMAGE_NT_HEADERS,OptionalHeader) + ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader))
+
 #define IMAGE_NUMBEROF_DIRECTORY_ENTRIES 16
 
 #define IMAGE_DIRECTORY_ENTRY_EXPORT 0
@@ -126,7 +129,6 @@ typedef struct _IMAGE_DATA_DIRECTORY {
 } IMAGE_DATA_DIRECTORY,*PIMAGE_DATA_DIRECTORY;
 
 typedef struct _IMAGE_OPTIONAL_HEADER {
-
   uint16_t Magic;
   uint8_t MajorLinkerVersion;
   uint8_t MinorLinkerVersion;

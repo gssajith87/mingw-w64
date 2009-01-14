@@ -1,3 +1,8 @@
+2009-01-14  Kai Tietz  <kai.tietz@onevision.com>
+
+	* gendef.h (IMAGE_FIRST_SECTION): Added.
+	* gendef.c: Remove unused nacri defubutuibs,
+
 2009-01-07  jonY  <10walls@gmail.com>
 
 	* gendef.c (struct gendefopts): New.
