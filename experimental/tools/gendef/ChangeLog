@@ -1,3 +1,8 @@
+2009-01-15  Kai Tietz  <kai.tietz@onevision.com>
+
+	* gendef.c (is_reloc): New.
+	(is_data): Check if va is relocated.
+
 2009-01-14  Kai Tietz  <kai.tietz@onevision.com>
 
 	* gendef.h (IMAGE_FIRST_SECTION): Added.

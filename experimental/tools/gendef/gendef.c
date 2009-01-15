@@ -88,6 +88,7 @@ static size_t getMemonic(int *aCode,uint32_t pc,uint32_t *jmp_pc,const char *nam
 
 static void *map_va(uint32_t va);
 static int is_data(uint32_t va);
+static int is_reloc(uint32_t va);
 
 static int disassembleRetIntern(uint32_t pc,uint32_t *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name);
 static sAddresses*init_addr(void);
@@ -266,6 +267,10 @@ is_data (uint32_t va)
 {
   PIMAGE_SECTION_HEADER sec;
   uint32_t sec_cnt,i;
+
+  /* If export va is directly relocated, so it must be data.  */  
+  if (is_reloc (va))
+    return 1;
   
   if (gPEDta)
     {
@@ -295,6 +300,62 @@ is_data (uint32_t va)
   if ((sec[i].Characteristics & (IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_CNT_UNINITIALIZED_DATA | IMAGE_SCN_LNK_COMDAT)) != 0)
     return 1;
   return 1;
+}
+
+static int
+is_reloc (uint32_t va)
+{
+  uint32_t va_rel, sz_rel, pos;
+  unsigned char *p;
+  PIMAGE_BASE_RELOCATION brel;
+
+  if (gPEDta)
+    {
+      va_rel = gPEDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].VirtualAddress;
+      sz_rel = gPEDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].Size;
+    }
+  else
+    {
+      va_rel = gPEPDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].VirtualAddress;
+      sz_rel = gPEPDta->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].Size;
+    }
+  if (va_rel == 0 || sz_rel < IMAGE_SIZEOF_BASE_RELOCATION)
+    return 0;
+  p = (unsigned char *) map_va (va_rel);
+  for (pos = 0; pos < sz_rel;)
+    {
+      uint16_t *r;
+      uint32_t nums, j;
+      if ((sz_rel - pos) < IMAGE_SIZEOF_BASE_RELOCATION)
+        break;
+      brel = (PIMAGE_BASE_RELOCATION) &p[pos];
+      if (brel->SizeOfBlock == 0)
+         break;
+      pos += IMAGE_SIZEOF_BASE_RELOCATION;
+      nums = (brel->SizeOfBlock - IMAGE_SIZEOF_BASE_RELOCATION) / 2;
+      r = (uint16_t *) &p[pos];
+      for (j = 0; j < nums; j++)
+        {
+          uint32_t relsz = 0;
+          uint32_t offs = (uint32_t) (r[j] & 0xfff) + brel->VirtualAddress;
+          uint16_t typ = (r[j] >> 12) & 0xf;
+          if (typ == IMAGE_REL_BASED_HIGHADJ)
+            j++;
+          switch (typ)
+            {
+            case IMAGE_REL_BASED_HIGHLOW:
+              relsz = 4;
+              break;
+            case IMAGE_REL_BASED_DIR64:
+              relsz = 8;
+              break;
+            }
+          if (relsz != 0 && va >= offs && va < (offs + relsz))
+            return 1;
+        }
+      pos += (brel->SizeOfBlock - IMAGE_SIZEOF_BASE_RELOCATION);
+    }
+  return 0;
 }
 
 static void *
