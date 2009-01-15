@@ -86,9 +86,9 @@ static void dump_def(void);
 static int disassembleRet(uint32_t func,uint32_t *retpop,const char *name);
 static size_t getMemonic(int *aCode,uint32_t pc,uint32_t *jmp_pc,const char *name);
 
-static void *map_va(uint32_t va);
-static int is_data(uint32_t va);
-static int is_reloc(uint32_t va);
+static void *map_va (uint32_t va);
+static int is_data (uint32_t va);
+static int is_reloc (uint32_t va);
 
 static int disassembleRetIntern(uint32_t pc,uint32_t *retpop,sAddresses *seen,sAddresses *stack,int *hasret,int *atleast_one,const char *name);
 static sAddresses*init_addr(void);
@@ -334,24 +334,27 @@ is_reloc (uint32_t va)
       pos += IMAGE_SIZEOF_BASE_RELOCATION;
       nums = (brel->SizeOfBlock - IMAGE_SIZEOF_BASE_RELOCATION) / 2;
       r = (uint16_t *) &p[pos];
-      for (j = 0; j < nums; j++)
+      if (va >= brel->VirtualAddress && va < (brel->VirtualAddress + 0x1008))
         {
-          uint32_t relsz = 0;
-          uint32_t offs = (uint32_t) (r[j] & 0xfff) + brel->VirtualAddress;
-          uint16_t typ = (r[j] >> 12) & 0xf;
-          if (typ == IMAGE_REL_BASED_HIGHADJ)
-            j++;
-          switch (typ)
+          for (j = 0; j < nums; j++)
             {
-            case IMAGE_REL_BASED_HIGHLOW:
-              relsz = 4;
-              break;
-            case IMAGE_REL_BASED_DIR64:
-              relsz = 8;
-              break;
+              uint32_t relsz = 0;
+              uint32_t offs = (uint32_t) (r[j] & 0xfff) + brel->VirtualAddress;
+              uint16_t typ = (r[j] >> 12) & 0xf;
+              if (typ == IMAGE_REL_BASED_HIGHADJ)
+                j++;
+              switch (typ)
+                {
+                case IMAGE_REL_BASED_HIGHLOW:
+                  relsz = 4;
+                  break;
+                case IMAGE_REL_BASED_DIR64:
+                  relsz = 8;
+                  break;
+                }
+              if (relsz != 0 && va >= offs && va < (offs + relsz))
+                return 1;
             }
-          if (relsz != 0 && va >= offs && va < (offs + relsz))
-            return 1;
         }
       pos += (brel->SizeOfBlock - IMAGE_SIZEOF_BASE_RELOCATION);
     }
