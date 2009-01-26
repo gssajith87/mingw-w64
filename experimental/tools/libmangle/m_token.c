@@ -15,7 +15,7 @@
 #endif
 
 uMToken *
-gen_tok (int kind, int subkind,size_t addend)
+gen_tok (enum eMToken kind, enum eMSToken subkind, size_t addend)
 {
   uMToken *ret;
   switch (kind)
@@ -146,7 +146,7 @@ release_tok (uMToken *tok)
 }
 
 uMToken *
-gen_value (int skind, uint64_t val, int is_signed, int size)
+gen_value (enum eMSToken skind, uint64_t val, int is_signed, int size)
 {
   uMToken *ret = gen_tok (eMToken_value, skind, 0);
   MTOKEN_VALUE (ret) = val;
@@ -157,7 +157,7 @@ gen_value (int skind, uint64_t val, int is_signed, int size)
 }
 
 uMToken *
-gen_name (int skind, const char *name)
+gen_name (enum eMSToken skind, const char *name)
 {
   uMToken *ret;
   
@@ -170,7 +170,7 @@ gen_name (int skind, const char *name)
 }
 
 uMToken *
-gen_dim (int skind,uint64_t val, const char *non_tt_param, int fSigned, int fNegate)
+gen_dim (enum eMSToken skind, uint64_t val, const char *non_tt_param, int fSigned, int fNegate)
 {
   uMToken *ret = gen_tok (eMToken_dim, skind, 0);
   
@@ -182,7 +182,7 @@ gen_dim (int skind,uint64_t val, const char *non_tt_param, int fSigned, int fNeg
 }
 
 uMToken *
-gen_unary (int skind, uMToken *un)
+gen_unary (enum eMSToken skind, uMToken *un)
 {
   uMToken *ret = gen_tok (eMToken_unary, skind, 0);
   MTOKEN_UNARY (ret) = un;
@@ -190,7 +190,7 @@ gen_unary (int skind, uMToken *un)
 }
 
 uMToken *
-gen_binary (int skind, uMToken *l, uMToken *r)
+gen_binary (enum eMSToken skind, uMToken *l, uMToken *r)
 {
   uMToken *ret = gen_tok (eMToken_binary, skind, 0);
   MTOKEN_BINARY_LEFT (ret) = l;
@@ -333,11 +333,6 @@ print_decl1 (FILE *fp, uMToken *r)
 	    fprintf (fp,"::");
 	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
 	    break;
-	  case eMST_typedvar:
-	    print_decl1 (fp, MTOKEN_BINARY_LEFT (r));
-	    fprintf (fp," ");
-	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
-	    break;
 	  case eMST_assign:
 	    print_decl1 (fp, MTOKEN_BINARY_LEFT (r));
 	    fprintf (fp,"=");
@@ -369,6 +364,8 @@ print_decl1 (FILE *fp, uMToken *r)
 	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
 	    break;
 	  }
+	  break;
+	default:
 	  break;
       }
       r = MTOKEN_CHAIN (r);

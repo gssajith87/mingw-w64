@@ -1,3 +1,25 @@
+/*! \def GET_CHAR(CTX)
+    \brief Get currently marked character from \a CTX.
+    
+    Get character from at current possition via \a CTX.
+*/
+/*! \def INC_CHAR(CTX)
+     \brief Increments \a ctx position.
+     
+     Move marker to next character if it is currently not the last via \a CTX.
+*/
+/*! \def DEC_CHAR(CTX)
+     \brief Decrements \a ctx position.
+     
+     Move marker to previous character if it is currently not the first via \a CTX.
+*/
+/*! \def SKIP_CHAR(CTX,LEN)
+     \brief Increments \a CTX position by LEN
+     
+     Increments \a CTX marker by LEN characters, points to last character if
+     marker is moved out of bounds.
+*/
+
 #ifndef _M_MS_HXX
 #define _M_MS_HXX
 
@@ -11,15 +33,15 @@ typedef struct sCached {
 } sCached;
 
 typedef struct sMSCtx {
-  const char *name;
-  const char *end;
-  const char *pos;
-  int err;
-  int fExplicitTemplateParams;
-  int fGetTemplateArgumentList;
-  sCached *pZNameList;
-  sCached *pTemplateArgList;
-  sCached *pArgList;
+  const char *name;                /**< MSVC export name. */
+  const char *end;                 /**< Last character in the export name. */
+  const char *pos;                 /**< Export name processing position marker. */
+  int err;                         /**< Error codes. */
+  int fExplicitTemplateParams;     /**< Indicates that explicit template parameters are used. */
+  int fGetTemplateArgumentList;    /**< Indicates that the template argument list should be used. */
+  sCached *pZNameList;             /**< z-buffer of decoded names. */
+  sCached *pTemplateArgList;       /**< z-buffer of decoded template arguments. */
+  sCached *pArgList;               /**< z-buffer if decoded arguments. */
 } sMSCtx;
 
 #define GET_CHAR(CTX)	((CTX)->pos == (CTX)->end ? 0 : (CTX)->pos[0])
@@ -27,6 +49,14 @@ typedef struct sMSCtx {
 #define DEC_CHAR(CTX)   do { if ((CTX)->pos != (CTX)->name) (CTX)->pos--; } while (0)
 #define SKIP_CHAR(CTX,LEN) do { (CTX)->pos += (LEN); if ((CTX)->pos > (CTX)->end) (CTX)->pos=(CTX)->end; } while (0)
 
+/** 
+ * Decodes an MSVC export name.
+ * @param[in] name MSVC C++ mangled export string.
+ * @see print_decl()
+ * @see release_tok()
+ * @see uMToken
+ * @return Token containing information about the mangled string, needs to be freed after use.
+ */
 uMToken *decode_ms_name (const char *name);
 int encode_ms_name (uMToken *tok);
 

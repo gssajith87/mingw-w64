@@ -632,8 +632,8 @@ get_operator_name (sMSCtx *c, int fIsTemplate, int *pfReadTemplateArguments)
         switch (ch)
           {
             case '0':
-              h = gen_name (eMST_rtti,"Type Descriptor");
-              return m_oper (gen_binary (eMST_typedvar, get_data_type (c) , h));
+              h = gen_name (eMST_rtti,"$type_descriptor");
+              return m_oper (m_combine (get_data_type (c) , h));
             case '1':
               h = gen_name (eMST_rtti, "base_class_descriptor");
               n = m_element (get_dimension_signed (c));

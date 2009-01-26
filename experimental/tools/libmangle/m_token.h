@@ -42,19 +42,18 @@ typedef enum eMSToken {
   eMST_udt_returning,
   eMST_coloncolon, /*  eMToken_binary :: */
   eMST_assign,
-  eMST_typedvar,
   eMST_templateparam,
   eMST_nonetypetemplateparam,
   eMST_exp, /* dim 'e' dim */
   eMST_combine,
   eMST_ecsu,
   eMST_based,
-  eMST_initfield,
+  eMST_initfield
 } eMSToken;
 
 typedef struct sMToken_base {
-  int kind;
-  int subkind;
+  enum eMToken kind;
+  enum eMSToken subkind;
   union uMToken *chain;
   int flags;
 } sMToken_base;
@@ -124,17 +123,45 @@ typedef union uMToken {
   sMToken_binary binary;
 } uMToken;
 
-uMToken *gen_tok (int kind, int subkind,size_t addend);
+uMToken *gen_tok (enum eMToken kind, enum eMSToken subkind, size_t addend);
+
+/**
+ * Frees uMToken chains.
+ * @param tok uMToken to be freed, will always be set to NULL.
+ * @see uMToken
+ * @return Returns a NULL pointer.
+ */
 uMToken *release_tok (uMToken *tok);
+
+/**
+ * Chains uMTokens together.
+ * @param[in] l uMtoken chain to link up with.
+ * @param[in] add uMtoken to add to chain.
+ * @see uMToken.
+ */
 uMToken *chain_tok (uMToken *l, uMToken *add);
+
+/**
+ * Dumps uMToken to a file descriptor for debugging.
+ * @param[in] fp File descriptor to print the token to.
+ * @param[in] p uMToken chain to print.
+ * @see uMToken
+ */
 void dump_tok (FILE *fp, uMToken *p);
+
+/** 
+ * Prints C++ name to file descriptor.
+ * @param[in] fp Output file descriptor.
+ * @param[in] p Token containing information about the C++ name.
+ * @see decode_ms_name()
+ * @see uMToken
+ */
 void print_decl (FILE *fp, uMToken *p);
 
-uMToken *gen_value (int skind, uint64_t val, int is_signed, int size);
-uMToken *gen_name (int skind, const char *name);
-uMToken *gen_dim (int skind,uint64_t val, const char *non_tt_param, int fSigned, int fNegate);
-uMToken *gen_unary (int skind,uMToken *un);
-uMToken *gen_binary (int skind, uMToken *l, uMToken *r);
-
+uMToken *gen_value (enum eMSToken skind, uint64_t val, int is_signed, int size);
+uMToken *gen_name (enum eMSToken skind, const char *name);
+uMToken *gen_dim (enum eMSToken skind, uint64_t val, const char *non_tt_param, int fSigned, int fNegate);
+uMToken *gen_unary (enum eMSToken skind, uMToken *un);
+uMToken *gen_binary (enum eMSToken skind, uMToken *l, uMToken *r);
 
 #endif

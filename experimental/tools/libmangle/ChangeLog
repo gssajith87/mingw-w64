@@ -1,0 +1,10 @@
+2009-01-26  JonY
+
+	* m_ms.c: Add initial doxygen format documentation and fix
+	some gcc pedantic warnings.
+
+2009-01-26  Kai Tietz  <kai.tietz@onevision.com>
+
+	* m_ms.c, m_ms.h, m_token.c, m_token.h:
+	Initial version.
+
