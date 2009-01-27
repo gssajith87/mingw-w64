@@ -27,9 +27,15 @@
 
 #define ENCODING_TYPE_MS	1
 
+/**
+ * z-buffer for decoded names, decoded 
+ * templates args and decoded args.
+ * @see sMSCtx
+ * @see get_zbuf_name()
+ */
 typedef struct sCached {
-  int count;
-  uMToken *arr[10];
+  int count;                       /**< uMToken pointers in array count. */
+  uMToken *arr[10];                /**< Array of pointers to recently decoded tokens. */
 } sCached;
 
 typedef struct sMSCtx {
@@ -55,7 +61,8 @@ typedef struct sMSCtx {
  * @see print_decl()
  * @see release_tok()
  * @see uMToken
- * @return Token containing information about the mangled string, needs to be freed after use.
+ * @return Token containing information about the mangled string, 
+ * use release_tok() to free after use.
  */
 uMToken *decode_ms_name (const char *name);
 int encode_ms_name (uMToken *tok);

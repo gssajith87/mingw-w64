@@ -1,28 +1,40 @@
 #ifndef _M_TOKEN_HXX
 #define _M_TOKEN_HXX
 
+/**
+ * eMToken is used to inform gen_tok()
+ * the type of Token to generate.
+ * @see gen_tok()
+ * @see eMSToken
+ * @see uMToken
+ */
 typedef enum eMToken {
-  eMToken_none = 0,
-  eMToken_value = 1,
-  eMToken_name = 2,
-  eMToken_dim = 3,
-  eMToken_unary = 4,
-  eMToken_binary = 5,
-  eMToken_MAX
+  eMToken_none = 0,                /**< Token type: None.  */
+  eMToken_value = 1,               /**< Token type: Value. */
+  eMToken_name = 2,                /**< Token type: Name.  */
+  eMToken_dim = 3,                 /**< Token type: Dim.   */
+  eMToken_unary = 4,               /**< Token type: Unary  */
+  eMToken_binary = 5,              /**< Token type: Binary */
+  eMToken_MAX                      /**< Unused sentinel.   */
 } eMToken;
 
+/**
+ * eMToken "Subkind" enumeration list.
+ * @see eMToken
+ */
 typedef enum eMSToken {
-  eMST_unmangled = 0, /* eMToken_name */
+  eMST_unmangled = 0,              /**< Name is unmagled. */
   eMST_nttp = 1,
-  eMST_name = 2,
-  eMST_colon = 3, /* ...: */
+  eMST_name = 2,                   /**< Decoded function name. */
+  eMST_colon = 3, /* ...: */       /**< Class member accessibility. */
   eMST_rtti = 4,
-  eMST_cv = 5,
-  eMST_vftable = 6, eMST_vbtable = 7, eMST_vcall = 8,
-  eMST_opname = 9,
-  eMST_templargname,
-  eMST_type,
-  
+  eMST_cv = 5,                     /**< Function call convention / data qualifiers / pointer. */
+  eMST_vftable = 6,                /**< Virtual Function Table. */
+  eMST_vbtable = 7,                /**< Virtual Base Table. */
+  eMST_vcall = 8,                  /**< Virtual Function Call. */
+  eMST_opname = 9,                 /**< Overloaded operator. */
+  eMST_templargname = 10,          /**< Explicit template arg name. */
+  eMST_type = 11;                  /**< Function return type. */
   eMST_dim, /* eMToken_dim */
   eMST_val, /* sMToken_val */
   eMST_gcarray, /* __gc[,,,,] */
@@ -36,7 +48,7 @@ typedef enum eMSToken {
   eMST_rframe, /* () */
   eMST_destructor, /* ~ */
   eMST_oper, /* indicates that this is an operand */
-  eMST_colonarray, /* ::[] */
+  eMST_colonarray, /* ::[] */          
   eMST_lexical_frame,
   eMST_scope,
   eMST_udt_returning,
@@ -45,7 +57,7 @@ typedef enum eMSToken {
   eMST_templateparam,
   eMST_nonetypetemplateparam,
   eMST_exp, /* dim 'e' dim */
-  eMST_combine,
+  eMST_combine,                    /** Unary grouping. */
   eMST_ecsu,
   eMST_based,
   eMST_initfield
@@ -58,7 +70,10 @@ typedef struct sMToken_base {
   int flags;
 } sMToken_base;
 
+/**Sets the token kind, @a PT pointer to a base uMToken. */
 #define MTOKEN_KIND(PT)		((PT)->base.kind)
+
+/**Sets the token subkind, @a PT pointer to a base uMToken. */
 #define MTOKEN_SUBKIND(PT)	((PT)->base.subkind)
 #define MTOKEN_CHAIN(PT)	((PT)->base.chain)
 #define MTOKEN_FLAGS(PT)	((PT)->base.flags)
@@ -103,6 +118,7 @@ typedef struct sMToken_Unary
   union uMToken *unary;
 } sMToken_Unary;
 
+/**Sets the token unary, @a PT pointer to a unary uMToken. */
 #define MTOKEN_UNARY(PT)	((PT)->unary.unary)
 
 typedef struct sMToken_binary {
@@ -126,10 +142,10 @@ typedef union uMToken {
 uMToken *gen_tok (enum eMToken kind, enum eMSToken subkind, size_t addend);
 
 /**
- * Frees uMToken chains.
- * @param tok uMToken to be freed, will always be set to NULL.
+ * Frees uMToken chains recursively.
+ * @param[in] tok uMToken to be freed, will always be set to NULL.
  * @see uMToken
- * @return Returns a NULL pointer.
+ * @return a NULL pointer.
  */
 uMToken *release_tok (uMToken *tok);
 
@@ -137,6 +153,7 @@ uMToken *release_tok (uMToken *tok);
  * Chains uMTokens together.
  * @param[in] l uMtoken chain to link up with.
  * @param[in] add uMtoken to add to chain.
+ * @return @a unchanged l
  * @see uMToken.
  */
 uMToken *chain_tok (uMToken *l, uMToken *add);
