@@ -1,4 +1,9 @@
-2009-01-26  JonY
+2009-01-28  JonY  <jon_y@users.sourceforge.net>
+
+	* m_ms.h, m_token.h: Document some enums, structs and unions.
+	* Doxyfile: Add Doxyfile, use "doxygen" to generate HTML docs.
+
+2009-01-26  JonY  <jon_y@users.sourceforge.net>
 
 	* m_ms.c: Add initial doxygen format documentation and fix
 	some gcc pedantic warnings.
