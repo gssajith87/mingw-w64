@@ -34,7 +34,7 @@ typedef enum eMSToken {
   eMST_vcall = 8,                  /**< Virtual Function Call. */
   eMST_opname = 9,                 /**< Overloaded operator. */
   eMST_templargname = 10,          /**< Explicit template arg name. */
-  eMST_type = 11;                  /**< Function return type. */
+  eMST_type = 11,                  /**< Function return type. */
   eMST_dim, /* eMToken_dim */
   eMST_val, /* sMToken_val */
   eMST_gcarray, /* __gc[,,,,] */
