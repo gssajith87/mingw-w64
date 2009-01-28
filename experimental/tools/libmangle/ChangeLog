@@ -1,3 +1,22 @@
+2009-01-28  Kai Tietz  <kai.tietz@onevision.com>
+
+	* m_ms.c (m_colon): New.
+	(m_opname): New.
+	(m_rtti): New.
+	(m_frame): New.
+	(m_lexical_frame): New.
+	(m_ltgt): New.
+	(m_rframe): New.
+	(m_combine): Add sMSCtx argument.
+	(m_type): Likewise.
+	(m_cv): Likewise.
+	(m_coloncolon): Likewise.
+	(m_element): Likewise.
+	(m_array): Likewise.
+	(m_scope): Likewise.
+	(m_oper): Likewise.
+	(m_name): Likewise.
+
 2009-01-28  JonY  <jon_y@users.sourceforge.net>
 
 	* m_ms.h, m_token.h: Document some enums, structs and unions.
