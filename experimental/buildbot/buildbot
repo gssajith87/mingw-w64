@@ -1,0 +1,141 @@
+#!/bin/sh
+#
+# buildbot	start and stop buildbot instances
+#
+# !chkconfig: 35 98 10
+# description: start and stop buildbot instances
+### BEGIN INIT INFO
+# Default-Start:  3 4 5
+# Default-Stop: 0 1 2 6
+# Short-Description: start and stop buildbot instances
+# Description: start and stop buildbot instances
+### END INIT INFO
+
+
+. /etc/rc.d/init.d/functions
+RETVAL=0
+BUILDBOT_ROOT="/opt/buildbot/mingw-w64"
+DIRCPROXY_CONF="$BUILDBOT_ROOT/master/dircproxy.conf"
+DIRCPROXY_PID="$BUILDBOT_ROOT/master/dircproxy.pid"
+
+start_dircproxy() {
+	if ! pidofproc -p "$DIRCPROXY_PID" dircproxy; then
+	    echo -n $"Starting dircpxory: "
+	    sudo -u mook dircproxy "--pid-file=$DIRCPROXY_PID" -f "$DIRCPROXY_CONF"
+	    RETVAL=$?
+	    [ $RETVAL -eq 0 ] && success || failure
+	    echo
+	fi
+}
+
+start_single() {
+	if [ "$1" == "master" ]; then
+	    start_dircproxy || return $?
+	fi
+	if pidofproc -p "$BUILDBOT_ROOT/$1/twistd.pid" buildbot; then
+	    echo $"Buildbot $2 already started"
+	else
+	    echo -n $"Starting buildbot $2: "
+	    sudo -u mook buildbot start "$BUILDBOT_ROOT/$1" >>/var/log/buildbot.log 2>&1
+	    RETVAL=$?
+	    [ $RETVAL -eq 0 ] && success || failure
+	    echo
+	fi
+}
+start() {
+	if [ -z "$1" ]; then
+	    start_single master master
+	    start_single slave-uploader "uploader slave"
+	    start_single slave-linux "linux slave"
+	else
+	    start_single "$1" "$1"
+	fi
+}
+
+stop_single() {
+	if [ "$1" == "master" ]; then
+	    if ! pidofproc -p "$DIRCPROXY_PID" dircproxy; then
+	        echo -n $"Stopping dircproxy: "
+	        killproc -p "$DIRCPROXY_PID" dircproxy -SIGTERM
+	        RETVAL=$?
+	        [ $RETVAL -eq 0 ] && success || failure
+	        echo
+	    fi
+	fi
+	if pidofproc -p "$BUILDBOT_ROOT/$1/twistd.pid" buildbot; then
+	    echo -n $"Stopping buildbot $2: "
+	    sudo -u mook buildbot stop "$BUILDBOT_ROOT/$1" >>/var/log/buildbot.log 2>&1
+	    RETVAL=$?
+	    [ $RETVAL -eq 0 ] && success || failure
+	    echo
+	else
+	    echo $"Buildbot $2 not running"
+	fi
+}
+stop() {
+	if [ -z "$1" ]; then
+	    stop_single slave-linux "linux slave"
+	    stop_single slave-uploader "uploader slave"
+	    stop_single master master
+	else
+	    stop_single "$1" "$1"
+	fi
+}
+
+restart_single() {
+	if pidofproc -p "/opt/buildbot/mingw-w64/$1/twistd.pid" buildbot; then
+	    echo -n $"Restarting buildbot $2: "
+	    sudo -u mook buildbot restart "/opt/buildbot/mingw-w64/$1" >>/var/log/buildbot.log 2>&1
+	    RETVAL=$?
+	    [ $RETVAL -eq 0 ] && success || failure
+	    echo
+	fi
+}
+restart() {
+	if [ -z "$1" ]; then
+	    restart_single master master
+	    restart_single slave-uploader "uploader slave"
+	    restart_single slave-linux "linux slave"
+	else
+	    restart_single "$1" "$1"
+	fi
+}
+
+buildbot_status() {
+	MISSING=
+	pidofproc -p "/opt/buildbot/mingw-w64/master/twistd.pid" buildbot || MISSING="$MISSING master"
+        pidofproc -p "/opt/buildbot/mingw-w64/slave-uploader/twistd.pid" buildbot || MISSING="$MISSING slave-uploader"
+        pidofproc -p "/opt/buildbot/mingw-w64/slave-linux/twistd.pid" buildbot || MISSING="$MISSING slave-linux"
+	if [ -z "$MISSING" ]; then
+	    echo $"Buildbot is correctly running"
+	    return 0
+	else
+	    echo $"Buildbot is not runing$MISSING"
+	    return 3
+	fi
+}
+
+case "$1" in
+	start)
+		start "$2"
+		;;
+	stop)
+		stop "$2"
+		;;
+	status)
+		buildbot_status
+		RETVAL=$?
+		;;
+	restart)
+		stop "$2"
+		start "$2"
+		;;
+	condrestart|try-restart)
+		restart "$2"
+		;;
+	*)
+		echo $"Usage: $prog {start|stop|status|restart|try-restart} [instance]"
+		exit 1
+esac
+exit $RETVAL
+
