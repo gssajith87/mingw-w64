@@ -42,7 +42,7 @@ typedef struct sMSCtx {
   const char *name;                /**< MSVC export name. */
   const char *end;                 /**< Last character in the export name. */
   const char *pos;                 /**< Export name processing position marker. */
-  int err;                         /**< Error codes. */
+  int err;                         /**< Error codes. Zero indicates success. */
   int fExplicitTemplateParams;     /**< Indicates that explicit template parameters are used. */
   int fGetTemplateArgumentList;    /**< Indicates that the template argument list should be used. */
   sCached *pZNameList;             /**< z-buffer of decoded names. */
