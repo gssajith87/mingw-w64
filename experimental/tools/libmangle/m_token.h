@@ -2,11 +2,10 @@
 #define _M_TOKEN_HXX
 
 /**
- * eMToken is used to inform gen_tok()
- * the type of Token to generate.
+ * Token "Kind" enumeration list.
  * @see gen_tok()
  * @see eMSToken
- * @see uMToken
+ * @see sMToken_base
  */
 typedef enum eMToken {
   eMToken_none = 0,                /**< Token type: None.  */
@@ -19,8 +18,10 @@ typedef enum eMToken {
 } eMToken;
 
 /**
- * eMToken "Subkind" enumeration list.
+ * Token "Subkind" enumeration list.
+ * @see gen_tok()
  * @see eMToken
+ * @see sMToken_base
  */
 typedef enum eMSToken {
   eMST_unmangled = 0,              /**< Name is unmagled. */
@@ -42,11 +43,11 @@ typedef enum eMSToken {
   eMST_array,
   eMST_element,
   eMST_template_argument_list,
-  eMST_ltgt, /* <> */
+  eMST_ltgt, /* <> */               /**< Docoded has angular brackets */
   eMST_frame, /* {} */
-  eMST_throw, /* throw ... */
+  eMST_throw, /* throw ... */       /**< Decoded has Exception throw in name. */
   eMST_rframe, /* () */
-  eMST_destructor, /* ~ */
+  eMST_destructor, /* ~ */          /**< Decoded is a destructor */
   eMST_oper, /* indicates that this is an operand */
   eMST_colonarray, /* ::[] */          
   eMST_lexical_frame,
@@ -54,26 +55,24 @@ typedef enum eMSToken {
   eMST_udt_returning,
   eMST_coloncolon, /*  eMToken_binary :: */
   eMST_assign,
-  eMST_templateparam,
-  eMST_nonetypetemplateparam,
+  eMST_templateparam,               /**< Explicit template. */
+  eMST_nonetypetemplateparam,       /**< Non-explicit template. */
   eMST_exp, /* dim 'e' dim */
-  eMST_combine,                    /** Unary grouping. */
+  eMST_combine,                     /**< Unary grouping. */
   eMST_ecsu,
   eMST_based,
   eMST_initfield
 } eMSToken;
 
 /**
- * Token base descriptor about decoded fragments
- * @see eMToken
- * @see eMSToken
- * @see uMToken
+ * Token base descriptor header.
+ * Descibes the type of token being processed.
  */
 typedef struct sMToken_base {
   enum eMToken kind;            /**< Token kind. */
   enum eMSToken subkind;        /**< Token Subkind. */
   union uMToken *chain;         /**< Pointer to next token. NULL terminated. */
-  int flags;
+  int flags;                    /**< Token flags. */
 } sMToken_base;
 
 /**Sets the token kind, @a PT pointer to a base uMToken. */
@@ -84,32 +83,39 @@ typedef struct sMToken_base {
 
 /**Sets the pointer to the next token in the chain. */
 #define MTOKEN_CHAIN(PT)	((PT)->base.chain)
+
+/**Sets flags in base descriptor. */
 #define MTOKEN_FLAGS(PT)	((PT)->base.flags)
 
-#define MTOKEN_FLAGS_UDC	0x1
-#define MTOKEN_FLAGS_NOTE	0x2
-#define MTOKEN_FLAGS_PTRREF	0x4
-#define MTOKEN_FLAGS_ARRAY	0x8
+#define MTOKEN_FLAGS_UDC    0x1
+#define MTOKEN_FLAGS_NOTE   0x2 /**< Contains "note" name token.*/
+#define MTOKEN_FLAGS_PTRREF 0x4 /**< Decoded fragment is a referrence. */
+#define MTOKEN_FLAGS_ARRAY  0x8 /**< Decoded fragment has an array-like expression.*/
 
+/**
+ * "value" token.
+ * Contains numerical expressions for decoded names.
+ * @see sMToken_dim
+ */
 typedef struct sMToken_value {
   sMToken_base base;            /**< Base descriptor header. */
-  uint64_t value;
+  uint64_t value;               /**< Integer value. */
   uint64_t size : 5;            /**< Byte width of value. */
   uint64_t is_signed : 1;       /**< Value signed bit */
 } sMToken_value;
 
-/**Sets the token value. */
+/**Sets the token value. @a PT pointer to a value uMToken.*/
 #define MTOKEN_VALUE(PT)	((PT)->value.value)
 
-/**Sets the signed bit on value token. */
+/**Sets the signed bit on value token. @a PT pointer to a value uMToken.*/
 #define MTOKEN_VALUE_SIGNED(PT)	((PT)->value.is_signed)
 
-/**Sets the byte width of value in value token. */
+/**Sets the byte width of value in value token. @a PT pointer to a value uMToken.*/
 #define MTOKEN_VALUE_SIZE(PT)	((PT)->value.size)
 
 /**
- * Name Token contains the text string
- * of the decoded fragment.
+ * "name" token.
+ * Contains text string expressions of the decoded fragment.
  */
 typedef struct sMToken_name {
   sMToken_base base;            /**< Base descriptor header. */
@@ -119,52 +125,69 @@ typedef struct sMToken_name {
 /** Retrieve or set the name string, @a PT pointer to a name uMToken */
 #define MTOKEN_NAME(PT)		((PT)->name.name)
 
+/**
+ * "dim" token.
+ * Contains array-like expressions in decoded names.
+ */
 typedef struct sMToken_dim {
   sMToken_base base;            /**< Base descriptor header. */
-  union uMToken *value;
-  union uMToken *non_tt_param;
-  int beNegate;
+  union uMToken *value;         /**< Pointer to value token. */
+  union uMToken *non_tt_param;  /**< Pointer to C++ template name token. */
+  int beNegate;                 /**< 1 for negative "values". */
 } sMToken_dim;
 
+/** Retrieve or set the value of a token, @a PT pointer to a value uMToken */
 #define MTOKEN_DIM_VALUE(PT)	((PT)->dim.value)
+
+/** Retrieve or set the template of a token, @a PT pointer to a name uMToken */
 #define MTOKEN_DIM_NTTP(PT)	((PT)->dim.non_tt_param)
+
+/** Retrieve or set negative bit on value token, @a PT pointer to an generic uMToken */
 #define MTOKEN_DIM_NEGATE(PT)	((PT)->dim.beNegate)
 
+/**
+ * Unary node token.
+ * Contains a pointer to a single generic leaf element.
+ */
 typedef struct sMToken_Unary
 {
   sMToken_base base;            /**< Base descriptor header. */
-  union uMToken *unary;
+  union uMToken *unary;         /**< Pointer to leaf element. */
 } sMToken_Unary;
 
-/**Sets the token unary, @a PT pointer to a unary uMToken. */
+/**Sets the leaf element on a unary token, @a PT pointer to a unary uMToken. */
 #define MTOKEN_UNARY(PT)	((PT)->unary.unary)
 
+/** 
+ * Binary node token.
+ * Contains pointers to any 2 generic token instances as child node elements. 
+ * May act as a connector for decoded C++ names.
+ */
 typedef struct sMToken_binary {
   sMToken_base base;            /**< Base descriptor header. */
-  union uMToken *left;
-  union uMToken *right;
+  union uMToken *left;          /**< Left node element. */
+  union uMToken *right;         /**< Right node element. */
 } sMToken_binary;
 
+/**Sets the left node on binary token, @a PT pointer to a binary uMToken. */
 #define MTOKEN_BINARY_LEFT(PT)		((PT)->binary.left)
+
+/**Sets the right node on binary token, @a PT pointer to a binary uMToken. */
 #define MTOKEN_BINARY_RIGHT(PT)		((PT)->binary.right)
 
 /**
- * Generic tokens instances.
+ * Generic token instances.
  * Type of token determined by base descriptor in members.
- * @see sMToken_base
- * @see sMToken_value
- * @see sMToken_name
- * @see sMToken_dim
- * @see sMToken_Unary
- * @see sMToken_binary
+ * Base descriptor header available in all members through type punning.
+ * @see gen_tok()
  */
 typedef union uMToken {
-  sMToken_base base;
-  sMToken_value value;
-  sMToken_name name;
-  sMToken_dim dim;
-  sMToken_Unary unary;
-  sMToken_binary binary;
+  sMToken_base base;        /**< Base descriptor header. */
+  sMToken_value value;      /**< "value" token. */
+  sMToken_name name;        /**< "name" token. */
+  sMToken_dim dim;          /**< "dim" token */
+  sMToken_Unary unary;      /**< Unary node token. */
+  sMToken_binary binary;    /**< Binary node token. */
 } uMToken;
 
 /**
@@ -173,9 +196,6 @@ typedef union uMToken {
  * @param[in] kind Kind of token to construct
  * @param[in] subkind Subkind of token to construct
  * @param[in] addend Additional byte padding at the end.
- * @see uMToken
- * @see eMToken
- * @see eMSToken
  * @see release_tok()
  */
 uMToken *gen_tok (enum eMToken kind, enum eMSToken subkind, size_t addend);
@@ -183,7 +203,6 @@ uMToken *gen_tok (enum eMToken kind, enum eMSToken subkind, size_t addend);
 /**
  * Frees uMToken chains recursively.
  * @param[in] tok uMToken to be freed, will always be set to NULL.
- * @see uMToken
  * @return a NULL pointer.
  */
 uMToken *release_tok (uMToken *tok);
@@ -192,8 +211,7 @@ uMToken *release_tok (uMToken *tok);
  * Chains uMTokens together.
  * @param[in] l uMtoken chain to link up with.
  * @param[in] add uMtoken to add to chain.
- * @return @a unchanged l
- * @see uMToken.
+ * @return @a l unchanged
  */
 uMToken *chain_tok (uMToken *l, uMToken *add);
 
@@ -201,7 +219,6 @@ uMToken *chain_tok (uMToken *l, uMToken *add);
  * Dumps uMToken to a file descriptor for debugging.
  * @param[in] fp File descriptor to print the token to.
  * @param[in] p uMToken chain to print.
- * @see uMToken
  */
 void dump_tok (FILE *fp, uMToken *p);
 
@@ -210,7 +227,6 @@ void dump_tok (FILE *fp, uMToken *p);
  * @param[in] fp Output file descriptor.
  * @param[in] p Token containing information about the C++ name.
  * @see decode_ms_name()
- * @see uMToken
  */
 void print_decl (FILE *fp, uMToken *p);
 
@@ -220,23 +236,49 @@ void print_decl (FILE *fp, uMToken *p);
  * @param[in] val Sets the value on token,
  * @param[in] is_signed Signed bit of \a val.
  * @param[in] size Width of \a val.
- * @return Pointer to token.
- * @see uMToken
- * @see eMSToken
+ * @return Pointer to value token.
+ * @see sMToken_value
  */
 uMToken *gen_value (enum eMSToken skind, uint64_t val, int is_signed, int size);
 
 /**
- * Constructs a "name" kind value.
+ * Constructs a "name" kind token.
  * @param[in] skind Token subkind.
  * @param[in] name Pointer to name string.
- * @return Pointer to token.
- * @see uMToken
- * @see eMSToken
+ * @return Pointer to name token.
+ * @see sMToken_name
  */
 uMToken *gen_name (enum eMSToken skind, const char *name);
+
+/**
+ * Constructs a "dim" kind token.
+ * @param[in] skind Token subkind.
+ * @param[in] val Token numerical value.
+ * @param[in] non_tt_param pointer to decoded C++ template name.
+ * @param[in] fSigned Signedness of the numerical value.
+ * @param[in] fNegate 1 for "val" is negative digit.
+ * @return Pointer to dim token.
+ * @see sMToken_dim
+ */
 uMToken *gen_dim (enum eMSToken skind, uint64_t val, const char *non_tt_param, int fSigned, int fNegate);
+
+/**
+ * Constructs a "unary" kind token.
+ * @param[in] skind Token subkind.
+ * @param[in] un Pointer to leaf element.
+ * @return Pointer to a unary token.
+ * @see sMToken_unary
+ */
 uMToken *gen_unary (enum eMSToken skind, uMToken *un);
+
+/**
+ * Generates a binary node token.
+ * @param[in] skind Token subKind.
+ * @param[in] l Left node element.
+ * @param[in] r Right node element.
+ * @return Pointer to binary token.
+ * @see sMToken_binary
+ */
 uMToken *gen_binary (enum eMSToken skind, uMToken *l, uMToken *r);
 
 #endif
