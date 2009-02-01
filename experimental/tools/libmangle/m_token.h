@@ -30,49 +30,50 @@ typedef enum eMToken {
 
 /**
  * Token "Subkind" enumeration list.
+ * Also used by internal function print_decl1() for printing.
  * @see gen_tok()
  * @see eMToken
  * @see sMToken_base
  */
 typedef enum eMSToken {
-  eMST_unmangled = 0,              /**< Name is unmagled. */
-  eMST_nttp = 1,
-  eMST_name = 2,                   /**< Decoded function name. */
-  eMST_colon = 3, /* ...: */       /**< Class member accessibility. */
-  eMST_rtti = 4,
-  eMST_cv = 5,                     /**< Function call convention / data qualifiers / pointer. */
-  eMST_vftable = 6,                /**< Virtual Function Table. */
-  eMST_vbtable = 7,                /**< Virtual Base Table. */
-  eMST_vcall = 8,                  /**< Virtual Function Call. */
-  eMST_opname = 9,                 /**< Overloaded operator. */
-  eMST_templargname = 10,          /**< Explicit template arg name. */
-  eMST_type = 11,                  /**< Function return type. */
-  eMST_dim, /* eMToken_dim */
-  eMST_val, /* sMToken_val */
-  eMST_gcarray, /* __gc[,,,,] */
-  eMST_slashed, /* eMToken_unary */
-  eMST_array,
-  eMST_element,
-  eMST_template_argument_list,
-  eMST_ltgt, /* <> */               /**< Docoded has angular brackets */
-  eMST_frame, /* {} */
-  eMST_throw, /* throw ... */       /**< Decoded has Exception throw in name. */
-  eMST_rframe, /* () */
-  eMST_destructor, /* ~ */          /**< Decoded is a destructor */
-  eMST_oper, /* indicates that this is an operand */
-  eMST_colonarray, /* ::[] */          
-  eMST_lexical_frame,
-  eMST_scope,
-  eMST_udt_returning,
-  eMST_coloncolon, /*  eMToken_binary :: */
-  eMST_assign,
+  eMST_unmangled = 0,               /**< Name is unmagled. */
+  eMST_nttp = 1,                    /**< Template name. */
+  eMST_name = 2,                    /**< Decoded function name. */
+  eMST_colon = 3,                   /**< Class member accessibility. */
+  eMST_rtti = 4,                    /**< Runtime Type information name. */
+  eMST_cv = 5,                      /**< Function call convention / data qualifiers / pointer. */
+  eMST_vftable = 6,                 /**< Virtual Function Table. */
+  eMST_vbtable = 7,                 /**< Virtual Base Table. */
+  eMST_vcall = 8,                   /**< Virtual Function Call. */
+  eMST_opname = 9,                  /**< Overloaded operator. */
+  eMST_templargname = 10,           /**< Explicit template arg name. */
+  eMST_type = 11,                   /**< Function return type. */
+  eMST_dim,                         /**< Print array-like expression. @see eMToken_dim */
+  eMST_val,                         /**< Print value expression. @see sMToken_val */
+  eMST_gcarray, /* __gc[,,,,] */    /**< MSVC extenstion: "__gc" Managed C++ reference. */
+  eMST_slashed,                     /**< MTOKEN_UNARY appended and prepended with "/". */
+  eMST_array,                       /**< MTOKEN_UNARY enclosed by square brackets. */
+  eMST_element,                     /**< MTOKEN_UNARY in an argument list. */
+  eMST_template_argument_list,      /**< MTOKEN_UNARY in an argument list. */
+  eMST_ltgt,                        /**< MTOKEN_UNARY enclosed by angular brackets. */
+  eMST_frame,                       /**< MTOKEN_UNARY enclosed by curly brackets. */
+  eMST_throw,                       /**< MTOKEN_UNARY prepended by "throw ". */
+  eMST_rframe,                      /**< MTOKEN_UNARY enclosed by parentheses. */
+  eMST_destructor,                  /**< MTOKEN_UNARY prepended with "~". */
+  eMST_oper,                        /**< indicates that token an operand, prints from MTOKEN_UNARY. */
+  eMST_colonarray, /* ::[] */       /**< Unused, to be removed. */
+  eMST_lexical_frame,               /**< MTOKEN_UNARY enclosed by single quotes "'". */
+  eMST_scope,                       /**< MTOKEN_UNARY, unenclosed. */
+  eMST_udt_returning,               /**< User defined types (RTTI). */
+  eMST_coloncolon,                  /**< "::" between MTOKEN_BINARY_LEFT and MTOKEN_BINARY_RIGHT. */
+  eMST_assign,                      /**< "=" between MTOKEN_BINARY_LEFT and MTOKEN_BINARY_RIGHT and appended with "}". */
   eMST_templateparam,               /**< Explicit template. */
   eMST_nonetypetemplateparam,       /**< Non-explicit template. */
-  eMST_exp, /* dim 'e' dim */
+  eMST_exp,                         /**< dim 'e' (exponent) dim */
   eMST_combine,                     /**< Unary grouping. */
-  eMST_ecsu,
-  eMST_based,
-  eMST_initfield
+  eMST_ecsu,                        /**< Is an Enum/Class/Struct/Union */
+  eMST_based,                       /**< MSVC extension: "__based" Based addressing */
+  eMST_initfield                    /**< MSVC extension: Virtual class ctor/dtor type. To be removed.*/
 } eMSToken;
 
 /**
@@ -98,7 +99,7 @@ typedef struct sMToken_base {
 /**Sets flags in base descriptor. */
 #define MTOKEN_FLAGS(PT)	((PT)->base.flags)
 
-#define MTOKEN_FLAGS_UDC    0x1
+#define MTOKEN_FLAGS_UDC    0x1 /**< Indicates a following "name" token for named struct/union/class. */
 #define MTOKEN_FLAGS_NOTE   0x2 /**< Contains "note" name token.*/
 #define MTOKEN_FLAGS_PTRREF 0x4 /**< Decoded fragment is a referrence. */
 #define MTOKEN_FLAGS_ARRAY  0x8 /**< Decoded fragment has an array-like expression.*/
