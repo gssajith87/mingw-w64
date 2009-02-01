@@ -1,9 +1,18 @@
+2009-02-01  Kai Tietz  <kai.tietz@onevision.com>
+
+	* m_ms.c, m_token.c, m_token.h (sGcCtx): New.
+	(sGcElem): New.
+	(sMSCtx): Add new member gc of type sGcCtx.
+	Add to all gen_... methods new argument gc of type sGcCtx *.
+
 2009-01-31  JonY <jon_y@users.sourceforge.net>
-    * m_token.h: Add more documentation, cleans up some redundant info.
+
+	* m_token.h: Add more documentation, cleans up some redundant info.
 
 2009-01-30  JonY  <jon_y@users.sourceforge.net>
-    * m_token.h: Document more struct and union data fields.
-    * m_ms.h: Add error code clarification for sMSCtx struct.
+
+	* m_token.h: Document more struct and union data fields.
+	* m_ms.h: Add error code clarification for sMSCtx struct.
 
 2009-01-28  Kai Tietz  <kai.tietz@onevision.com>
 
