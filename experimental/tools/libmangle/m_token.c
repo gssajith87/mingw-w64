@@ -8,10 +8,10 @@
 #include "m_token.h"
 #include "m_ms.h"
 
-#ifdef __CYGWIN__
-#define MY_LL  "ll"
-#else
+#ifdef __MSVCRT__
 #define MY_LL  "I64"
+#else
+#define MY_LL  "ll"
 #endif
 
 uMToken *
