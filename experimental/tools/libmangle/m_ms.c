@@ -109,7 +109,7 @@ decode_ms_name (const char *name)
 
   if (!ret)
     {
-      ret = gen_name (eMST_unmangled, name);
+      ret = gen_name (ctx.gc, eMST_unmangled, name);
     }
 
   return ret;
@@ -230,7 +230,7 @@ get_zbuf_name (sMSCtx *c, int updateCache)
         }
     }
   dim=get_dimension_signed (c);
-  n=chain_tok (gen_name (eMST_templargname, ntmp), dim);
+  n=chain_tok (gen_name (c->gc, eMST_templargname, ntmp), dim);
   if (updateCache && c->pZNameList->count < 10)
     {
       c->pZNameList->arr[c->pZNameList->count] = n;
@@ -273,7 +273,7 @@ get_dimension (sMSCtx *c, int fSigned, int fNegate)
     {
       uint64_t v = (uint64_t) ((GET_CHAR (c)-'0') + 1);
       INC_CHAR (c);
-      return gen_dim (eMST_dim,v, non_tt_param, fSigned, fNegate);
+      return gen_dim (c->gc, eMST_dim,v, non_tt_param, fSigned, fNegate);
     }
 
   while (GET_CHAR (c) != '@')
@@ -298,7 +298,7 @@ get_dimension (sMSCtx *c, int fSigned, int fNegate)
       return NULL;
     }
   INC_CHAR (c);
-  return gen_dim (eMST_dim,v_r, non_tt_param, fSigned, fNegate);
+  return gen_dim (c->gc, eMST_dim,v_r, non_tt_param, fSigned, fNegate);
 }
 
 static uMToken *
@@ -364,7 +364,7 @@ get_scope (sMSCtx *c)
               }
             else
 	      {
-		n = m_coloncolon (c, gen_unary (eMST_slashed, get_decorated_name (c)), n);
+		n = m_coloncolon (c, gen_unary (c->gc, eMST_slashed, get_decorated_name (c)), n);
 	      }
           }
         else if (GET_CHAR (c) == 'I')
@@ -471,7 +471,7 @@ get_operator_name (sMSCtx *c, int fIsTemplate, int *pfReadTemplateArguments)
         n = get_zbuf_name (c, 0);
         c->pos = svName;
         if (n && ch == '1')
-          n=gen_unary (eMST_destructor, n);
+          n=gen_unary (c->gc, eMST_destructor, n);
         n = chain_tok (n, h);
         return m_oper (c, n);
       case '2':
@@ -593,11 +593,11 @@ get_operator_name (sMSCtx *c, int fIsTemplate, int *pfReadTemplateArguments)
       case '6':
         return m_oper (c, m_opname (c, "operator ^="));
       case '7':
-        return m_oper (c, gen_name (eMST_vftable, "$vftable"));
+        return m_oper (c, gen_name (c->gc, eMST_vftable, "$vftable"));
       case '8':
-        return m_oper (c, gen_name (eMST_vbtable, "$vbtable"));
+        return m_oper (c, gen_name (c->gc, eMST_vbtable, "$vbtable"));
       case '9':
-        return m_oper (c, gen_name (eMST_vcall, "vcall"));
+        return m_oper (c, gen_name (c->gc, eMST_vcall, "vcall"));
       case 'A':
         return m_oper (c, m_opname (c,"typeof"));
       case 'B':
@@ -631,7 +631,7 @@ get_operator_name (sMSCtx *c, int fIsTemplate, int *pfReadTemplateArguments)
       case 'O':
         return m_oper (c, m_opname (c, "__copy_ctor_closure"));
       case 'P':
-        return gen_unary (eMST_udt_returning, get_operator_name (c, 0, NULL));
+        return gen_unary (c->gc, eMST_udt_returning, get_operator_name (c, 0, NULL));
       case 'Q':
         return m_oper (c, m_opname (c,  "operator 'EH'"));
       case 'R':
@@ -649,7 +649,7 @@ get_operator_name (sMSCtx *c, int fIsTemplate, int *pfReadTemplateArguments)
               n = chain_tok (n, m_element (c, get_dimension_signed (c)));
               n = chain_tok (n, m_element (c, get_dimension (c, 0, 0)));
 	      n = m_frame (c, n);
-              return m_oper (c, gen_binary (eMST_assign, h, n));
+              return m_oper (c, gen_binary (c->gc, eMST_assign, h, n));
             case '2':
               return m_oper (c, m_rtti (c, "base_class_array"));
             case '3':
@@ -734,7 +734,7 @@ get_template_argument_list (sMSCtx *c)
           else if (GET_CHAR (c) == '?')
             {
               uMToken *sdim = get_dimension_signed (c);
-              h = gen_binary (eMST_templateparam, m_name (c, "template-parameter"), sdim);
+              h = gen_binary (c->gc, eMST_templateparam, m_name (c, "template-parameter"), sdim);
             }
           else
             h = get_primary_data_type (c, NULL);
@@ -759,7 +759,7 @@ get_template_argument_list (sMSCtx *c)
   while (c->err == 0);
   c->fGetTemplateArgumentList = 0;
   if (n)
-    n = gen_unary (eMST_template_argument_list, n);
+    n = gen_unary (c->gc, eMST_template_argument_list, n);
   return n;
 }
 
@@ -859,8 +859,8 @@ get_template_constant (sMSCtx *c)
     {
       n = get_dimension_signed (c);
       if (ch == 'D')
-        return gen_binary (eMST_templateparam, m_name (c, "template-parameter"), n);
-      return gen_binary (eMST_nonetypetemplateparam, m_name (c, "none-type-template-parameter"), n);
+        return gen_binary (c->gc, eMST_templateparam, m_name (c, "template-parameter"), n);
+      return gen_binary (c->gc, eMST_nonetypetemplateparam, m_name (c, "none-type-template-parameter"), n);
     }
   if (ch == '0')
     return get_dimension_signed (c);
@@ -878,7 +878,7 @@ get_template_constant (sMSCtx *c)
     }
   n = get_dimension_signed (c);
   exp = get_dimension_signed (c);
-  return gen_binary (eMST_exp, n, exp);
+  return gen_binary (c->gc, eMST_exp, n, exp);
 }
 
 static uMToken *
@@ -944,7 +944,7 @@ get_indirect_data_type (sMSCtx *c, uMToken *superType, char prType, uMToken *cvT
           INC_CHAR (c);
           state += (int)GET_CHAR (c);
           INC_CHAR (c);
-          n = gen_value (eMST_gcarray, (uint64_t) state, 0, 4);
+          n = gen_value (c->gc, eMST_gcarray, (uint64_t) state, 0, 4);
           if (superType)
             {
               if (!(MTOKEN_FLAGS (superType) & MTOKEN_FLAGS_ARRAY))
@@ -990,7 +990,7 @@ get_indirect_data_type (sMSCtx *c, uMToken *superType, char prType, uMToken *cvT
                   else
 		    {
 		      if (ret)
-			ret = gen_binary (eMST_coloncolon , get_scope (c), ret);
+			ret = gen_binary (c->gc, eMST_coloncolon , get_scope (c), ret);
 		      else
 			ret = get_scope (c);
 		    }
@@ -1139,7 +1139,7 @@ get_based_type (sMSCtx *c)
   if (GET_CHAR (c) == 0)
     {
       c->err = 2;
-      return gen_binary (eMST_based, n, NULL);
+      return gen_binary (c->gc, eMST_based, n, NULL);
     }
   ch = GET_CHAR (c);
   INC_CHAR (c);
@@ -1158,7 +1158,7 @@ get_based_type (sMSCtx *c)
 	fprintf (stderr, " *** get_based_type unknown '%c' (ignored)\n", ch);
 	break;
     }
-  return gen_binary (eMST_based, n, p);
+  return gen_binary (c->gc, eMST_based, n, p);
 }
 
 static uMToken *
@@ -1518,7 +1518,7 @@ get_ECSU_data_type (sMSCtx *c)
 	n = m_type (c, "cointerface");
 	break;
     }
-  return gen_binary (eMST_ecsu, n, get_scoped_name (c));
+  return gen_binary (c->gc, eMST_ecsu, n, get_scoped_name (c));
 }
 
 static uMToken *
@@ -2004,14 +2004,14 @@ compose_decl (sMSCtx *c, uMToken *symbol)
 		    m_element (c, n1),
 		    m_element (c, n2));
 		  n2 = m_frame (c, n2);
-		  n = m_combine (c, n, gen_binary (eMST_initfield,
+		  n = m_combine (c, n, gen_binary (c->gc, eMST_initfield,
 		    m_name (c, "vtordisp"),
 		    n2));
 	        }
 	      else
 	        {
 		  n2 = m_frame (c, m_element (c, n2));
-		  n = m_combine (c, n, gen_binary (eMST_initfield,
+		  n = m_combine (c, n, gen_binary (c->gc, eMST_initfield,
 		    m_name (c, "adjustor"),
 		    n2));
 	        }
@@ -2217,19 +2217,19 @@ m_combine (sMSCtx *c, uMToken *l, uMToken *r)
     return r;
   if (!r)
     return l;
-  return gen_binary (eMST_combine, l, r);
+  return gen_binary (c->gc, eMST_combine, l, r);
 }
 
 static uMToken *
 m_type (sMSCtx *c, const char *typname)
 {
-  return gen_name (eMST_type, typname);
+  return gen_name (c->gc, eMST_type, typname);
 }
 
 static uMToken *
 m_cv (sMSCtx *c, const char *cv)
 {
-  return gen_name (eMST_cv, cv);
+  return gen_name (c->gc, eMST_cv, cv);
 }
 
 static uMToken *
@@ -2239,83 +2239,83 @@ m_coloncolon (sMSCtx *c, uMToken *l, uMToken *r)
     return r;
   if (!r)
     return l;
-  return gen_binary (eMST_coloncolon, l, r);
+  return gen_binary (c->gc, eMST_coloncolon, l, r);
 }
 
 static uMToken *
 m_element (sMSCtx *c, uMToken *el)
 {
-  return gen_unary (eMST_element, el);
+  return gen_unary (c->gc, eMST_element, el);
 }
 
 static uMToken *
 m_array (sMSCtx *c, uMToken *dim)
 {
-  return gen_unary (eMST_array, dim);
+  return gen_unary (c->gc, eMST_array, dim);
 }
 
 static uMToken *
 m_scope (sMSCtx *c, uMToken *n)
 {
-  return gen_unary (eMST_scope, n);
+  return gen_unary (c->gc, eMST_scope, n);
 }
 
 static uMToken *
 m_oper (sMSCtx *c, uMToken *n)
 {
-  return gen_unary (eMST_oper, n);
+  return gen_unary (c->gc, eMST_oper, n);
 }
 
 static uMToken *
 m_name (sMSCtx *c, const char *str)
 {
-  return gen_name (eMST_name, str);
+  return gen_name (c->gc, eMST_name, str);
 }
 
 static uMToken *
 m_colon (sMSCtx *c, const char *str)
 {
-  return gen_name (eMST_colon, str);
+  return gen_name (c->gc, eMST_colon, str);
 }
 
 static uMToken *
 m_opname (sMSCtx *c, const char *str)
 {
-  return gen_name (eMST_opname, str);
+  return gen_name (c->gc, eMST_opname, str);
 }
 
 static uMToken *
 m_rtti (sMSCtx *c, const char *str)
 {
-  return gen_name (eMST_rtti, str);
+  return gen_name (c->gc, eMST_rtti, str);
 }
 
 static uMToken *
 m_frame (sMSCtx *c, uMToken *u)
 {
-  return gen_unary (eMST_frame, u);
+  return gen_unary (c->gc, eMST_frame, u);
 }
 
 static uMToken *
 m_rframe (sMSCtx *c, uMToken *u)
 {
-  return gen_unary (eMST_rframe, u);
+  return gen_unary (c->gc, eMST_rframe, u);
 }
 
 static uMToken *
 m_ltgt (sMSCtx *c, uMToken *u)
 {
-  return gen_unary (eMST_ltgt, u);
+  return gen_unary (c->gc, eMST_ltgt, u);
 }
 
 static uMToken *
 m_throw (sMSCtx *c, uMToken *u)
 {
-  return gen_unary (eMST_throw, u);
+  return gen_unary (c->gc, eMST_throw, u);
 }
 
 static uMToken *
 m_lexical_frame (sMSCtx *c, uMToken *u)
 {
-  return gen_unary (eMST_lexical_frame, u);
+  return gen_unary (c->gc, eMST_lexical_frame, u);
 }

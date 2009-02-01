@@ -39,6 +39,7 @@ typedef struct sCached {
 } sCached;
 
 typedef struct sMSCtx {
+  sGcCtx *gc;
   const char *name;                /**< MSVC export name. */
   const char *end;                 /**< Last character in the export name. */
   const char *pos;                 /**< Export name processing position marker. */

@@ -1,6 +1,17 @@
 #ifndef _M_TOKEN_HXX
 #define _M_TOKEN_HXX
 
+typedef struct sGcElem {
+  struct sGcElem *chain;
+  size_t length;
+  char dta[1];
+} sGcElem;
+
+typedef struct sGcCtx {
+  sGcElem *head;
+  sGcElem **tail;
+} sGcCtx;
+
 /**
  * Token "Kind" enumeration list.
  * @see gen_tok()
@@ -239,7 +250,7 @@ void print_decl (FILE *fp, uMToken *p);
  * @return Pointer to value token.
  * @see sMToken_value
  */
-uMToken *gen_value (enum eMSToken skind, uint64_t val, int is_signed, int size);
+uMToken *gen_value (sGcCtx *gc, enum eMSToken skind, uint64_t val, int is_signed, int size);
 
 /**
  * Constructs a "name" kind token.
@@ -248,7 +259,7 @@ uMToken *gen_value (enum eMSToken skind, uint64_t val, int is_signed, int size);
  * @return Pointer to name token.
  * @see sMToken_name
  */
-uMToken *gen_name (enum eMSToken skind, const char *name);
+uMToken *gen_name (sGcCtx *gc, enum eMSToken skind, const char *name);
 
 /**
  * Constructs a "dim" kind token.
@@ -260,7 +271,7 @@ uMToken *gen_name (enum eMSToken skind, const char *name);
  * @return Pointer to dim token.
  * @see sMToken_dim
  */
-uMToken *gen_dim (enum eMSToken skind, uint64_t val, const char *non_tt_param, int fSigned, int fNegate);
+uMToken *gen_dim (sGcCtx *gc, enum eMSToken skind, uint64_t val, const char *non_tt_param, int fSigned, int fNegate);
 
 /**
  * Constructs a "unary" kind token.
@@ -269,7 +280,7 @@ uMToken *gen_dim (enum eMSToken skind, uint64_t val, const char *non_tt_param, i
  * @return Pointer to a unary token.
  * @see sMToken_unary
  */
-uMToken *gen_unary (enum eMSToken skind, uMToken *un);
+uMToken *gen_unary (sGcCtx *gc, enum eMSToken skind, uMToken *un);
 
 /**
  * Generates a binary node token.
@@ -279,6 +290,6 @@ uMToken *gen_unary (enum eMSToken skind, uMToken *un);
  * @return Pointer to binary token.
  * @see sMToken_binary
  */
-uMToken *gen_binary (enum eMSToken skind, uMToken *l, uMToken *r);
+uMToken *gen_binary (sGcCtx *gc, enum eMSToken skind, uMToken *l, uMToken *r);
 
 #endif

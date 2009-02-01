@@ -146,7 +146,7 @@ release_tok (uMToken *tok)
 }
 
 uMToken *
-gen_value (enum eMSToken skind, uint64_t val, int is_signed, int size)
+gen_value (sGcCtx *gc, enum eMSToken skind, uint64_t val, int is_signed, int size)
 {
   uMToken *ret = gen_tok (eMToken_value, skind, 0);
   MTOKEN_VALUE (ret) = val;
@@ -157,7 +157,7 @@ gen_value (enum eMSToken skind, uint64_t val, int is_signed, int size)
 }
 
 uMToken *
-gen_name (enum eMSToken skind, const char *name)
+gen_name (sGcCtx *gc, enum eMSToken skind, const char *name)
 {
   uMToken *ret;
   
@@ -170,19 +170,19 @@ gen_name (enum eMSToken skind, const char *name)
 }
 
 uMToken *
-gen_dim (enum eMSToken skind, uint64_t val, const char *non_tt_param, int fSigned, int fNegate)
+gen_dim (sGcCtx *gc, enum eMSToken skind, uint64_t val, const char *non_tt_param, int fSigned, int fNegate)
 {
   uMToken *ret = gen_tok (eMToken_dim, skind, 0);
   
-  MTOKEN_DIM_VALUE(ret) = gen_value (eMST_val, val, fSigned, 8);
+  MTOKEN_DIM_VALUE(ret) = gen_value (gc, eMST_val, val, fSigned, 8);
   if (non_tt_param)
-    MTOKEN_DIM_NTTP(ret) = gen_name (eMST_nttp, non_tt_param);
+    MTOKEN_DIM_NTTP(ret) = gen_name (gc, eMST_nttp, non_tt_param);
   MTOKEN_DIM_NEGATE(ret) = fNegate;
   return ret;
 }
 
 uMToken *
-gen_unary (enum eMSToken skind, uMToken *un)
+gen_unary (sGcCtx *gc, enum eMSToken skind, uMToken *un)
 {
   uMToken *ret = gen_tok (eMToken_unary, skind, 0);
   MTOKEN_UNARY (ret) = un;
@@ -190,7 +190,7 @@ gen_unary (enum eMSToken skind, uMToken *un)
 }
 
 uMToken *
-gen_binary (enum eMSToken skind, uMToken *l, uMToken *r)
+gen_binary (sGcCtx *gc, enum eMSToken skind, uMToken *l, uMToken *r)
 {
   uMToken *ret = gen_tok (eMToken_binary, skind, 0);
   MTOKEN_BINARY_LEFT (ret) = l;
