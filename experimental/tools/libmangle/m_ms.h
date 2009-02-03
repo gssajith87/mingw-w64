@@ -58,12 +58,13 @@ typedef struct sMSCtx {
 
 /** 
  * Decodes an MSVC export name.
+ * @param[in] gc sGcCtx pointer for collecting memory allocations.
  * @param[in] name MSVC C++ mangled export string.
  * @see print_decl()
- * @see release_tok()
+ * @see release_gc()
  * @see uMToken
  * @return Token containing information about the mangled string, 
- * use release_tok() to free after use.
+ * use release_gc() to free after use.
  */
 uMToken *decode_ms_name (sGcCtx *gc, const char *name);
 char *encode_ms_name (sGcCtx *gc, uMToken *tok);

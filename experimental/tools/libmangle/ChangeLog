@@ -4,6 +4,7 @@
 	gc parameter.
 	(decode_ms_name): Add gc parameter.
 	* m_ms.h: Likewise.
+	adjust some documentation.
 	* m_token (release_tok): Removed.
 	(release_gc): New.
 	(generate_gc): New.
