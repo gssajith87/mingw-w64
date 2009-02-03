@@ -14,8 +14,79 @@
 #define MY_LL  "ll"
 #endif
 
+sGcCtx *
+generate_gc (void)
+{
+  sGcCtx *h = (sGcCtx *) malloc (sizeof (sGcCtx));
+  if (h)
+    memset (h, 0, sizeof (sGcCtx));
+  return h;
+}
+
+static void *
+alloc_gc (sGcCtx *gc, size_t size)
+{
+  sGcElem *n = (sGcElem *) malloc (size + sizeof (sGcElem));
+  if (!n)
+    {
+      fprintf (stderr, "error: Run out of memory for %" MY_LL "x byte(s)\n",
+        (unsigned long long) size);
+      abort ();
+    }
+  memset (n, 0, size + sizeof (sGcElem));
+  n->length = size;
+  if (gc->head == NULL)
+    gc->head = n;
+  else
+    gc->tail->chain = n;
+  gc->tail = n;
+  return & n->dta[0];
+}
+
+void
+release_gc (sGcCtx *gc)
+{
+  sGcElem *n;
+  if (!gc)
+    return;
+  while ((n = gc->head) != NULL)
+    {
+      gc->head = n->chain;
+      free (n);
+    }
+  gc->tail = NULL;
+  free (gc);
+}
+
+static void
+free_gc (sGcCtx *gc, const void *p)
+{
+  sGcElem *n, *l = NULL;
+
+  if (!gc || !p)
+    return;
+  n = gc->head;
+  while (n != NULL)
+    {
+      const void *ptr = &n->dta[0];
+      if (ptr == p)
+        {
+          if (!l)
+            gc->head = n->chain;
+          else
+            l->chain = n->chain;
+          if (gc->tail == n)
+            gc->tail = l;
+          free (n);
+          return;
+        }
+      l = n;
+      n = n->chain;
+    }
+}
+
 uMToken *
-gen_tok (enum eMToken kind, enum eMSToken subkind, size_t addend)
+gen_tok (sGcCtx *gc, enum eMToken kind, enum eMSToken subkind, size_t addend)
 {
   uMToken *ret;
   switch (kind)
@@ -39,10 +110,9 @@ gen_tok (enum eMToken kind, enum eMSToken subkind, size_t addend)
       abort ();
     }
   addend += (addend + 15) & ~15;
-  ret = (uMToken *) malloc (addend);
+  ret = (uMToken *) alloc_gc (gc, addend);
   if (!ret)
     abort ();
-  memset (ret, 0, addend);
 
   MTOKEN_KIND (ret) = kind;
   MTOKEN_SUBKIND (ret) = subkind;
@@ -132,23 +202,9 @@ chain_tok (uMToken *l, uMToken *add)
 }
 
 uMToken *
-release_tok (uMToken *tok)
-{
-  uMToken *ret = NULL;
-  
-  while (tok != NULL)
-    {
-      ret = MTOKEN_CHAIN (tok);
-      free (tok);
-      tok = ret;
-    }
-  return NULL;
-}
-
-uMToken *
 gen_value (sGcCtx *gc, enum eMSToken skind, uint64_t val, int is_signed, int size)
 {
-  uMToken *ret = gen_tok (eMToken_value, skind, 0);
+  uMToken *ret = gen_tok (gc, eMToken_value, skind, 0);
   MTOKEN_VALUE (ret) = val;
   MTOKEN_VALUE_SIGNED (ret) = is_signed;
   MTOKEN_VALUE_SIZE (ret) = size;
@@ -163,7 +219,7 @@ gen_name (sGcCtx *gc, enum eMSToken skind, const char *name)
   
   if (!name)
     name = "";
-  ret = gen_tok (eMToken_name, skind, strlen (name) + 1);
+  ret = gen_tok (gc, eMToken_name, skind, strlen (name) + 1);
   strcpy (MTOKEN_NAME (ret), name);
 
   return ret;
@@ -172,7 +228,7 @@ gen_name (sGcCtx *gc, enum eMSToken skind, const char *name)
 uMToken *
 gen_dim (sGcCtx *gc, enum eMSToken skind, uint64_t val, const char *non_tt_param, int fSigned, int fNegate)
 {
-  uMToken *ret = gen_tok (eMToken_dim, skind, 0);
+  uMToken *ret = gen_tok (gc, eMToken_dim, skind, 0);
   
   MTOKEN_DIM_VALUE(ret) = gen_value (gc, eMST_val, val, fSigned, 8);
   if (non_tt_param)
@@ -184,7 +240,7 @@ gen_dim (sGcCtx *gc, enum eMSToken skind, uint64_t val, const char *non_tt_param
 uMToken *
 gen_unary (sGcCtx *gc, enum eMSToken skind, uMToken *un)
 {
-  uMToken *ret = gen_tok (eMToken_unary, skind, 0);
+  uMToken *ret = gen_tok (gc, eMToken_unary, skind, 0);
   MTOKEN_UNARY (ret) = un;
   return ret;
 }
@@ -192,7 +248,7 @@ gen_unary (sGcCtx *gc, enum eMSToken skind, uMToken *un)
 uMToken *
 gen_binary (sGcCtx *gc, enum eMSToken skind, uMToken *l, uMToken *r)
 {
-  uMToken *ret = gen_tok (eMToken_binary, skind, 0);
+  uMToken *ret = gen_tok (gc, eMToken_binary, skind, 0);
   MTOKEN_BINARY_LEFT (ret) = l;
   MTOKEN_BINARY_RIGHT (ret) = r;
   return ret;
@@ -440,9 +496,10 @@ int main()
   uMToken *h;
   for (i = 0; szTest[i]!=NULL; i++)
   {
-    h = decode_ms_name (szTest[i]);
+    sGcCtx *gc = generate_gc ();
+    h = decode_ms_name (gc, szTest[i]);
     print_decl (stderr, h);
-    release_tok (h);
+    release_gc (gc);
   }
   return 0;
 }

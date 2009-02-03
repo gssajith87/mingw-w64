@@ -66,7 +66,7 @@ static uMToken *get_vdisp_map_type (sMSCtx *c, uMToken *superType);
 static uMToken *get_ext_data_type (sMSCtx *c, uMToken *superType);
 
 uMToken *
-decode_ms_name (const char *name)
+decode_ms_name (sGcCtx *gc, const char *name)
 {
   sMSCtx ctx;
   sCached ZNameList, ArgList, TempArgList;
@@ -75,6 +75,7 @@ decode_ms_name (const char *name)
     return NULL;
   
   memset (&ctx, 0, sizeof (ctx));
+  ctx.gc = gc;
   memset (&ZNameList, 0, sizeof (ZNameList));
   memset (&ArgList, 0, sizeof (ArgList));
   memset (&TempArgList, 0, sizeof (TempArgList));
@@ -115,10 +116,10 @@ decode_ms_name (const char *name)
   return ret;
 }
 
-int
-encode_ms_name (uMToken *tok)
+char *
+encode_ms_name (sGcCtx *gc, uMToken *tok)
 {
-  return 0;
+  return NULL;
 }
 
 static uMToken *

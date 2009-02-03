@@ -1,3 +1,18 @@
+2009-02-03  Kai Tietz  <kai.tietz@onevision.com>
+
+	* m_ms.c (encode_ms_name): Change return type and add
+	gc parameter.
+	(decode_ms_name): Add gc parameter.
+	* m_ms.h: Likewise.
+	* m_token (release_tok): Removed.
+	(release_gc): New.
+	(generate_gc): New.
+	(release_gc): New.
+	(alloc_gc): New.
+	(free_gc): New.
+	(gen_tok): Add argument gc and use alloc_gc for memory
+	allocations.
+
 2009-02-01  JonY  <jon_y@users.sourceforge.net>
 
 	* m_token.h: Document eMSToken enumerators.

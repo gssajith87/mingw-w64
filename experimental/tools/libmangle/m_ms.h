@@ -65,7 +65,7 @@ typedef struct sMSCtx {
  * @return Token containing information about the mangled string, 
  * use release_tok() to free after use.
  */
-uMToken *decode_ms_name (const char *name);
-int encode_ms_name (uMToken *tok);
+uMToken *decode_ms_name (sGcCtx *gc, const char *name);
+char *encode_ms_name (sGcCtx *gc, uMToken *tok);
 
 #endif

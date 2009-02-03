@@ -9,7 +9,7 @@ typedef struct sGcElem {
 
 typedef struct sGcCtx {
   sGcElem *head;
-  sGcElem **tail;
+  sGcElem *tail;
 } sGcCtx;
 
 /**
@@ -204,20 +204,21 @@ typedef union uMToken {
 
 /**
  * gen_tok constructs uMToken instances
- * Instances are destroyed with release_tok().
+ * Instances are destroyed with release_gc().
  * @param[in] kind Kind of token to construct
  * @param[in] subkind Subkind of token to construct
  * @param[in] addend Additional byte padding at the end.
- * @see release_tok()
+ * @see release_gc()
  */
-uMToken *gen_tok (enum eMToken kind, enum eMSToken subkind, size_t addend);
+uMToken *gen_tok (sGcCtx *gc, enum eMToken kind, enum eMSToken subkind, size_t addend);
 
 /**
  * Frees uMToken chains recursively.
- * @param[in] tok uMToken to be freed, will always be set to NULL.
- * @return a NULL pointer.
+ * @param[in] gc sGcCtx to be freed, will always be set to NULL.
  */
-uMToken *release_tok (uMToken *tok);
+void release_gc (sGcCtx *gc);
+
+sGcCtx *generate_gc (void);
 
 /**
  * Chains uMTokens together.
