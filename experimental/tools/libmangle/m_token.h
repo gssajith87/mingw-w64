@@ -1,15 +1,26 @@
 #ifndef _M_TOKEN_HXX
 #define _M_TOKEN_HXX
 
+/**
+ * Garbage collector elements.
+ * Tracks allocated memory and points to the next element from the same context.
+ * @see sGcCtx
+ */
 typedef struct sGcElem {
-  struct sGcElem *chain;
-  size_t length;
-  char dta[1];
+  struct sGcElem *chain;        /**< Next element in chain. */
+  size_t length;                /**< Size of allocated memory (excluding sGcElem and sGcCtx). */
+  char dta[1];                  /**< Starting adress marker of requested memory. */
 } sGcElem;
 
+/**
+ * Garbage collector context.
+ * Tracks first and last of elements in gc context.
+ * @see generate_gc()
+ * @see release_gc()
+ */
 typedef struct sGcCtx {
-  sGcElem *head;
-  sGcElem *tail;
+  sGcElem *head;                /**< Pointer to first gc element in context.*/
+  sGcElem *tail;                /**< Pointer to last gc element in context. */
 } sGcCtx;
 
 /**
@@ -205,6 +216,7 @@ typedef union uMToken {
 /**
  * gen_tok constructs uMToken instances
  * Instances are destroyed with release_gc().
+ * @param[in] gc Pointer to garbage collection context.
  * @param[in] kind Kind of token to construct
  * @param[in] subkind Subkind of token to construct
  * @param[in] addend Additional byte padding at the end.
@@ -213,11 +225,17 @@ typedef union uMToken {
 uMToken *gen_tok (sGcCtx *gc, enum eMToken kind, enum eMSToken subkind, size_t addend);
 
 /**
- * Frees uMToken chains recursively.
- * @param[in] gc sGcCtx to be freed, will always be set to NULL.
+ * Releases memory tracked by context.
+ * @param[in] gc Garbage collection context to work on.
+ * @see generate_gc()
  */
 void release_gc (sGcCtx *gc);
 
+/**
+ * Constructs a garbage collection context token.
+ * @return Pointer to context.
+ * @see release_gc()
+ */
 sGcCtx *generate_gc (void);
 
 /**
@@ -245,6 +263,7 @@ void print_decl (FILE *fp, uMToken *p);
 
 /**
  * Constructs a "value" kind token.
+ * @param[in] gc Pointer to garbage collection context.
  * @param[in] skind Token subkind.
  * @param[in] val Sets the value on token,
  * @param[in] is_signed Signed bit of \a val.
@@ -256,6 +275,7 @@ uMToken *gen_value (sGcCtx *gc, enum eMSToken skind, uint64_t val, int is_signed
 
 /**
  * Constructs a "name" kind token.
+ * @param[in] gc Pointer to garbage collection context.
  * @param[in] skind Token subkind.
  * @param[in] name Pointer to name string.
  * @return Pointer to name token.
@@ -265,6 +285,7 @@ uMToken *gen_name (sGcCtx *gc, enum eMSToken skind, const char *name);
 
 /**
  * Constructs a "dim" kind token.
+ * @param[in] gc Pointer to garbage collection context.
  * @param[in] skind Token subkind.
  * @param[in] val Token numerical value.
  * @param[in] non_tt_param pointer to decoded C++ template name.
@@ -277,6 +298,7 @@ uMToken *gen_dim (sGcCtx *gc, enum eMSToken skind, uint64_t val, const char *non
 
 /**
  * Constructs a "unary" kind token.
+ * @param[in] gc Pointer to garbage collection context.
  * @param[in] skind Token subkind.
  * @param[in] un Pointer to leaf element.
  * @return Pointer to a unary token.
@@ -286,6 +308,7 @@ uMToken *gen_unary (sGcCtx *gc, enum eMSToken skind, uMToken *un);
 
 /**
  * Generates a binary node token.
+ * @param[in] gc Pointer to garbage collection context.
  * @param[in] skind Token subKind.
  * @param[in] l Left node element.
  * @param[in] r Right node element.
