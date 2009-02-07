@@ -3,6 +3,7 @@
 from buildbot.steps.shell import ShellCommand, SetProperty
 from buildbot.status.builder import SKIPPED
 import datetime
+from xml.dom import minidom
 
 class M64CVS(ShellCommand):
     def __init__(self, cvsroot, cvsmodule, workdir=None,
@@ -99,7 +100,8 @@ class M64NightlyRev(SetPropertyConditional):
 
         # XXX Mook: extra hack for mingw because it has trouble passing {} to svn
         argtemplate = "{%sT0000Z}:{%sT0030Z}"
-        if self.build.getProperty("platform")[-5:] == "mingw":
+        if (self.build.getProperties().has_key("platform") and
+            self.build.getProperty("platform")[-5:] == "mingw"):
             argtemplate = "\\{%sT0000Z\\}:\\{%sT0030Z\\}"
 
         command = ['svn', 'log', '-r',
@@ -134,3 +136,28 @@ class M64NightlyRev(SetPropertyConditional):
                      'datestamp' : ("_%s" % self.datestamp) }
         # if we reach here, we failed to find a revision
         return { }
+
+class SubversionRevProperty(SetPropertyConditional):
+    """Sets a revision property based on a check out"""
+    def __init__(self, **kwargs):
+        if kwargs.has_key('prop_prefix'):
+            self.prop_prefix = kwargs['prop_prefix']
+            del kwargs['prop_prefix']
+        else:
+            self.prop_prefix = ""
+
+        command = ["svn", "info", "--xml", "--incremental",
+                   "--config-dir", ".", "--no-auth-cache", "--non-interactive"]
+        SetPropertyConditional.__init__(self,
+                                        extract_fn=self._extract,
+                                        command=command,
+                                        **kwargs)
+
+    def _extract(self, rc, stdout, stderr):
+        dom = minidom.parseString(stdout)
+        revision = dom.documentElement.getAttribute("revision")
+        datestring = dom.getElementsByTagName("date")[0].firstChild.nodeValue
+        datestamp = datetime.datetime.strptime(datestring[:-7], "%Y-%m-%dT%H:%M:%S.")
+        datestring = datestamp.strftime("%Y-%m-%d")
+        return { self.prop_prefix + 'revision': revision,
+                 self.prop_prefix + 'datestamp': datestring }

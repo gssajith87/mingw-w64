@@ -64,8 +64,8 @@ class Mingw64Factory(factory.BuildFactory):
                  command=["bash", "-x", "./root-init.sh"],
                  haltOnFailure=True,
                  env={'TGT': self.target},
-                 description=["initializing root"],
-                 descriptionDone=["initialize root"])
+                 description=["root initializing"],
+                 descriptionDone=["root initialized"])
 
     self.addStep(FileDownload,
                  name="exec-script",
@@ -76,170 +76,25 @@ class Mingw64Factory(factory.BuildFactory):
                  mode=0755,
                  haltOnFailure=True)
 
-    self.addStep(ShellCommand,
-                 name="patch-download",
-                 workdir="build",
-                 command=["svn", "co",
-                          "https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/experimental/patches/"],
-                 description=["patches", "download"],
-                 descriptionDone=["downloaded", "patches"])
-
-    # download binutils
-    self.addStep(M64CVS,
-                 name="binutils-pull",
-                 cvsroot=":pserver:anoncvs@sourceware.org:/cvs/src",
-                 cvsmodule="binutils",
-                 login=None)
-    self.addStep(ShellCommandConditional,
-                 name="binutils-patch",
-                 workdir="build/binutils",
-                 description=["patch", "binutils"],
-                 descriptionDone=["binutils", "patched"],
-                 condprop="scheduler",
-                 condvalue="try",
-                 condinvert=True,
-                 command=["bash", "-c",
-                          """if [ $( ls ../patches/binutils/*.patch ) ] ; then
-                               for i in ../patches/binutils/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
- 
-    # download gcc                 
-    self.addStep(SVN,
-                 name="gcc-pull",
-                 workdir="build/gcc/gcc",
-                 baseURL="svn://gcc.gnu.org/svn/gcc/",
-                 defaultBranch="trunk")
-    self.addStep(ShellCommandConditional,
-                 name="gcc-patch",
-                 workdir="build/gcc/gcc",
-                 description=["patch", "gcc"],
-                 condprop="scheduler",
-                 condvalue="try",
-                 condinvert=True,
-                 command=["bash", "-c",
-                          """if [ $( ls ../../patches/gcc/*.patch ) ] ; then
-                               for i in ../../patches/gcc/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
- 
-    # download gmp
     self.addStep(FileDownload,
-                 name="gmp-download",
+                 name="src-download",
                  workdir="build",
-                 mastersrc="scripts/sources/gmp-4.2.2.tar.bz2",
-                 slavedest="gmp.tar.bz2")
+                 mastersrc="mingw-w64-src.tar.bz2",
+                 slavedest="mingw-w64-src.tar.bz2",
+                 mode=0644,
+                 haltOnFailure=True)
     self.addStep(ShellCommand,
-                 name="gmp-extract",
-                 workdir="build/gcc",
-                 command=["tar", "-xjvf", "../gmp.tar.bz2"],
-                 description=["gmp extract"])
-    self.addStep(ShellCommand,
-                 name="gmp-move",
-                 workdir="build/gcc",
-                 command=["mv", "gmp-4.2.2", "gcc/gmp"],
-                 description=["gmp move"])
-
-
-    # Fix gmp (fails to find m4 for flex)
-    self.addStep(ShellCommandConditional,
-                 name="gmp-patch",
-                 workdir="build/gcc",
-                 description=["patch", "gmp"],
-                 condprop="scheduler",
-                 condvalue="try",
-                 condinvert=True,
-                 command=["bash", "-c",
-                          """if [ $( ls ../patches/gmp/*.patch ) ] ; then
-                               for i in ../patches/gmp/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
-    self.addStep(ShellCommand,
-                 name="gmp-autoconf",
-                 workdir="build/gcc/gcc/gmp",
-                 command="autoconf",
-                 description=["gmp", "autoconf"])
-
-    # download mpfr
-    #self.addStep(ShellCommand,
-    #             name="mpfr-pull",
-    #             workdir="build/gcc",
-    #             command=["bash", "-c",
-    #                      " ".join(["if [ ! -d gcc/mpfr ] ; then",
-    #                                "rm -rfv gcc/mpfr &&",
-    #                                "wget -O- http://www.mpfr.org/mpfr-current/mpfr-2.3.2.tar.bz2 | ",
-    #                                "tar xjf - && ",
-    #                                "mv mpfr-2.3.2 gcc/mpfr",
-    #                                "; fi"])],
-    #             description=["mpfr download"])
-    self.addStep(FileDownload,
-                 name="mpfr-download",
+                 name="src-extract",
                  workdir="build",
-                 mastersrc="scripts/sources/mpfr-2.3.2.tar.bz2",
-                 slavedest="mpfr.tar.bz2")
-    self.addStep(ShellCommand,
-                 name="mpfr-extract",
-                 workdir="build/gcc",
-                 command=["tar", "-xjvf", "../mpfr.tar.bz2"],
-                 description=["mpfr extract"])
-    self.addStep(ShellCommand,
-                 name="mpfr-move",
-                 workdir="build/gcc",
-                 command=["mv", "mpfr-2.3.2", "gcc/mpfr"],
-                 description=["mpfr move"])
-    self.addStep(ShellCommandConditional,
-                 name="mpfr-patch",
-                 workdir="build/gcc/mpfr",
-                 description=["patch", "mpfr"],
-                 condprop="scheduler",
-                 condvalue="try",
-                 condinvert=True,
-                 command=["bash", "-c",
-                          """if [ $( ls ../../patches/mpfr/*.patch ) ] ; then
-                               for i in ../../patches/mpfr/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
- 
-    # download mingw-w64 crt and headers
-    # always pull HEAD, because revision numbers on the waterfall is more useful for changing gcc version
-    # unfortunately, buildbot's alwaysUseLatest flag only applies when you _don't_ give a revision
-    self.addStep(ShellCommand,
-                 name="mingw-pull",
-                 workdir=".",
-                 command=["svn", "checkout", "--non-interactive", "--no-auth-cache", "--revision", "HEAD",
-                          "https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/trunk", "build/mingw"],
-                 description=["mingw pull"])
-    self.addStep(ShellCommandConditional,
-                 name="mingw-patch",
-                 workdir="build/mingw",
-                 description=["patch", "mingw"],
-                 condprop="scheduler",
-                 condvalue="try",
-                 condinvert=True,
-                 command=["bash", "-c",
-                          """if [ $( ls ../patches/mingw/*.patch ) ] ; then
-                               for i in ../patches/mingw/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
- 
-
-    # Install mingw headers
-    self.addStep(ShellCommand,
-                 name="mingw-headers-install",
-                 description=["mingw headers install"],
-                 workdir="build/root/%s/include" % self.target,
-                 command="tar cf - --exclude=.svn -C ../../../mingw/mingw-w64-headers/include . | tar xpvf -")
+                 description=["source extract"],
+                 descriptionDone=["source extracted"],
+                 command=["tar", "xvjpf", "mingw-w64-src.tar.bz2"])
 
     # Make binutils
     self.addStep(Configure,
                  name="binutils-configure",
                  description=["binuils configure"],
-                 descriptionDone=["binutils configure"],
+                 descriptionDone=["binutils configured"],
                  workdir="build/binutils/obj",
                  command=["bash",
                             "../src/configure", 
@@ -249,13 +104,13 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(Compile,
                  name="binutils-compile",
                  description=["binutils compile"],
-                 descriptionDone=["binutils compile"],
+                 descriptionDone=["binutils compiled"],
                  workdir="build/binutils/obj",
                  command=["make"])
     self.addStep(Compile,
                  name="binutils-install",
                  description=["binutils install"],
-                 descriptionDone=["binutils install"],
+                 descriptionDone=["binutils installed"],
                  workdir="build/binutils/obj",
                  command=["make", "install"])
 
@@ -263,7 +118,7 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(Configure,
                  name="gcc-configure",
                  description=["gcc configure"],
-                 descriptionDone=["gcc configure"],
+                 descriptionDone=["gcc configured"],
                  workdir="build/gcc/obj",
                  command=["bash",
                             "../gcc/configure",
@@ -276,7 +131,7 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(Compile,
                  name="gcc-bootstrap-compile",
                  description=["bootstrap gcc compile"],
-                 descriptionDone=["bootstrap gcc compile"],
+                 descriptionDone=["bootstrap gcc compiled"],
                  workdir="build/gcc/obj",
                  command=["make", "all-gcc"],
                  env={'found_asm': 'yes'})
@@ -291,7 +146,7 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(Configure,
                  name="crt-configure",
                  description=["CRT configure"],
-                 descriptionDone=["CRT configure"],
+                 descriptionDone=["CRT configured"],
                  workdir="build/mingw/obj",
                  command=["bash",
                             "../../wrapped-exec.sh",
@@ -303,7 +158,7 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(Compile,
                  name="crt-compile",
                  description=["CRT compile"],
-                 descriptionDone=["CRT compile"],
+                 descriptionDone=["CRT compiled"],
                  workdir="build/mingw/obj",
                  command=["bash",
                             "../../wrapped-exec.sh",
@@ -312,7 +167,7 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(Compile,
                  name="crt-install",
                  description=["CRT install"],
-                 descriptionDone=["CRT install"],
+                 descriptionDone=["CRT installed"],
                  workdir="build/mingw/obj",
                  command=["bash",
                             "../../wrapped-exec.sh",
@@ -321,13 +176,9 @@ class Mingw64Factory(factory.BuildFactory):
                             "install"])
 
     # Compile full gcc
-#    self.addStep(Compile,
-#                 name="gcc-clean-temp",
-#                 workdir="build/gcc/obj/x86_64-pc-mingw32/libgcc",
-#                 command=["make","-p","clean"])
     self.addStep(Compile,
                  name="gcc-compile",
-                 description=["gcc compile"],
+                 description=["gcc compiled"],
                  descriptionDone=["gcc compile"],
                  workdir="build/gcc/obj",
                  command=["bash",
@@ -337,7 +188,7 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(Compile,
                  name="gcc-install",
                  description=["gcc install"],
-                 descriptionDone=["gcc install"],
+                 descriptionDone=["gcc installed"],
                  workdir="build/gcc/obj",
                  command=["bash",
                             "../../wrapped-exec.sh",
@@ -356,9 +207,6 @@ class Mingw64Factory(factory.BuildFactory):
                  haltOnFailure=True)
 
     # tell the master to upload the file to sourceforge
-    self.addStep(SetProperty,
-                 command=["echo", os.getcwd()],
-                 property="masterdir")
     self.addStep(Trigger,
                  schedulerNames=["sourceforge-upload"],
                  waitForFinish=True,
