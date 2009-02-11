@@ -125,10 +125,11 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  command="autoconf",
                  description=["gmp", "autoconf"])
 
+    # download mpfr
     self.addStep(FileDownload,
                  name="mpfr-download",
                  workdir="build",
-                 mastersrc="scripts/sources/mpfr-2.3.2.tar.bz2",
+                 mastersrc="scripts/sources/mpfr-2.4.0.tar.bz2",
                  slavedest="mpfr.tar.bz2")
     self.addStep(ShellCommand,
                  name="mpfr-extract",
