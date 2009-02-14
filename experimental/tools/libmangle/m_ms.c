@@ -2005,16 +2005,12 @@ compose_decl (sMSCtx *c, uMToken *symbol)
 		    m_element (c, n1),
 		    m_element (c, n2));
 		  n2 = m_frame (c, n2);
-		  n = m_combine (c, n, gen_binary (c->gc, eMST_initfield,
-		    m_name (c, "vtordisp"),
-		    n2));
+		  n = m_combine (c, n, m_combine (c, m_name (c, "vtordisp"), n2));
 	        }
 	      else
 	        {
 		  n2 = m_frame (c, m_element (c, n2));
-		  n = m_combine (c, n, gen_binary (c->gc, eMST_initfield,
-		    m_name (c, "adjustor"),
-		    n2));
+		  n = m_combine (c, n, m_combine (c, m_name (c, "adjustor"), n2));
 	        }
 	    }
 	  n = m_combine (c, n, m_rframe (c, get_argument_types (c)));

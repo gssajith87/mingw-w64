@@ -414,11 +414,6 @@ print_decl1 (FILE *fp, uMToken *r)
 	    fprintf (fp," ");
 	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
 	    break;
-	  case eMST_initfield:
-	    print_decl1 (fp, MTOKEN_BINARY_LEFT (r));
-	    fprintf (fp," ");
-	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
-	    break;
 	  }
 	  break;
 	default:

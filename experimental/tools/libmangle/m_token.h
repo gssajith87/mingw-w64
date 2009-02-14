@@ -83,8 +83,7 @@ typedef enum eMSToken {
   eMST_exp,                         /**< dim 'e' (exponent) dim */
   eMST_combine,                     /**< Unary grouping. */
   eMST_ecsu,                        /**< Is an Enum/Class/Struct/Union */
-  eMST_based,                       /**< MSVC extension: "__based" Based addressing */
-  eMST_initfield                    /**< MSVC extension: Virtual class ctor/dtor type. To be removed.*/
+  eMST_based                       /**< MSVC extension: "__based" Based addressing */
 } eMSToken;
 
 /**
