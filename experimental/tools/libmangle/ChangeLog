@@ -1,8 +1,14 @@
 2009-02-14  Kai Tietz  <kai.tietz@onevision.com>
 
 	* m_token.h (eMST_initframe): Removed.
-	m_token.c: Likewise.
-	m_ms.c: Likewise.
+	* m_token.c: Likewise.
+	* m_ms.c: Likewise.
+	* m_token.c (print_decl1): Removed.
+	(sprint_decl): New.
+	(sprint_decl1): New.
+	(print_decl): Use sprint_decl.
+	(mt_strcat): New.
+	* m_token.h (sprint_decl): New.
 
 2009-02-04  JonY  <jon_y@users.sourceforge.net>
 

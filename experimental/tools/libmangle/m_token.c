@@ -14,6 +14,9 @@
 #define MY_LL  "ll"
 #endif
 
+static char *mt_strcat (char *h, const char *add);
+
+
 sGcCtx *
 generate_gc (void)
 {
@@ -254,181 +257,217 @@ gen_binary (sGcCtx *gc, enum eMSToken skind, uMToken *l, uMToken *r)
   return ret;
 }
 
-static void
-print_decl1 (FILE *fp, uMToken *r)
+static char *
+mt_strcat (char *h, const char *add)
+{
+  char *ret;
+  if (!add || *add == 0)
+    return h;
+  if (!h)
+    ret = strdup (add);
+  else
+    {
+      ret = (char *) malloc (strlen (h) + strlen (add) + 1);
+      if (ret)
+        {
+	  strcpy (ret, h);
+	  strcat (ret, add);
+        }
+      free (h);
+    }
+  if (!ret)
+    {
+      fprintf (stderr, " *** Run out of memory.\n");
+      abort ();
+    }
+  return ret;
+}
+
+static char *
+sprint_decl1 (char *txt, uMToken *r)
 {
   while (r != NULL)
     {
-      switch (MTOKEN_KIND(r))
-      {
+      switch (MTOKEN_KIND (r))
+	{
         case eMToken_name:
 	  switch (MTOKEN_SUBKIND (r))
-	  {
-	  case eMST_unmangled:
-	  case eMST_vftable: case eMST_vbtable: case eMST_vcall:
-	    fprintf (fp, "%s", MTOKEN_NAME (r)); break;
-	  case eMST_name:
-	  case eMST_nttp: case eMST_rtti:
-	  case eMST_cv: case eMST_type:
-	  case eMST_opname:
-	    fprintf (fp, "%s", MTOKEN_NAME (r)); break;
-	  case eMST_colon:
-	    fprintf (fp, "%s:", MTOKEN_NAME (r)); break;
-	  default:
-	    fprintf (fp, "%d:%s", MTOKEN_SUBKIND(r), MTOKEN_NAME (r));
-	    break;
-	  }
+	    {
+	    default:
+	    case eMST_unmangled: case eMST_name:
+	    case eMST_vftable: case eMST_vbtable: case eMST_vcall:
+	    case eMST_nttp: case eMST_rtti:
+	    case eMST_cv: case eMST_type: case eMST_opname:
+	      txt = mt_strcat (txt, MTOKEN_NAME (r));
+	      break;
+	    case eMST_colon:
+	      txt = mt_strcat (txt, MTOKEN_NAME (r));
+	      txt = mt_strcat (txt, ":");
+	      break;
+	    }
 	  break;
 	case eMToken_value:
 	  switch (MTOKEN_SUBKIND (r))
 	    {
-	      default:
-		fprintf (fp, "v%d:", MTOKEN_SUBKIND (r));
-	      case eMST_gcarray:
-		fprintf (fp,"__gc[");
-	      case eMST_val:
-		if (MTOKEN_VALUE_SIGNED (r))
-		  {
-		    if ((MTOKEN_VALUE (r) >> 32) != 0)
-		      fprintf (fp, "0x%lx%08lx", (unsigned long) (MTOKEN_VALUE (r) >> 32), (unsigned long) MTOKEN_VALUE (r));
-		    else
-		      fprintf (fp,"0x%lx", (unsigned long) MTOKEN_VALUE (r));
-		    fprintf (fp, "U");
-		  }
-		else
-		  {
-		    fprintf (fp,"%"MY_LL"d", (long long) MTOKEN_VALUE (r));
-		  }
-		if (MTOKEN_VALUE_SIZE (r) == 8) fprintf (fp, "LL");
-		else if (MTOKEN_VALUE_SIZE (r) == 4) fprintf (fp,"L");
-		if (MTOKEN_SUBKIND (r) == eMST_gcarray)
-		  fprintf (fp,"]");
-		break;
+	    default:
+	      break;
+	    case eMST_gcarray:
+		txt = mt_strcat (txt, "__gc[");
+	    case eMST_val:
+	      if (! MTOKEN_VALUE_SIGNED (r))
+	        {
+		  char s[128];
+		  if ((MTOKEN_VALUE (r) >> 32) != 0)
+		    sprintf (s, "0x%lx%08lx", (unsigned long) (MTOKEN_VALUE (r) >> 32), (unsigned long) MTOKEN_VALUE (r));
+		  else
+		    sprintf (s,"0x%lx", (unsigned long) MTOKEN_VALUE (r));
+		  strcat (s, "U");
+		  txt = mt_strcat (txt, s);
+	        }
+	      else
+	        {
+		  char s[128];
+		  sprintf (s,"%"MY_LL"d", (long long) MTOKEN_VALUE (r));
+		  txt = mt_strcat (txt, s);
+	        }
+	      if (MTOKEN_VALUE_SIZE (r) == 8)
+		txt = mt_strcat (txt, "LL");
+	      else if (MTOKEN_VALUE_SIZE (r) == 4)
+		txt = mt_strcat (txt, "L");
+	      if (MTOKEN_SUBKIND (r) == eMST_gcarray)
+		txt = mt_strcat (txt, "]");
+	      break;
 	    }
 	  break;
 	case eMToken_dim:
 	  switch (MTOKEN_SUBKIND (r))
 	    {
 	      default:
-		fprintf(fp,"d%d:\n", MTOKEN_SUBKIND (r));
+		/* FALL THROUGH */
 	      case eMST_dim:
-		if(MTOKEN_DIM_NEGATE(r)) fprintf (fp, "-");
+		if (MTOKEN_DIM_NEGATE (r))
+		  txt = mt_strcat (txt, "-");
 		if (MTOKEN_DIM_NTTP (r))
-		  print_decl1 (fp, MTOKEN_DIM_NTTP (r));
+		  txt = sprint_decl1 (txt, MTOKEN_DIM_NTTP (r));
 		if (MTOKEN_DIM_VALUE (r))
-		  print_decl1 (fp, MTOKEN_DIM_VALUE (r));
+		  txt = sprint_decl1 (txt, MTOKEN_DIM_VALUE (r));
 		break;
 	    }
 	  break;
 	case eMToken_unary:
 	  switch (MTOKEN_SUBKIND (r))
-	  {
-	  case eMST_slashed:
-	    fprintf (fp,"/");
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    fprintf (fp,"/");
-	    break;
-	  case eMST_array:
-	    fprintf (fp,"[");
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    fprintf (fp,"]");
-	    break;
-	  case eMST_ltgt:
-	    fprintf (fp,"<");
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    fprintf (fp,">");
-	    break;
-	  case eMST_frame:
-	    fprintf (fp,"{");
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    fprintf (fp,"}");
-	    break;
-	  case eMST_rframe:
-	    fprintf (fp,"(");
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    fprintf (fp,")");
-	    break;
-	  case eMST_lexical_frame:
-	    fprintf (fp,"'");
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    fprintf (fp,"'");
-	    break;
-	  case eMST_throw:
-	    fprintf (fp,"throw ");
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    break;
-	  case eMST_destructor:
-	    fprintf (fp,"~");
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    break;
-	  case eMST_element: case eMST_template_argument_list:
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    if (MTOKEN_CHAIN (r) != NULL)
-	      fprintf (fp, ",");
-	    break;
-	  case eMST_oper: case eMST_scope:
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    break;
-	  default:
-	    fprintf (fp,"%d:",MTOKEN_SUBKIND (r));
-	    print_decl1 (fp, MTOKEN_UNARY (r));
-	    break;
-	  }
+	    {
+  	    case eMST_slashed:
+	      txt = mt_strcat (txt, "/");
+	      txt = sprint_decl1 (txt, MTOKEN_UNARY (r));
+	      txt = mt_strcat (txt, "/");
+	      break;
+	    case eMST_array:
+	      txt = mt_strcat (txt, "[");
+	      txt = sprint_decl1 (txt, MTOKEN_UNARY (r));
+	      txt = mt_strcat (txt, "]");
+	      break;
+	    case eMST_ltgt:
+	      txt = mt_strcat (txt, "<");
+	      txt = sprint_decl1 (txt, MTOKEN_UNARY (r));
+	      txt = mt_strcat (txt, ">");
+	      break;
+	    case eMST_frame:
+	      txt = mt_strcat (txt, "{");
+	      txt = sprint_decl1 (txt, MTOKEN_UNARY (r));
+	      txt = mt_strcat (txt, "}");
+	      break;
+	    case eMST_rframe:
+	      txt = mt_strcat (txt, "(");
+	      txt = sprint_decl1 (txt, MTOKEN_UNARY (r));
+	      txt = mt_strcat (txt, ")");
+	      break;
+	    case eMST_lexical_frame:
+	      txt = mt_strcat (txt, "'");
+	      txt = sprint_decl1 (txt, MTOKEN_UNARY (r));
+	      txt = mt_strcat (txt, "'");
+	      break;
+	    case eMST_throw:
+	      txt = mt_strcat (txt, "throw ");
+	      txt = sprint_decl1 (txt, MTOKEN_UNARY (r));
+	      break;
+	    case eMST_destructor:
+	      txt = mt_strcat (txt, "~");
+	      txt = sprint_decl1 (txt, MTOKEN_UNARY (r));
+	      break;
+	    case eMST_element: case eMST_template_argument_list:
+	      txt = sprint_decl1 (txt, MTOKEN_UNARY (r));
+	      if (MTOKEN_CHAIN (r) != NULL)
+		txt = mt_strcat (txt, ",");
+	      break;
+	    default:
+	    case eMST_oper: case eMST_scope:
+	      txt = sprint_decl1 (txt, MTOKEN_UNARY (r));
+	      break;
+	    }
 	  break;
 	case eMToken_binary:
 	  switch (MTOKEN_SUBKIND (r))
-	  {
-	  default:
-	    fprintf (fp,"b:%d:", MTOKEN_SUBKIND (r));
-	    print_decl1 (fp, MTOKEN_BINARY_LEFT (r));
-	    fprintf (fp," ");
-	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
-	    break;
-	  case eMST_coloncolon:
-	    print_decl1 (fp, MTOKEN_BINARY_LEFT (r));
-	    fprintf (fp,"::");
-	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
-	    break;
-	  case eMST_assign:
-	    print_decl1 (fp, MTOKEN_BINARY_LEFT (r));
-	    fprintf (fp,"=");
-	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
-	    fprintf (fp,"}");
-	    break;
-	  case eMST_templateparam: case eMST_nonetypetemplateparam:
-	    print_decl1 (fp, MTOKEN_BINARY_LEFT (r));
-	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
-	    break;
-	  case eMST_exp:
-	    print_decl1 (fp, MTOKEN_BINARY_LEFT (r));
-	    fprintf (fp,"e");
-	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
-	    break;
-	  case eMST_combine: case eMST_ecsu:
-	    print_decl1 (fp, MTOKEN_BINARY_LEFT (r));
-	    fprintf (fp," ");
-	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
-	    break;
-	  case eMST_based:
-	    print_decl1 (fp, MTOKEN_BINARY_LEFT (r));
-	    fprintf (fp," ");
-	    print_decl1 (fp, MTOKEN_BINARY_RIGHT (r));
-	    break;
-	  }
+	    {
+	    default:
+	    case eMST_combine: case eMST_ecsu:
+	    case eMST_based:
+	      txt = sprint_decl1 (txt, MTOKEN_BINARY_LEFT (r));
+	      txt = mt_strcat (txt, " ");
+	      txt = sprint_decl1 (txt, MTOKEN_BINARY_RIGHT (r));
+	      break;
+	    case eMST_coloncolon:
+	      txt = sprint_decl1 (txt, MTOKEN_BINARY_LEFT (r));
+	      txt = mt_strcat (txt, "::");
+	      txt = sprint_decl1 (txt, MTOKEN_BINARY_RIGHT (r));
+	      break;
+	    case eMST_assign:
+	      txt = sprint_decl1 (txt, MTOKEN_BINARY_LEFT (r));
+	      txt = mt_strcat (txt, "=");
+	      txt = sprint_decl1 (txt, MTOKEN_BINARY_RIGHT (r));
+	      break;
+	    case eMST_templateparam: case eMST_nonetypetemplateparam:
+	      txt = sprint_decl1 (txt, MTOKEN_BINARY_LEFT (r));
+	      txt = sprint_decl1 (txt, MTOKEN_BINARY_RIGHT (r));
+	      break;
+	    case eMST_exp:
+	      txt = sprint_decl1 (txt, MTOKEN_BINARY_LEFT (r));
+	      txt = mt_strcat (txt, "e");
+	      txt = sprint_decl1 (txt, MTOKEN_BINARY_RIGHT (r));
+	      break;
+	    }
 	  break;
 	default:
 	  break;
-      }
+	}
       r = MTOKEN_CHAIN (r);
     }
+  return txt;
+}
+
+char *
+sprint_decl (uMToken *r)
+{
+  char *ret = NULL;
+  if (r)
+    ret = sprint_decl1(NULL, r);
+  /* TODO: Trim string */
+  return ret;
 }
 
 void
 print_decl (FILE *fp, uMToken *r)
 {
-  if (r)
-    print_decl1(fp, r);
-  fprintf (fp,"\n");
+  char *ret = sprint_decl (r);
+  if (ret)
+    {
+      fprintf (fp, "%s\n", ret);
+      free (ret);
+    }
+  else
+    {
+      fprintf (fp, "<NULL>\n");
+    }
 }
 
 #if defined (TEST)

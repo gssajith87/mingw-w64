@@ -260,6 +260,8 @@ void dump_tok (FILE *fp, uMToken *p);
  */
 void print_decl (FILE *fp, uMToken *p);
 
+char *sprint_decl (uMToken *r);
+
 /**
  * Constructs a "value" kind token.
  * @param[in] gc Pointer to garbage collection context.
