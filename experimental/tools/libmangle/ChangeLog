@@ -1,3 +1,9 @@
+2009-02-15  JonY  <jon_y@users.sourceforge.net>
+
+	* m_ms.h, m_token.h, m_token.c: Remove reference to print_decl().
+	* m_token.h: Move documentation for print_decl to sprintf_decl().
+	* m_token.c: Use new sprintf_decl() in test main().
+
 2009-02-14  Kai Tietz  <kai.tietz@onevision.com>
 
 	* m_token.h (eMST_initframe): Removed.

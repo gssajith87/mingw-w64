@@ -41,7 +41,7 @@ typedef enum eMToken {
 
 /**
  * Token "Subkind" enumeration list.
- * Also used by internal function print_decl1() for printing.
+ * Also used by internal function sprint_decl1() for printing.
  * @see gen_tok()
  * @see eMToken
  * @see sMToken_base
@@ -253,13 +253,12 @@ uMToken *chain_tok (uMToken *l, uMToken *add);
 void dump_tok (FILE *fp, uMToken *p);
 
 /** 
- * Prints C++ name to file descriptor.
- * @param[in] fp Output file descriptor.
- * @param[in] p Token containing information about the C++ name.
+ * Get pointer to decoded C++ name string.
+ * Use free() to release returned string.
+ * @param[in] r C++ name token.
+ * @return pointer to decoded C++ name string.
  * @see decode_ms_name()
  */
-void print_decl (FILE *fp, uMToken *p);
-
 char *sprint_decl (uMToken *r);
 
 /**

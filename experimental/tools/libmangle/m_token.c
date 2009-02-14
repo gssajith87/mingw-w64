@@ -528,11 +528,14 @@ int main()
 {
   int i;
   uMToken *h;
+  char *txt;
   for (i = 0; szTest[i]!=NULL; i++)
   {
     sGcCtx *gc = generate_gc ();
     h = decode_ms_name (gc, szTest[i]);
-    print_decl (stderr, h);
+    txt = sprint_decl (h);
+    fprintf (stderr, "%s\n", txt);
+    free (txt);
     release_gc (gc);
   }
   return 0;
