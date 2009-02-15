@@ -253,6 +253,14 @@ uMToken *chain_tok (uMToken *l, uMToken *add);
 void dump_tok (FILE *fp, uMToken *p);
 
 /** 
+ * Prints C++ name to file descriptor.
+ * @param[in] fp Output file descriptor.
+ * @param[in] p Token containing information about the C++ name.
+ * @see decode_ms_name()
+ */
+void print_decl (FILE *fp, uMToken *p);
+
+/** 
  * Get pointer to decoded C++ name string.
  * Use free() to release returned string.
  * @param[in] r C++ name token.

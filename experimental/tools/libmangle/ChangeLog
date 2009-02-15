@@ -1,5 +1,13 @@
 2009-02-15  JonY  <jon_y@users.sourceforge.net>
 
+	* m_token.h: Revert accidental print_decl() documentation
+	removal.
+	* m_token.c (trim_str): New.
+	(sprintf_decl): Use trim_str.
+	* m_token.c: Remove DOS carriage returns.
+
+2009-02-15  JonY  <jon_y@users.sourceforge.net>
+
 	* m_ms.h, m_token.h, m_token.c: Remove reference to print_decl().
 	* m_token.h: Move documentation for print_decl to sprintf_decl().
 	* m_token.c: Use new sprintf_decl() in test main().

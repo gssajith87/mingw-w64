@@ -445,13 +445,36 @@ sprint_decl1 (char *txt, uMToken *r)
   return txt;
 }
 
+static void
+trim_str (char *str)
+{
+  char *r, *l;
+  l = r = str;
+  while ( *r != '\0')
+  {
+    if ( *r == ' ') 
+    {
+       if (r[1]=='(' || r[1]=='[' || r[1]==' ') r++;
+       else
+       if (l!=str && (l[-1]=='*' || l[-1]=='&' || l[-1]==')')) r++;
+       else
+       if (l!=r) *l++ = *r++;
+       else
+       r++, l++;
+    }
+    else if (l!=r) *l++ = *r++;
+    else r++, l++;
+  }
+  *l = '\0';
+}
+
 char *
 sprint_decl (uMToken *r)
 {
   char *ret = NULL;
   if (r)
     ret = sprint_decl1(NULL, r);
-  /* TODO: Trim string */
+  trim_str (ret);
   return ret;
 }
 
