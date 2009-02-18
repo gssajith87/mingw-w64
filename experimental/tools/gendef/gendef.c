@@ -180,11 +180,14 @@ int main(int argc,char **argv)
       fnoutput = opt->fnoutput;
 
       load_pep();
-      if (gPEDta)
-	do_pedef ();
-      else
-	do_pepdef ();
-      dump_def ();
+      if (gPEDta || gPEPDta)
+	{
+	  if (gPEDta)
+	    do_pedef ();
+	  else
+	    do_pepdef ();
+	  dump_def ();
+	}
       if (fndllname)
 	free (fndllname);
       fndllname = NULL;
