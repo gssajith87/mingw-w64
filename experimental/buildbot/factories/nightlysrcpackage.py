@@ -139,7 +139,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(ShellCommand,
                  name="mpfr-move",
                  workdir="build/gcc",
-                 command=["mv", "mpfr-2.3.2", "gcc/mpfr"],
+                 command=["mv", "mpfr-2.4.0", "gcc/mpfr"],
                  description=["mpfr move"])
     self.addStep(ShellCommandConditional,
                  name="mpfr-patch",
@@ -229,7 +229,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     # trigger building
     self.addStep(Trigger,
                  name="start-build",
-                 schedulerNames=["trigger-linux", "trigger-cygwin", "trigger-mingw"],
+                 schedulerNames=["trigger-linux64", "trigger-linux32", "trigger-cygwin", "trigger-mingw"],
                  waitForFinish=False,
                  updateSourceStamp=True,
                  set_properties={'is_nightly': WithProperties("%(is_nightly:-)s"),

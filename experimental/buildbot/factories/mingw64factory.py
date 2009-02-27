@@ -238,8 +238,13 @@ class Mingw64Factory(factory.BuildFactory):
                  haltOnFailure=True)
                 
 
-class Mingw64LinuxFactory(Mingw64Factory):
+class Mingw64Linux32Factory(Mingw64Factory):
   platform = "i686-linux"
+  def __init__(self, **kwargs):
+    Mingw64Factory.__init__(self, **kwargs)
+
+class Mingw64Linux64Factory(Mingw64Factory):
+  platform = "x86_64-linux"
   def __init__(self, **kwargs):
     Mingw64Factory.__init__(self, **kwargs)
 
