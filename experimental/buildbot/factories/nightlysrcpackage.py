@@ -12,6 +12,10 @@ from buildbot.steps.transfer import FileDownload, FileUpload
 from buildbot.steps.trigger import Trigger
 from scripts.buildsteps import M64CVS, M64NightlyRev, ShellCommandConditional, SubversionRevProperty
 
+from ConfigParser import RawConfigParser as ConfigParser
+gConfig = ConfigParser()
+gConfig.read("config.ini")
+
 class NightlySrcPackageFactory(factory.BuildFactory):
   clobber = True
   target = "x86_64-pc-mingw32"
@@ -94,7 +98,8 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(FileDownload,
                  name="gmp-download",
                  workdir="build",
-                 mastersrc="scripts/sources/gmp-4.2.2.tar.bz2",
+                 mastersrc=("scripts/sources/gmp-%s.tar.bz2" % (
+                            gConfig.get("libraries", "gmp"))),
                  slavedest="gmp.tar.bz2")
     self.addStep(ShellCommand,
                  name="gmp-extract",
@@ -104,7 +109,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(ShellCommand,
                  name="gmp-move",
                  workdir="build/gcc",
-                 command=["mv", "gmp-4.2.2", "gcc/gmp"],
+                 command=["mv", ("gmp-%s" % (gConfig.get("libraries", "gmp"))), "gcc/gmp"],
                  description=["gmp move"])
 
 
@@ -129,7 +134,8 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(FileDownload,
                  name="mpfr-download",
                  workdir="build",
-                 mastersrc="scripts/sources/mpfr-2.4.0.tar.bz2",
+                 mastersrc=("scripts/sources/mpfr-%s.tar.bz2" % (
+                            gConfig.get("libraries", "mpfr"))),
                  slavedest="mpfr.tar.bz2")
     self.addStep(ShellCommand,
                  name="mpfr-extract",
@@ -139,7 +145,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(ShellCommand,
                  name="mpfr-move",
                  workdir="build/gcc",
-                 command=["mv", "mpfr-2.4.0", "gcc/mpfr"],
+                 command=["mv", ("mpfr-%s" % (gConfig.get("libraries", "mpfr"))), "gcc/mpfr"],
                  description=["mpfr move"])
     self.addStep(ShellCommandConditional,
                  name="mpfr-patch",
@@ -243,5 +249,6 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  set_properties={"masterdir":  WithProperties("%(masterdir)s"),
                                  "filename":   WithProperties("%(filename)s"),
                                  "destname":   WithProperties("%(destname)s"),
+                                 "datestamp":  WithProperties("%(datestamp:-)s"),
                                  "is_nightly": WithProperties("%(is_nightly:-)s")})
 

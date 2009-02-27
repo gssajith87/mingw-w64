@@ -11,7 +11,7 @@ EDIT_URL = "https://sourceforge.net/project/admin/editreleases.php"
 
 def main(argv):
   config = ConfigParser()
-  config.read("password.ini")
+  config.read("config.ini")
 
   # check that the file exists
   (optparse, args) = getopt.gnu_getopt(argv, 'd:n', ['datestamp=', 'dry-run'])
