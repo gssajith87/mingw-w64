@@ -213,6 +213,7 @@ class Mingw64Factory(factory.BuildFactory):
                  set_properties={"masterdir": WithProperties("%(masterdir)s"),
                                  "filename": WithProperties("%(filename)s"),
                                  "destname": WithProperties("%(destname)s"),
+                                 "datestamp": WithProperties("%(datestamp:-)s"),
                                  "is_nightly": WithProperties("%(is_nightly:-)s")})
 
   def _step_Archive(self):

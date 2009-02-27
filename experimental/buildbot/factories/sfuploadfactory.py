@@ -26,9 +26,11 @@ class SourceForgeUploadFactory(factory.BuildFactory):
                  name="sfupload",
                  description=["uploading"],
                  descriptionDone=["upload"],
-                 workdir=WithProperties("%s", "masterdir"),
+                 workdir=WithProperties("%(masterdir)s"),
                  command=["./upload.py",
-                          WithProperties("%s", "filename"),
-                          WithProperties("%s", "destname")],
+                          WithProperties("%(filename)s"),
+                          WithProperties("%(destname)s"),
+                          WithProperties("%(datestamp:+--datestamp)s"),
+                          WithProperties("%(datestamp:-)s")],
                  haltOnFailure=True)
 
