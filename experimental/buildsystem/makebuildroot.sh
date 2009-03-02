@@ -113,7 +113,6 @@ EOF
    "--32bit" )
       TGT=i686-pc-mingw32
       BITS=32
-      shift
       ;;
   esac
 done
