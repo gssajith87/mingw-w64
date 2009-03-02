@@ -2,11 +2,7 @@
 #Set this to your host!!
 HST=x86_64-pc-linux
 TGT=x86_64-pc-mingw32
-RT=root-$HST
-PF=`pwd`/$RT
-BD=`pwd`/build
-DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$HST $BD/gcc-svn $BD/gcc-svn/build-$HST $BD/mingw $BD/mingw/build-$HST"
-baseopts="--prefix=$PF --with-sysroot=$PF --target=$TGT"
+BITS=64
 
 #Option defaults
 build="false"
@@ -70,6 +66,8 @@ while opt=$1 && shift; do
     --jobs N    Specify the number of jobs to submit to make.  This translates into the -j number supplied
                 to make for each built project.  Not specifying N is the same as not specifying --jobs at all.
 
+    --32bit     Builds a 32 bit toolchain (using mingw-w64 sources)
+
 EOF
     exit
     ;;
@@ -111,8 +109,21 @@ EOF
       fi
       shift
       ;;
+
+   "--32bit" )
+      TGT=i686-pc-mingw32
+      BITS=32
+      shift
+      ;;
   esac
 done
+
+RT=root-$HST-$BITS
+PF=`pwd`/$RT
+BD=`pwd`/build
+DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$HST-$BITS $BD/gcc-svn
+      $BD/gcc-svn/build-$HST-$BITS $BD/mingw $BD/mingw/build-$HST-$BITS"
+baseopts="--prefix=$PF --with-sysroot=$PF --target=$TGT"
 
 if [[ $update == "true" ]]; then
   echo "Creating directory tree:"
@@ -151,17 +162,21 @@ if [[ $update == "true" ]]; then
 fi
 
 if [[ $build == "true" ]]; then
-  echo "Compiling binutils.." && cd $BD/binutils/build-$HST
+  echo "Compiling binutils.." && cd $BD/binutils/build-$HST-$BITS
   ../src/configure $baseopts > $out && make -s $j > $out && make install > $out || exit 1
 
-  echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$HST
+  echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$HST-$BITS
   ../gcc/configure $baseopts > $out && make -s $j all-gcc > $out && make install-gcc > $out || exit 1
   export PATH=$PF/bin:$PATH
 
-  echo "Compiling crt.." && cd $BD/mingw/build-$HST
-  ../mingw-w64-crt/configure --prefix=$PF --with-sysroot=$PF --host=$TGT > $out && make -s $j > $out && make install > $out || exit 1
+  echo "Compiling crt.." && cd $BD/mingw/build-$HST-$BITS
+  _configure_args="--prefix=$PF --with-sysroot=$PF --host=$TGT"
+  if [[ "$BITS" == "32" ]] ; then
+    _configure_args="$_configure_args --enable-lib32 --disable-lib64"
+  fi
+  ../mingw-w64-crt/configure $_configure_args > $out && make -s $j > $out && make install > $out || exit 1
 
-  echo "Compiling full gcc.." && cd $BD/gcc-svn/build-$HST
+  echo "Compiling full gcc.." && cd $BD/gcc-svn/build-$HST-$BITS
   make -s $j > $out && make install > $out || exit 1
 
   cd $PF
@@ -170,7 +185,7 @@ fi
 
 if [[ $makedist == "true" ]]; then
   cd $PF
-  tarname=mingw-w64-bin_`uname`_`$PF/bin/$TGT-gcc --version | head -1 | awk '{print $4}'`.tar.bz2
+  tarname=mingw-w$BITS-bin_`uname`_`$PF/bin/$TGT-gcc --version | head -1 | awk '{print $4}'`.tar.bz2
   tar cjf ../$tarname --owner 0 --group 0 * || exit 1
   echo "Distribution: $tarname"
   cd ..
