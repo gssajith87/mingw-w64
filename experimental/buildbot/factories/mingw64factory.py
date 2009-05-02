@@ -49,8 +49,6 @@ class Mingw64Factory(factory.BuildFactory):
                  command=["echo", target_os],
                  property="target-os")
 
-    self.addStep(M64NightlyRev)
-
     # set up build root
     if self.clobber:
       self.addStep(ShellCommand,
