@@ -14,7 +14,7 @@ def main(argv):
   config.read("config.ini")
 
   # check that the file exists
-  (optparse, args) = getopt.gnu_getopt(argv, 'd:n', ['datestamp=', 'dry-run'])
+  (optparse, args) = getopt.gnu_getopt(argv, 'd:o:n', ['datestamp=', 'os=', 'dry-run'])
   while "" == args[-1]:
     # remove any trailing empty parameters
     args.pop()
@@ -25,6 +25,7 @@ def main(argv):
 
   opts = {
     "datestamp": None,
+    "os": "w64",
     "dry-run": False
   }
   for o,a in optparse:
@@ -34,6 +35,8 @@ def main(argv):
       opts["datestamp"] = "_" + a.strip("_")
     elif o in ("-n", "--dry-run"):
       opts["dry-run"] = True
+    elif o in ("-o", "--os"):
+      opts["os"] = a
   assert filesize > 1048576, "%s is only %s bytes" %(srcfile, filesize)
   assert (-1 < srcfile.find(".tar.")) or (-1 < srcfile.find(".zip")), "%s is not a tarball" % (srcfile)
 
@@ -78,8 +81,8 @@ def publish(filename, config, opts):
   ### publish files
   if not opts["dry-run"]:
     publish_data = {"group_id" : config.get("sourceforge", "group_id"),
-                    "package_id": config.get("sourceforge", "package_id"),
-                    "release_id": config.get("sourceforge", "release_id"),
+                    "package_id": config.get("sourceforge", "package-" + opts["os"]),
+                    "release_id": config.get("sourceforge", "release-" + opts["os"]),
                     "step2": 1,
                     "file_list[]": filename,
                     "submit": "Add Files and/or Refresh View"}
@@ -87,8 +90,8 @@ def publish(filename, config, opts):
     print "%s published to sourceforge; editing metadata..." % (filename)
   else:
     publish_data = {"group_id" : config.get("sourceforge", "group_id"),
-                    "package_id": config.get("sourceforge", "package_id"),
-                    "release_id": config.get("sourceforge", "release_id")}
+                    "package_id": config.get("sourceforge", "package-" + opts["os"]),
+                    "release_id": config.get("sourceforge", "release-" + opts["os"])}
     publish_page = urllib2.urlopen(EDIT_URL, urllib.urlencode(publish_data))
     print "Skipping publish of %s due to dry-run..." % (filename)
   return publish_page
@@ -146,9 +149,9 @@ def cleanup(filename, config, opts, page_data):
   for item in items:
     if item["file_name"] == filename:
       edit_data = {"group_id" : config.get("sourceforge", "group_id"),
-                   "package_id": config.get("sourceforge", "package_id"),
-                   "release_id": config.get("sourceforge", "release_id"),
-                   "new_release_id": config.get("sourceforge", "release_id"),
+                   "package_id": config.get("sourceforge", "package-" + opts["os"]),
+                   "release_id": config.get("sourceforge", "release-" + opts["os"]),
+                   "new_release_id": config.get("sourceforge", "release-" + opts["os"]),
                    "file_id": item["file_id"],
                    "step3": 1,
                    "processor_id": item["processor_id"][processor],
@@ -167,8 +170,8 @@ def cleanup(filename, config, opts, page_data):
         datestamp = datetime.date(int(datestring[0:4]), int(datestring[4:6]), int(datestring[6:8]))
         if datestamp < cutoff:
           edit_data = {"group_id" : config.get("sourceforge", "group_id"),
-                       "package_id": config.get("sourceforge", "package_id"),
-                       "release_id": config.get("sourceforge", "release_id"),
+                       "package_id": config.get("sourceforge", "package-" + opts["os"]),
+                       "release_id": config.get("sourceforge", "release-" + opts["os"]),
                        "file_id": item["file_id"],
                        "im_sure": 1,
                        "step3": "Delete File"}

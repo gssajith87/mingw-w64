@@ -11,6 +11,7 @@ from buildbot.steps.shell import Configure, Compile, ShellCommand, WithPropertie
 from buildbot.steps.transfer import FileDownload, FileUpload
 from buildbot.steps.trigger import Trigger
 from scripts.buildsteps import M64CVS, M64NightlyRev, ShellCommandConditional
+import re
 
 class Mingw64Factory(factory.BuildFactory):
   clobber = True
@@ -27,16 +28,26 @@ class Mingw64Factory(factory.BuildFactory):
                  command=["bash", "-c", "pwd"],
                  property="basedir")
 
-    if self.platform:
-      # we have a platform specified
+    if self.host_pair:
+      # we have a host pair specified
       self.addStep(SetProperty,
-                   command=["echo", self.platform],
-                   property="platform")
+                   command=["echo", self.host_pair],
+                   property="host-pair")
     else:
-      # unknown platform, fall back to buildername
+      # unknown host pair, fall back to buildername
       self.addStep(SetProperty,
                    command=["echo", WithProperties("%(buildername)s")],
-                   property="platform")
+                   property="host-pair")
+
+    target_os = "unknown"
+    for os_mask in [ { "expr": "x86_64", "value": "w64" },
+                     { "expr": "i.86",   "value": "w32" } ]:
+      if re.match(os_mask["expr"], self.target) is not None:
+        target_os = os_mask["value"]
+        break
+    self.addStep(SetProperty,
+                 command=["echo", target_os],
+                 property="target-os")
 
     self.addStep(M64NightlyRev)
 
@@ -220,6 +231,7 @@ class Mingw64Factory(factory.BuildFactory):
                  schedulerNames=["sourceforge-upload"],
                  waitForFinish=True,
                  set_properties={"masterdir": WithProperties("%(masterdir)s"),
+                                 "target-os": WithProperties("%(target-os)s"),
                                  "filename": WithProperties("%(filename)s"),
                                  "destname": WithProperties("%(destname)s"),
                                  "datestamp": WithProperties("%(datestamp:-)s"),
@@ -227,10 +239,10 @@ class Mingw64Factory(factory.BuildFactory):
 
   def _step_Archive(self):
     self.addStep(SetProperty,
-                 command=["echo", WithProperties("mingw-w64-bin_%(platform)s.tar.bz2")],
+                 command=["echo", WithProperties("mingw-%(target-os)s-bin_%(host-pair)s.tar.bz2")],
                  property="filename")
     self.addStep(SetProperty,
-                 command=["echo", WithProperties("mingw-w64-bin_%(platform)s%(platform-extra:-)s%(datestamp:-)s.tar.bz2")],
+                 command=["echo", WithProperties("mingw-%(target-os)s-bin_%(host-pair)s%(host-extra:-)s%(datestamp:-)s.tar.bz2")],
                  property="destname")
     # make the tarball
     self.addStep(ShellCommand,
@@ -249,17 +261,17 @@ class Mingw64Factory(factory.BuildFactory):
                 
 
 class Mingw64Linux32Factory(Mingw64Factory):
-  platform = "i686-linux"
+  host_pair = "i686-linux"
   def __init__(self, **kwargs):
     Mingw64Factory.__init__(self, **kwargs)
 
 class Mingw64Linux64Factory(Mingw64Factory):
-  platform = "x86_64-linux"
+  host_pair = "x86_64-linux"
   def __init__(self, **kwargs):
     Mingw64Factory.__init__(self, **kwargs)
 
 class Mingw64CygwinFactory(Mingw64Factory):
-  platform = "i686-cygwin"
+  host_pair = "i686-cygwin"
   #gccConfigExtraArgs = ["--enable-bootstrap"]
   def __init__(self, **kwargs):
     Mingw64Factory.__init__(self, **kwargs)
@@ -268,21 +280,21 @@ class Mingw64CygwinFactory(Mingw64Factory):
     self.addStep(SetProperty,
                  command=["bash", "-c",
                           """cygcheck -c -d cygwin | perl -ne 'm/^cygwin\s+(\S+)/ and print "-$1"'"""],
-                 property="platform-extra")
+                 property="host-extra")
     return Mingw64Factory._step_Archive(self)
  
 class Mingw64MingwFactory(Mingw64Factory):
-  platform = "i686-mingw"
+  host_pair = "i686-mingw"
   #gccConfigExtraArgs = ["--enable-bootstrap"]
   def __init__(self, **kwargs):
     Mingw64Factory.__init__(self, **kwargs)
 
   def _step_Archive(self):
     self.addStep(SetProperty,
-                 command=["echo", WithProperties("mingw-w64-bin_%(platform)s.zip")],
+                 command=["echo", WithProperties("mingw-%(target-os)s-bin_%(host-pair)s.zip")],
                  property="filename")
     self.addStep(SetProperty,
-                 command=["echo", WithProperties("mingw-w64-bin_%(platform)s%(datestamp:-)s.zip")],
+                 command=["echo", WithProperties("mingw-%(target-os)s-bin_%(host-pair)s%(datestamp:-)s.zip")],
                  property="destname")
     # make the tarball
     self.addStep(ShellCommand,
@@ -299,25 +311,25 @@ class Mingw64MingwFactory(Mingw64Factory):
                  haltOnFailure=True)
 
 class Mingw32Linux32Factory(Mingw64Linux32Factory):
-  target = "i586-pc-mingw32"
+  target = "i686-pc-mingw32"
   crtConfigExtraArgs = ["--enable-lib32", "--disable-lib64"]
   def __init__(self, **kwargs):
     Mingw64Linux32Factory.__init__(self, **kwargs)
 
 class Mingw32Linux64Factory(Mingw64Linux64Factory):
-  target = "i586-pc-mingw32"
+  target = "i686-pc-mingw32"
   crtConfigExtraArgs = ["--enable-lib32", "--disable-lib64"]
   def __init__(self, **kwargs):
     Mingw64Linux64Factory.__init__(self, **kwargs)
 
 class Mingw32CygwinFactory(Mingw64CygwinFactory):
-  target = "i586-pc-mingw32"
+  target = "i686-pc-mingw32"
   crtConfigExtraArgs = ["--enable-lib32", "--disable-lib64"]
   def __init__(self, **kwargs):
     Mingw64CygwinFactory.__init__(self, **kwargs)
 
 class Mingw32MingwFactory(Mingw64MingwFactory):
-  target = "i586-pc-mingw32"
+  target = "i686-pc-mingw32"
   crtConfigExtraArgs = ["--enable-lib32", "--disable-lib64"]
   def __init__(self, **kwargs):
     Mingw64MingwFactory.__init__(self, **kwargs)

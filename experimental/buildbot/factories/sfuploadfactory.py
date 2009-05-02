@@ -30,6 +30,8 @@ class SourceForgeUploadFactory(factory.BuildFactory):
                  command=["./upload.py",
                           WithProperties("%(filename)s"),
                           WithProperties("%(destname)s"),
+                          WithProperties("%(target-os:+--os)s"),
+                          WithProperties("%(target-os:-)s"),
                           WithProperties("%(datestamp:+--datestamp)s"),
                           WithProperties("%(datestamp:-)s")],
                  haltOnFailure=True)
