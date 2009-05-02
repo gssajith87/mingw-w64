@@ -107,7 +107,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(ShellCommand,
                  name="gmp-move",
                  workdir="build/gcc",
-                 command=["mv", ("gmp-%s" % (gConfig.get("libraries", "gmp"))), "gcc/gmp"],
+                 command=["nohup", "mv", ("gmp-%s" % (gConfig.get("libraries", "gmp"))), "gcc/gmp"],
                  description=["gmp move"])
 
 
