@@ -229,6 +229,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  schedulerNames=["trigger-linux6464",
                                  "trigger-linux6432",
                                  "trigger-linux3264",
+                                 "trigger-linux3232",
                                  "trigger-cygwin3264",
                                  "trigger-mingw3264"],
                  waitForFinish=False,

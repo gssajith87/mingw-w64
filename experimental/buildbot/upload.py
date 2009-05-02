@@ -45,16 +45,16 @@ def main(argv):
   cleanup(destfile, config, opts, page)
 
 def upload(srcfile, destfile, config, opts):
-  command = ["rsync", "-avPc", "-e", "ssh -i %s", 
+  command = ["rsync", "-avPc", "-e", "ssh -i %s -o UserKnownHostsFile=%s",
              srcfile, "%%s@frs.sourceforge.net:uploads/%s" % (destfile)]
   print " ".join(command)
-  command[3] = command[3] % (config.get("sourceforge", "sshkey"))
+  command[3] = command[3] % (config.get("sourceforge", "sshkey"), "ssh_known_hosts")
   command[5] = command[5] % (config.get("sourceforge", "user"))
   if opts["dry-run"]:
     print "(rsync skipped due to dry-run)"
   else:
     for attempt in range(0, 5):  # 5 tries
-      rsync = subprocess.Popen(command)
+      rsync = subprocess.Popen(command, stderr=subprocess.STDOUT)
       rsync.communicate()
       if rsync.returncode == 0:
         return
