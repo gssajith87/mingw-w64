@@ -18,7 +18,6 @@ gConfig.read("config.ini")
 
 class NightlySrcPackageFactory(factory.BuildFactory):
   clobber = True
-  target = "x86_64-pc-mingw32"
   gccConfigExtraArgs = ["--disable-multilib"]
 
   def __init__(self, **kwargs):
@@ -199,13 +198,6 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                             """#define __MINGW_W64_REV_STAMP "%(mingw_datestamp)s"\n'"""
                             """ > revstamp.h """)])
 
-    # Install mingw headers
-    self.addStep(ShellCommand,
-                 name="mingw-headers-install",
-                 description=["mingw headers install"],
-                 workdir="build/root/%s/include" % self.target,
-                 command="tar cf - --exclude=.svn -C ../../../mingw/mingw-w64-headers/include . | tar xpvf -")
-
     # make the tarball
     self.addStep(SetProperty,
                  command=["echo", WithProperties("mingw-w64-src.tar.bz2")],
@@ -235,7 +227,11 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     # trigger building
     self.addStep(Trigger,
                  name="start-build",
-                 schedulerNames=["trigger-linux64", "trigger-linux32", "trigger-cygwin", "trigger-mingw"],
+                 schedulerNames=["trigger-linux6464",
+                                 "trigger-linux6432",
+                                 "trigger-linux3264",
+                                 "trigger-cygwin3264",
+                                 "trigger-mingw3264"],
                  waitForFinish=False,
                  updateSourceStamp=True,
                  set_properties={'is_nightly': WithProperties("%(is_nightly:-)s"),

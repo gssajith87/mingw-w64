@@ -90,6 +90,13 @@ class Mingw64Factory(factory.BuildFactory):
                  descriptionDone=["source extracted"],
                  command=["tar", "xvjpf", "mingw-w64-src.tar.bz2"])
 
+    # Install mingw headers
+    self.addStep(ShellCommand,
+                 name="mingw-headers-install",
+                 description=["mingw headers install"],
+                 workdir="build/root/%s/include" % self.target,
+                 command="tar cf - --exclude=.svn -C ../../../mingw/mingw-w64-headers/include . | tar xpvf -")
+
     # Make binutils
     self.addStep(Configure,
                  name="binutils-configure",
@@ -288,3 +295,23 @@ class Mingw64MingwFactory(Mingw64Factory):
                           ".",
                           "-x", ".svn"],
                  haltOnFailure=True)
+
+class Mingw32Linux32Factory(Mingw64Linux32Factory):
+  target = "i586-pc-mingw32"
+  def __init__(self, **kwargs):
+    Mingw64Linux32Factory.__init__(self, **kwargs)
+
+class Mingw32Linux64Factory(Mingw64Linux64Factory):
+  target = "i586-pc-mingw32"
+  def __init__(self, **kwargs):
+    Mingw64Linux64Factory.__init__(self, **kwargs)
+
+class Mingw32CygwinFactory(Mingw64CygwinFactory):
+  target = "i586-pc-mingw32"
+  def __init__(self, **kwargs):
+    Mingw64CygwinFactory.__init__(self, **kwargs)
+
+class Mingw32MingwFactory(Mingw64MingwFactory):
+  target = "i586-pc-mingw32"
+  def __init__(self, **kwargs):
+    Mingw64MingwFactory.__init__(self, **kwargs)

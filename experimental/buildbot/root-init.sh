@@ -2,6 +2,7 @@
 
 [ -d build ] || mkdir build
 [ -d build/root ] || mkdir build/root
+[ -d "build/root/$TGT" ] || mkdir "build/root/$TGT"
 
 case $(uname -s) in
 	MINGW*)
