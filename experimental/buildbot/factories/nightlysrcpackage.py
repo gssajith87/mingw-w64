@@ -56,8 +56,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(M64CVS,
                  name="binutils-pull",
                  cvsroot=":pserver:anoncvs@sourceware.org:/cvs/src",
-                 cvsmodule="binutils",
-                 login=None)
+                 cvsmodule="binutils")
     self.addStep(ShellCommandConditional,
                  name="binutils-patch",
                  workdir="build/binutils",
