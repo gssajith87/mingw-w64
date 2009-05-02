@@ -17,11 +17,12 @@ RETVAL=0
 BUILDBOT_ROOT="/opt/buildbot/mingw-w64"
 DIRCPROXY_CONF="$BUILDBOT_ROOT/master/dircproxy.conf"
 DIRCPROXY_PID="$BUILDBOT_ROOT/master/dircproxy.pid"
+RUN_AS=mook
 
 start_dircproxy() {
 	if ! pidofproc -p "$DIRCPROXY_PID" dircproxy; then
 	    echo -n $"Starting dircpxory: "
-	    sudo -u mook dircproxy "--pid-file=$DIRCPROXY_PID" -f "$DIRCPROXY_CONF"
+	    su $RUN_AS -c "dircproxy '--pid-file=$DIRCPROXY_PID' -f '$DIRCPROXY_CONF'"
 	    RETVAL=$?
 	    [ $RETVAL -eq 0 ] && success || failure
 	    echo
@@ -36,7 +37,7 @@ start_single() {
 	    echo $"Buildbot $2 already started"
 	else
 	    echo -n $"Starting buildbot $2: "
-	    sudo -u mook buildbot start "$BUILDBOT_ROOT/$1" >>/var/log/buildbot.log 2>&1
+	    su $RUN_AS -c "buildbot start '$BUILDBOT_ROOT/$1'" >>/var/log/buildbot.log 2>&1
 	    RETVAL=$?
 	    [ $RETVAL -eq 0 ] && success || failure
 	    echo
@@ -64,7 +65,7 @@ stop_single() {
 	fi
 	if pidofproc -p "$BUILDBOT_ROOT/$1/twistd.pid" buildbot; then
 	    echo -n $"Stopping buildbot $2: "
-	    sudo -u mook buildbot stop "$BUILDBOT_ROOT/$1" >>/var/log/buildbot.log 2>&1
+	    su $RUN_AS -c "buildbot stop '$BUILDBOT_ROOT/$1'" >>/var/log/buildbot.log 2>&1
 	    RETVAL=$?
 	    [ $RETVAL -eq 0 ] && success || failure
 	    echo
@@ -85,7 +86,7 @@ stop() {
 restart_single() {
 	if pidofproc -p "/opt/buildbot/mingw-w64/$1/twistd.pid" buildbot; then
 	    echo -n $"Restarting buildbot $2: "
-	    sudo -u mook buildbot restart "/opt/buildbot/mingw-w64/$1" >>/var/log/buildbot.log 2>&1
+	    su $RUN_AS -c "buildbot restart '/opt/buildbot/mingw-w64/$1'" >>/var/log/buildbot.log 2>&1
 	    RETVAL=$?
 	    [ $RETVAL -eq 0 ] && success || failure
 	    echo
