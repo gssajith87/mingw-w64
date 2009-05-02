@@ -1,0 +1,27 @@
+# SELinux script to allow rsync to sourceforge :(
+# to use:
+#    make -f /usr/share/selinux/devel/Makefile && semodule -i selinuxrsync.pp
+# note: put the known_hosts file next to upload.py as "ssh_known_hosts" and run;
+#    chcon -t etc_t ssh_known_hosts
+# also do the same for the ssh private key.
+
+module selinuxrsync 1.0;
+
+require {
+	# types of things we need to know about:
+	type ssh_exec_t;	# ssh execution context
+	type rsync_t;		# rsync execution context
+	type bin_t;		# /usr/bin/ directory context
+	type ssh_port_t;	# the SSH port, 22
+	type usr_t;		# /usr type files (... the tarballs we're sending)
+
+	class dir search;	# directories need to be searchable
+	class tcp_socket name_connect;	# can connect to tcp sockets by name
+	class file { exec_file_perms read_file_perms };
+}
+
+#============= rsync_t ==============
+allow rsync_t bin_t:dir search;
+allow rsync_t ssh_exec_t:file exec_file_perms;
+allow rsync_t ssh_port_t:tcp_socket name_connect;
+allow rsync_t usr_t:file read_file_perms;
