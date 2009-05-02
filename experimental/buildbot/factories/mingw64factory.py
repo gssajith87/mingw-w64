@@ -16,7 +16,8 @@ class Mingw64Factory(factory.BuildFactory):
   clobber = True
   target = "x86_64-pc-mingw32"
   gccConfigExtraArgs = ["--disable-multilib"]
-
+  crtConfigExtraArgs = []
+ 
   def __init__(self, **kwargs):
 
     factory.BuildFactory.__init__(self, **kwargs)
@@ -144,7 +145,7 @@ class Mingw64Factory(factory.BuildFactory):
                  env={'found_asm': 'yes'})
     self.addStep(Compile,
                  name="gcc-bootstrap-install",
-                 escription=["bootstrap gcc install"],
+                 description=["bootstrap gcc install"],
                  descriptionDone=["bootstrap gcc install"],
                  workdir="build/gcc/obj",
                  command=["make", "install-gcc"])
@@ -161,7 +162,8 @@ class Mingw64Factory(factory.BuildFactory):
                             "../mingw-w64-crt/configure",
                             "--host=%s" % self.target,
                             WithProperties("--prefix=%s/root", "basedir"),
-                            WithProperties("--with-sysroot=%s/root", "basedir")])
+                            WithProperties("--with-sysroot=%s/root", "basedir")] +
+                         self.crtConfigExtraArgs)
     self.addStep(Compile,
                  name="crt-compile",
                  description=["CRT compile"],
@@ -298,20 +300,24 @@ class Mingw64MingwFactory(Mingw64Factory):
 
 class Mingw32Linux32Factory(Mingw64Linux32Factory):
   target = "i586-pc-mingw32"
+  crtConfigExtraArgs = ["--enable-lib32", "--disable-lib64"]
   def __init__(self, **kwargs):
     Mingw64Linux32Factory.__init__(self, **kwargs)
 
 class Mingw32Linux64Factory(Mingw64Linux64Factory):
   target = "i586-pc-mingw32"
+  crtConfigExtraArgs = ["--enable-lib32", "--disable-lib64"]
   def __init__(self, **kwargs):
     Mingw64Linux64Factory.__init__(self, **kwargs)
 
 class Mingw32CygwinFactory(Mingw64CygwinFactory):
   target = "i586-pc-mingw32"
+  crtConfigExtraArgs = ["--enable-lib32", "--disable-lib64"]
   def __init__(self, **kwargs):
     Mingw64CygwinFactory.__init__(self, **kwargs)
 
 class Mingw32MingwFactory(Mingw64MingwFactory):
   target = "i586-pc-mingw32"
+  crtConfigExtraArgs = ["--enable-lib32", "--disable-lib64"]
   def __init__(self, **kwargs):
     Mingw64MingwFactory.__init__(self, **kwargs)
