@@ -117,7 +117,7 @@ gmp-download: \
 
 src/gmp.tar.bz2: \
     src/.mkdir.marker
-	wget -O $@ ftp://ftp.gnu.org/gnu/gmp/gmp-$(GMP_VERSION).tar.bz2
+	wget -O $@ ftp://ftp.gnu.org/gnu/gmp/gmp-$(strip $(GMP_VERSION)).tar.bz2
 
 ########################################
 # Extract gmp
@@ -129,7 +129,7 @@ gmp-extract: \
 src/gcc/.gmp.extract.marker: \
     src/gmp.tar.bz2
 	tar -C $(dir $@) -xjvf $<
-	mv $(dir $@)/gmp-$(GMP_VERSION) $(dir $@)/gcc/gmp
+	mv $(dir $@)/gmp-$(strip $(GMP_VERSION)) $(dir $@)/gcc/gmp
 	@touch $@
 
 ########################################
@@ -153,7 +153,7 @@ mpfr-download: \
 
 src/mpfr.tar.bz2: \
     src/.mkdir.marker
-	wget -O $@ http://www.mpfr.org/mpfr-current/mpfr-$(MPFR_VERSION).tar.bz2
+	wget -O $@ http://www.mpfr.org/mpfr-current/mpfr-$(strip $(MPFR_VERSION)).tar.bz2
 
 ########################################
 # Extract mpfr
@@ -165,7 +165,7 @@ mpfr-extract: \
 src/gcc/.mpfr.extract.marker: \
     src/mpfr.tar.bz2
 	tar -C $(dir $@) -xjvf $<
-	mv $(dir $@)/mpfr-$(MPFR_VERSION) $(dir $@)/gcc/mpfr
+	mv $(dir $@)/mpfr-$(strip $(MPFR_VERSION)) $(dir $@)/gcc/mpfr
 	@touch $@
 
 ########################################
@@ -403,7 +403,7 @@ $(BIN_ARCHIVE): \
 
 %/.mkdir.marker:
 	-mkdir -p $(dir $@)
-	@touch -d 1970-01-01 $@
+	@touch -d 1970-01-02 $@
 
 all:: \
   $(BIN_ARCHIVE)
