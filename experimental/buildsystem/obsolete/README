@@ -1,0 +1,5 @@
+This was an obsolete version of the build system used to
+build the mingw-w64 CRT.  It has been replaced in 2007
+by a different system based on autoconf/automake.
+
+This is kept here as a reference.
