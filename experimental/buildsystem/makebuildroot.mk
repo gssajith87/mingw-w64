@@ -19,7 +19,7 @@ all:: # default target
 # Configurable variables
 ########################################
 TARGET_ARCH ?= x86_64-w64-mingw32
-GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string
+GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --disable-multilib
 GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
 GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
 GMP_VERSION ?= 4.3.0 # GMP release version
