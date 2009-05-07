@@ -19,6 +19,7 @@ all:: # default target
 # Configurable variables
 ########################################
 TARGET_ARCH ?= x86_64-w64-mingw32
+BINUTILS_CONFIG_EXTRA_ARGS ?=
 GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --disable-multilib
 GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
 GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
@@ -241,7 +242,8 @@ build/binutils/obj/.config.marker: \
 	cd $(dir $@) && \
 	../src/configure --target=$(TARGET_ARCH) \
 	                 --prefix=$(CURDIR)/build/root \
-	                 --with-sysroot=$(CURDIR)/build/root
+	                 --with-sysroot=$(CURDIR)/build/root \
+	                 $(BINUTILS_CONFIG_EXTRA_ARGS)
 	@touch $@
 
 ########################################
