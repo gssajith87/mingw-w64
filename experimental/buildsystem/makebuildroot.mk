@@ -405,11 +405,14 @@ $(BIN_ARCHIVE): \
 	-mkdir -p $(dir $@)
 	@touch -d 1970-01-02 $@
 
+help::
+	@echo Available targets:
+	@echo -e $(foreach t,all $(TARGETS) $@,\\t$(t)\\n)
+
 all:: \
   $(BIN_ARCHIVE)
 
-.PHONY: \
-  all \
+TARGETS := \
   patch-pull \
   binutils-pull \
   gcc-pull \
@@ -434,4 +437,11 @@ all:: \
   gcc-compile \
   gcc-install \
   release-archive \
+  $(NULL)
+
+
+.PHONY: \
+  all \
+  $(TARGETS) \
+  help \
   $(NULL)
