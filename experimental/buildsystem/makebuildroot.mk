@@ -397,7 +397,7 @@ $(BIN_ARCHIVE): \
     build/gcc/obj/.install.marker
 	tar cjf $(BIN_ARCHIVE) -C build/root --owner 0 --group 0 --checkpoint \
 	    --exclude=CVS --exclude=.svn --exclude=.*.marker \
-            binutils gcc mingw
+            .
 
 ########################################
 # Helper targets
