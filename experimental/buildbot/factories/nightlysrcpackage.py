@@ -48,11 +48,19 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                 description=["clobber all"],
                                 descriptionDone=["clobbered"]))
 
-    self.addStep(FileDownload(mastersrc="scripts/mingw-makefile",
-                              slavedest="mingw-makefile",
-                              maxsize=102400,
-                              mode=0600))
+    self.addStep(ShellCommand(name="makefile-checkout",
+                              description=["makefile", "checkout"],
+                              descriptionDone=["checked out", "makefile"],
+                              command=["curl",
+                                       "-o",
+                                       "mingw-makefile",
+                                       "https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/experimental/buildsystem/makebuildroot.mk"],
+                              haltOnFailure=True))
 
+    self.addStep(FileUpload(masterdest="mingw-makefile",
+                            slavesrc="mingw-makefile",
+                            maxsize=102400,
+                            mode=0600))
 
     self.addStep(ShellCommand,
                  name="patch-pull",
@@ -221,6 +229,10 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(Trigger(name="start-build",
                          schedulerNames=["trigger-linux-x86_64-x86_64",
                                          "trigger-linux-x86_64-x86",
+                                         "trigger-linux-x86-x86_64",
+                                         "trigger-linux-x86-x86",
+                                         "trigger-cygwin-x86-x86_64",
+                                         "trigger-cygwin-x86-x86",
                                          "trigger-mingw-x86-x86_64",
                                          "trigger-mingw-x86-x86"],
                          waitForFinish=False,

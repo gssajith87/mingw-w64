@@ -59,7 +59,7 @@ class Mingw64Factory(factory.BuildFactory):
                                 description=["clobber all"],
                                 descriptionDone=["clobbered"]))
 
-    self.addStep(FileDownload(mastersrc="scripts/mingw-makefile",
+    self.addStep(FileDownload(mastersrc="mingw-makefile",
                               slavedest="mingw-makefile",
                               maxsize=102400,
                               mode=0600,
