@@ -25,41 +25,52 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     factory.BuildFactory.__init__(self, **kwargs)
 
     # set properties about this builder
-    self.addStep(SetProperty,
-                 command=["echo", os.getcwd()],
-                 property="masterdir")
-    self.addStep(SetProperty,
-                 command=["bash", "-c", "pwd"],
-                 property="basedir")
+    self.addStep(SetProperty(property="masterdir",
+                             command=["echo", os.getcwd()]))
+    self.addStep(SetProperty(property="basedir",
+                             command=["bash", "-c", "builtin pwd"]))
+    self.addStep(SetProperty(property="gmp_version",
+                             command=["echo", gConfig.get("libraries", "gmp")]))
+    self.addStep(SetProperty(property="mpfr_version",
+                             command=["echo", gConfig.get("libraries", "mpfr")]))
+    self.addStep(SetProperty(property="binutils_branch",
+                             command=["echo", WithProperties("%(binutils_branch:-trunk)s")]))
+    self.addStep(SetProperty(property="gcc_branch",
+                             command=["echo", WithProperties("%(gcc_branch:-trunk)s")]))
+    self.addStep(SetProperty(property="mingw_branch",
+                             command=["echo", WithProperties("%(mingw_branch:-trunk)s")]))
+    #self.addStep(M64NightlyRev)
 
-    self.addStep(M64NightlyRev)
-
-    # set up build root
     if self.clobber:
-      self.addStep(ShellCommand,
-                   name="clobber",
-                   workdir=".",
-                   command=["rm", "-rfv", "build"],
-                   haltOnFailure=False,
-                   description=["clobber all"],
-                   descriptionDone=["clobbered"])
+      self.addStep(ShellCommand(name="clobber",
+                                command=["rm", "-rfv", "build"],
+                                haltOnFailure=False,
+                                description=["clobber all"],
+                                descriptionDone=["clobbered"]))
+
+    self.addStep(FileDownload(mastersrc="scripts/mingw-makefile",
+                              slavedest="mingw-makefile",
+                              maxsize=102400,
+                              mode=0600))
+
 
     self.addStep(ShellCommand,
-                 name="patch-download",
-                 workdir="build",
-                 command=["svn", "co",
-                          "https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/experimental/patches/"],
-                 description=["patches", "download"],
-                 descriptionDone=["downloaded", "patches"])
+                 name="patch-pull",
+                 command=["make", "-f", "mingw-makefile", "patch-pull"],
+                 description=["patches", "pull"],
+                 descriptionDone=["pulled", "patches"])
 
     # download binutils
-    self.addStep(M64CVS,
-                 name="binutils-pull",
-                 cvsroot=":pserver:anoncvs@sourceware.org:/cvs/src",
-                 cvsmodule="binutils")
+    self.addStep(Compile(name="binutils-pull",
+                         description=["binutils", "pull"],
+                         descriptionDone=["pulled", "binutils"],
+                         command=["make", "-f", "mingw-makefile", "binutils-pull"],
+                         env={"BINUTILS_REVISION": WithProperties("%(binutils_revision:-head)s"),
+                              "BINUTILS_BRANCH"  : WithProperties("%(binutils_branch)s")}))
+
     self.addStep(ShellCommandConditional,
                  name="binutils-patch",
-                 workdir="build/binutils",
+                 workdir="build/src/binutils",
                  description=["patch", "binutils"],
                  descriptionDone=["binutils", "patched"],
                  condprop="scheduler",
@@ -72,15 +83,16 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                done ;
                              fi""".replace("\n", " ")])
  
-    # download gcc                 
-    self.addStep(SVN,
-                 name="gcc-pull",
-                 workdir="build/gcc/gcc",
-                 baseURL="svn://gcc.gnu.org/svn/gcc/",
-                 defaultBranch="trunk")
+    # download gcc
+    self.addStep(Compile(name="gcc-pull",
+                         description=["gcc", "pull"],
+                         descriptionDone=["pulled", "gcc"],
+                         command=["make", "-f", "mingw-makefile", "gcc-pull"],
+                         env={"GCC_REVISION": WithProperties("%(gcc_revision:-head)s"),
+                              "GCC_BRANCH"  : WithProperties("%(gcc_branch)s")}))
     self.addStep(ShellCommandConditional,
                  name="gcc-patch",
-                 workdir="build/gcc/gcc",
+                 workdir="build/src/gcc/gcc",
                  description=["patch", "gcc"],
                  condprop="scheduler",
                  condvalue="try",
@@ -93,28 +105,21 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              fi""".replace("\n", " ")])
  
     # download gmp
-    self.addStep(FileDownload,
-                 name="gmp-download",
-                 workdir="build",
-                 mastersrc=("scripts/sources/gmp-%s.tar.bz2" % (
-                            gConfig.get("libraries", "gmp"))),
-                 slavedest="gmp.tar.bz2")
-    self.addStep(ShellCommand,
-                 name="gmp-extract",
-                 workdir="build/gcc",
-                 command=["tar", "-xjvf", "../gmp.tar.bz2"],
-                 description=["gmp extract"])
-    self.addStep(ShellCommand,
-                 name="gmp-move",
-                 workdir="build/gcc",
-                 command=["nohup", "mv", ("gmp-%s" % (gConfig.get("libraries", "gmp"))), "gcc/gmp"],
-                 description=["gmp move"])
-
+    self.addStep(Compile(name="gmp-download",
+                         description=["gmp", "download"],
+                         descriptionDone=["downloaded", "gmp"],
+                         command=["make", "-f", "mingw-makefile", "gmp-download"],
+                         env={"GMP_VERSION": WithProperties("%(gmp_version)s")}))
+    self.addStep(Compile(name="gmp-extract",
+                         description=["gmp", "extract"],
+                         descriptionDone=["extracted", "gmp"],
+                         command=["make", "-f", "mingw-makefile", "gmp-extract"],
+                         env={"GMP_VERSION": WithProperties("%(gmp_version)s")}))
 
     # Fix gmp (fails to find m4 for flex)
     self.addStep(ShellCommand,
                  name="gmp-patch",
-                 workdir="build/gcc",
+                 workdir="build/src/gcc",
                  description=["patch", "gmp"],
                  command=["bash", "-c",
                           """if [ $( ls ../patches/gmp/*.patch ) ] ; then
@@ -122,32 +127,28 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                  patch -p0 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
-    self.addStep(ShellCommand,
-                 name="gmp-autoconf",
-                 workdir="build/gcc/gcc/gmp",
-                 command="autoconf",
-                 description=["gmp", "autoconf"])
+    self.addStep(Compile(name="gmp-autoconf",
+                         description=["gmp", "autoconf"],
+                         descriptionDone=["autoconf", "gmp"],
+                         command=["make", "-f", "mingw-makefile", "gmp-autoconf"],
+                         env={"GMP_VERSION": WithProperties("%(gmp_version)s")}))
 
     # download mpfr
-    self.addStep(FileDownload,
-                 name="mpfr-download",
-                 workdir="build",
-                 mastersrc=("scripts/sources/mpfr-%s.tar.bz2" % (
-                            gConfig.get("libraries", "mpfr"))),
-                 slavedest="mpfr.tar.bz2")
-    self.addStep(ShellCommand,
-                 name="mpfr-extract",
-                 workdir="build/gcc",
-                 command=["tar", "-xjvf", "../mpfr.tar.bz2"],
-                 description=["mpfr extract"])
-    self.addStep(ShellCommand,
-                 name="mpfr-move",
-                 workdir="build/gcc",
-                 command=["mv", ("mpfr-%s" % (gConfig.get("libraries", "mpfr"))), "gcc/mpfr"],
-                 description=["mpfr move"])
+    self.addStep(Compile(name="mpfr-download",
+                         description=["mpfr", "download"],
+                         descriptionDone=["downloaded", "mpfr"],
+                         command=["make", "-f", "mingw-makefile", "mpfr-download"],
+                         env={"MPFR_VERSION": WithProperties("%(mpfr_version)s")}))
+
+    self.addStep(Compile(name="mpfr-extract",
+                         description=["mpfr", "extract"],
+                         descriptionDone=["extracted", "mpfr"],
+                         command=["make", "-f", "mingw-makefile", "mpfr-extract"],
+                         env={"MPFR_VERSION": WithProperties("%(mpfr_version)s")}))
+
     self.addStep(ShellCommandConditional,
                  name="mpfr-patch",
-                 workdir="build/gcc/mpfr",
+                 workdir="build/src/gcc/mpfr",
                  description=["patch", "mpfr"],
                  condprop="scheduler",
                  condvalue="try",
@@ -160,17 +161,16 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              fi""".replace("\n", " ")])
  
     # download mingw-w64 crt and headers
-    # always pull HEAD, because revision numbers on the waterfall is more useful for changing gcc version
-    # unfortunately, buildbot's alwaysUseLatest flag only applies when you _don't_ give a revision
-    self.addStep(ShellCommand,
-                 name="mingw-pull",
-                 workdir=".",
-                 command=["svn", "checkout", "--non-interactive", "--no-auth-cache", "--revision", "HEAD",
-                          "https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/trunk", "build/mingw"],
-                 description=["mingw pull"])
+    self.addStep(Compile(name="mingw-pull",
+                         description=["mingw", "pull"],
+                         descriptionDone=["pulled", "mingw"],
+                         command=["make", "-f", "mingw-makefile", "mingw-pull"],
+                         env={"MINGW_REVISION": WithProperties("%(mingw_revision:-head)s"),
+                              "MINGW_BRANCH"  : WithProperties("%(mingw_branch)s")}))
+
     self.addStep(ShellCommandConditional,
                  name="mingw-patch",
-                 workdir="build/mingw",
+                 workdir="build/src/mingw",
                  description=["patch", "mingw"],
                  condprop="scheduler",
                  condvalue="try",
@@ -183,68 +183,59 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              fi""".replace("\n", " ")])
 
     # update the build stamp
-    self.addStep(SubversionRevProperty,
-                 workdir="build/mingw",
-                 prop_prefix="mingw_")
-    self.addStep(ShellCommand,
-                 name="mingw-datestamp",
-                 workdir="build/mingw/mingw-w64-crt",
-                 description=["writing", "buildstamp"],
-                 descriptionDone=["buildstamp", "written"],
-                 command=["bash", "-c", WithProperties(
-                            """echo -e '/* generated by buildbot */\n"""
-                            """#define __MINGW_W64_REV "%(mingw_revision)s"\n"""
-                            """#define __MINGW_W64_REV_STAMP "%(mingw_datestamp)s"\n'"""
-                            """ > revstamp.h """)])
+    self.addStep(SubversionRevProperty(name="gcc-svnrev",
+                                       workdir="build/src/gcc/gcc",
+                                       prop_prefix="gcc_",
+                                       config_dir=WithProperties("%(basedir:-.)s")))
+    self.addStep(SubversionRevProperty(name="mingw-svnrev",
+                                       workdir="build/src/mingw",
+                                       prop_prefix="mingw_",
+                                       config_dir=WithProperties("%(basedir:-.)s")))
+    self.addStep(ShellCommand(name="mingw-datestamp",
+                              workdir="src/mingw/mingw-w64-crt",
+                              description=["writing", "buildstamp"],
+                              descriptionDone=["buildstamp", "written"],
+                              command=["bash", "-c", WithProperties(
+                                         """echo -e '/* generated by buildbot */\n"""
+                                         """#define __MINGW_W64_REV "%(mingw_revision)s"\n"""
+                                         """#define __MINGW_W64_REV_STAMP "%(mingw_datestamp)s"\n'"""
+                                         """ > revstamp.h """)]))
 
     # make the tarball
-    self.addStep(SetProperty,
-                 command=["echo", WithProperties("mingw-w64-src.tar.bz2")],
-                 property="filename")
-    self.addStep(SetProperty,
-                 command=["echo", WithProperties("mingw-w64-src%(datestamp:-)s.tar.bz2")],
-                 property="destname")
-    self.addStep(ShellCommand,
-                 name="src-package",
-                 description=["tarball", "package"],
-                 workdir="build",
-                 command=["tar",
-                          "cjf",
-                          WithProperties("../%(filename)s"),
-                          "--owner", "0",
-                          "--group", "0",
-                          "--checkpoint",
-                          "--exclude=.svn",
-                          "."],
-                 haltOnFailure=True)
+    self.addStep(SetProperty(property="filename",
+                             command=["echo", WithProperties("mingw-w64-src.tar.bz2")]))
+    self.addStep(SetProperty(property="destname",
+                             command=["echo", WithProperties("mingw-w64-src%(datestamp:-)s.tar.bz2")]))
+    self.addStep(Compile(name="src-package",
+                         description=["tarball", "package"],
+                         descriptionDone=["packaged", "tarball"],
+                         command=["make", "-f", "mingw-makefile", "src-archive"],
+                         env={"SRC_ARCHIVE": WithProperties("%(filename)s")}))
+
     # upload the tarball to the master
-    self.addStep(FileUpload,
-                 name="src-upload",
-                 slavesrc=WithProperties("../%(filename)s"),
-                 masterdest=WithProperties("%(filename)s"))
+    self.addStep(FileUpload(name="src-upload",
+                            slavesrc=WithProperties("%(filename)s"),
+                            masterdest=WithProperties("%(filename)s")))
 
     # trigger building
-    self.addStep(Trigger,
-                 name="start-build",
-                 schedulerNames=["trigger-linux6464",
-                                 "trigger-linux6432",
-                                 "trigger-linux3264",
-                                 "trigger-linux3232",
-                                 "trigger-cygwin3264",
-                                 "trigger-mingw3264"],
-                 waitForFinish=False,
-                 updateSourceStamp=True,
-                 set_properties={'is_nightly': WithProperties("%(is_nightly:-)s"),
-                                 'datestamp':  WithProperties("%(datestamp:-)s"),
-                                 'masterdir':  WithProperties("%(masterdir)s")})
+    self.addStep(Trigger(name="start-build",
+                         schedulerNames=["trigger-linux-x86_64-x86_64",
+                                         "trigger-linux-x86_64-x86",
+                                         "trigger-mingw-x86-x86_64",
+                                         "trigger-mingw-x86-x86"],
+                         waitForFinish=False,
+                         updateSourceStamp=True,
+                         set_properties={'is_nightly':  WithProperties("%(is_nightly:-)s"),
+                                         'datestamp':   WithProperties("%(datestamp:-)s"),
+                                         'masterdir':   WithProperties("%(masterdir)s"),
+                                         'src_archive': WithProperties("%(filename)s")}))
     # trigger upload
-    self.addStep(Trigger,
-                 name="src-publish",
-                 schedulerNames=["sourceforge-upload"],
-                 waitForFinish=False, # don't hang :D
-                 set_properties={"masterdir":  WithProperties("%(masterdir)s"),
-                                 "filename":   WithProperties("%(filename)s"),
-                                 "destname":   WithProperties("%(destname)s"),
-                                 "datestamp":  WithProperties("%(datestamp:-)s"),
-                                 "is_nightly": WithProperties("%(is_nightly:-)s")})
+    self.addStep(Trigger(name="src-publish",
+                         schedulerNames=["sourceforge-upload"],
+                         waitForFinish=False, # don't hang :D
+                         set_properties={"masterdir":  WithProperties("%(masterdir)s"),
+                                         "filename":   WithProperties("%(filename)s"),
+                                         "destname":   WithProperties("%(destname)s"),
+                                         "datestamp":  WithProperties("%(datestamp:-)s"),
+                                         "is_nightly": WithProperties("%(is_nightly:-)s")}))
 

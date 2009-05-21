@@ -68,14 +68,10 @@ class ShellCommandConditional(ShellCommand):
 
 class SetPropertyConditional(SetProperty):
     """Sets a property if a different property (given by "condprop") is set"""
-    def __init__(self, **kwargs):
-        self.condprop = None
-
-        if kwargs.has_key('condprop'):
-            self.condprop = kwargs['condprop']
-            del kwargs['condprop']
-
+    def __init__(self, condprop=None, **kwargs):
         SetProperty.__init__(self, **kwargs)
+        self.addFactoryArguments(condprop=condprop)
+        self.condprop = condprop
 
     def start(self):
         if self.condprop is not None:
@@ -139,19 +135,25 @@ class M64NightlyRev(SetPropertyConditional):
 
 class SubversionRevProperty(SetPropertyConditional):
     """Sets a revision property based on a check out"""
-    def __init__(self, **kwargs):
-        if kwargs.has_key('prop_prefix'):
-            self.prop_prefix = kwargs['prop_prefix']
-            del kwargs['prop_prefix']
-        else:
-            self.prop_prefix = ""
+    def __init__(self,
+                 prop_prefix="",
+                 config_dir=".",
+                 **kwargs):
+
+        if kwargs.has_key("command"):
+           del kwargs["command"]
+        if kwargs.has_key("extract_fn"):
+           del kwargs["extract_fn"]
 
         command = ["svn", "info", "--xml", "--incremental",
-                   "--config-dir", ".", "--no-auth-cache", "--non-interactive"]
+                   "--config-dir", config_dir, "--no-auth-cache", "--non-interactive"]
         SetPropertyConditional.__init__(self,
                                         extract_fn=self._extract,
                                         command=command,
                                         **kwargs)
+        self.addFactoryArguments(prop_prefix=prop_prefix,
+                                 config_dir=config_dir)
+        self.prop_prefix = prop_prefix
 
     def _extract(self, rc, stdout, stderr):
         dom = minidom.parseString(stdout)
