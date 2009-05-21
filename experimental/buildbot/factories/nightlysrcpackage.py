@@ -43,7 +43,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
 
     if self.clobber:
       self.addStep(ShellCommand(name="clobber",
-                                command=["rm", "-rfv", "build"],
+                                command=["rm", "-rfv", "build", "src"],
                                 haltOnFailure=False,
                                 description=["clobber all"],
                                 descriptionDone=["clobbered"]))
