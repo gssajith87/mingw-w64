@@ -18,6 +18,7 @@ class Mingw64Factory(factory.BuildFactory):
   target = "x86_64-w64-mingw32"
   gccConfigExtraArgs = "--enable-fully-dynamic-string --disable-multilib"
   crtConfigExtraArgs = ""
+  binutilsConfigExtraArgs = ""
  
   def __init__(self, **kwargs):
 
@@ -49,6 +50,13 @@ class Mingw64Factory(factory.BuildFactory):
 
     self.addStep(SetProperty(property="target_arch",
                              command=["echo", self.target]))
+
+    self.addStep(SetProperty(property="gcc_config_args",
+                             command=["echo", WithProperties("%%(gcc_config_args:-%s)s" % (self.gccConfigExtraArgs))]))
+    self.addStep(SetProperty(property="mingw_config_args",
+                             command=["echo", WithProperties("%%(mingw_config_args:-%s)s" % (self.crtConfigExtraArgs))]))
+    self.addStep(SetProperty(property="binutils_config_args",
+                             command=["echo", WithProperties("%%(binutils_config_args:-%s)s" % (self.binutilsConfigExtraArgs))]))
 
     # set up build root
     if self.clobber:
@@ -96,7 +104,8 @@ class Mingw64Factory(factory.BuildFactory):
                            description=["binuils", "configure"],
                            descriptionDone=["binutils", "configured"],
                            command=["make", "-f", "mingw-makefile", "binutils-configure"],
-                           env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
+                           env={"BINUTILS_CONFIG_EXTRA_ARGS": WithProperties("%(binutils_config_args)s"),
+                                "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     self.addStep(Compile(name="binutils-compile",
                          description=["binutils compile"],
@@ -115,7 +124,7 @@ class Mingw64Factory(factory.BuildFactory):
                            description=["gcc configure"],
                            descriptionDone=["gcc configured"],
                            command=["make", "-f", "mingw-makefile", "gcc-configure"],
-                           env={"GCC_CONFIG_EXTRA_ARGS": self.gccConfigExtraArgs,
+                           env={"GCC_CONFIG_EXTRA_ARGS": WithProperties("%(gcc_config_args)s"),
                                 "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     self.addStep(Compile(name="gcc-bootstrap-compile",
@@ -135,7 +144,7 @@ class Mingw64Factory(factory.BuildFactory):
                            description=["CRT configure"],
                            descriptionDone=["CRT configured"],
                            command=["make", "-f", "mingw-makefile", "crt-configure"],
-                           env={"MINGW_CONFIG_EXTRA_ARGS": self.crtConfigExtraArgs,
+                           env={"MINGW_CONFIG_EXTRA_ARGS": WithProperties("%(mingw_config_args)s"),
                                 "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     self.addStep(Compile(name="crt-compile",
