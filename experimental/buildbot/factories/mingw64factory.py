@@ -59,6 +59,13 @@ class Mingw64Factory(factory.BuildFactory):
                                 description=["clobber all"],
                                 descriptionDone=["clobbered"]))
 
+    # force the build/ directory to exist so we can download into it
+    self.addStep(ShellCommand(name="mkdir-build",
+                              description=["mkdir", "build/"],
+                              workdir="build",
+                              command=["echo", ""],
+                              haltOnFailure=True))
+
     self.addStep(FileDownload(mastersrc="mingw-makefile",
                               slavedest="mingw-makefile",
                               maxsize=102400,
