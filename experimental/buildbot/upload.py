@@ -14,7 +14,7 @@ def main(argv):
   config.read("config.ini")
 
   # check that the file exists
-  (optparse, args) = getopt.gnu_getopt(argv, 'd:o:n', ['datestamp=', 'os=', 'dry-run'])
+  (optparse, args) = getopt.gnu_getopt(argv, 'd:o:nv', ['datestamp=', 'os=', 'dry-run', 'verbose'])
   while "" == args[-1]:
     # remove any trailing empty parameters
     args.pop()
@@ -26,7 +26,8 @@ def main(argv):
   opts = {
     "datestamp": None,
     "os": "w64",
-    "dry-run": False
+    "dry-run": False,
+    "verbose": False
   }
   for o,a in optparse:
     if o in ("-d", "--datestamp"):
@@ -37,6 +38,8 @@ def main(argv):
       opts["dry-run"] = True
     elif o in ("-o", "--os"):
       opts["os"] = a
+    elif o in ("-v", "--verbose"):
+      opts["verbose"] = True
   assert filesize > 1048576, "%s is only %s bytes" %(srcfile, filesize)
   assert (-1 < srcfile.find(".tar.")) or (-1 < srcfile.find(".zip")), "%s is not a tarball" % (srcfile)
 
@@ -70,12 +73,24 @@ def publish(filename, config, opts):
   login_data = {"form_loginname": config.get("sourceforge", "user"),
                 "form_pw": config.get("sourceforge", "password"),
                 "ssl_status": 1,
+                "form_securemode": "yes",
                 "login": "Log in"}
-  #print urllib.urlencode(login_data)
-  login_page = urllib2.urlopen(LOGIN_URL, urllib.urlencode(login_data))
+  if opts["verbose"]:
+    for item in login_data:
+      if item == "form_pw":
+        print "%s = <*>" % (item)
+      else:
+        print "%s = %s" % (item, login_data[item])
+  request = urllib2.Request(LOGIN_URL)
+  request.add_data(urllib.urlencode(login_data))
+  login_page = urllib2.urlopen(request)
+  # sourceforge is being weird, we need to submit twice to pick up cookies
+  login_page = urllib2.urlopen(request)
 
   # read the page and guess if we succeeded
   for line in login_page:
+    if opts["verbose"]:
+      print line[:-1]
     assert (-1 == line.find(LOGIN_FAIL)), "sourceforge login error"
 
   ### publish files
