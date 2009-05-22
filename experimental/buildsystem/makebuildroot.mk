@@ -269,10 +269,35 @@ build/binutils/obj/.install.marker: \
 	@touch $@
 
 ########################################
+# GCC cross compiling support - winsup
+########################################
+gcc-winsup: \
+    build/gcc/gcc/.winsup.marker
+
+build/gcc/gcc/.winsup.marker: \
+    build/.extract.marker \
+    build/.root.init.marker
+ifneq (,$(filter MINGW%,$(shell uname -s)))
+	test -e build/gcc/gcc/winsup  || \
+	  junction build/gcc/gcc/winsup "build/root"
+	test -e build/gcc/gcc/winsup
+else
+	test -h build/gcc/gcc/winsup  || \
+	  ln -s "../../root" build/gcc/gcc/winsup
+	test -h build/gcc/gcc/winsup
+endif
+	@touch $@
+
+########################################
 # Configure GCC
 ########################################
 gcc-configure: \
     build/gcc/obj/.config.marker
+
+ifneq (,$(filter --host=x86_64-w64-mingw32,$(GCC_CONFIG_EXTRA_ARGS)))
+build/gcc/obj/.config.marker: \
+    build/gcc/gcc/.winsup.marker
+endif
 
 build/gcc/obj/.config.marker: \
     build/gcc/obj/.mkdir.marker \
@@ -370,6 +395,7 @@ gcc-compile: \
     build/mingw/obj/.install.marker
 
 build/gcc/obj/.compile.marker: \
+    build/gcc/obj/.config.marker \
     build/mingw/obj/.install.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	make -C $(dir $@)
