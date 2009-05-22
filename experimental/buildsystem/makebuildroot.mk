@@ -42,6 +42,19 @@ else
   $(error Unknown CPU for target arch $(TARGET_ARCH))
 endif
 
+# the type of _host_ to run on (n.b. not build)
+HOST_TYPE := posix
+ifneq (,$(filter MINGW%,$(shell uname -s)))
+  HOST_TYPE := windows
+endif
+ifneq (,$(filter --host=%,$(GCC_CONFIG_EXTRA_ARGS)))
+  HOST_TYPE := posix
+endif
+ifneq (,$(filter --host=%-mingw32,$(GCC_CONFIG_EXTRA_ARGS)))
+  HOST_TYPE := windows
+endif
+
+
 ########################################
 # Pull mingw-w64-specific patches
 ########################################
@@ -421,9 +434,15 @@ release-archive: \
 
 $(BIN_ARCHIVE): \
     build/gcc/obj/.install.marker
+ifeq (windows,$(HOST_TYPE))
+	cd build/root && \
+	zip -r -9 ../../$(patsubst %.tar.bz2,%.zip,$(BIN_ARCHIVE)) \
+	     . -x .*.marker *.*.marker
+else
 	tar cjf $(BIN_ARCHIVE) -C build/root --owner 0 --group 0 --checkpoint \
 	    --exclude=CVS --exclude=.svn --exclude=.*.marker \
             .
+endif
 
 ########################################
 # Helper targets
