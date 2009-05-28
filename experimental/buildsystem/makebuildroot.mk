@@ -230,7 +230,7 @@ build/.extract.marker: \
 	@touch $@
 
 build/.root.init.marker: \
-    build/root/.mkdir.marker \
+    build/root/${TARGET_ARCH}/.mkdir.marker \
     build/.extract.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
 	test -e build/root/mingw  || \
