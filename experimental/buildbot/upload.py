@@ -24,11 +24,13 @@ def main(argv):
   optparser.add_option("-n", "--dry-run", action="store_true", dest="dry_run")
   optparser.add_option("-o", "--os", action="store", dest="os")
   optparser.add_option("-v", "--verbose", action="count", dest="verbose")
+  optparser.add_option("--debug", action="store_true", dest="debug")
 
   optparser.set_default("datestamp", None)
   optparser.set_default("os", "w64")
   optparser.set_default("dry_run", False)
   optparser.set_default("verbose", 0)
+  optparser.set_default("debug", False)
 
   def configOptionCallback(option, opt_str, value, parser, *args):
     """ an option parser callback to put things into the ini parser """
@@ -117,6 +119,8 @@ def main(argv):
   cleanup(destfile, config, opts, page)
 
 def upload(srcfile, destfile, config, opts):
+  if opts.verbose > 0:
+    print "processing upload of %s to %s..." % (srcfile, destfile)
   command = ["rsync", "-avPc", "-e", "ssh -i %s -o UserKnownHostsFile=%s",
              srcfile, "%%s@frs.sourceforge.net:uploads/%s" % (destfile)]
   print " ".join(command)
@@ -133,6 +137,8 @@ def upload(srcfile, destfile, config, opts):
     assert(rsync.returncode == 0)
 
 def publish(filename, config, opts):
+  if opts.verbose > 0:
+    print "processing publish of %s..." % (filename)
   ### set up cookie management
   cookiejar = cookielib.CookieJar()
   opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar))
@@ -181,8 +187,25 @@ def publish(filename, config, opts):
   return publish_page
 
 def cleanup(filename, config, opts, page_data):
+  if opts.verbose > 0:
+    print "processing cleanup of %s..." % (filename)
   items = []
   item_data = {}
+
+  # figure out the desired file characteristics
+  processor = "Other"
+  if re.search(r'i.86', filename):
+    processor = 'i386'
+  if re.search(r'x86.64', filename):
+    processor = 'AMD64'
+  extension = filename[filename.rindex("."):]
+  if opts.datestamp is not None and filename.find(opts.datestamp) != -1:
+    prefix = filename[:filename.find(opts.datestamp)]
+  else:
+    prefix = None
+
+  if opts.debug:
+    print "prefix = %s" % (prefix)
 
   ### scrape through the page to look for files we know about
   r_name = re.compile('<td nowrap><font size="-1">([^<]+)</td>', re.IGNORECASE)
@@ -212,25 +235,29 @@ def cleanup(filename, config, opts, page_data):
     elif in_form and line.find('</form>') != -1:
       in_form = False
       if "file_id" in item_data and "file_name" in item_data:
-        items += [item_data]
+        if prefix is not None:
+          # calculate the date of the file
+          match = re.match("_*(\d{8})", item_data["file_name"][len(prefix):])
+          if match is not None:
+            datestring = match.group(1)
+            datestamp = datetime.date(int(datestring[0:4]), int(datestring[4:6]), int(datestring[6:8]))
+            item_data["datestamp"] = datestamp
+            items += [item_data]
+          else:
+            if opts.verbose > 0:
+              print "item %s doesn't look like the right type" % (item_data["file_name"])
+        else:
+          item_data["datestamp"] = datetime.date(datetime.MAXYEAR, 12, 31)
+          items += [item_data]
     elif in_form and r_name.search(line):
       item_data["file_name"] = r_name.search(line).group(1)
 
-  # figure out the desired file characteristics
-  processor = "Other"
-  if re.search(r'i.86', filename):
-    processor = 'i386'
-  if re.search(r'x86.64', filename):
-    processor = 'AMD64'
-  extension = filename[filename.rindex("."):]
-  if opts.datestamp is not None and filename.find(opts.datestamp) != -1:
-    prefix = filename[:filename.find(opts.datestamp)]
-    cutoff = datetime.date(int(opts.datestamp[1:5]),
-                           int(opts.datestamp[5:7]),
-                           int(opts.datestamp[7:9]))
-    cutoff -= datetime.timedelta(7)
-  else:
-    prefix = None
+  items.sort(cmp=lambda x,y:cmp(x["datestamp"], y["datestamp"]), reverse=False)
+
+  skipped_items = 0
+  days_to_keep = 7
+  if config.has_option("sourceforge", "history"):
+    days_to_keep = config.getint("sourceforge", "history")
 
   for item in items:
     if item["file_name"] == filename:
@@ -249,24 +276,25 @@ def cleanup(filename, config, opts, page_data):
       else:
         edit_page = urllib2.urlopen(EDIT_URL, urllib.urlencode(edit_data))
         print "item %s edited (processor %s)" % (filename, processor)
+
     elif prefix is not None and item["file_name"].startswith(prefix):
-      match = re.match("_*(\d{8})", item["file_name"][len(prefix):])
-      if match is not None:
-        datestring = match.group(1)
-        datestamp = datetime.date(int(datestring[0:4]), int(datestring[4:6]), int(datestring[6:8]))
-        if datestamp < cutoff:
-          edit_data = {"group_id" : config.get("sourceforge", "group_id"),
-                       "package_id": config.get("sourceforge", "package-" + opts.os),
-                       "release_id": config.get("sourceforge", "release-" + opts.os),
-                       "file_id": item["file_id"],
-                       "im_sure": 1,
-                       "step3": "Delete File"}
-          if opts.dry_run:
-            print "deleting item %s skipped due to dry-run" % (item["file_name"])
-          else:
-            urllib2.urlopen(EDIT_URL, urllib.urlencode(edit_data))
-            print "item %s deleted" % (item["file_name"])
-  return
+      if skipped_items + 1 < days_to_keep:
+        if opts.verbose > 0:
+          print "keeping item %s" % (item["file_name"])
+        skipped_items = skipped_items + 1
+      else:
+        # should delete this old item
+        edit_data = {"group_id" : config.get("sourceforge", "group_id"),
+                     "package_id": config.get("sourceforge", "package-" + opts.os),
+                     "release_id": config.get("sourceforge", "release-" + opts.os),
+                     "file_id": item["file_id"],
+                     "im_sure": 1,
+                     "step3": "Delete File"}
+        if opts.dry_run:
+          print "deleting item %s skipped due to dry-run" % (item["file_name"])
+        else:
+          urllib2.urlopen(EDIT_URL, urllib.urlencode(edit_data))
+          print "item %s deleted" % (item["file_name"])
   print "Done"
 
 if __name__ == "__main__":
