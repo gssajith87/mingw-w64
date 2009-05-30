@@ -61,6 +61,20 @@ class Mingw64Factory(factory.BuildFactory):
                              command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
                                       WithProperties("%%(binutils_config_args:-%s)s" % (self.binutilsConfigExtraArgs))]))
 
+    self.addStep(SetProperty(property="gcc_branch",
+                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
+                                      WithProperties("%(gcc_branch:-trunk)s")]))
+    self.addStep(SetProperty(property="gcc_revision",
+                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
+                                      WithProperties("%(gcc_revision:-head)s")]))
+    self.addStep(SetProperty(property="mingw_revision",
+                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
+                                      WithProperties("%(mingw_revision:-head)s")]))
+    self.addStep(SetProperty(property="binutils_revision",
+                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
+                                      WithProperties("%(binutils_revision:-)s")]))
+
+
     # set up build root
     if self.clobber:
       self.addStep(ShellCommand(name="clobber",
@@ -88,6 +102,17 @@ class Mingw64Factory(factory.BuildFactory):
                               slavedest="mingw-w64-src.tar.bz2",
                               mode=0644,
                               haltOnFailure=True))
+
+    # Normally, this ends up being a no-op; it's used for custom forced builds to pull gcc
+    self.addStep(Compile(name="src-archive",
+                         description=["source archive", "create"],
+                         descriptionDone=["source archive", "created"],
+                         command=["make", "-f", "mingw-makefile", "src-archive"],
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "GCC_BRANCH" : WithProperties("%(gcc_branch)s"),
+                              "GCC_REVISION": WithProperties("%(gcc_revision)s"),
+                              "MINGW_REVISION": WithProperties("%(mingw_revision)s"),
+                              "BINUTILS_REVISION": WithProperties("%(binutils_revision)s")}))
 
     self.addStep(Compile(name="src-extract",
                          description=["source", "extract"],

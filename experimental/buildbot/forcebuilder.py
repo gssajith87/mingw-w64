@@ -201,6 +201,8 @@ class ForceBuilder(HtmlResource):
     for prop_name in request.args:
       if not prop_name[:2] == "p_":
         continue
+      if request.args[prop_name][0] == "-":
+        continue
       properties.setProperty(prop_name[2:],
                              request.args[prop_name][0],
                              "ForceBuilder")
