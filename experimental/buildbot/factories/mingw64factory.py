@@ -52,11 +52,14 @@ class Mingw64Factory(factory.BuildFactory):
                              command=["echo", self.target]))
 
     self.addStep(SetProperty(property="gcc_config_args",
-                             command=["echo", WithProperties("%%(gcc_config_args:-%s)s" % (self.gccConfigExtraArgs))]))
+                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
+                                      WithProperties("%%(gcc_config_args:-%s)s" % (self.gccConfigExtraArgs))]))
     self.addStep(SetProperty(property="mingw_config_args",
-                             command=["echo", WithProperties("%%(mingw_config_args:-%s)s" % (self.crtConfigExtraArgs))]))
+                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
+                                      WithProperties("%%(mingw_config_args:-%s)s" % (self.crtConfigExtraArgs))]))
     self.addStep(SetProperty(property="binutils_config_args",
-                             command=["echo", WithProperties("%%(binutils_config_args:-%s)s" % (self.binutilsConfigExtraArgs))]))
+                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
+                                      WithProperties("%%(binutils_config_args:-%s)s" % (self.binutilsConfigExtraArgs))]))
 
     # set up build root
     if self.clobber:
