@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #Set this to your host!!
 HST=x86_64-pc-linux
-TGT=x86_64-pc-mingw32
+TGT=x86_64-w64-mingw32
 BITS=64
 
 #Option defaults
