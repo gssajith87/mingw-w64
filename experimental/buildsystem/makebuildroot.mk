@@ -351,7 +351,7 @@ build/gcc/obj/.bootstrap.install.marker: \
 # Install mingw-w64 headers
 ########################################
 headers-install: \
-    build/root/$(TARGET_ARCH)/include/.mkdir.marker
+    build/root/mingw/.headers.install.marker
 
 build/root/mingw/.headers.install.marker: \
     build/root/$(TARGET_ARCH)/include/.mkdir.marker
