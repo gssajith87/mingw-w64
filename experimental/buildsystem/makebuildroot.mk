@@ -244,12 +244,26 @@ endif
 	@touch $@
 
 ########################################
+# Install mingw-w64 headers
+########################################
+headers-install: \
+    build/root/mingw/.headers.install.marker
+
+build/root/mingw/.headers.install.marker: \
+    build/.root.init.marker \
+    build/root/$(TARGET_ARCH)/include/.mkdir.marker
+	tar cf - --exclude=.svn -C build/mingw/mingw-w64-headers/include . | \
+	  tar xpvf - -C build/root/$(TARGET_ARCH)/include
+	@touch $@
+
+########################################
 # Configure binutils
 ########################################
 binutils-configure: \
     build/binutils/obj/.config.marker
 
 build/binutils/obj/.config.marker: \
+    build/root/mingw/.headers.install.marker\
     build/binutils/obj/.mkdir.marker \
     build/.root.init.marker
 	cd $(dir $@) && \
@@ -345,18 +359,6 @@ gcc-bootstrap-install: \
 build/gcc/obj/.bootstrap.install.marker: \
     build/gcc/obj/.bootstrap.compile.marker
 	make -C $(dir $@) install-gcc
-	@touch $@
-
-########################################
-# Install mingw-w64 headers
-########################################
-headers-install: \
-    build/root/mingw/.headers.install.marker
-
-build/root/mingw/.headers.install.marker: \
-    build/root/$(TARGET_ARCH)/include/.mkdir.marker
-	tar cf - --exclude=.svn -C build/mingw/mingw-w64-headers/include . | \
-	  tar xpvf - -C build/root/$(TARGET_ARCH)/include
 	@touch $@
 
 ########################################
