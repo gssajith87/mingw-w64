@@ -19,6 +19,7 @@ all:: # default target
 # Configurable variables
 ########################################
 TARGET_ARCH ?= x86_64-w64-mingw32
+HOST_ARCH ?=
 BINUTILS_CONFIG_EXTRA_ARGS ?=
 GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --disable-multilib
 GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
@@ -47,10 +48,13 @@ HOST_TYPE := posix
 ifneq (,$(filter MINGW%,$(shell uname -s)))
   HOST_TYPE := windows
 endif
-ifneq (,$(filter --host=%,$(GCC_CONFIG_EXTRA_ARGS)))
+ifneq (,${HOST_ARCH})
   HOST_TYPE := posix
+  BINUTILS_CONFIG_EXTRA_ARGS += --host=${HOST_ARCH}
+  GCC_CONFIG_EXTRA_ARGS += --host=${HOST_ARCH}
+  MINGW_CONFIG_EXTRA_RAGS += --host=${HOST_ARCH}
 endif
-ifneq (,$(filter --host=%-mingw32,$(GCC_CONFIG_EXTRA_ARGS)))
+ifneq (,$(filter %-mingw32,${HOST_ARCH}))
   HOST_TYPE := windows
 endif
 
@@ -321,7 +325,7 @@ endif
 gcc-configure: \
     build/gcc/obj/.config.marker
 
-ifneq (,$(filter --host=x86_64-w64-mingw32,$(GCC_CONFIG_EXTRA_ARGS)))
+ifneq (,$(filter %-mingw32,${HOST_ARCH}))
 build/gcc/obj/.config.marker: \
     build/gcc/gcc/.winsup.marker
 endif
