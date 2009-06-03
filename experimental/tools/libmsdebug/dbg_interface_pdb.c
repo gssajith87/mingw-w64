@@ -81,7 +81,35 @@ static int pdb2_load (sDbgInterface *pDCtx)
   root = pdb2Root (hdr, &streams, &streamBytes, &fUnused);
   if (root)
     {
-      fprintf (stderr, " # of streams: %u\n", streams);
+      sDbgMemFile **h = (sDbgMemFile **) malloc (sizeof (sDbgMemFile *) * ((size_t) root->nstreams));
+      uint32_t i, pageidx = 0;
+      uint32_t off, dStreamBytes;
+      if (!h)
+	{
+	  free (root);
+	  return -1;
+	}
+      memset (h, 0, sizeof (sDbgMemFile *) * ((size_t) root->nstreams));
+      for (i = 0; i < root->nstreams; i++)
+	{
+	  void *pdata;
+	  fUnused = 0;
+	  dStreamBytes = root->streams[i].streamBytes;
+	  off = sizeof (sPdbRoot2) + ((uint32_t) root->streams) * sizeof(sPdbStream2) + (pageidx * sizeof (uint16_t));
+	  pdata = pdb2FileRead (hdr, dStreamBytes, ((unsigned char*) root) + off, &fUnused);
+	  if (!fUnused)
+	    {
+	      sDbgMemFile *dmf = dbg_memfile_create ("stream", dStreamBytes);
+	      h[i] = dmf;
+	      dbg_memfile_write (dmf, 0, pdata, dStreamBytes);
+	    }
+	  if (pdata)
+	    free (pdata);
+	  pageidx += pdb2FilePages (hdr, dStreamBytes, NULL, NULL);
+	}
+      ((sDbgInterfacePDB *)pDCtx)->streams = root->nstreams;
+      ((sDbgInterfacePDB *)pDCtx)->files = h;
+      fprintf (stderr, " # of streams: %u\n", root->nstreams);
       free (root);
     }
  
@@ -93,13 +121,34 @@ static int pdb2_update (sDbgInterface *pDCtx)
   return unknown_update (pDCtx);
 }
 
-static int pdb2_release (sDbgInterface *pDCtx)
+static int
+pdb2_release (sDbgInterface *pDCtx)
 {
+  uint32_t i;
+  uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
+  sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
+
+  ((sDbgInterfacePDB *)pDCtx)->files = NULL;
+  ((sDbgInterfacePDB *)pDCtx)->streams = 0;
+  for (i = 0; i < streams; i++)
+    dbg_memfile_release (h[i]);
+  if (h)
+    free (h);
   return unknown_release (pDCtx);
 }
 
 static sDbgMemFile *pdb2_dump (sDbgInterface *pDCtx)
 {
+  uint32_t i;
+  uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
+  sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
+
+  for (i = 0; i < streams; i++)
+    {
+      if (h)
+	;
+    }
+
   return 0;
 }
 
@@ -135,6 +184,34 @@ static int pdb7_load (sDbgInterface *pDCtx)
   sPdbRoot7 *root = pdb7Root (hdr, &streams, &streamBytes, &fUnused);
   if (root)
     {
+      sDbgMemFile **h = (sDbgMemFile **) malloc (sizeof (sDbgMemFile *) * ((size_t) root->nstreams));
+      uint32_t i, pageidx = 0;
+      uint32_t off, dStreamBytes;
+      if (!h)
+	{
+	  free (root);
+	  return -1;
+	}
+      memset (h, 0, sizeof (sDbgMemFile *) * ((size_t) root->nstreams));
+      for (i = 0; i < root->nstreams; i++)
+	{
+	  void *pdata;
+	  fUnused = 0;
+	  dStreamBytes = root->streamBytes [i];
+	  off = sizeof (sPdbRoot7) + ((uint32_t) root->nstreams) * sizeof(uint32_t) + (pageidx * sizeof (uint32_t));
+	  pdata = pdb7FileRead (hdr, dStreamBytes, ((unsigned char*) root) + off, &fUnused);
+	  if (!fUnused)
+	    {
+	      sDbgMemFile *dmf = dbg_memfile_create ("stream", dStreamBytes);
+	      h[i] = dmf;
+	      dbg_memfile_write (dmf, 0, pdata, dStreamBytes);
+	    }
+	  if (pdata)
+	    free (pdata);
+	  pageidx += pdb7FilePages (hdr, dStreamBytes, NULL, NULL);
+	}
+      ((sDbgInterfacePDB *)pDCtx)->streams = root->nstreams;
+      ((sDbgInterfacePDB *)pDCtx)->files = h;
       fprintf (stderr, " # of streams: %u\n", root->nstreams);
       free (root);
     }
@@ -146,8 +223,19 @@ static int pdb7_update (sDbgInterface *pDCtx)
   return unknown_update (pDCtx);
 }
 
-static int pdb7_release (sDbgInterface *pDCtx)
+static int
+pdb7_release (sDbgInterface *pDCtx)
 {
+  uint32_t i;
+  uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
+  sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
+
+  ((sDbgInterfacePDB *)pDCtx)->files = NULL;
+  ((sDbgInterfacePDB *)pDCtx)->streams = 0;
+  for (i = 0; i < streams; i++)
+    dbg_memfile_release (h[i]);
+  if (h)
+    free (h);
   return unknown_release (pDCtx);
 }
 
