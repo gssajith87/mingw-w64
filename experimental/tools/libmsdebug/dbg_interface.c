@@ -28,7 +28,7 @@ static const sDbgInterface *dbg_interfaces[eInterface_max] = {
 };
 
 eInterfaceType
-probe_file (const char *filename)
+dbg_probe_file (const char *filename)
 {
   sDbgMemFile *pDFile = dbg_memfile_open (filename);
   eInterfaceType ret;
@@ -73,8 +73,6 @@ unknown_release (sDbgInterface *pDCtx)
 {
   if (!pDCtx)
     return -1;
-  dbg_memfile_release (pDCtx->memfile);
-  free (pDCtx);
   return 0;
 }
 
@@ -116,7 +114,7 @@ unknown_dump_symbol(struct sDbgInterface *pDCtx, sSymbolInterface *pSym)
 
 /* Public accessors.  */
 sDbgInterface *
-open_file (const char *filename)
+dbg_open_file (const char *filename)
 {
   sDbgInterface *ret;
   const sDbgInterface *pInter = NULL;
@@ -148,13 +146,28 @@ open_file (const char *filename)
   return ret;
 }
 
+int 
+dbg_release_interface (sDbgInterface *pDCtx)
+{
+  int ret = 0;
+  if (!pDCtx)
+    return 0;
+  if (pDCtx->release)
+    ret = (* pDCtx->release) (pDCtx);
+  if (pDCtx->memfile)
+    dbg_memfile_release (pDCtx->memfile);
+  free (pDCtx);
+  return 0;
+  
+}
+
 int main (int argc,char **argv)
 {
   sDbgInterface *in;
   
   if (argc <= 1)
     return;
-  in = open_file (argv[1]);
+  in = dbg_open_file (argv[1]);
   if (!in)
     printf ("Can't open ,%s'\n", argv[1]);
   else
@@ -162,7 +175,7 @@ int main (int argc,char **argv)
       sDbgMemFile *h = (* in->dump)(in);
       if (h) printf ("%s\n", h->data);
       dbg_memfile_release (h);
-      (* in->release) (in);
+      dbg_release_interface (in);
     }
     
 }

@@ -50,7 +50,8 @@ sDbgMemFile *unknown_dump (sDbgInterface *pDCtx);
 sSymbolInterface *unknown_search(struct sDbgInterface *pDCtx, sSymbolSearchInterface *match);
 sDbgMemFile *unknown_dump_symbol(struct sDbgInterface *pDCtx, sSymbolInterface *pSym);
 
-eInterfaceType probe_file (const char *filename);
-sDbgInterface *open_file (const char *filename);
+eInterfaceType dbg_probe_file (const char *filename);
+sDbgInterface *dbg_open_file (const char *filename);
+int dbg_release_interface (sDbgInterface *pDCtx);
 
 #endif
