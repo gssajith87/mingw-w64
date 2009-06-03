@@ -41,6 +41,15 @@ typedef struct sDbgInterface
   sDbgMemFile *(*dump_symbol)(struct sDbgInterface *pDCtx, sSymbolInterface *pSym);
 } sDbgInterface;
 
+/* Default implementations.  */
+int unknown_probe (const sDbgMemFile *pDFile);
+int unknown_load (sDbgInterface *pDCtx);
+int unknown_update (sDbgInterface *pDCtx);
+int unknown_release (sDbgInterface *pDCtx);
+sDbgMemFile *unknown_dump (sDbgInterface *pDCtx);
+sSymbolInterface *unknown_search(struct sDbgInterface *pDCtx, sSymbolSearchInterface *match);
+sDbgMemFile *unknown_dump_symbol(struct sDbgInterface *pDCtx, sSymbolInterface *pSym);
+
 eInterfaceType probe_file (const char *filename);
 sDbgInterface *open_file (const char *filename);
 

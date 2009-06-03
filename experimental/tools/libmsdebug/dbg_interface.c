@@ -5,15 +5,9 @@
 #include <stdio.h>
 
 #include "dbg_interface.h"
+#include "dbg_interface_pdb.h"
 
 static eInterfaceType probe_file1 (sDbgMemFile *pDFile);
-static int unknown_probe(const sDbgMemFile *pDFile);
-static int unknown_load (sDbgInterface *pDCtx);
-static int unknown_update (sDbgInterface *pDCtx);
-static int unknown_release (sDbgInterface *pDCtx);
-static sDbgMemFile *unknown_dump (sDbgInterface *pDCtx);
-static sSymbolInterface *unknown_search(struct sDbgInterface *pDCtx, sSymbolSearchInterface *match);
-static sDbgMemFile *unknown_dump_symbol(struct sDbgInterface *pDCtx, sSymbolInterface *pSym);
 
 static const sDbgInterface interface_unknown = {
   eInterface_unknown, "binary file",
@@ -29,8 +23,8 @@ static const sDbgInterface interface_unknown = {
 
 static const sDbgInterface *dbg_interfaces[eInterface_max] = {
   &interface_unknown,
-  NULL, /* pdb 2.0 */
-  NULL, /* pdb 7.0 */
+  &interface_pdb2, /* pdb 2.0 */
+  &interface_pdb7, /* pdb 7.0 */
 };
 
 eInterfaceType
@@ -60,13 +54,13 @@ probe_file1 (sDbgMemFile *pDFile)
 }
 
 /* Unknown file support.  */
-static int
-unknown_probe(const sDbgMemFile *pDFile __attribute__ ((unused)) )
+int
+unknown_probe (const sDbgMemFile *pDFile __attribute__ ((unused)) )
 {
   return 0;
 }
 
-static int
+int
 unknown_load (sDbgInterface *pDCtx)
 {
   if (pDCtx && pDCtx->memfile)
@@ -74,7 +68,7 @@ unknown_load (sDbgInterface *pDCtx)
   return -1;
 }
 
-static int
+int
 unknown_release (sDbgInterface *pDCtx)
 {
   if (!pDCtx)
@@ -84,7 +78,7 @@ unknown_release (sDbgInterface *pDCtx)
   return 0;
 }
 
-static int
+int
 unknown_update (sDbgInterface *pDCtx)
 {
   if (!pDCtx)
@@ -92,17 +86,19 @@ unknown_update (sDbgInterface *pDCtx)
   return 0;
 }
 
-static sDbgMemFile *
+sDbgMemFile *
 unknown_dump (sDbgInterface *pDCtx)
 {
   sDbgMemFile *ret;
   size_t size, i, k;
   if (!pDCtx || pDCtx->memfile == NULL)
     return NULL;
-  return dbg_memfile_dump (pDCtx->memfile);
+  fprintf (stderr," File type ,%s':\n", pDCtx->file_type_name);
+  ret = dbg_memfile_dump (pDCtx->memfile);
+  return ret;
 }
 
-static sSymbolInterface *
+sSymbolInterface *
 unknown_search(struct sDbgInterface *pDCtx, sSymbolSearchInterface *match)
 {
   if (!pDCtx || !match)
@@ -110,7 +106,7 @@ unknown_search(struct sDbgInterface *pDCtx, sSymbolSearchInterface *match)
   return NULL;
 }
 
-static sDbgMemFile *
+sDbgMemFile *
 unknown_dump_symbol(struct sDbgInterface *pDCtx, sSymbolInterface *pSym)
 {
   if (!pDCtx || !pSym)
