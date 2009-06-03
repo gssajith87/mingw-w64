@@ -1,0 +1,172 @@
+#include <stdlib.h>
+#include <malloc.h>
+#include <memory.h>
+#include <string.h>
+#include <stdio.h>
+
+#include "dbg_interface.h"
+
+static eInterfaceType probe_file1 (sDbgMemFile *pDFile);
+static int unknown_probe(const sDbgMemFile *pDFile);
+static int unknown_load (sDbgInterface *pDCtx);
+static int unknown_update (sDbgInterface *pDCtx);
+static int unknown_release (sDbgInterface *pDCtx);
+static sDbgMemFile *unknown_dump (sDbgInterface *pDCtx);
+static sSymbolInterface *unknown_search(struct sDbgInterface *pDCtx, sSymbolSearchInterface *match);
+static sDbgMemFile *unknown_dump_symbol(struct sDbgInterface *pDCtx, sSymbolInterface *pSym);
+
+static const sDbgInterface interface_unknown = {
+  eInterface_unknown, "binary file",
+  NULL, sizeof (sDbgInterface),
+  unknown_probe, /* probe */
+  unknown_load,
+  unknown_update,
+  unknown_release,
+  unknown_dump,
+  unknown_search,
+  unknown_dump_symbol
+};
+
+static const sDbgInterface *dbg_interfaces[eInterface_max] = {
+  &interface_unknown,
+  NULL, /* pdb 2.0 */
+  NULL, /* pdb 7.0 */
+};
+
+eInterfaceType
+probe_file (const char *filename)
+{
+  sDbgMemFile *pDFile = dbg_memfile_open (filename);
+  eInterfaceType ret;
+
+  ret = probe_file1 (pDFile);
+  dbg_memfile_release (pDFile);
+
+  return ret;
+}
+
+static eInterfaceType
+probe_file1 (sDbgMemFile *pDFile)
+{
+  int i;
+  if (!pDFile)
+    return eInterface_error;
+  for (i = 1; i < (int) eInterface_max; i++)
+    {
+      if (dbg_interfaces[i] != NULL && (*dbg_interfaces[i]->probe)(pDFile) == 0)
+           return dbg_interfaces[i]->file_type;
+    }
+  return eInterface_unknown;
+}
+
+/* Unknown file support.  */
+static int
+unknown_probe(const sDbgMemFile *pDFile __attribute__ ((unused)) )
+{
+  return 0;
+}
+
+static int
+unknown_load (sDbgInterface *pDCtx)
+{
+  if (pDCtx && pDCtx->memfile)
+    return 0;
+  return -1;
+}
+
+static int
+unknown_release (sDbgInterface *pDCtx)
+{
+  if (!pDCtx)
+    return -1;
+  dbg_memfile_release (pDCtx->memfile);
+  free (pDCtx);
+  return 0;
+}
+
+static int
+unknown_update (sDbgInterface *pDCtx)
+{
+  if (!pDCtx)
+    return -1;
+  return 0;
+}
+
+static sDbgMemFile *
+unknown_dump (sDbgInterface *pDCtx)
+{
+  sDbgMemFile *ret;
+  size_t size, i, k;
+  if (!pDCtx || pDCtx->memfile == NULL)
+    return NULL;
+  return dbg_memfile_dump (pDCtx->memfile);
+}
+
+static sSymbolInterface *
+unknown_search(struct sDbgInterface *pDCtx, sSymbolSearchInterface *match)
+{
+  if (!pDCtx || !match)
+    return NULL;
+  return NULL;
+}
+
+static sDbgMemFile *
+unknown_dump_symbol(struct sDbgInterface *pDCtx, sSymbolInterface *pSym)
+{
+  if (!pDCtx || !pSym)
+    return NULL;
+  return NULL;
+}
+
+/* Public accessors.  */
+sDbgInterface *
+open_file (const char *filename)
+{
+  sDbgInterface *ret;
+  const sDbgInterface *pInter = NULL;
+  sDbgMemFile *pDFile = dbg_memfile_open (filename);
+  size_t interface_len;
+  eInterfaceType t;
+
+  if (!pDFile)
+    return NULL;
+
+  t = probe_file1 (pDFile);
+  pInter = dbg_interfaces[t];
+  if (!pInter)
+    {
+      dbg_memfile_release (pDFile);
+      return NULL;
+    }
+  ret = (sDbgInterface *) malloc (pInter->cb_size);
+  if (!ret)
+    {
+      dbg_memfile_release (pDFile);
+      return NULL;
+    }
+  memset (ret, 0, pInter->cb_size);
+  memcpy (ret, pInter, sizeof (sDbgInterface));
+  ret->memfile = pDFile;
+  if (ret->load)
+    (* ret->load)(ret);
+  return ret;
+}
+
+int main (int argc,char **argv)
+{
+  sDbgInterface *in;
+  
+  if (argc <= 1)
+    return;
+  in = open_file (argv[1]);
+  if (!in)
+    printf ("Can't open ,%s'\n", argv[1]);
+  else
+    {
+      sDbgMemFile *h = (* in->dump)(in);
+      if (h) printf ("%s\n", h->data);
+      dbg_memfile_release (h);
+      (* in->release) (in);
+    }
+    
+}
