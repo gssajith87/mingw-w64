@@ -23,6 +23,7 @@ const char *dbg_memfile_getname (sDbgMemFile *pDFile);
 int dbg_memfile_setname (sDbgMemFile *pDFile, const char *name);
 
 sDbgMemFile *dbg_memfile_dump (sDbgMemFile *pDFile);
+void dbg_memfile_dump_in (sDbgMemFile *pText, sDbgMemFile *pDFile);
 
 /* text stream emulation methods.  */
 sDbgMemFile *dbg_memfile_create_text (const char *name);

@@ -234,14 +234,24 @@ dbg_memfile_dump (sDbgMemFile *pDFile)
   ret = dbg_memfile_create_text ("dump");
   if (!pDFile)
     return ret;
-  dbg_memfile_printf (ret, "Dump of '%s':\n", dbg_memfile_getname (pDFile));
+  dbg_memfile_dump_in (ret, pDFile);
+  return ret;
+}
+
+void
+dbg_memfile_dump_in (sDbgMemFile *pText, sDbgMemFile *pDFile)
+{
+  size_t size, i, k;
+
+  if (!pDFile || !pText)
+    return;
+  dbg_memfile_printf (pText, "Dump of '%s':\n", dbg_memfile_getname (pDFile));
   size = dbg_memfile_getsize (pDFile);
   for (i = 0; i < size;)
     {
-      dbg_memfile_printf (ret, "0x%08x:", (unsigned int) i);
+      dbg_memfile_printf (pText, "0x%08x:", (unsigned int) i);
       for (k = 0;k < 16; k++, i++)
-        dbg_memfile_printf (ret, " %02X", pDFile->data[i]);
-      dbg_memfile_printf (ret, "\n");
+        dbg_memfile_printf (pText, " %02X", pDFile->data[i]);
+      dbg_memfile_printf (pText, "\n");
     }
-  return ret;
 }

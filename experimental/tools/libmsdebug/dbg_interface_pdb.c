@@ -142,14 +142,17 @@ static sDbgMemFile *pdb2_dump (sDbgInterface *pDCtx)
   uint32_t i;
   uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
   sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
-
+  sDbgMemFile *ret = dbg_memfile_create_text ("pdb2_dump");
   for (i = 0; i < streams; i++)
     {
-      if (h)
-	;
+      if (h[i])
+	{
+	  dbg_memfile_printf (ret, "Stream: %u with size %u\n", i, h[i]->size);
+	  //dbg_memfile_dump_in (ret, h[i]);
+	}
     }
 
-  return 0;
+  return ret;
 }
 
 static sSymbolInterface *pdb2_search(struct sDbgInterface *pDCtx, sSymbolSearchInterface *match)
@@ -241,8 +244,20 @@ pdb7_release (sDbgInterface *pDCtx)
 
 static sDbgMemFile *pdb7_dump (sDbgInterface *pDCtx)
 {
-  /* return unknown_dump (pDCtx); */
-  return 0;
+  uint32_t i;
+  uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
+  sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
+  sDbgMemFile *ret = dbg_memfile_create_text ("pdb7_dump");
+  for (i = 0; i < streams; i++)
+    {
+      if (h[i])
+	{
+	  dbg_memfile_printf (ret, "Stream: %u with size %u\n", i, h[i]->size);
+	  //dbg_memfile_dump_in (ret, h[i]);
+	}
+    }
+
+  return ret;
 }
 
 static sSymbolInterface *pdb7_search(struct sDbgInterface *pDCtx, sSymbolSearchInterface *match)
