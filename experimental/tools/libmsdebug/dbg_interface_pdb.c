@@ -143,7 +143,16 @@ static sDbgMemFile *pdb2_dump (sDbgInterface *pDCtx)
   uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
   sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
   sDbgMemFile *ret = dbg_memfile_create_text ("pdb2_dump");
-  for (i = 0; i < streams; i++)
+  if (h[1])
+    {
+      sPdbInfo *pi = dbg_readPdbInfo (h[1]);
+      if (pi)
+      {
+	dbg_dumpPdbInfo (ret, pi);
+	free (pi);
+      }
+    }
+  for (i = 2; i < streams; i++)
     {
       if (h[i])
 	{
@@ -248,7 +257,16 @@ static sDbgMemFile *pdb7_dump (sDbgInterface *pDCtx)
   uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
   sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
   sDbgMemFile *ret = dbg_memfile_create_text ("pdb7_dump");
-  for (i = 0; i < streams; i++)
+  if (h[1])
+    {
+      sPdbInfo *pi = dbg_readPdbInfo (h[1]);
+      if (pi)
+      {
+	dbg_dumpPdbInfo (ret, pi);
+	free (pi);
+      }
+    }
+  for (i = 2; i < streams; i++)
     {
       if (h[i])
 	{
