@@ -47,7 +47,7 @@ sDbgInterface interface_pdb2 = {
 };
 
 sDbgInterface interface_pdb7 = {
-  eInterface_pdb2, "PDB Version 7.0",
+  eInterface_pdb7, "PDB Version 7.0",
   NULL, sizeof (sDbgInterfacePDB),
   pdb7_probe, /* probe */
   pdb7_load,
@@ -77,7 +77,8 @@ static int pdb2_load (sDbgInterface *pDCtx)
   uint32_t streams, streamBytes;
   int fUnused = 0;
   sPdbHeader2 *hdr = (sPdbHeader2 *) pDCtx->memfile->data;
-  sPdbRoot2 *root = pdb2Root (hdr, &streams, &streamBytes, &fUnused);
+  sPdbRoot2 *root;
+  root = pdb2Root (hdr, &streams, &streamBytes, &fUnused);
   if (root)
     {
       fprintf (stderr, " # of streams: %u\n", streams);
@@ -99,7 +100,6 @@ static int pdb2_release (sDbgInterface *pDCtx)
 
 static sDbgMemFile *pdb2_dump (sDbgInterface *pDCtx)
 {
-  /* return unknown_dump (pDCtx); */
   return 0;
 }
 
@@ -222,7 +222,8 @@ static sPdbRoot7 *pdb7Root (sPdbHeader7 *pph, uint32_t *pStreams, uint32_t *pStr
   return ppr;
 }
 
-static void *pdb2FileRead (sPdbHeader2 *pph, uint32_t streamBytes, void *pages, int *pfUnused)
+static void *
+pdb2FileRead (sPdbHeader2 *pph, uint32_t streamBytes, void *pages, int *pfUnused)
 {
   uint32_t pageBytes, dPages, i, j, n;
   int fUnused = 0;
