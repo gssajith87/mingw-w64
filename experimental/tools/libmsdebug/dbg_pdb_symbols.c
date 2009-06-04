@@ -74,8 +74,8 @@ static sDbgMemFile *sym_dump(sPdbSymbols *s, sDbgMemFile *t)
         sPdbStreamSymbolsV1 *sy1 = (sPdbStreamSymbolsV1 *) s->memfile->data;
         dbg_memfile_printf (ret,
           "Symbols Version 1 (Stream #%u)\n"
-          "file(s): Hash1=%x, Hash2=%x, GlobalSyms:%x\n"
-          "size(s): Module=%u, Offsets=%u, Hash=%u, SrcModule=%u\n",
+          "  file(s): Hash1=%x, Hash2=%x, GlobalSyms:%x\n"
+          "  size(s): Module=%u, Offsets=%u, Hash=%u, SrcModule=%u\n",
           s->stream_idx, sy1->hash1_file, sy1->hash2_file, sy1->gsym_file,
           sy1->module_size, sy1->offset_size, sy1->hash_size, sy1->srcmodule_size);
       }
@@ -85,12 +85,14 @@ static sDbgMemFile *sym_dump(sPdbSymbols *s, sDbgMemFile *t)
         sPdbStreamSymbolsV2 *sy1 = (sPdbStreamSymbolsV2 *) s->memfile->data;
         dbg_memfile_printf (ret,
           "Symbols Version %u (ext=0x%x) (Stream #%u)\n"
-          "file(s): Hash1=%x, Hash2=%x, GlobalSyms:%x\n"
-          "size(s): Module=%u, Offsets=%u, Hash=%u, SrcModule=%u, Imports=%u\n"
-          "         Unk1=%u, Unk2=%u, Unk3=%u\n"
-          "reserved[2]={0x%x,0x%x}\n",
+          "  file(s): Hash1=%u (0x%x), Hash2=%u (0x%x), GlobalSyms:%u (0x%x)\n"
+          "  size(s): Module=%u, Offsets=%u, Hash=%u, SrcModule=%u, Imports=%u\n"
+          "           Unk1=%u, Unk2=%u, Unk3=%u\n"
+          "  reserved[2]={0x%x,0x%x}\n",
           sy1->version, sy1->extended_format, s->stream_idx,
-          sy1->hash1_file, sy1->hash2_file, sy1->gsym_file,
+          sy1->hash1_file, sy1->hash1_unknown,
+          sy1->hash2_file, sy1->hash2_unknown,
+          sy1->gsym_file, sy1->gsym_unknown,
           sy1->module_size, sy1->offset_size, sy1->hash_size, sy1->srcmodule_size,
           sy1->pdbimport_size, sy1->unknown1_size, sy1->unknown2_size, sy1->unknown3_size,
           sy1->resvd[0],sy1->resvd[1]);

@@ -168,8 +168,10 @@ static sDbgMemFile *pdb2_dump (sDbgInterface *pDCtx)
     {
       (diPDB->syms->dump) (diPDB->syms, ret);
     }
-  for (i = 3; i < streams; i++)
+  for (i = 2; i < streams; i++)
     {
+      if (i == 3)
+        continue;
       if (h[i])
 	{
 	  dbg_memfile_printf (ret, "Stream: %u with size %u\n", i, h[i]->size);
@@ -299,8 +301,10 @@ static sDbgMemFile *pdb7_dump (sDbgInterface *pDCtx)
     {
       (* diPDB->syms->dump) (diPDB->syms, ret);
     }
-  for (i = 3; i < streams; i++)
+  for (i = 2; i < streams; i++)
     {
+      if (i == 3)
+        continue;
       if (h[i])
 	{
 	  dbg_memfile_printf (ret, "Stream: %u with size %u\n", i, h[i]->size);

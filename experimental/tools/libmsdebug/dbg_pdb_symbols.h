@@ -22,9 +22,12 @@ typedef struct sPdbStreamSymbolsV2
   uint32_t signature;
   uint32_t version;
   uint32_t extended_format;
-  uint32_t hash1_file;
-  uint32_t hash2_file;
-  uint32_t gsym_file;
+  uint16_t hash1_file;
+  uint16_t hash1_unknown;
+  uint16_t hash2_file;
+  uint16_t hash2_unknown;
+  uint16_t gsym_file;
+  uint16_t gsym_unknown;
   uint32_t module_size;
   uint32_t offset_size;
   uint32_t hash_size;
