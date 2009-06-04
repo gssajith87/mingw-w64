@@ -249,9 +249,14 @@ dbg_memfile_dump_in (sDbgMemFile *pText, sDbgMemFile *pDFile)
   size = dbg_memfile_getsize (pDFile);
   for (i = 0; i < size;)
     {
+      char s[17];
       dbg_memfile_printf (pText, "0x%08x:", (unsigned int) i);
       for (k = 0;k < 16; k++, i++)
-        dbg_memfile_printf (pText, " %02X", pDFile->data[i]);
-      dbg_memfile_printf (pText, "\n");
+        {
+          dbg_memfile_printf (pText, " %02X", pDFile->data[i]);
+          s[k] = (pDFile->data[i] >= 0x20 && pDFile->data[i] <= 0x7f) ? pDFile->data[i] : '.';
+        }
+      s[k]=0;
+      dbg_memfile_printf (pText, " - %s\n", s);
     }
 }

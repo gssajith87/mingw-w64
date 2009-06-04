@@ -19,7 +19,7 @@ static int sym1_load (sPdbSymbols *s);
 static int sym2_load (sPdbSymbols *s);
 static int sym1_update (sPdbSymbols *s);
 static int sym2_update (sPdbSymbols *s);
-static sDbgMemFile *sym_dump(sPdbSymbols *s, sDbgMemFile *t);
+static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t);
 
 static const sPdbSymbols locSymbolV1 = {
   ePdbSymbols_v1,
@@ -63,7 +63,7 @@ static int sym2_update (sPdbSymbols *s)
   return 0;
 }
 
-static sDbgMemFile *sym_dump(sPdbSymbols *s, sDbgMemFile *t)
+static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
 {
   sDbgMemFile *ret = t;
   if (!ret)
@@ -118,6 +118,20 @@ static sDbgMemFile *sym_dump(sPdbSymbols *s, sDbgMemFile *t)
             (* s->sym_files[i]->dump) (s->sym_files[i], ret);
         }
     }
+  if (s->offset_stream)
+    dbg_memfile_dump_in (ret, s->offset_stream);
+  if (s->hash_stream)
+    dbg_memfile_dump_in (ret, s->hash_stream);
+  if (s->srcmodule_stream)
+    dbg_memfile_dump_in (ret, s->srcmodule_stream);
+  if (s->pdbimport_stream)
+    dbg_memfile_dump_in (ret, s->pdbimport_stream);
+  if (s->unknown1_stream)
+    dbg_memfile_dump_in (ret, s->unknown1_stream);
+  if (s->unknown2_stream)
+    dbg_memfile_dump_in (ret, s->unknown2_stream);
+  if (s->unknown3_stream)
+    dbg_memfile_dump_in (ret, s->unknown3_stream);
   return ret;
 }
 
@@ -152,6 +166,48 @@ static int sym2_load (sPdbSymbols *s)
           s->sym_files_count = cnt;
         }
     }
+  if (sym->offset_size != 0)
+    {
+      s->offset_stream = dbg_memfile_create ("Offset stream", sym->offset_size);
+      dbg_memfile_write (s->offset_stream, 0, dptr, sym->offset_size);
+      dptr += sym->offset_size;
+    }
+  if (sym->hash_size != 0)
+    {
+      s->hash_stream = dbg_memfile_create ("Symbol hash stream", sym->hash_size);
+      dbg_memfile_write (s->hash_stream, 0, dptr, sym->hash_size);
+      dptr += sym->hash_size;
+    }
+  if (sym->srcmodule_size != 0)
+    {
+      s->srcmodule_stream = dbg_memfile_create ("Symbol source module stream", sym->srcmodule_size);
+      dbg_memfile_write (s->srcmodule_stream, 0, dptr, sym->srcmodule_size);
+      dptr += sym->srcmodule_size;
+    }
+  if (sym->pdbimport_size != 0)
+    {
+      s->pdbimport_stream = dbg_memfile_create ("Symbol PDB import stream", sym->pdbimport_size);
+      dbg_memfile_write (s->pdbimport_stream, 0, dptr, sym->pdbimport_size);
+      dptr += sym->pdbimport_size;
+    }
+  if (sym->unknown1_size != 0)
+    {
+      s->unknown1_stream = dbg_memfile_create ("Symbol unknown1 stream", sym->unknown1_size);
+      dbg_memfile_write (s->unknown1_stream, 0, dptr, sym->unknown1_size);
+      dptr += sym->unknown1_size;
+    }
+  if (sym->unknown2_size != 0)
+    {
+      s->unknown2_stream = dbg_memfile_create ("Symbol unknown2 stream", sym->unknown2_size);
+      dbg_memfile_write (s->unknown2_stream, 0, dptr, sym->unknown2_size);
+      dptr += sym->unknown2_size;
+    }
+  if (sym->unknown3_size != 0)
+    {
+      s->unknown3_stream = dbg_memfile_create ("Symbol unknown2 stream", sym->unknown3_size);
+      dbg_memfile_write (s->unknown3_stream, 0, dptr, sym->unknown3_size);
+      dptr += sym->unknown3_size;
+    }
   return 0;
 }
 
@@ -159,6 +215,7 @@ static int sym1_load (sPdbSymbols *s)
 {
   const sPdbStreamSymbolsV1 *sym;
   unsigned char *dptr;
+
   if (!s)
     return -1;
   sym = (sPdbStreamSymbolsV1 *) s->memfile->data;
@@ -185,6 +242,25 @@ static int sym1_load (sPdbSymbols *s)
           s->sym_files = h;
           s->sym_files_count = cnt;
         }
+      dptr += sym->module_size;
+    }
+  if (sym->offset_size != 0)
+    {
+      s->offset_stream = dbg_memfile_create ("Offset stream", sym->offset_size);
+      dbg_memfile_write (s->offset_stream, 0, dptr, sym->offset_size);
+      dptr += sym->offset_size;
+    }
+  if (sym->hash_size != 0)
+    {
+      s->hash_stream = dbg_memfile_create ("Symbol hash stream", sym->hash_size);
+      dbg_memfile_write (s->hash_stream, 0, dptr, sym->hash_size);
+      dptr += sym->hash_size;
+    }
+  if (sym->srcmodule_size != 0)
+    {
+      s->srcmodule_stream = dbg_memfile_create ("Symbol hash stream", sym->srcmodule_size);
+      dbg_memfile_write (s->srcmodule_stream, 0, dptr, sym->srcmodule_size);
+      dptr += sym->srcmodule_size;
     }
   
   return 0;
@@ -385,6 +461,15 @@ static int sym_release (sPdbSymbols *s)
     }
   s->sym_files = NULL;
   s->sym_files_count = 0;
+
+  dbg_memfile_release (s->module_stream);
+  dbg_memfile_release (s->offset_stream);
+  dbg_memfile_release (s->hash_stream);
+  dbg_memfile_release (s->srcmodule_stream);
+  dbg_memfile_release (s->pdbimport_stream);
+  dbg_memfile_release (s->unknown1_stream);
+  dbg_memfile_release (s->unknown2_stream);
+  dbg_memfile_release (s->unknown3_stream);
   return 0;
 }
 

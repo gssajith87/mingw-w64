@@ -135,6 +135,14 @@ typedef struct sPdbSymbols
   uint32_t extended_format;
   sPdbSymbolFile **sym_files;
   size_t sym_files_count;
+  sDbgMemFile *module_stream;
+  sDbgMemFile *offset_stream;
+  sDbgMemFile *hash_stream;
+  sDbgMemFile *srcmodule_stream;
+  sDbgMemFile *pdbimport_stream;
+  sDbgMemFile *unknown1_stream;
+  sDbgMemFile *unknown2_stream;
+  sDbgMemFile *unknown3_stream;
 } sPdbSymbols;
 
 sPdbSymbols *dbg_symbols_load (sDbgMemFile *f, sDbgInterfacePDB *base, int stream_idx);
