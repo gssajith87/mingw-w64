@@ -126,7 +126,6 @@ static int pdb2_load (sDbgInterface *pDCtx)
   if (diPDB->files && diPDB->streams > 2)
     {
       diPDB->syms = (sPdbSymbols *) dbg_symbols_load (diPDB->files[3], diPDB, 3);
-      diPDB->files_kind[3] = "symbols stream";
     }
   return 0;
 }
@@ -274,7 +273,6 @@ static int pdb7_load (sDbgInterface *pDCtx)
   if (diPDB->files && diPDB->streams > 2)
     {
       diPDB->syms = dbg_symbols_load (diPDB->files[3], diPDB, 3);
-      diPDB->files_kind [3] = "symbols stream";
     }
   return unknown_load (pDCtx);
 }

@@ -19,6 +19,6 @@ typedef struct sDbgInterfacePDB {
 } sDbgInterfacePDB;
 
 #define DbgInterfacePDB_streams(PTR)	((sDbgInterfacePDB *) (PTR))->streams
-#define DbgInterfacePDB_file(PTR,IDX)	((IDX) >= DbgInterfacePDB_streams(PTR) ? NULL : ((sDbgInterfacePDB *) (PTR))->files)
-
+#define DbgInterfacePDB_file(PTR,IDX)	((sDbgInterfacePDB *) (PTR))->files[(IDX)]
+#define DbgInterfacePDB_file_kind(PTR,IDX) ((sDbgInterfacePDB *) (PTR))->files_kind[(IDX)]
 #endif

@@ -8,7 +8,7 @@
 static int dbg_symbols_probe (sDbgMemFile *f);
 static size_t sym_files_count (unsigned char *ptr, uint32_t size, uint32_t ext);
 static size_t sym_files_getelemsize (unsigned char *ptr, uint32_t size, uint32_t ext);
-static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext);
+static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext, sPdbSymbols *s);
 
 static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t);
 
@@ -129,6 +129,12 @@ static int sym2_load (sPdbSymbols *s)
     return -1;
   sym = (sPdbStreamSymbolsV2 *) s->memfile->data;
   dptr = & s->memfile->data[sizeof (sPdbStreamSymbolsV2)];
+  if (DbgInterfacePDB_streams (s->base) > sym->gsym_file)
+    DbgInterfacePDB_file_kind (s->base, sym->gsym_file) = "Global Symbol stream";
+  if (DbgInterfacePDB_streams (s->base) > sym->hash1_file)
+    DbgInterfacePDB_file_kind (s->base, sym->hash1_file) = "Hash1 stream";
+  if (DbgInterfacePDB_streams (s->base) > sym->hash2_file)
+    DbgInterfacePDB_file_kind (s->base, sym->hash2_file) = "Hash2 stream";
   if (sym->module_size != 0)
     {
       size_t cnt = sym_files_count (dptr, sym->module_size, sym->extended_format);
@@ -139,7 +145,7 @@ static int sym2_load (sPdbSymbols *s)
           size_t i;
           for (i = 0;i < cnt; i++)
             {
-              h[i] = sym_file_new (d, sym->extended_format);
+              h[i] = sym_file_new (d, sym->extended_format, s);
               d += ((sym_files_getelemsize (d, 0xffff, sym->extended_format) + 3) & ~3);
             }
           s->sym_files = h;
@@ -157,6 +163,12 @@ static int sym1_load (sPdbSymbols *s)
     return -1;
   sym = (sPdbStreamSymbolsV1 *) s->memfile->data;
   dptr = & s->memfile->data[sizeof (sPdbStreamSymbolsV1)];
+  if (DbgInterfacePDB_streams (s->base) > sym->gsym_file)
+    DbgInterfacePDB_file_kind (s->base, sym->gsym_file) = "Global Symbol stream";
+  if (DbgInterfacePDB_streams (s->base) > sym->hash1_file)
+    DbgInterfacePDB_file_kind (s->base, sym->hash1_file) = "Hash1 stream";
+  if (DbgInterfacePDB_streams (s->base) > sym->hash2_file)
+    DbgInterfacePDB_file_kind (s->base, sym->hash2_file) = "Hash2 stream";
   if (sym->module_size != 0)
     {
       size_t cnt = sym_files_count (dptr, sym->module_size, 0);
@@ -167,7 +179,7 @@ static int sym1_load (sPdbSymbols *s)
           size_t i;
           for (i = 0;i < cnt; i++)
             {
-              h[i] = sym_file_new (d, 0);
+              h[i] = sym_file_new (d, 0, s);
               d += ((sym_files_getelemsize (d, 0xffff, 0) + 3) & ~3);
             }
           s->sym_files = h;
@@ -227,7 +239,7 @@ static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t)
   return ret;
 }
 
-static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext)
+static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext, sPdbSymbols *s)
 {
   size_t name_off, len;
   sPdbSymbolFile *ret;
@@ -243,12 +255,16 @@ static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext)
       if (psf->unknown1 == 1) name_off -= 4;
       
       ret->version = 2;
+      if (DbgInterfacePDB_streams (s->base) > psf->file)
+        DbgInterfacePDB_file_kind (s->base, psf->file) = "Symbol/Lineno stream";
     }
   else
     {
       sPdbSymbolFileV1 *psf = (sPdbSymbolFileV1 *) ptr;
       name_off = sizeof (sPdbSymbolFileV1) - 1;
       if (psf->unknown1 == 1) name_off -= 4;
+      if (DbgInterfacePDB_streams (s->base) > psf->file)
+        DbgInterfacePDB_file_kind (s->base, psf->file) = "Symbol/Lineno stream";
 
       ret->version = 1;
     }
@@ -402,6 +418,7 @@ sPdbSymbols *dbg_symbols_load (sDbgMemFile *f, sDbgInterfacePDB *base, int strea
       return NULL;
     }
   dbg_memfile_retain (f);
+  DbgInterfacePDB_file_kind (base, stream_idx) = "symbols stream";
   return ret;
 }
 
