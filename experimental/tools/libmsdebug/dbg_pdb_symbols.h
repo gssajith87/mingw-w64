@@ -5,6 +5,8 @@
 #include "dbg_memfile.h"
 #include "dbg_interface_pdb.h"
 
+#pragma pack(push, 1)
+
 typedef struct sPdbStreamSymbolsV1
 {
   uint16_t hash1_file;
@@ -94,6 +96,18 @@ typedef struct sPdbSymbolFileV2
   char filename[1];
 } sPdbSymbolFileV2;
 
+#pragma pack(pop)
+
+typedef struct sPdbSymbolFile
+{
+  int version;
+  __extension__ union {
+    sPdbSymbolFileV1 *v1;
+    sPdbSymbolFileV2 *v2;
+  };
+  char *name[2];
+  sDbgMemFile *(*dump)(struct sPdbSymbolFile *,sDbgMemFile *);
+} sPdbSymbolFile;
 
 typedef enum ePdbSymbolsTypes {
   ePdbSymbols_v1 = 0,
@@ -119,18 +133,8 @@ typedef struct sPdbSymbols
   uint32_t signature;
   uint32_t version;
   uint32_t extended_format;
-  uint32_t hash1_file;
-  uint32_t hash2_file;
-  uint32_t gsym_file;
-  uint32_t module_size;
-  uint32_t offset_size;
-  uint32_t hash_size;
-  uint32_t srcmodule_size;
-  uint32_t pdbimport_size;
-  uint32_t unknown1_size;
-  uint32_t unknown2_size;
-  uint32_t unknown3_size;
-  uint32_t reserved[2];
+  sPdbSymbolFile **sym_files;
+  size_t sym_files_count;
 } sPdbSymbols;
 
 sPdbSymbols *dbg_symbols_load (sDbgMemFile *f, sDbgInterfacePDB *base, int stream_idx);

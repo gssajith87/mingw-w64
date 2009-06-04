@@ -7,6 +7,10 @@
 
 static int dbg_symbols_probe (sDbgMemFile *f);
 static size_t sym_files_count (unsigned char *ptr, uint32_t size, uint32_t ext);
+static size_t sym_files_getelemsize (unsigned char *ptr, uint32_t size, uint32_t ext);
+static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext);
+
+static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t);
 
 static int sym_release (sPdbSymbols *s);
 static int sym1_probe (const sDbgMemFile *f);
@@ -104,6 +108,16 @@ static sDbgMemFile *sym_dump(sPdbSymbols *s, sDbgMemFile *t)
        dbg_memfile_printf (ret, "Unknown symbol stream\n");
        break;
     }
+  if (s->sym_files)
+    {
+      size_t i;
+      dbg_memfile_printf (ret, "   Contains %u symbol_file(s)\n", (uint32_t) s->sym_files_count);
+      for (i = 0; i < s->sym_files_count; i++)
+        {
+          if (s->sym_files[i])
+            (* s->sym_files[i]->dump) (s->sym_files[i], ret);
+        }
+    }
   return ret;
 }
 
@@ -118,7 +132,19 @@ static int sym2_load (sPdbSymbols *s)
   if (sym->module_size != 0)
     {
       size_t cnt = sym_files_count (dptr, sym->module_size, sym->extended_format);
-      fprintf (stderr, "Has %u symbol_files\n", (uint32_t) cnt);
+      sPdbSymbolFile **h = (sPdbSymbolFile **) malloc (sizeof (sPdbSymbolFile *) * cnt);
+      if (h)
+        {
+          unsigned char *d = dptr;
+          size_t i;
+          for (i = 0;i < cnt; i++)
+            {
+              h[i] = sym_file_new (d, sym->extended_format);
+              d += ((sym_files_getelemsize (d, 0xffff, sym->extended_format) + 3) & ~3);
+            }
+          s->sym_files = h;
+          s->sym_files_count = cnt;
+        }
     }
   return 0;
 }
@@ -134,10 +160,131 @@ static int sym1_load (sPdbSymbols *s)
   if (sym->module_size != 0)
     {
       size_t cnt = sym_files_count (dptr, sym->module_size, 0);
-      fprintf (stderr, "Has %u symbol_files\n", (uint32_t) cnt);
+      sPdbSymbolFile **h = (sPdbSymbolFile **) malloc (sizeof (sPdbSymbolFile *) * cnt);
+      if (h)
+        {
+          unsigned char *d = dptr;
+          size_t i;
+          for (i = 0;i < cnt; i++)
+            {
+              h[i] = sym_file_new (d, 0);
+              d += ((sym_files_getelemsize (d, 0xffff, 0) + 3) & ~3);
+            }
+          s->sym_files = h;
+          s->sym_files_count = cnt;
+        }
     }
   
   return 0;
+}
+
+static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t)
+{
+  sDbgMemFile *ret = t;
+  if (t == NULL)
+    ret = dbg_memfile_create_text ("sym_file_dump");
+  if (!sf)
+    {
+      dbg_memfile_printf (ret, "Invalid symbol\n");
+      return ret;
+    }
+  if (sf->version == 1)
+    {
+      dbg_memfile_printf (ret,
+        "SymbolV1: Unknown1=%x, Addr:0x%04x:0x%08x [0x%x]\n"
+        "   Characteristics: 0x%x index:%u\n"
+        "  flags:%x, file:%x [symbol_size:0x%x lineno_size:0x%x]\n"
+        "  unknown2:%x, # of src files:%u, attribute:0x%x\n"
+        "  name[0]='%s'\n"
+        "  name[1]='%s'\n", 
+        sf->v1->unknown1,
+        sf->v1->range.segment,sf->v1->range.offset,sf->v1->range.size,
+        sf->v1->range.characteristics,sf->v1->range.index,
+        sf->v1->flag, sf->v1->file, sf->v1->symbol_size, sf->v1->lineno_size,
+        sf->v1->unknown2,sf->v1->nSrcFiles,sf->v1->attribute,
+        sf->name[0],sf->name[1]);
+    }
+  else if (sf->version == 2)
+    {
+      dbg_memfile_printf (ret,
+        "SymbolV2: Unknown1=%x, Addr:0x%04x:0x%08x [0x%x]\n"
+        "   Characteristics: 0x%x index:%u TimeStamp:0x%x, Unknown:0x%x\n"
+        "  flags:%x, file:%x [symbol_size:0x%x lineno_size:0x%x]\n"
+        "  unknown2:%x, # of src files:%u, attribute:0x%x [0x%x:0x%x]\n"
+        "  name[0]='%s'\n"
+        "  name[1]='%s'\n", 
+        sf->v2->unknown1,
+        sf->v2->range.segment,sf->v1->range.offset,sf->v2->range.size,
+        sf->v2->range.characteristics,sf->v2->range.index,
+        sf->v2->range.timestamp, sf->v2->range.unknown,
+        sf->v2->flag, sf->v1->file, sf->v2->symbol_size, sf->v2->lineno_size,
+        sf->v2->unknown2,sf->v2->nSrcFiles,sf->v2->attribute,
+        sf->v2->reserved[0], sf->v2->reserved[1],
+        sf->name[0],sf->name[1]);
+    }
+  else
+    dbg_memfile_printf (ret, "Unknown sym_file version:%u\n", sf->version);
+  return ret;
+}
+
+static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext)
+{
+  size_t name_off, len;
+  sPdbSymbolFile *ret;
+  len = sym_files_getelemsize (ptr, 0xffff, ext);
+
+  ret = (sPdbSymbolFile *) malloc (sizeof (sPdbSymbolFile) + len);
+  memset (ret, 0, sizeof (sPdbSymbolFile));
+  ret->dump = sym_file_dump;
+  if (ext)
+    {
+      sPdbSymbolFileV2 *psf = (sPdbSymbolFileV2 *) ptr;
+      name_off = sizeof (sPdbSymbolFileV2) - 1;
+      if (psf->unknown1 == 1) name_off -= 4;
+      
+      ret->version = 2;
+    }
+  else
+    {
+      sPdbSymbolFileV1 *psf = (sPdbSymbolFileV1 *) ptr;
+      name_off = sizeof (sPdbSymbolFileV1) - 1;
+      if (psf->unknown1 == 1) name_off -= 4;
+
+      ret->version = 1;
+    }
+  ret->v2 = (sPdbSymbolFileV2 *) &((unsigned char *)ret)[sizeof (sPdbSymbolFile)];
+  memcpy (ret->v2, ptr, len);
+  ret->name[0] = &((char*) ret->v2)[name_off];
+  name_off += strlen (ret->name[0]) + 1;
+  ret->name[1] = &((char*) ret->v2)[name_off];
+  return ret;
+}
+
+static size_t sym_files_getelemsize (unsigned char *ptr, uint32_t size, uint32_t ext)
+{
+  size_t len;
+
+  if (size < 4)
+    return 0;
+  if (!ext)
+    {
+      sPdbSymbolFileV1 *v1 = (sPdbSymbolFileV1 *) ptr;
+      len = sizeof (sPdbSymbolFileV1) - 1;
+      if (v1->unknown1 == 1) len -= 4;
+    }
+  else
+    {
+      sPdbSymbolFileV2 *v1 = (sPdbSymbolFileV2 *) ptr;
+      len = sizeof (sPdbSymbolFileV2) - 1;
+      if (v1->unknown1 == 1) len -= 4;
+    }
+  if ((len + 2) > size)
+    return 0;
+  len += strlen ((char *) &ptr[len]) + 1;
+  len += strlen ((char *) &ptr[len]) + 1;
+  if (len > size)
+    return 0;
+  return len;
 }
 
 static size_t sym_files_count (unsigned char *ptr, uint32_t size, uint32_t ext)
@@ -149,46 +296,12 @@ static size_t sym_files_count (unsigned char *ptr, uint32_t size, uint32_t ext)
     return 0;
   while (ptr < pd)
     {
-       int len, len2;
-       if (!ext)
-         {
-           sPdbSymbolFileV1 *v1 = (sPdbSymbolFileV1 *) ptr;
-           len = sizeof (sPdbSymbolFileV1) - 1;
-           if ((ptr + sizeof (sPdbSymbolFileV1)) > pd)
-             break;
-           if (v1->unknown1 == 1)
-             {
-	       len2 = (int) strlen ((char *) &v1->filename[-4]) + 1 - 4;
-	       len2 += (int) strlen ((char *) &v1->filename[len2-4]) + 1;
-             }
-           else
-             {
-	       len2 = strlen ((char *) &v1->filename[0]) + 1;
-	       len2 += strlen ((char *) &v1->filename[len2]) + 1;
-	     }
-           len += len2;
-         }
-       else
-         {
-           sPdbSymbolFileV2 *v1 = (sPdbSymbolFileV2 *) ptr;
-           len = sizeof (sPdbSymbolFileV2) - 1;
-           if ((ptr + sizeof (sPdbSymbolFileV2)) > pd)
-             break;
-           if (v1->unknown1 == 1)
-             {
-	       len2 = (int) strlen ((char *) &v1->filename[-4]) + 1 - 4;
-	       len2 += (int) strlen ((char *) &v1->filename[len2-4]) + 1;
-             }
-           else
-             {
-	       len2 = strlen ((char *) &v1->filename[0]) + 1;
-	       len2 += strlen ((char *) &v1->filename[len2]) + 1;
-	     }
-           len += len2;
-         }
-       ret += 1;
-       len = (len + 3) & ~3;
-       ptr += len;
+      size_t len = sym_files_getelemsize (ptr, size, ext);
+
+      ret += 1;
+      len = (len + 3) & ~3;
+      ptr += len;
+      size -= len;
     }
   return ret;
 }
@@ -241,6 +354,21 @@ static int sym1_probe (const sDbgMemFile *f)
 
 static int sym_release (sPdbSymbols *s)
 {
+  size_t i;
+  if (!s)
+    return 0;
+  if (s->sym_files)
+    {
+      for (i = 0;i < s->sym_files_count; i++)
+	{
+	  if (s->sym_files[i] != NULL)
+	    free (s->sym_files[i]);
+	  s->sym_files[i] = NULL;
+	}
+      free (s->sym_files);
+    }
+  s->sym_files = NULL;
+  s->sym_files_count = 0;
   return 0;
 }
 
