@@ -6,6 +6,8 @@
 #include "dbg_pdb_symbols.h"
 
 static int dbg_symbols_probe (sDbgMemFile *f);
+static size_t sym_files_count (unsigned char *ptr, uint32_t size, uint32_t ext);
+
 static int sym_release (sPdbSymbols *s);
 static int sym1_probe (const sDbgMemFile *f);
 static int sym2_probe (const sDbgMemFile *f);
@@ -107,25 +109,88 @@ static sDbgMemFile *sym_dump(sPdbSymbols *s, sDbgMemFile *t)
 
 static int sym2_load (sPdbSymbols *s)
 {
+  const sPdbStreamSymbolsV2 *sym;
+  unsigned char *dptr;
   if (!s)
     return -1;
+  sym = (sPdbStreamSymbolsV2 *) s->memfile->data;
+  dptr = & s->memfile->data[sizeof (sPdbStreamSymbolsV2)];
+  if (sym->module_size != 0)
+    {
+      size_t cnt = sym_files_count (dptr, sym->module_size, sym->extended_format);
+      fprintf (stderr, "Has %u symbol_files\n", (uint32_t) cnt);
+    }
   return 0;
 }
 
 static int sym1_load (sPdbSymbols *s)
 {
+  const sPdbStreamSymbolsV1 *sym;
+  unsigned char *dptr;
   if (!s)
     return -1;
-/*  uint16_t hash1_file;
-  uint16_t hash2_file;
-  uint16_t gsym_file;
-  uint16_t pad;
-  uint32_t module_size;
-  uint32_t offset_size;
-  uint32_t hash_size;
-  uint32_t srcmodule_size; */
+  sym = (sPdbStreamSymbolsV1 *) s->memfile->data;
+  dptr = & s->memfile->data[sizeof (sPdbStreamSymbolsV1)];
+  if (sym->module_size != 0)
+    {
+      size_t cnt = sym_files_count (dptr, sym->module_size, 0);
+      fprintf (stderr, "Has %u symbol_files\n", (uint32_t) cnt);
+    }
   
   return 0;
+}
+
+static size_t sym_files_count (unsigned char *ptr, uint32_t size, uint32_t ext)
+{
+  size_t ret = 0;
+  unsigned char *pd = ptr + size;
+ 
+  if (!ptr || !size)
+    return 0;
+  while (ptr < pd)
+    {
+       int len, len2;
+       if (!ext)
+         {
+           sPdbSymbolFileV1 *v1 = (sPdbSymbolFileV1 *) ptr;
+           len = sizeof (sPdbSymbolFileV1) - 1;
+           if ((ptr + sizeof (sPdbSymbolFileV1)) > pd)
+             break;
+           if (v1->unknown1 == 1)
+             {
+	       len2 = (int) strlen ((char *) &v1->filename[-4]) + 1 - 4;
+	       len2 += (int) strlen ((char *) &v1->filename[len2-4]) + 1;
+             }
+           else
+             {
+	       len2 = strlen ((char *) &v1->filename[0]) + 1;
+	       len2 += strlen ((char *) &v1->filename[len2]) + 1;
+	     }
+           len += len2;
+         }
+       else
+         {
+           sPdbSymbolFileV2 *v1 = (sPdbSymbolFileV2 *) ptr;
+           len = sizeof (sPdbSymbolFileV2) - 1;
+           if ((ptr + sizeof (sPdbSymbolFileV2)) > pd)
+             break;
+           if (v1->unknown1 == 1)
+             {
+	       len2 = (int) strlen ((char *) &v1->filename[-4]) + 1 - 4;
+	       len2 += (int) strlen ((char *) &v1->filename[len2-4]) + 1;
+             }
+           else
+             {
+	       len2 = strlen ((char *) &v1->filename[0]) + 1;
+	       len2 += strlen ((char *) &v1->filename[len2]) + 1;
+	     }
+           len += len2;
+         }
+       ret += 1;
+       len = (len + 3) & ~3;
+       ptr += len;
+    }
+  return ret;
 }
 
 static int sym2_probe (const sDbgMemFile *f)

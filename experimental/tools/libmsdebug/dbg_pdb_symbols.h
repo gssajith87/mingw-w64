@@ -41,6 +41,60 @@ typedef struct sPdbStreamSymbolsV2
 
 #define DBG_PDB_SYMBOLV2_MAGIC	0xffffffffU
 
+typedef struct sPdbSymbolRangeV1
+{
+  uint16_t segment;
+  uint16_t pad1;
+  uint32_t offset;
+  uint32_t size;
+  uint32_t characteristics;
+  uint16_t index;
+  uint16_t pad2;
+} sPdbSymbolRangeV1;
+
+typedef struct sPdbSymbolFileV1
+{
+  uint32_t unknown1;
+  sPdbSymbolRangeV1 range;
+  uint16_t flag;
+  uint16_t file;
+  uint32_t symbol_size;
+  uint32_t lineno_size;
+  uint32_t unknown2;
+  uint32_t nSrcFiles;
+  uint32_t attribute;
+  char filename[1];
+} sPdbSymbolFileV1;
+
+typedef struct sPdbSymbolRangeV2
+{
+  uint16_t segment;
+  uint16_t pad1;
+  uint32_t offset;
+  uint32_t size;
+  uint32_t characteristics;
+  uint16_t index;
+  uint16_t pad2;
+  uint32_t timestamp;
+  uint32_t unknown;
+} sPdbSymbolRangeV2;
+
+typedef struct sPdbSymbolFileV2
+{
+  uint32_t unknown1;
+  sPdbSymbolRangeV2 range;
+  uint16_t flag;
+  uint16_t file;
+  uint32_t symbol_size;
+  uint32_t lineno_size;
+  uint32_t unknown2;
+  uint32_t nSrcFiles;
+  uint32_t attribute;
+  uint32_t reserved[2];
+  char filename[1];
+} sPdbSymbolFileV2;
+
+
 typedef enum ePdbSymbolsTypes {
   ePdbSymbols_v1 = 0,
   ePdbSymbols_v2 = 1,
