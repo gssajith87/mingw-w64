@@ -7,12 +7,14 @@
 extern sDbgInterface interface_pdb2; /* pdb 2.0 */
 extern sDbgInterface interface_pdb7; /* pdb 7.0 */
 
+struct sPdbSymbols;
+
 typedef struct sDbgInterfacePDB {
   sDbgInterface common;
   sDbgMemFile **files;
   uint32_t streams;
   sPdbInfo *info; /* Stream #1  */
+  struct sPdbSymbols *syms;
 } sDbgInterfacePDB;
-
 
 #endif

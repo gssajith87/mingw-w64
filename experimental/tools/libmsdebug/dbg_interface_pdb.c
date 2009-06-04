@@ -6,6 +6,7 @@
 
 #include "dbg_interface_pdb.h"
 #include "dbg_pdb.h"
+#include "dbg_pdb_symbols.h"
 
 /* Prototypes.  */
 static sPdbRoot2 *pdb2Root (sPdbHeader2 *pph, uint32_t *pStreams, uint32_t *pStreamBytes, int *pfUnused);
@@ -74,6 +75,7 @@ static int pdb2_probe(const sDbgMemFile *pDFile)
 
 static int pdb2_load (sDbgInterface *pDCtx)
 {
+  sDbgInterfacePDB *diPDB = (sDbgInterfacePDB *) pDCtx;
   uint32_t streams, streamBytes;
   int fUnused = 0;
   sPdbHeader2 *hdr = (sPdbHeader2 *) pDCtx->memfile->data;
@@ -107,12 +109,15 @@ static int pdb2_load (sDbgInterface *pDCtx)
 	    free (pdata);
 	  pageidx += pdb2FilePages (hdr, dStreamBytes, NULL, NULL);
 	}
-      ((sDbgInterfacePDB *)pDCtx)->streams = root->nstreams;
-      ((sDbgInterfacePDB *)pDCtx)->files = h;
+      diPDB->streams = root->nstreams;
+      diPDB->files = h;
       fprintf (stderr, " # of streams: %u\n", root->nstreams);
       free (root);
     }
- 
+  if (diPDB->files && diPDB->streams > 2)
+    {
+      diPDB->syms = (sPdbSymbols *) dbg_symbols_load (diPDB->files[3], diPDB, 3);
+    }
   return 0;
 }
 
@@ -124,12 +129,18 @@ static int pdb2_update (sDbgInterface *pDCtx)
 static int
 pdb2_release (sDbgInterface *pDCtx)
 {
+  sDbgInterfacePDB *diPDB = (sDbgInterfacePDB *) pDCtx;
   uint32_t i;
   uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
   sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
 
-  ((sDbgInterfacePDB *)pDCtx)->files = NULL;
-  ((sDbgInterfacePDB *)pDCtx)->streams = 0;
+  if (diPDB->syms)
+    {
+      dbg_symbol_release ((sPdbSymbols *)diPDB->syms);
+      diPDB->syms = NULL;
+    }
+  diPDB->files = NULL;
+  diPDB->streams = 0;
   for (i = 0; i < streams; i++)
     dbg_memfile_release (h[i]);
   if (h)
@@ -139,6 +150,7 @@ pdb2_release (sDbgInterface *pDCtx)
 
 static sDbgMemFile *pdb2_dump (sDbgInterface *pDCtx)
 {
+  sDbgInterfacePDB *diPDB = (sDbgInterfacePDB *) pDCtx;
   uint32_t i;
   uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
   sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
@@ -152,7 +164,11 @@ static sDbgMemFile *pdb2_dump (sDbgInterface *pDCtx)
 	free (pi);
       }
     }
-  for (i = 2; i < streams; i++)
+  if (diPDB->syms)
+    {
+      (diPDB->syms->dump) (diPDB->syms, ret);
+    }
+  for (i = 3; i < streams; i++)
     {
       if (h[i])
 	{
@@ -190,6 +206,7 @@ static int pdb7_probe(const sDbgMemFile *pDFile)
 
 static int pdb7_load (sDbgInterface *pDCtx)
 {
+  sDbgInterfacePDB *diPDB = (sDbgInterfacePDB *) pDCtx;
   uint32_t streams, streamBytes;
   int fUnused = 0;
   sPdbHeader7 *hdr = (sPdbHeader7 *) pDCtx->memfile->data;
@@ -222,28 +239,39 @@ static int pdb7_load (sDbgInterface *pDCtx)
 	    free (pdata);
 	  pageidx += pdb7FilePages (hdr, dStreamBytes, NULL, NULL);
 	}
-      ((sDbgInterfacePDB *)pDCtx)->streams = root->nstreams;
-      ((sDbgInterfacePDB *)pDCtx)->files = h;
+      diPDB->streams = root->nstreams;
+      diPDB->files = h;
       fprintf (stderr, " # of streams: %u\n", root->nstreams);
       free (root);
+    }
+  if (diPDB->files && diPDB->streams > 2)
+    {
+      diPDB->syms = dbg_symbols_load (diPDB->files[3], diPDB, 3);
     }
   return unknown_load (pDCtx);
 }
 
 static int pdb7_update (sDbgInterface *pDCtx)
 {
+
   return unknown_update (pDCtx);
 }
 
 static int
 pdb7_release (sDbgInterface *pDCtx)
 {
+  sDbgInterfacePDB *diPDB = (sDbgInterfacePDB *) pDCtx;
   uint32_t i;
   uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
   sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
 
-  ((sDbgInterfacePDB *)pDCtx)->files = NULL;
-  ((sDbgInterfacePDB *)pDCtx)->streams = 0;
+  if (diPDB->syms)
+    {
+      dbg_symbol_release (diPDB->syms);
+      diPDB->syms = NULL;
+    }
+  diPDB->files = NULL;
+  diPDB->streams = 0;
   for (i = 0; i < streams; i++)
     dbg_memfile_release (h[i]);
   if (h)
@@ -253,6 +281,7 @@ pdb7_release (sDbgInterface *pDCtx)
 
 static sDbgMemFile *pdb7_dump (sDbgInterface *pDCtx)
 {
+  sDbgInterfacePDB *diPDB = (sDbgInterfacePDB *) pDCtx;
   uint32_t i;
   uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
   sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
@@ -266,7 +295,11 @@ static sDbgMemFile *pdb7_dump (sDbgInterface *pDCtx)
 	free (pi);
       }
     }
-  for (i = 2; i < streams; i++)
+  if (diPDB->syms)
+    {
+      (* diPDB->syms->dump) (diPDB->syms, ret);
+    }
+  for (i = 3; i < streams; i++)
     {
       if (h[i])
 	{
