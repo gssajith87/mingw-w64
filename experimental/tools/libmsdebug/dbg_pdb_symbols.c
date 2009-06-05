@@ -160,6 +160,7 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
       else
         {
           uint16_t i;
+          uint16_t cnt_sum;
           dbg_memfile_printf (ret, "Source Module dump:\n"
             "  uint16_t tab1[%u] = {\n", hdr[0]);
           for (i = 0; i < hdr[0];)
@@ -172,7 +173,8 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
                 }
               dbg_memfile_printf (ret, "\n");
             }
-          dbg_memfile_printf (ret, "  };\n  uint16_t tab2[%u] = {\n", hdr[0]);
+          dbg_memfile_printf (ret, "  };\n  uint16_t tab2[%u] = { /* count of hashed elements */\n", hdr[0]);
+          cnt_sum = 0;
           for (i = 0; i < hdr[0];)
             {
               uint16_t k;
@@ -180,10 +182,13 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
               for (k=0;k<8 && i < hdr[0]; k++, i++)
                 {
                   dbg_memfile_printf (ret, "%u,", tab2[i]);
+                  cnt_sum += tab2[i];
                 }
               dbg_memfile_printf (ret, "\n");
             }
-          dbg_memfile_printf (ret, "  };\n  uint32_t tab3[%u] = { /* Offsets in string table */ \n", hdr[1]);
+          dbg_memfile_printf (ret, "  }; /* sum:%u */\n  uint32_t tab3[%u] = { /* Offsets in string table */ \n",
+            cnt_sum,
+            hdr[1]);
           for (i = 0; i < hdr[1];)
             {
               uint16_t k;
