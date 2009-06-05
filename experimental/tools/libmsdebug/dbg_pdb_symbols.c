@@ -127,7 +127,87 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
   if (s->sectionmap_stream)
     dbg_memfile_dump_in (ret, s->sectionmap_stream);
   if (s->srcmodule_stream)
-    dbg_memfile_dump_in (ret, s->srcmodule_stream);
+    {
+      uint16_t *hdr = (uint16_t *) s->srcmodule_stream->data;
+      uint16_t *tab1,*tab2,*tab3;
+      char *strs;
+      size_t check = s->srcmodule_stream->size;
+      size_t text_size;
+
+      do {
+        size_t len1, len2;
+        if (check < 4)
+          break;
+        check -= 4;
+        tab1 = &hdr[2];
+        len1 = (size_t) hdr[0] * sizeof(uint16_t);
+        len2 = (size_t) hdr[1] * sizeof(uint32_t);
+        if (check < (len1 * 2))
+          break;
+        tab2 = &tab1[len1];
+        tab3 = &tab2[len1];
+        check -= len1 * 2;
+        if (check < len2)
+          break;
+        check -= len2;
+        strs = (char *) &tab3[len2 * 2];
+        text_size = check;
+        check = 0;
+      } while (0);
+      if (check)
+        dbg_memfile_dump_in (ret, s->srcmodule_stream);
+      else
+        {
+          uint16_t i;
+          dbg_memfile_printf (ret, "Source Module dump:\n"
+            "  uint16_t tab1[%u] = {\n", hdr[0]);
+          for (i = 0; i < hdr[0];)
+            {
+              uint16_t k;
+              dbg_memfile_printf (ret, "    ");
+              for (k=0;k<8 && i < hdr[0]; k++, i++)
+                {
+                  dbg_memfile_printf (ret, "%u,", tab1[i]);
+                }
+              dbg_memfile_printf (ret, "\n");
+            }
+          dbg_memfile_printf (ret, "  };\n  uint16_t tab2[%u] = {\n", hdr[0]);
+          for (i = 0; i < hdr[0];)
+            {
+              uint16_t k;
+              dbg_memfile_printf (ret, "    ");
+              for (k=0;k<8 && i < hdr[0]; k++, i++)
+                {
+                  dbg_memfile_printf (ret, "%u,", tab2[i]);
+                }
+              dbg_memfile_printf (ret, "\n");
+            }
+          dbg_memfile_printf (ret, "  };\n  uint16_t tab3[%u][2] = {\n", hdr[1]);
+          for (i = 0; i < hdr[1];)
+            {
+              uint16_t k;
+              dbg_memfile_printf (ret, "    ");
+              for (k=0;k<4 && i < hdr[1]; k++, i++)
+                {
+                  dbg_memfile_printf (ret, "{ 0x%x. %u},", tab3[((size_t) i * 2)],tab3[((size_t) i * 2) + 1]);
+                }
+              dbg_memfile_printf (ret, "\n");
+            }
+          dbg_memfile_printf (ret, "  };\n  const char *strs[] = {\n");
+          i = 0;
+          while (text_size > 0)
+            {
+              size_t len = strlen (strs) + 1;
+              dbg_memfile_printf (ret, "    \"%s\", /* %u */\n", strs, i++);
+              if (text_size < len)
+                break;
+              text_size -= len;
+              strs += len;
+            }
+              
+          dbg_memfile_printf (ret, "  };\n");
+        }
+    }
   if (s->pdbimport_stream)
     dbg_memfile_dump_in (ret, s->pdbimport_stream);
   if (s->unknown1_stream)

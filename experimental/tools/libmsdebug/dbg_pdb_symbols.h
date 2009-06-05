@@ -90,6 +90,17 @@ typedef struct sPdbSectionInfo
   sPdbSectionInfoElement elm[1];
 } sPdbSectionInfo;
 
+typedef struct sPdbStreamSectionMapElement {
+  uint16_t id; /* 0x10d, 0x109, 0x10b, 0x208 */
+  uint16_t unknown1;
+  uint16_t unknown2;
+  uint16_t unknown3;
+  uint32_t unknown4; /* mostly -1 */
+  uint32_t unknown5;
+  uint32_t unknown6;  /* offset */
+  /* Optional uint32_t unknown7; if id == 0x208 */
+} sPdbStreamSectionMapElement;
+
 #define DBG_PDB_SYMBOLV2_MAGIC	0xffffffffU
 
 typedef struct sPdbSymbolRangeV1
