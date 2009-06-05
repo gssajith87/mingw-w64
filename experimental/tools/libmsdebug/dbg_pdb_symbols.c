@@ -144,13 +144,13 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
         len2 = (size_t) hdr[1] * sizeof(uint32_t);
         if (check < (len1 * 2))
           break;
-        tab2 = &tab1[len1];
-        tab3 = &tab2[len1];
+        tab2 = &tab1[hdr[0]];
+        tab3 = &tab2[hdr[0]];
         check -= len1 * 2;
         if (check < len2)
           break;
         check -= len2;
-        strs = (char *) &tab3[len2 * 2];
+        strs = (char *) &tab3[((size_t) hdr[1]) *2];
         text_size = check;
         check = 0;
       } while (0);
