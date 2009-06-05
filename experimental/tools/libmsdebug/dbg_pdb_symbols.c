@@ -129,8 +129,9 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
   if (s->srcmodule_stream)
     {
       uint16_t *hdr = (uint16_t *) s->srcmodule_stream->data;
-      uint16_t *tab1,*tab2,*tab3;
-      char *strs;
+      uint16_t *tab1,*tab2;
+      uint32_t *tab3;
+      char *strs, *start = (char *) s->srcmodule_stream->data;
       size_t check = s->srcmodule_stream->size;
       size_t text_size;
 
@@ -145,12 +146,12 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
         if (check < (len1 * 2))
           break;
         tab2 = &tab1[hdr[0]];
-        tab3 = &tab2[hdr[0]];
+        tab3 = (uint32_t *) &tab2[hdr[0]];
         check -= len1 * 2;
         if (check < len2)
           break;
         check -= len2;
-        strs = (char *) &tab3[((size_t) hdr[1]) *2];
+        strs = (char *) &tab3[hdr[1]];
         text_size = check;
         check = 0;
       } while (0);
@@ -182,23 +183,25 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
                 }
               dbg_memfile_printf (ret, "\n");
             }
-          dbg_memfile_printf (ret, "  };\n  uint16_t tab3[%u][2] = {\n", hdr[1]);
+          dbg_memfile_printf (ret, "  };\n  uint32_t tab3[%u] = { /* Offsets in string table */ \n", hdr[1]);
           for (i = 0; i < hdr[1];)
             {
               uint16_t k;
               dbg_memfile_printf (ret, "    ");
-              for (k=0;k<4 && i < hdr[1]; k++, i++)
+              for (k=0;k<16 && i < hdr[1]; k++, i++)
                 {
-                  dbg_memfile_printf (ret, "{ 0x%x. %u},", tab3[((size_t) i * 2)],tab3[((size_t) i * 2) + 1]);
+                  dbg_memfile_printf (ret, "0x%x,", tab3[i]);
                 }
               dbg_memfile_printf (ret, "\n");
             }
           dbg_memfile_printf (ret, "  };\n  const char *strs[] = {\n");
           i = 0;
+          start = strs;
           while (text_size > 0)
             {
               size_t len = strlen (strs) + 1;
-              dbg_memfile_printf (ret, "    \"%s\", /* %u */\n", strs, i++);
+	      dbg_memfile_printf (ret, "  /* 0x%x */ \"%s\", /* %u */\n",
+                (uint32_t) ((size_t) (strs - start)), strs, i++);
               if (text_size < len)
                 break;
               text_size -= len;
