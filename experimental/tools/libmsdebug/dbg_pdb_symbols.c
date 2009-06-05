@@ -9,6 +9,9 @@ static int dbg_symbols_probe (sDbgMemFile *f);
 static size_t sym_files_count (unsigned char *ptr, uint32_t size, uint32_t ext);
 static size_t sym_files_getelemsize (unsigned char *ptr, uint32_t size, uint32_t ext);
 static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext, sPdbSymbols *s);
+static size_t sym_sectioninfo_count (unsigned char *dptr, size_t max_size);
+static uint32_t sym_sectioninfo_version (unsigned char *dptr, size_t max_size);
+static sPdbSectionInfo *sym_sectioninfo_read (unsigned char *dptr, size_t max_size, size_t cnt);
 
 static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t);
 
@@ -81,9 +84,9 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
         dbg_memfile_printf (ret,
           "Symbols Version 1 (Stream #%u)\n"
           "  file(s): Hash1=%x, Hash2=%x, GlobalSyms:%x\n"
-          "  size(s): Module=%u, Offsets=%u, Hash=%u, SrcModule=%u\n",
+          "  size(s): Module=%u, SectionInfo=%u, SectionMap=%u, SrcModule=%u\n",
           s->stream_idx, sy1->hash1_file, sy1->hash2_file, sy1->gsym_file,
-          sy1->module_size, sy1->offset_size, sy1->hash_size, sy1->srcmodule_size);
+          sy1->module_size, sy1->sectioninfo_size, sy1->sectionmap_size, sy1->srcmodule_size);
       }
       break;
     case ePdbSymbols_v2:
@@ -91,17 +94,18 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
         sPdbStreamSymbolsV2 *sy1 = (sPdbStreamSymbolsV2 *) s->memfile->data;
         dbg_memfile_printf (ret,
           "Symbols Version %u (ext=0x%x) (Stream #%u)\n"
-          "  file(s): Hash1=%u (0x%x), Hash2=%u (0x%x), GlobalSyms:%u (0x%x)\n"
-          "  size(s): Module=%u, Offsets=%u, Hash=%u, SrcModule=%u, Imports=%u\n"
+          "  file(s): Hash1=%u, Version DLL> 0x%04x, Hash2=%u Version DLL-Build 0x%04x, GlobalSyms:%u (0x%x)\n"
+          "  size(s): Module=%u, SectionInfo=%u, SectionMap=%u, SrcModule=%u, Imports=%u\n"
           "           Unk1=%u, Unk2=%u, Unk3=%u\n"
-          "  reserved[2]={0x%x,0x%x}\n",
+          "  flag: 0x%x, MachineID:0x%x, reserved[1]={0x%x}\n",
           sy1->version, sy1->extended_format, s->stream_idx,
-          sy1->hash1_file, sy1->hash1_unknown,
-          sy1->hash2_file, sy1->hash2_unknown,
+          sy1->hash1_file, sy1->verPdbDLL,
+          sy1->hash2_file, sy1->verPdbDLLBuild,
           sy1->gsym_file, sy1->gsym_unknown,
-          sy1->module_size, sy1->offset_size, sy1->hash_size, sy1->srcmodule_size,
+          sy1->module_size, sy1->sectioninfo_size, sy1->sectionmap_size, sy1->srcmodule_size,
           sy1->pdbimport_size, sy1->unknown1_size, sy1->unknown2_size, sy1->unknown3_size,
-          sy1->resvd[0],sy1->resvd[1]);
+          sy1->flags, sy1->machine,
+          sy1->resvd[0]);
       }
       break;
     default:
@@ -118,10 +122,10 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
             (* s->sym_files[i]->dump) (s->sym_files[i], ret);
         }
     }
-  if (s->offset_stream)
-    dbg_memfile_dump_in (ret, s->offset_stream);
-  if (s->hash_stream)
-    dbg_memfile_dump_in (ret, s->hash_stream);
+  if (s->sectioninfo_stream)
+    dbg_memfile_dump_in (ret, s->sectioninfo_stream);
+  if (s->sectionmap_stream)
+    dbg_memfile_dump_in (ret, s->sectionmap_stream);
   if (s->srcmodule_stream)
     dbg_memfile_dump_in (ret, s->srcmodule_stream);
   if (s->pdbimport_stream)
@@ -151,8 +155,14 @@ static int sym2_load (sPdbSymbols *s)
     DbgInterfacePDB_file_kind (s->base, sym->hash2_file) = "Hash2 stream";
   if (sym->module_size != 0)
     {
-      size_t cnt = sym_files_count (dptr, sym->module_size, sym->extended_format);
-      sPdbSymbolFile **h = (sPdbSymbolFile **) malloc (sizeof (sPdbSymbolFile *) * cnt);
+      size_t cnt;
+      sPdbSymbolFile **h;
+
+      s->module_stream = dbg_memfile_create ("Section info stream", sym->module_size);
+      dbg_memfile_write (s->module_stream, 0, dptr, sym->module_size);
+
+      cnt = sym_files_count (dptr, sym->module_size, sym->extended_format);
+      h = (sPdbSymbolFile **) malloc (sizeof (sPdbSymbolFile *) * cnt);
       if (h)
         {
           unsigned char *d = dptr;
@@ -165,18 +175,34 @@ static int sym2_load (sPdbSymbols *s)
           s->sym_files = h;
           s->sym_files_count = cnt;
         }
+      dbg_memfile_release (s->module_stream);
+      s->module_stream = NULL;
+      dptr += sym->module_size;
     }
-  if (sym->offset_size != 0)
+  if (sym->sectioninfo_size != 0)
     {
-      s->offset_stream = dbg_memfile_create ("Offset stream", sym->offset_size);
-      dbg_memfile_write (s->offset_stream, 0, dptr, sym->offset_size);
-      dptr += sym->offset_size;
+      size_t cnt;
+      s->sectioninfo_stream = dbg_memfile_create ("Section info stream", sym->sectioninfo_size);
+      dbg_memfile_write (s->sectioninfo_stream, 0, dptr, sym->sectioninfo_size);
+
+      cnt = sym_sectioninfo_count (dptr, sym->sectioninfo_size);
+      if (cnt != 0xffffffff)
+        {
+          fprintf (stderr, "Found %u section info element(s)\n", (uint32_t) cnt);
+          s->sym_section_info = sym_sectioninfo_read (dptr, sym->sectioninfo_size, cnt);
+          if (s->sym_section_info)
+            {
+              dbg_memfile_release (s->sectioninfo_stream);
+              s->sectioninfo_stream = NULL;
+            }
+        }
+      dptr += sym->sectioninfo_size;
     }
-  if (sym->hash_size != 0)
+  if (sym->sectionmap_size != 0)
     {
-      s->hash_stream = dbg_memfile_create ("Symbol hash stream", sym->hash_size);
-      dbg_memfile_write (s->hash_stream, 0, dptr, sym->hash_size);
-      dptr += sym->hash_size;
+      s->sectionmap_stream = dbg_memfile_create ("Symbol section map stream", sym->sectionmap_size);
+      dbg_memfile_write (s->sectionmap_stream, 0, dptr, sym->sectionmap_size);
+      dptr += sym->sectionmap_size;
     }
   if (sym->srcmodule_size != 0)
     {
@@ -204,7 +230,7 @@ static int sym2_load (sPdbSymbols *s)
     }
   if (sym->unknown3_size != 0)
     {
-      s->unknown3_stream = dbg_memfile_create ("Symbol unknown2 stream", sym->unknown3_size);
+      s->unknown3_stream = dbg_memfile_create ("Symbol unknown3 stream", sym->unknown3_size);
       dbg_memfile_write (s->unknown3_stream, 0, dptr, sym->unknown3_size);
       dptr += sym->unknown3_size;
     }
@@ -244,17 +270,30 @@ static int sym1_load (sPdbSymbols *s)
         }
       dptr += sym->module_size;
     }
-  if (sym->offset_size != 0)
+  if (sym->sectioninfo_size != 0)
     {
-      s->offset_stream = dbg_memfile_create ("Offset stream", sym->offset_size);
-      dbg_memfile_write (s->offset_stream, 0, dptr, sym->offset_size);
-      dptr += sym->offset_size;
+      size_t cnt;
+      s->sectioninfo_stream = dbg_memfile_create ("Section info stream", sym->sectioninfo_size);
+      dbg_memfile_write (s->sectioninfo_stream, 0, dptr, sym->sectioninfo_size);
+
+      cnt = sym_sectioninfo_count (dptr, sym->sectioninfo_size);
+      if (cnt != 0xffffffff)
+        {
+          fprintf (stderr, "Found %u section info element(s)\n", (uint32_t) cnt);
+          s->sym_section_info = sym_sectioninfo_read (dptr, sym->sectioninfo_size, cnt);
+          if (s->sym_section_info)
+            {
+              dbg_memfile_release (s->sectioninfo_stream);
+              s->sectioninfo_stream = NULL;
+            }
+        }
+      dptr += sym->sectioninfo_size;
     }
-  if (sym->hash_size != 0)
+  if (sym->sectionmap_size != 0)
     {
-      s->hash_stream = dbg_memfile_create ("Symbol hash stream", sym->hash_size);
-      dbg_memfile_write (s->hash_stream, 0, dptr, sym->hash_size);
-      dptr += sym->hash_size;
+      s->sectionmap_stream = dbg_memfile_create ("Symbol section map stream", sym->sectionmap_size);
+      dbg_memfile_write (s->sectionmap_stream, 0, dptr, sym->sectionmap_size);
+      dptr += sym->sectionmap_size;
     }
   if (sym->srcmodule_size != 0)
     {
@@ -281,7 +320,7 @@ static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t)
       dbg_memfile_printf (ret,
         "SymbolV1: Unknown1=%x, Addr:0x%04x:0x%08x [0x%x]\n"
         "   Characteristics: 0x%x index:%u\n"
-        "  flags:%x, file:%x [symbol_size:0x%x lineno_size:0x%x]\n"
+        "  flags:%x, file:%u [symbol_size:0x%x lineno_size:0x%x]\n"
         "  unknown2:%x, # of src files:%u, attribute:0x%x\n"
         "  name[0]='%s'\n"
         "  name[1]='%s'\n", 
@@ -297,7 +336,7 @@ static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t)
       dbg_memfile_printf (ret,
         "SymbolV2: Unknown1=%x, Addr:0x%04x:0x%08x [0x%x]\n"
         "   Characteristics: 0x%x index:%u TimeStamp:0x%x, Unknown:0x%x\n"
-        "  flags:%x, file:%x [symbol_size:0x%x lineno_size:0x%x]\n"
+        "  flags:%x, file:%u [symbol_size:0x%x lineno_size:0x%x]\n"
         "  unknown2:%x, # of src files:%u, attribute:0x%x [0x%x:0x%x]\n"
         "  name[0]='%s'\n"
         "  name[1]='%s'\n", 
@@ -305,7 +344,7 @@ static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t)
         sf->v2->range.segment,sf->v1->range.offset,sf->v2->range.size,
         sf->v2->range.characteristics,sf->v2->range.index,
         sf->v2->range.timestamp, sf->v2->range.unknown,
-        sf->v2->flag, sf->v1->file, sf->v2->symbol_size, sf->v2->lineno_size,
+        sf->v2->flag, sf->v2->file, sf->v2->symbol_size, sf->v2->lineno_size,
         sf->v2->unknown2,sf->v2->nSrcFiles,sf->v2->attribute,
         sf->v2->reserved[0], sf->v2->reserved[1],
         sf->name[0],sf->name[1]);
@@ -408,8 +447,8 @@ static int sym2_probe (const sDbgMemFile *f)
   if (sym->signature != DBG_PDB_SYMBOLV2_MAGIC)
     return -1;
   len += (size_t) sym->module_size;
-  len += (size_t) sym->offset_size;
-  len += (size_t) sym->hash_size;
+  len += (size_t) sym->sectioninfo_size;
+  len += (size_t) sym->sectionmap_size;
   len += (size_t) sym->srcmodule_size;
   len += (size_t) sym->pdbimport_size;
   len += (size_t) sym->unknown1_size;
@@ -433,8 +472,8 @@ static int sym1_probe (const sDbgMemFile *f)
     return -1;
   sym = (const sPdbStreamSymbolsV1 *) f->data;
   len += (size_t) sym->module_size;
-  len += (size_t) sym->offset_size;
-  len += (size_t) sym->hash_size;
+  len += (size_t) sym->sectioninfo_size;
+  len += (size_t) sym->sectionmap_size;
   len += (size_t) sym->srcmodule_size;
   if (f->size != len)
     {
@@ -459,12 +498,17 @@ static int sym_release (sPdbSymbols *s)
 	}
       free (s->sym_files);
     }
+  if (s->sym_section_info)
+    {
+      free (s->sym_section_info);
+      s->sym_section_info = NULL;
+    }
   s->sym_files = NULL;
   s->sym_files_count = 0;
 
   dbg_memfile_release (s->module_stream);
-  dbg_memfile_release (s->offset_stream);
-  dbg_memfile_release (s->hash_stream);
+  dbg_memfile_release (s->sectioninfo_stream);
+  dbg_memfile_release (s->sectionmap_stream);
   dbg_memfile_release (s->srcmodule_stream);
   dbg_memfile_release (s->pdbimport_stream);
   dbg_memfile_release (s->unknown1_stream);
@@ -482,6 +526,84 @@ void dbg_symbol_release (sPdbSymbols *s)
   if (s->memfile)
     dbg_memfile_release (s->memfile);
   free (s);
+}
+
+static uint32_t sym_sectioninfo_version (unsigned char *dptr, size_t max_size)
+{
+  uint32_t version;
+  if (max_size < 4)
+    return 0;
+  version = *((uint32_t *)dptr);
+  max_size -= 4;
+  switch (version)
+    {
+    case DBG_PDB_STREAM_VERSION_V2:
+      if ((max_size % sizeof (sPdbStreamSectionInfoV2)) == 0)
+        return 2;
+      fprintf (stderr,"SectionInfo Version %u != V2\n", version);
+      break;
+    default:
+      break;
+    }
+  max_size -= 4;
+  if ((max_size % sizeof (sPdbStreamSectionInfoV1)) != 0 && (max_size % sizeof (sPdbStreamSectionInfoV2)) == 0)
+    {
+      fprintf (stderr, "SectionInfo V2 with new version ident %u\n", version);
+      return 2;
+    }
+  if ((max_size % sizeof (sPdbStreamSectionInfoV1)) == 0)
+    return 1;
+  fprintf (stderr, "SectionInfo V? with version ident %u\n", version);
+  return 3;
+}
+
+static size_t sym_sectioninfo_count (unsigned char *dptr, size_t max_size)
+{
+  switch (sym_sectioninfo_version (dptr, max_size))
+    {
+      case 0:
+        return 0xffffffff;
+      case 1:
+        max_size -= 4;
+        return (max_size / sizeof (sPdbStreamSectionInfoV1));
+      case 2:
+        max_size -= 4;
+        return (max_size / sizeof (sPdbStreamSectionInfoV2));
+    }
+  return 0xffffffff;
+}
+
+static sPdbSectionInfo *sym_sectioninfo_read (unsigned char *dptr, size_t max_size, size_t cnt)
+{
+  sPdbSectionInfo *ret;
+  sPdbStreamSectionInfoV1 *v1;
+  sPdbStreamSectionInfoV2 *v2;
+  size_t i;
+
+  ret = (sPdbSectionInfo *) malloc (sizeof (sPdbSectionInfo) + cnt * sizeof (sPdbSectionInfoElement));
+  if (!ret)
+    return NULL;
+  ret->version = sym_sectioninfo_version (dptr, max_size);
+  ret->count = cnt;
+  ret->signature = *((uint32_t *) dptr);
+  dptr += 4;
+  v1 = (sPdbStreamSectionInfoV1 *) dptr;
+  v2 = (sPdbStreamSectionInfoV2 *) dptr;
+
+  for (i = 0; i < cnt; i++)
+    {
+      if (ret->version == 1)
+        {
+          memcpy (&ret->elm[i], &v1[i], sizeof (sPdbStreamSectionInfoV1));
+          ret->elm[i].dataCRC = 0;
+          ret->elm[i].relocCRC = 0;
+        }
+      else
+        {
+          memcpy (&ret->elm[i], &v2[i], sizeof (sPdbStreamSectionInfoV2));
+        }
+    }
+  return ret;
 }
 
 sPdbSymbols *dbg_symbols_load (sDbgMemFile *f, sDbgInterfacePDB *base, int stream_idx)

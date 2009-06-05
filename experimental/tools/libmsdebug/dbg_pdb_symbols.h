@@ -9,37 +9,86 @@
 
 typedef struct sPdbStreamSymbolsV1
 {
-  uint16_t hash1_file;
-  uint16_t hash2_file;
-  uint16_t gsym_file;
+  uint16_t hash1_file; /* GS */
+  uint16_t hash2_file; /* PS */
+  uint16_t gsym_file;  /* SymRec */
   uint16_t pad;
   uint32_t module_size;
-  uint32_t offset_size;
-  uint32_t hash_size;
-  uint32_t srcmodule_size;
+  uint32_t sectioninfo_size; /* SC */
+  uint32_t sectionmap_size;
+  uint32_t srcmodule_size; /* File info */
 } sPdbStreamSymbolsV1;
 
 typedef struct sPdbStreamSymbolsV2
 {
   uint32_t signature;
   uint32_t version;
-  uint32_t extended_format;
-  uint16_t hash1_file;
-  uint16_t hash1_unknown;
-  uint16_t hash2_file;
-  uint16_t hash2_unknown;
-  uint16_t gsym_file;
+  uint32_t extended_format; /* Age */
+  uint16_t hash1_file; /* GS */
+  uint16_t verPdbDLL;
+  uint16_t hash2_file; /* PS */
+  uint16_t verPdbDLLBuild;
+  uint16_t gsym_file; /* SymRec */
   uint16_t gsym_unknown;
   uint32_t module_size;
-  uint32_t offset_size;
-  uint32_t hash_size;
-  uint32_t srcmodule_size;
-  uint32_t pdbimport_size;
-  uint32_t unknown1_size;
-  uint32_t unknown2_size;
-  uint32_t unknown3_size;
-  uint32_t resvd[2];
+  uint32_t sectioninfo_size; /* SC */
+  uint32_t sectionmap_size; /* SecMap */
+  uint32_t srcmodule_size; /* File Information */
+  uint32_t pdbimport_size; /* TS map */
+  uint32_t unknown1_size;  /* iMFC */
+  uint32_t unknown2_size;  /* Debug header */
+  uint32_t unknown3_size;  /* EC info */
+  uint16_t flags;
+  uint16_t machine;
+  uint32_t resvd[1];
 } sPdbStreamSymbolsV2;
+
+#define DBG_PDB_STREAM_VERSION_V2	4046371373U
+
+typedef struct sPdbStreamSectionInfoV1
+{
+  uint16_t isect;
+  uint16_t reserved1;
+  uint32_t off;
+  uint32_t cbSectionSize;
+  uint32_t characteristics;
+  uint16_t imod;
+  uint16_t reserved2;
+} sPdbStreamSectionInfoV1;
+
+typedef struct sPdbStreamSectionInfoV2
+{
+  uint16_t isect;
+  uint16_t reserved1;
+  uint32_t off;
+  uint32_t cbSectionSize;
+  uint32_t characteristics;
+  uint16_t imod;
+  uint16_t reserved2;
+  uint32_t dataCRC;
+  uint32_t relocCRC;
+} sPdbStreamSectionInfoV2;
+
+typedef struct sPdbSectionInfoElement
+{
+  uint16_t isect;
+  uint16_t reserved1;
+  uint32_t off;
+  uint32_t cbSectionSize;
+  uint32_t characteristics;
+  uint16_t imod;
+  uint16_t reserved2;
+  uint32_t dataCRC;
+  uint32_t relocCRC;
+} sPdbSectionInfoElement;
+
+typedef struct sPdbSectionInfo
+{
+  uint32_t signature;
+  int version;
+  size_t count;
+  sPdbSectionInfoElement elm[1];
+} sPdbSectionInfo;
 
 #define DBG_PDB_SYMBOLV2_MAGIC	0xffffffffU
 
@@ -135,9 +184,10 @@ typedef struct sPdbSymbols
   uint32_t extended_format;
   sPdbSymbolFile **sym_files;
   size_t sym_files_count;
+  sPdbSectionInfo *sym_section_info;
   sDbgMemFile *module_stream;
-  sDbgMemFile *offset_stream;
-  sDbgMemFile *hash_stream;
+  sDbgMemFile *sectioninfo_stream;
+  sDbgMemFile *sectionmap_stream;
   sDbgMemFile *srcmodule_stream;
   sDbgMemFile *pdbimport_stream;
   sDbgMemFile *unknown1_stream;
