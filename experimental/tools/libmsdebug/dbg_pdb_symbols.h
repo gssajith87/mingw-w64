@@ -169,6 +169,17 @@ typedef struct sPdbSymbolFile
   sDbgMemFile *(*dump)(struct sPdbSymbolFile *,sDbgMemFile *);
 } sPdbSymbolFile;
 
+typedef struct sPdbSymbolSrcModules {
+  size_t hash_size;
+  size_t symbol_size;
+  uint16_t *hash_off;
+  uint16_t *hash_len;
+  uint32_t *str_off;
+  size_t strs_size;
+  char *strs;
+} sPdbSymbolSrcModules;
+
+
 typedef enum ePdbSymbolsTypes {
   ePdbSymbols_v1 = 0,
   ePdbSymbols_v2 = 1,
@@ -200,6 +211,7 @@ typedef struct sPdbSymbols
   sDbgMemFile *sectioninfo_stream;
   sDbgMemFile *sectionmap_stream;
   sDbgMemFile *srcmodule_stream;
+  sPdbSymbolSrcModules *srcmodules;
   sDbgMemFile *pdbimport_stream;
   sDbgMemFile *unknown1_stream;
   sDbgMemFile *unknown2_stream;

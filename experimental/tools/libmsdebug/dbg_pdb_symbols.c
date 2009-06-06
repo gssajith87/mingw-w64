@@ -12,6 +12,7 @@ static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext, sPdbSymbo
 static size_t sym_sectioninfo_count (unsigned char *dptr, size_t max_size);
 static uint32_t sym_sectioninfo_version (unsigned char *dptr, size_t max_size);
 static sPdbSectionInfo *sym_sectioninfo_read (unsigned char *dptr, size_t max_size, size_t cnt);
+static sPdbSymbolSrcModules *sym_file_srcmodules (unsigned char *dptr, size_t size);
 
 static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t);
 
@@ -127,94 +128,16 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
   if (s->sectionmap_stream)
     dbg_memfile_dump_in (ret, s->sectionmap_stream);
   if (s->srcmodule_stream)
+    dbg_memfile_dump_in (ret, s->srcmodule_stream);
+  if (s->srcmodules != NULL)
     {
-      uint16_t *hdr = (uint16_t *) s->srcmodule_stream->data;
-      uint16_t *tab1,*tab2;
-      uint32_t *tab3;
-      char *strs, *start = (char *) s->srcmodule_stream->data;
-      size_t check = s->srcmodule_stream->size;
-      size_t text_size;
-
-      do {
-        size_t len1, len2;
-        if (check < 4)
-          break;
-        check -= 4;
-        tab1 = &hdr[2];
-        len1 = (size_t) hdr[0] * sizeof(uint16_t);
-        len2 = (size_t) hdr[1] * sizeof(uint32_t);
-        if (check < (len1 * 2))
-          break;
-        tab2 = &tab1[hdr[0]];
-        tab3 = (uint32_t *) &tab2[hdr[0]];
-        check -= len1 * 2;
-        if (check < len2)
-          break;
-        check -= len2;
-        strs = (char *) &tab3[hdr[1]];
-        text_size = check;
-        check = 0;
-      } while (0);
-      if (check)
-        dbg_memfile_dump_in (ret, s->srcmodule_stream);
-      else
-        {
-          uint16_t i;
-          uint16_t cnt_sum;
-          dbg_memfile_printf (ret, "Source Module dump:\n"
-            "  uint16_t tab1[%u] = {\n", hdr[0]);
-          for (i = 0; i < hdr[0];)
-            {
-              uint16_t k;
-              dbg_memfile_printf (ret, "    ");
-              for (k=0;k<8 && i < hdr[0]; k++, i++)
-                {
-                  dbg_memfile_printf (ret, "%u,", tab1[i]);
-                }
-              dbg_memfile_printf (ret, "\n");
-            }
-          dbg_memfile_printf (ret, "  };\n  uint16_t tab2[%u] = { /* count of hashed elements */\n", hdr[0]);
-          cnt_sum = 0;
-          for (i = 0; i < hdr[0];)
-            {
-              uint16_t k;
-              dbg_memfile_printf (ret, "    ");
-              for (k=0;k<8 && i < hdr[0]; k++, i++)
-                {
-                  dbg_memfile_printf (ret, "%u,", tab2[i]);
-                  cnt_sum += tab2[i];
-                }
-              dbg_memfile_printf (ret, "\n");
-            }
-          dbg_memfile_printf (ret, "  }; /* sum:%u */\n  uint32_t tab3[%u] = { /* Offsets in string table */ \n",
-            cnt_sum,
-            hdr[1]);
-          for (i = 0; i < hdr[1];)
-            {
-              uint16_t k;
-              dbg_memfile_printf (ret, "    ");
-              for (k=0;k<16 && i < hdr[1]; k++, i++)
-                {
-                  dbg_memfile_printf (ret, "0x%x,", tab3[i]);
-                }
-              dbg_memfile_printf (ret, "\n");
-            }
-          dbg_memfile_printf (ret, "  };\n  const char *strs[] = {\n");
-          i = 0;
-          start = strs;
-          while (text_size > 0)
-            {
-              size_t len = strlen (strs) + 1;
-	      dbg_memfile_printf (ret, "  /* 0x%x */ \"%s\", /* %u */\n",
-                (uint32_t) ((size_t) (strs - start)), strs, i++);
-              if (text_size < len)
-                break;
-              text_size -= len;
-              strs += len;
-            }
-              
-          dbg_memfile_printf (ret, "  };\n");
-        }
+      size_t i;
+      dbg_memfile_printf (ret, "  Source Modules\n    # of files: %u, hash size: %u\n",
+	(uint32_t) s->srcmodules->symbol_size, (uint32_t) s->srcmodules->hash_size);
+      for (i = 0; i < s->srcmodules->symbol_size; i++)
+	{
+	  dbg_memfile_printf (ret, "   #%u \"%s\"\n", (uint32_t) i, & s->srcmodules->strs[s->srcmodules->str_off[i]]);
+	}
     }
   if (s->pdbimport_stream)
     dbg_memfile_dump_in (ret, s->pdbimport_stream);
@@ -296,6 +219,12 @@ static int sym2_load (sPdbSymbols *s)
     {
       s->srcmodule_stream = dbg_memfile_create ("Symbol source module stream", sym->srcmodule_size);
       dbg_memfile_write (s->srcmodule_stream, 0, dptr, sym->srcmodule_size);
+      s->srcmodules = sym_file_srcmodules (dptr, sym->srcmodule_size);
+      if (s->srcmodules != NULL)
+        {
+	  dbg_memfile_release (s->srcmodule_stream);
+	  s->srcmodule_stream = NULL;
+        }
       dptr += sym->srcmodule_size;
     }
   if (sym->pdbimport_size != 0)
@@ -387,6 +316,12 @@ static int sym1_load (sPdbSymbols *s)
     {
       s->srcmodule_stream = dbg_memfile_create ("Symbol hash stream", sym->srcmodule_size);
       dbg_memfile_write (s->srcmodule_stream, 0, dptr, sym->srcmodule_size);
+      s->srcmodules = sym_file_srcmodules (dptr, sym->srcmodule_size);
+      if (s->srcmodules != NULL)
+        {
+	  dbg_memfile_release (s->srcmodule_stream);
+	  s->srcmodule_stream = NULL;
+        }
       dptr += sym->srcmodule_size;
     }
   
@@ -598,6 +533,19 @@ static int sym_release (sPdbSymbols *s)
   dbg_memfile_release (s->sectioninfo_stream);
   dbg_memfile_release (s->sectionmap_stream);
   dbg_memfile_release (s->srcmodule_stream);
+  if (s->srcmodules)
+    {
+      if (s->srcmodules->hash_off)
+	free (s->srcmodules->hash_off);
+      if (s->srcmodules->hash_len)
+	free (s->srcmodules->hash_len);
+      if (s->srcmodules->str_off)
+	free (s->srcmodules->str_off);
+      if (s->srcmodules->strs)
+	free (s->srcmodules->strs);
+      free (s->srcmodules);
+      s->srcmodules = NULL;
+    }
   dbg_memfile_release (s->pdbimport_stream);
   dbg_memfile_release (s->unknown1_stream);
   dbg_memfile_release (s->unknown2_stream);
@@ -730,3 +678,67 @@ static int dbg_symbols_probe (sDbgMemFile *f)
   return -1;
 }
 
+static sPdbSymbolSrcModules *sym_file_srcmodules (unsigned char *dptr, size_t size)
+{
+  sPdbSymbolSrcModules *ret = NULL;
+  uint16_t *sdptr = (uint16_t *) dptr;
+  ret = (sPdbSymbolSrcModules *) malloc (sizeof (sPdbSymbolSrcModules));
+  if (!ret)
+    return NULL;
+  memset (ret, 0, sizeof (sPdbSymbolSrcModules));
+  if (size < 4)
+    return ret;
+  ret->hash_size = (size_t) sdptr[0];
+  ret->symbol_size = (size_t) sdptr[1];
+  size -= 4; dptr += 4;
+  sdptr = &sdptr[2];
+  if (ret->hash_size)
+    {
+      size_t hash_cblen = sizeof (uint16_t) * ret->hash_size;
+      ret->hash_off = (uint16_t *) malloc (hash_cblen);
+      if (ret->hash_off == NULL || size < hash_cblen)
+        goto error_out;
+      memcpy (ret->hash_off, sdptr, hash_cblen);
+      dptr += hash_cblen;
+      sdptr = &sdptr[ret->hash_size];
+      size -= hash_cblen;
+      ret->hash_len = (uint16_t *) malloc (hash_cblen);
+      if (ret->hash_len == NULL || size < hash_cblen)
+	goto error_out;
+      memcpy (ret->hash_len, sdptr, hash_cblen);
+      dptr += hash_cblen;
+      size -= hash_cblen;
+    }
+  if (ret->symbol_size)
+    {
+      size_t symbol_cblen = sizeof (uint32_t) * ret->symbol_size;
+      ret->str_off = (uint32_t *) malloc (symbol_cblen);
+      if (ret->str_off == NULL || size < symbol_cblen)
+	goto error_out;
+      memcpy (ret->str_off, dptr, symbol_cblen);
+      dptr += symbol_cblen;
+      size -= symbol_cblen;
+    }
+  if (size > 0)
+    {
+      ret->strs_size = size;
+      ret->strs = (char *) malloc (size);
+      if (ret->strs == NULL)
+	goto error_out;
+      memcpy (ret->strs, dptr, size);
+    }
+  return ret;
+error_out:
+  if (!ret)
+    return NULL;
+  if (ret->hash_off)
+    free (ret->hash_off);
+  if (ret->hash_len)
+    free (ret->hash_len);
+  if (ret->str_off)
+    free (ret->str_off);
+  if (ret->strs)
+    free (ret->strs);
+  free (ret);
+  return NULL;
+}
