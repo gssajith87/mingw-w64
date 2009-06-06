@@ -12,7 +12,9 @@ typedef struct sDbgCVCommon {
 } sDbgCVCommon;
 
 static sDbgMemFile *cv_default_dump (sDbgCVtag *cv, sDbgMemFile *x);
+static sDbgMemFile *cv_dump_modifier (sDbgCVtag *cv, sDbgMemFile *x);
 static int cv_default_update (sDbgCVtag *cv, sDbgMemFile *to);
+static int cv_update_dta (sDbgCVtag *cv, sDbgMemFile *to);
 static int cv_fill (sDbgCVtag *cv, sDbgCVCommon *cm);
 static size_t dbg_CVtag_getsize (unsigned char *dta, size_t max);
 
@@ -172,6 +174,17 @@ static sDbgMemFile *cv_default_dump (sDbgCVtag *cv, sDbgMemFile *x)
   return ret;
 }
 
+static int cv_update_dta (sDbgCVtag *cv, sDbgMemFile *to)
+{
+  uint16_t lw[2];
+  if (!cv || !to || cv->unknown_leaf == NULL)
+    return -1;
+  lw[0] = (uint16_t) (cv->length + 2);
+  lw[1] = (uint16_t) cv->leaf;
+  dbg_memfile_write (to, to->size, (unsigned char *)lw, 4);
+  return dbg_memfile_write (to, to->size, cv->dta, cv->length);
+}
+
 static int cv_default_update (sDbgCVtag *cv, sDbgMemFile *to)
 {
   if (!cv || !to || cv->unknown_leaf == NULL)
@@ -179,19 +192,34 @@ static int cv_default_update (sDbgCVtag *cv, sDbgMemFile *to)
   return dbg_memfile_write (to, to->size, cv->unknown_leaf->data, cv->unknown_leaf->size);
 }
 
+static sDbgMemFile *cv_dump_modifier (sDbgCVtag *cv, sDbgMemFile *x)
+{
+  sDbgMemFile *ret = x;
+  if (!ret) ret = dbg_memfile_create_text ("cv_type");
+  dbg_memfile_printf (ret, "  LF_MODIFIER: FollowUpType: 0x%x Flags:0x%x\n", cv->ui_dta[0], cv->ui_dta[1]);
+  return ret;
+}
+
 static int cv_fill (sDbgCVtag *cv, sDbgCVCommon *cm)
 {
   uint32_t *dw = (uint32_t *) cm->data;
   if (!cm)
     return -1;
+  cv->length = cm->dSize - 2;
   switch (cm->leaf)
     {
     case LF_MODIFIER:
+      cv->dump = cv_dump_modifier;
       break;
     default:
-      break;
+      return -1;
     }
-  return -1;
+  cv->dta = (unsigned char *) malloc (cv->length + 1);
+  if (!cv->dta)
+    return -1;
+  cv->update = cv_update_dta;
+  memcpy (cv->dta, &dw, cv->length);
+  return 0;
 }
 
 void dbg_CVtag_release (sDbgCVtag *cv)
@@ -200,5 +228,7 @@ void dbg_CVtag_release (sDbgCVtag *cv)
     return;
   if (cv->unknown_leaf)
     dbg_memfile_release (cv->unknown_leaf);
+  if (cv->dta)
+    free (cv->dta);
   free (cv);
 }

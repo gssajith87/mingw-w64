@@ -9,6 +9,13 @@ typedef struct sDbgCVtag {
   int (*update)(struct sDbgCVtag *, sDbgMemFile *);
   sDbgMemFile *(*dump)(struct sDbgCVtag *, sDbgMemFile *);
   sDbgMemFile *unknown_leaf;
+
+  uint32_t length; /* dta length */
+  __extension__ union {
+    unsigned char *dta;
+    uint16_t *us_dta;
+    uint32_t *ui_dta;
+  };
 } sDbgCVtag;
 
 typedef enum eDbgCVLeaf {
