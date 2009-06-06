@@ -147,6 +147,8 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
     dbg_memfile_dump_in (ret, s->unknown2_stream);
   if (s->unknown3_stream)
     dbg_memfile_dump_in (ret, s->unknown3_stream);
+  if (s->gsyms)
+    ret = dbg_CV_dump (s->gsyms, ret);
   return ret;
 }
 
@@ -159,7 +161,12 @@ static int sym2_load (sPdbSymbols *s)
   sym = (sPdbStreamSymbolsV2 *) s->memfile->data;
   dptr = & s->memfile->data[sizeof (sPdbStreamSymbolsV2)];
   if (DbgInterfacePDB_streams (s->base) > sym->gsym_file)
-    DbgInterfacePDB_file_kind (s->base, sym->gsym_file) = "Global Symbol stream";
+    {
+      sDbgMemFile *gs = DbgInterfacePDB_file (s->base, sym->gsym_file);
+      DbgInterfacePDB_file_kind (s->base, sym->gsym_file) = "Global Symbol stream";
+      if (gs)
+	s->gsyms = dbg_CV_create (gs->data, gs->size);
+    }
   if (DbgInterfacePDB_streams (s->base) > sym->hash1_file)
     DbgInterfacePDB_file_kind (s->base, sym->hash1_file) = "Hash1 stream";
   if (DbgInterfacePDB_streams (s->base) > sym->hash2_file)
@@ -264,7 +271,12 @@ static int sym1_load (sPdbSymbols *s)
   sym = (sPdbStreamSymbolsV1 *) s->memfile->data;
   dptr = & s->memfile->data[sizeof (sPdbStreamSymbolsV1)];
   if (DbgInterfacePDB_streams (s->base) > sym->gsym_file)
-    DbgInterfacePDB_file_kind (s->base, sym->gsym_file) = "Global Symbol stream";
+    {
+      sDbgMemFile *gs = DbgInterfacePDB_file (s->base, sym->gsym_file);
+      DbgInterfacePDB_file_kind (s->base, sym->gsym_file) = "Global Symbol stream";
+      if (gs)
+	s->gsyms = dbg_CV_create (gs->data, gs->size);
+    }
   if (DbgInterfacePDB_streams (s->base) > sym->hash1_file)
     DbgInterfacePDB_file_kind (s->base, sym->hash1_file) = "Hash1 stream";
   if (DbgInterfacePDB_streams (s->base) > sym->hash2_file)
@@ -550,6 +562,9 @@ static int sym_release (sPdbSymbols *s)
   dbg_memfile_release (s->unknown1_stream);
   dbg_memfile_release (s->unknown2_stream);
   dbg_memfile_release (s->unknown3_stream);
+  if (s->gsyms)
+    dbg_CV_release (s->gsyms);
+  s->gsyms = NULL;
   return 0;
 }
 
