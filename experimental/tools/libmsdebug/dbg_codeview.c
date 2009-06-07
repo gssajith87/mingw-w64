@@ -13,12 +13,17 @@ typedef struct sDbgCVCommon {
 
 static sDbgMemFile *cv_default_dump (sDbgCVtag *cv, sDbgMemFile *x);
 static sDbgMemFile *cv_dump_modifier (sDbgCVtag *cv, sDbgMemFile *x);
+static sDbgMemFile *cv_dump_s_pub32 (sDbgCVtag *cv, sDbgMemFile *x);
+static sDbgMemFile *cv_dump_s_constant (sDbgCVtag *cv, sDbgMemFile *x);
+static sDbgMemFile *cv_dump_s_gdata32 (sDbgCVtag *cv, sDbgMemFile *x);
+static sDbgMemFile *cv_dump_s_procref (sDbgCVtag *cv, sDbgMemFile *x);
+
 static int cv_default_update (sDbgCVtag *cv, sDbgMemFile *to);
 static int cv_update_dta (sDbgCVtag *cv, sDbgMemFile *to);
 static int cv_fill (sDbgCVtag *cv, sDbgCVCommon *cm);
 static size_t dbg_CVtag_getsize (unsigned char *dta, size_t max);
 
-sDbgCV *dbg_CV_create (unsigned char *dta, size_t max)
+sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms)
 {
   unsigned char *d = dta;
   size_t max2 = max, count = 0;
@@ -53,7 +58,7 @@ sDbgCV *dbg_CV_create (unsigned char *dta, size_t max)
   for (count = 0; count < ret->count; count++)
     {
       size_t l = dbg_CVtag_getsize (dta, max);
-      ret->tag[count] = dbg_CVtag_create (dta, max);
+      ret->tag[count] = dbg_CVtag_create (dta, max, be_syms);
       dta += l;
       max -= l;
     }
@@ -116,7 +121,7 @@ static size_t dbg_CVtag_getsize (unsigned char *dta, size_t max)
   return ret;
 }
 
-sDbgCVtag *dbg_CVtag_create (unsigned char *dta, size_t max)
+sDbgCVtag *dbg_CVtag_create (unsigned char *dta, size_t max, int be_syms)
 {
   size_t tagSize;
   sDbgCVtag *ret = NULL;
@@ -132,6 +137,7 @@ sDbgCVtag *dbg_CVtag_create (unsigned char *dta, size_t max)
   if (!ret)
     return NULL;
   memset (ret, 0, sizeof (sDbgCVtag));
+  ret->be_syms = be_syms;
   ret->dump = cv_default_dump;
   ret->update = cv_default_update;
   ret->leaf = (uint32_t) cv->leaf;
@@ -194,9 +200,49 @@ static int cv_default_update (sDbgCVtag *cv, sDbgMemFile *to)
 
 static sDbgMemFile *cv_dump_modifier (sDbgCVtag *cv, sDbgMemFile *x)
 {
-  sDbgMemFile *ret = x;
-  if (!ret) ret = dbg_memfile_create_text ("cv_type");
+  sDbgMemFile *ret = x != NULL ? x : dbg_memfile_create_text ("cv_type");
   dbg_memfile_printf (ret, "  LF_MODIFIER: FollowUpType: 0x%x Flags:0x%x\n", cv->ui_dta[0], cv->ui_dta[1]);
+  return ret;
+}
+
+static sDbgMemFile *cv_dump_s_pub32 (sDbgCVtag *cv, sDbgMemFile *x)
+{
+  sDbgMemFile *ret = x != NULL ? x : dbg_memfile_create_text ("cv_sym");
+  dbg_memfile_printf (ret, "  S_PUB32:%s%s%s%s (0x%x), Addr: 0x%04x:0x%08x, \"%s\"\n",
+    ((cv->s_pub32->flags & 1) != 0 ? " code" : ""),
+    ((cv->s_pub32->flags & 2) != 0 ? " function" : ""),
+    ((cv->s_pub32->flags & 4) != 0 ? " managed" : ""),
+    ((cv->s_pub32->flags & 8) != 0 ? " msil" : ""),
+    cv->s_pub32->flags & ~0xf,
+    cv->s_pub32->segment,
+    cv->s_pub32->offset,
+    cv->s_pub32->name);
+  return ret;
+}
+
+static sDbgMemFile *cv_dump_s_constant (sDbgCVtag *cv, sDbgMemFile *x)
+{
+  sDbgMemFile *ret = x != NULL ? x : dbg_memfile_create_text ("cv_sym");
+  dbg_memfile_printf (ret, "  S_CONSTANT: TypeIndex: %u, Value: 0x%x, \"%s\"\n",
+    cv->s_constant->type_index, cv->s_constant->value,
+    cv->s_constant->name);
+  return ret;
+}
+
+static sDbgMemFile *cv_dump_s_procref (sDbgCVtag *cv, sDbgMemFile *x)
+{
+  sDbgMemFile *ret = x != NULL ? x : dbg_memfile_create_text ("cv_sym");
+  dbg_memfile_printf (ret, "  S_PROCREF: sumName: %u, ibSym: %u, imod: %u, \"%s\"\n",
+    cv->s_procref->sumName, cv->s_procref->ibSym, cv->s_procref->imod, cv->s_procref->name);
+  return ret;
+}
+
+static sDbgMemFile *cv_dump_s_gdata32 (sDbgCVtag *cv, sDbgMemFile *x)
+{
+  sDbgMemFile *ret = x != NULL ? x : dbg_memfile_create_text ("cv_sym");
+  dbg_memfile_printf (ret, "  S_GDATA32: TypeIndex: %u, Addr: 0x%04x:0x%08x, \"%s\"\n",
+    cv->s_gdata32->type_index, cv->s_gdata32->segment,cv->s_gdata32->offset,
+    cv->s_gdata32->name);
   return ret;
 }
 
@@ -206,19 +252,32 @@ static int cv_fill (sDbgCVtag *cv, sDbgCVCommon *cm)
   if (!cm)
     return -1;
   cv->length = cm->dSize - 2;
-  switch (cm->leaf)
+  if (cv->be_syms)
     {
-    case LF_MODIFIER:
-      cv->dump = cv_dump_modifier;
-      break;
-    default:
-      return -1;
+      switch (cm->leaf)
+	{
+        case DBG_CV_S_CONSTANT: cv->dump = cv_dump_s_constant; break;
+        case DGB_CV_S_PUB32: cv->dump = cv_dump_s_pub32; break;
+	case DBG_CV_S_GDATA32: cv->dump = cv_dump_s_gdata32; break;
+	case DBG_CV_S_PROCREF: cv->dump = cv_dump_s_procref; break;
+	default:
+	  return -1;
+        }
     }
+  else
+  {
+    switch (cm->leaf)
+      {
+      case LF_MODIFIER: cv->dump = cv_dump_modifier;  break;
+      default:
+	return -1;
+      }
+  }
   cv->dta = (unsigned char *) malloc (cv->length + 1);
   if (!cv->dta)
     return -1;
   cv->update = cv_update_dta;
-  memcpy (cv->dta, &dw, cv->length);
+  memcpy (cv->dta, dw, cv->length);
   return 0;
 }
 

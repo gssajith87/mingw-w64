@@ -4,17 +4,54 @@
 #include <stdint.h>
 #include "dbg_memfile.h"
 
+#define DBG_CV_S_CONSTANT 0x1107
+#define DBG_CV_S_GDATA32 0x110D
+#define DGB_CV_S_PUB32  0x110e
+#define DBG_CV_S_PROCREF 0x1125
+
+typedef struct sDbgCV_S_PROCREF { /* DBG_CV_S_PROCREF */
+  uint32_t sumName;
+  uint32_t ibSym;
+  uint16_t imod;
+  char name[1];
+} sDbgCV_S_PROCREF;
+
+typedef struct sDbgCV_S_CONSTANT { /* DBG_CV_S_CONSTANT */
+  uint32_t type_index;
+  uint16_t value;
+  char name[1];
+} sDbgCV_S_CONSTANT;
+
+typedef struct sDbgCV_S_PUB32 { /* DGB_CV_S_PUB32 */
+  uint32_t flags; /* 1:code, 2:function, 4:Managed, 8:MSIL*/
+  uint32_t offset;
+  uint16_t segment;
+  char name[1];
+} sDbgCV_S_PUB32;
+
+typedef struct sDbgCV_S_GDATA32 { /* DBG_CV_S_GDATA32 */
+  uint32_t type_index;
+  uint32_t offset;
+  uint16_t segment;
+  char name[1];
+} sDbgCV_S_GDATA32;
+
 typedef struct sDbgCVtag {
   uint32_t leaf;
   int (*update)(struct sDbgCVtag *, sDbgMemFile *);
   sDbgMemFile *(*dump)(struct sDbgCVtag *, sDbgMemFile *);
   sDbgMemFile *unknown_leaf;
 
+  int be_syms;
   uint32_t length; /* dta length */
   __extension__ union {
     unsigned char *dta;
     uint16_t *us_dta;
     uint32_t *ui_dta;
+    sDbgCV_S_CONSTANT *s_constant;
+    sDbgCV_S_PUB32 *s_pub32;
+    sDbgCV_S_GDATA32 *s_gdata32;
+    sDbgCV_S_PROCREF *s_procref;
   };
 } sDbgCVtag;
 
@@ -187,7 +224,7 @@ typedef enum eDbgCVLeaf {
   eDbgCVLeaf_max
 } eDbgCVLeaf;
 
-sDbgCVtag *dbg_CVtag_create (unsigned char *dta, size_t max);
+sDbgCVtag *dbg_CVtag_create (unsigned char *dta, size_t max, int be_syms);
 void dbg_CVtag_release (sDbgCVtag *);
 sDbgMemFile *dbg_CVtag_dump (sDbgCVtag *cv,sDbgMemFile *x);
 int dbg_CVtag_update (sDbgCVtag *cv, sDbgMemFile *f);
@@ -197,7 +234,7 @@ typedef struct sDbgCV {
   sDbgCVtag **tag;
 } sDbgCV;
 
-sDbgCV *dbg_CV_create (unsigned char *dta, size_t max);
+sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms);
 void dbg_CV_release (sDbgCV *);
 sDbgMemFile *dbg_CV_dump (sDbgCV *cv, sDbgMemFile *x);
 int dbg_CV_update (sDbgCV *cv, sDbgMemFile *f);
