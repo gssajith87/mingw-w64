@@ -1,7 +1,7 @@
 #ifndef _DBG_CODEVIEW_HXX
 #define _DBG_CODEVIEW_HXX
 
-#include <stdint.h>
+#include "stdint.h"
 #include "dbg_memfile.h"
 
 #define DBG_CV_S_CONSTANT 0x1107
@@ -21,13 +21,6 @@ typedef struct sDbgCV_S_CONSTANT { /* DBG_CV_S_CONSTANT */
   uint16_t value;
   char name[1];
 } sDbgCV_S_CONSTANT;
-
-typedef struct sDbgCV_S_PUB32 { /* DGB_CV_S_PUB32 */
-  uint32_t flags; /* 1:code, 2:function, 4:Managed, 8:MSIL*/
-  uint32_t offset;
-  uint16_t segment;
-  char name[1];
-} sDbgCV_S_PUB32;
 
 typedef struct sDbgCV_S_GDATA32 { /* DBG_CV_S_GDATA32 */
   uint32_t type_index;
@@ -49,7 +42,6 @@ typedef struct sDbgCVtag {
     uint16_t *us_dta;
     uint32_t *ui_dta;
     sDbgCV_S_CONSTANT *s_constant;
-    sDbgCV_S_PUB32 *s_pub32;
     sDbgCV_S_GDATA32 *s_gdata32;
     sDbgCV_S_PROCREF *s_procref;
   };

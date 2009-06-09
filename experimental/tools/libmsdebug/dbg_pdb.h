@@ -1,7 +1,7 @@
 #ifndef _DBG_PDB_HXX
 #define _DBG_PDB_HXX
 
-#include <stdint.h>
+#include "stdint.h"
 
 #pragma pack(push,1)
 

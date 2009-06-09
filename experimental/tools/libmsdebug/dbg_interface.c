@@ -88,7 +88,6 @@ sDbgMemFile *
 unknown_dump (sDbgInterface *pDCtx)
 {
   sDbgMemFile *ret;
-  size_t size, i, k;
   if (!pDCtx || pDCtx->memfile == NULL)
     return NULL;
   fprintf (stderr," File type ,%s':\n", pDCtx->file_type_name);
@@ -119,7 +118,6 @@ dbg_open_file (const char *filename)
   sDbgInterface *ret;
   const sDbgInterface *pInter = NULL;
   sDbgMemFile *pDFile = dbg_memfile_open (filename);
-  size_t interface_len;
   eInterfaceType t;
 
   if (!pDFile)

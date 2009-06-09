@@ -1,7 +1,7 @@
 #ifndef _DBG_PDB_SYMBOLS_HXX
 #define _DBG_PDB_SYMBOLS_HXX
 
-#include <stdint.h>
+#include "stdint.h"
 #include "dbg_memfile.h"
 #include "dbg_interface_pdb.h"
 #include "dbg_codeview.h"
