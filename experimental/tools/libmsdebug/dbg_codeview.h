@@ -18,6 +18,8 @@
 #define DBG_CV_S_PROCREF 0x1125
 #define DBG_CV_S_LPROCREF 0x1127
 #define DBG_CV_S_TOKENREF 0x1129
+#define DBG_CV_S_GMANPROC 0x112a
+#define DBG_CV_S_LMANPROC 0x112b
 
 typedef struct sDbgCVtag {
   uint32_t leaf;

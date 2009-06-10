@@ -37,6 +37,8 @@ static const char *sz_gmandata[] = { "UIndex", "Flag", "Unk3", "name", "pad" };
 static const char *sz_manslot[] = { "TypeIdx", "Unk1", "Unk2", "Unk3", "name", "pad" };
 static const char *sz_gdata32[] = { "TypeIdx", "Addr", "name", "pad" };
 static const char *sz_tokenref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
+static const char *sz_gmanproc[] = { "pParent", "pEnd", "pNext", "len", "DbgStart", "DbgEnd", "token", "Addr",
+  "CV_PROCFLAGS", "retReg", "name", "pad" };
 static const char *sz_end[] = { "pad" };
 static const char *sz_unknown[] = { "unknown" };
 
@@ -55,6 +57,8 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_PROCREF, "S_PROCREF", "uuwsp", sz_procref },
   { DBG_CV_S_LPROCREF, "S_LPROGREF", "uuwsp", sz_procref },
   { DBG_CV_S_TOKENREF, "S_TOKENREF", "uuwsp", sz_tokenref },
+  { DBG_CV_S_GMANPROC, "S_GMANPROC", "uuuuuuUAbwsp", sz_gmanproc },
+  { DBG_CV_S_LMANPROC, "S_LMANPROC", "uuuuuuUAbwsp", sz_gmanproc },
   { 0, "SYM_UNKNOWN", "x", sz_unknown }
 };
 
