@@ -29,16 +29,21 @@ typedef struct sDbtTags {
 
 static const char *sz_compiler[] = { "iLanguage", "Flag1", "Flag1Res", "Machine", "FE_Version","Version","Build-Version", "pad" };
 static const char *sz_constant[] = { "TypeIdx", "Value", "name", "pad" };
+static const char *sz_objname[] = { "Signature", "name", "pad" };
 static const char *sz_udt[] = { "TypeIdx", "name", "pad" };
 static const char *sz_procref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_pub32[] = { "Flags","Addr","name","pad" };
 static const char *sz_gmandata[] = { "UIndex", "Flag", "Unk3", "name", "pad" };
+static const char *sz_manslot[] = { "TypeIdx", "Unk1", "Unk2", "Unk3", "name", "pad" };
 static const char *sz_gdata32[] = { "TypeIdx", "Addr", "name", "pad" };
 static const char *sz_tokenref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
+static const char *sz_end[] = { "pad" };
 static const char *sz_unknown[] = { "unknown" };
 
 static sDbgTags stSYMs[] = {
   { DBG_CV_S_COMPILE, "S_COMPILE", "bbwwVVvp", sz_compiler },
+  { DBG_CV_S_END, "S_END", "p", sz_end },
+  { DBG_CV_S_OBJNAME, "S_OBJNAME", "Usp", sz_objname },
   { DBG_CV_S_CONSTANT, "S_CONSTANT", "uwsp", sz_constant },
   { DBG_CV_S_UDT, "S_UDT", "usp", sz_udt },
   { DBG_CV_S_LDATA32, "S_LDATA32", "uAsp", sz_gdata32 },
@@ -46,6 +51,7 @@ static sDbgTags stSYMs[] = {
   { DGB_CV_S_PUB32, "S_PUB32", "uAsp", sz_pub32 },
   { DBG_CV_S_LMANDATA, "S_LMANDATA", "wUusp", sz_gmandata },
   { DBG_CV_S_GMANDATA, "S_GMANDATA", "wUusp", sz_gmandata },
+  { DBG_CV_S_MANSLOT, "S_MANSLOT", "uUuusp", sz_manslot },
   { DBG_CV_S_PROCREF, "S_PROCREF", "uuwsp", sz_procref },
   { DBG_CV_S_LPROCREF, "S_LPROGREF", "uuwsp", sz_procref },
   { DBG_CV_S_TOKENREF, "S_TOKENREF", "uuwsp", sz_tokenref },
@@ -208,7 +214,7 @@ sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms)
       max2 -= l;
       if (!l)
       {
-	fprintf (stderr, "*** CV create: %u %u\n", (uint32_t) max2, (uint32_t) l);
+	fprintf (stderr, "*** CV create: %u %u (0x%x, 0x%x)\n", (uint32_t) max2, (uint32_t) l, *((uint32_t *) dta), *((uint32_t *) &dta[4]));
 	exit(0);
 	return NULL;
       }

@@ -386,6 +386,8 @@ static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t)
     }
   else
     dbg_memfile_printf (ret, "Unknown sym_file version:%u\n", sf->version);
+  if (sf->sym_tags)
+    dbg_CV_dump (sf->sym_tags, ret);
   return ret;
 }
 
@@ -406,7 +408,15 @@ static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext, sPdbSymbo
       
       ret->version = 2;
       if (DbgInterfacePDB_streams (s->base) > psf->file)
-        DbgInterfacePDB_file_kind (s->base, psf->file) = "Symbol/Lineno stream";
+        {
+          sDbgMemFile *h = DbgInterfacePDB_file(s->base, psf->file);
+          DbgInterfacePDB_file_kind (s->base, psf->file) = "Symbol/Lineno stream";
+          if (h != NULL && psf->symbol_size != 0)
+            {
+              fprintf (stderr, "*** Sym/Lineno Version: %u\n", *((uint32_t *) h->data));
+              ret->sym_tags = dbg_CV_create (&h->data[4], (size_t) (psf->symbol_size) - 4, 1);
+            }
+        }
     }
   else
     {
@@ -528,7 +538,11 @@ static int sym_release (sPdbSymbols *s)
       for (i = 0;i < s->sym_files_count; i++)
 	{
 	  if (s->sym_files[i] != NULL)
-	    free (s->sym_files[i]);
+	    {
+	      if (s->sym_files[i]->sym_tags)
+	        dbg_CV_release (s->sym_files[i]->sym_tags);
+	      free (s->sym_files[i]);
+	    }
 	  s->sym_files[i] = NULL;
 	}
       free (s->sym_files);

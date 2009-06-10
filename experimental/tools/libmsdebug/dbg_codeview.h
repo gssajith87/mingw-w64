@@ -5,7 +5,8 @@
 #include "dbg_memfile.h"
 
 #define DBG_CV_S_COMPILE  0x1
-
+#define DBG_CV_S_END 0x6
+#define DBG_CV_S_OBJNAME  0x1101
 #define DBG_CV_S_CONSTANT 0x1107
 #define DBG_CV_S_UDT 0x1108
 #define DBG_CV_S_LDATA32 0x110c
@@ -13,6 +14,7 @@
 #define DGB_CV_S_PUB32  0x110e
 #define DBG_CV_S_LMANDATA 0x111C
 #define DBG_CV_S_GMANDATA 0x111D
+#define DBG_CV_S_MANSLOT 0x1120
 #define DBG_CV_S_PROCREF 0x1125
 #define DBG_CV_S_LPROCREF 0x1127
 #define DBG_CV_S_TOKENREF 0x1129

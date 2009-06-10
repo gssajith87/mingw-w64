@@ -168,6 +168,7 @@ typedef struct sPdbSymbolFile
   };
   char *name[2];
   sDbgMemFile *(*dump)(struct sPdbSymbolFile *,sDbgMemFile *);
+  sDbgCV *sym_tags;
 } sPdbSymbolFile;
 
 typedef struct sPdbSymbolSrcModules {
