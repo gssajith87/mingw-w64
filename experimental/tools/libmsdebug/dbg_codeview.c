@@ -14,7 +14,6 @@ typedef struct sDbgCVCommon {
 
 static sDbgMemFile *cv_default_dump (sDbgCVtag *cv, sDbgMemFile *x);
 static sDbgMemFile *cv_dump_modifier (sDbgCVtag *cv, sDbgMemFile *x);
-static sDbgMemFile *cv_dump_s_constant (sDbgCVtag *cv, sDbgMemFile *x);
 
 static int cv_default_update (sDbgCVtag *cv, sDbgMemFile *to);
 static int cv_update_dta (sDbgCVtag *cv, sDbgMemFile *to);
@@ -28,15 +27,28 @@ typedef struct sDbtTags {
   const char **names;
 } sDbgTags;
 
+static const char *sz_compiler[] = { "iLanguage", "Flag1", "Flag1Res", "Machine", "FE_Version","Version","Build-Version", "pad" };
+static const char *sz_constant[] = { "TypeIdx", "Value", "name", "pad" };
+static const char *sz_udt[] = { "TypeIdx", "name", "pad" };
 static const char *sz_procref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_pub32[] = { "Flags","Addr","name","pad" };
+static const char *sz_gmandata[] = { "UIndex", "Flag", "Unk3", "name", "pad" };
 static const char *sz_gdata32[] = { "TypeIdx", "Addr", "name", "pad" };
+static const char *sz_tokenref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_unknown[] = { "unknown" };
 
 static sDbgTags stSYMs[] = {
-  { DBG_CV_S_PROCREF, "S_PROCREF", "uuwsp", sz_procref },
-  { DGB_CV_S_PUB32, "S_PUB32", "uAsp", sz_pub32 },
+  { DBG_CV_S_COMPILE, "S_COMPILE", "bbwwVVvp", sz_compiler },
+  { DBG_CV_S_CONSTANT, "S_CONSTANT", "uwsp", sz_constant },
+  { DBG_CV_S_UDT, "S_UDT", "usp", sz_udt },
+  { DBG_CV_S_LDATA32, "S_LDATA32", "uAsp", sz_gdata32 },
   { DBG_CV_S_GDATA32, "S_GDATA32", "uAsp", sz_gdata32 },
+  { DGB_CV_S_PUB32, "S_PUB32", "uAsp", sz_pub32 },
+  { DBG_CV_S_LMANDATA, "S_LMANDATA", "wUusp", sz_gmandata },
+  { DBG_CV_S_GMANDATA, "S_GMANDATA", "wUusp", sz_gmandata },
+  { DBG_CV_S_PROCREF, "S_PROCREF", "uuwsp", sz_procref },
+  { DBG_CV_S_LPROCREF, "S_LPROGREF", "uuwsp", sz_procref },
+  { DBG_CV_S_TOKENREF, "S_TOKENREF", "uuwsp", sz_tokenref },
   { 0, "SYM_UNKNOWN", "x", sz_unknown }
 };
 
@@ -74,14 +86,32 @@ static sDbgMemFile *dump_tag_element_sym (uint32_t tag, unsigned char *dta, size
 	  l = get_tag_element_size (dta, doff,len,*fmt);
 	  switch (*fmt)
 	  {
+	  case 'b':
+	    dbg_memfile_printf (ret, " %s:%u", h->names[el], (uint32_t) dta[doff]);
+	    break;
+	  case 'B':
+	    dbg_memfile_printf (ret, " %s:0x%02u", h->names[el], (uint32_t) dta[doff]);
+	    break;
 	  case 'w':
 	    dbg_memfile_printf (ret, " %s:%u", h->names[el], *((uint16_t *) &dta[doff]));
+	    break;
+	  case 'W':
+	    dbg_memfile_printf (ret, " %s:0x%04x", h->names[el], *((uint16_t *) &dta[doff]));
 	    break;
 	  case 'u':
 	    dbg_memfile_printf (ret, " %s:%u", h->names[el], *((uint32_t *) &dta[doff]));
 	    break;
+	  case 'U':
+	    dbg_memfile_printf (ret, " %s:0x%08x", h->names[el], *((uint32_t *) &dta[doff]));
+	    break;
 	  case 's':
 	    dbg_memfile_printf (ret, " %s:\"%s\"", h->names[el], (char *) &dta[doff]);
+	    break;
+	  case 'v':
+	    dbg_memfile_printf (ret, " %s:%u.%u", h->names[el], *((uint16_t *) &dta[doff]) & 0xff, (*((uint16_t *) &dta[doff]) >> 8) && 0xff);
+	    break;
+	  case 'V':
+	    dbg_memfile_printf (ret, " %s:%u.%u", h->names[el], *((uint32_t *) &dta[doff]), *((uint32_t *) &dta[doff+4]));
 	    break;
 	  case 'A':
 	    dbg_memfile_printf (ret, " %s:0x%x:0x%x", h->names[el], *((uint16_t *) &dta[doff + 4]), *((uint32_t *) &dta[doff]));
@@ -144,8 +174,11 @@ static size_t get_tag_element_size (unsigned char *dta, size_t off, size_t size,
 {
   switch (fmt)
   {
-  case 'u': return sizeof (uint32_t);
-  case 'w': return sizeof (uint16_t);
+  case 'u': case 'U': return sizeof (uint32_t);
+  case 'w': case 'W': return sizeof (uint16_t);
+  case 'b': case 'B': return sizeof (unsigned char);
+  case 'V': return sizeof (uint16_t) + sizeof (uint16_t);
+  case 'v': return sizeof (uint16_t);
   case 's': return strlen ((char*) &dta[off]) + 1;
   case 'p': return size - off;
   case 'A': return sizeof (uint32_t) + sizeof (uint16_t);
@@ -355,15 +388,6 @@ static sDbgMemFile *cv_dump_modifier (sDbgCVtag *cv, sDbgMemFile *x)
   return ret;
 }
 
-static sDbgMemFile *cv_dump_s_constant (sDbgCVtag *cv, sDbgMemFile *x)
-{
-  sDbgMemFile *ret = x != NULL ? x : dbg_memfile_create_text ("cv_sym");
-  dbg_memfile_printf (ret, "  S_CONSTANT: TypeIndex: %u, Value: 0x%x, \"%s\"\n",
-    cv->s_constant->type_index, cv->s_constant->value,
-    cv->s_constant->name);
-  return ret;
-}
-
 static int cv_fill (sDbgCVtag *cv, sDbgCVCommon *cm)
 {
   uint32_t *dw = (uint32_t *) cm->data;
@@ -372,15 +396,9 @@ static int cv_fill (sDbgCVtag *cv, sDbgCVCommon *cm)
   cv->length = cm->dSize - 2;
   if (cv->be_syms)
     {
-      switch (cm->leaf)
-	{
-        case DBG_CV_S_CONSTANT: cv->dump = cv_dump_s_constant; break;
-        case DGB_CV_S_PUB32: break;
-	case DBG_CV_S_GDATA32:  break;
-	case DBG_CV_S_PROCREF: break;
-	default:
-	  return -1;
-        }
+      sDbgTags * h = find_tag_sym (cm->leaf);
+      if (!h || h->tag == 0)
+        return -1;
     }
   else
   {

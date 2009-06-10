@@ -4,30 +4,18 @@
 #include "stdint.h"
 #include "dbg_memfile.h"
 
+#define DBG_CV_S_COMPILE  0x1
+
 #define DBG_CV_S_CONSTANT 0x1107
-#define DBG_CV_S_GDATA32 0x110D
+#define DBG_CV_S_UDT 0x1108
+#define DBG_CV_S_LDATA32 0x110c
+#define DBG_CV_S_GDATA32 0x110d
 #define DGB_CV_S_PUB32  0x110e
+#define DBG_CV_S_LMANDATA 0x111C
+#define DBG_CV_S_GMANDATA 0x111D
 #define DBG_CV_S_PROCREF 0x1125
-
-typedef struct sDbgCV_S_PROCREF { /* DBG_CV_S_PROCREF */
-  uint32_t sumName;
-  uint32_t ibSym;
-  uint16_t imod;
-  char name[1];
-} sDbgCV_S_PROCREF;
-
-typedef struct sDbgCV_S_CONSTANT { /* DBG_CV_S_CONSTANT */
-  uint32_t type_index;
-  uint16_t value;
-  char name[1];
-} sDbgCV_S_CONSTANT;
-
-typedef struct sDbgCV_S_GDATA32 { /* DBG_CV_S_GDATA32 */
-  uint32_t type_index;
-  uint32_t offset;
-  uint16_t segment;
-  char name[1];
-} sDbgCV_S_GDATA32;
+#define DBG_CV_S_LPROCREF 0x1127
+#define DBG_CV_S_TOKENREF 0x1129
 
 typedef struct sDbgCVtag {
   uint32_t leaf;
@@ -41,9 +29,6 @@ typedef struct sDbgCVtag {
     unsigned char *dta;
     uint16_t *us_dta;
     uint32_t *ui_dta;
-    sDbgCV_S_CONSTANT *s_constant;
-    sDbgCV_S_GDATA32 *s_gdata32;
-    sDbgCV_S_PROCREF *s_procref;
   };
 } sDbgCVtag;
 
