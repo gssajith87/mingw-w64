@@ -7,6 +7,7 @@
 #define DBG_CV_S_COMPILE  0x1
 #define DBG_CV_S_END 0x6
 #define DBG_CV_S_OBJNAME  0x1101
+#define DBG_CV_S_THUNK32  0x1102
 #define DBG_CV_S_CONSTANT 0x1107
 #define DBG_CV_S_UDT 0x1108
 #define DBG_CV_S_LDATA32 0x110c
@@ -20,6 +21,8 @@
 #define DBG_CV_S_TOKENREF 0x1129
 #define DBG_CV_S_GMANPROC 0x112a
 #define DBG_CV_S_LMANPROC 0x112b
+#define DBG_CV_S_COMPILER 0x113c
+#define DBG_CV_S_BUILDCMD 0x113d
 
 typedef struct sDbgCVtag {
   uint32_t leaf;

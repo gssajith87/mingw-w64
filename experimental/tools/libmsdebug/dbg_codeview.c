@@ -27,9 +27,10 @@ typedef struct sDbtTags {
   const char **names;
 } sDbgTags;
 
-static const char *sz_compiler[] = { "iLanguage", "Flag1", "Flag1Res", "Machine", "FE_Version","Version","Build-Version", "pad" };
+static const char *sz_compile[] = { "iLanguage", "Flag1", "Flag1Res", "Machine", "FE_Version","Version","Build-Version", "pad" };
 static const char *sz_constant[] = { "TypeIdx", "Value", "name", "pad" };
 static const char *sz_objname[] = { "Signature", "name", "pad" };
+static const char *sz_thunk32[] = { "pParent","pEnd","pNext", "Addr", "len", "ord", "name", "pad" };
 static const char *sz_udt[] = { "TypeIdx", "name", "pad" };
 static const char *sz_procref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_pub32[] = { "Flags","Addr","name","pad" };
@@ -39,13 +40,16 @@ static const char *sz_gdata32[] = { "TypeIdx", "Addr", "name", "pad" };
 static const char *sz_tokenref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_gmanproc[] = { "pParent", "pEnd", "pNext", "len", "DbgStart", "DbgEnd", "token", "Addr",
   "CV_PROCFLAGS", "retReg", "name", "pad" };
+static const char *sz_compiler[] = { "Unk1","Unk2","Unk3","Str1","Unk4","name", "pad" };
+static const char *sz_buildcmd[] = { "cmds" };
 static const char *sz_end[] = { "pad" };
 static const char *sz_unknown[] = { "unknown" };
 
 static sDbgTags stSYMs[] = {
-  { DBG_CV_S_COMPILE, "S_COMPILE", "bbwwVVvp", sz_compiler },
+  { DBG_CV_S_COMPILE, "S_COMPILE", "bbwwVVvp", sz_compile },
   { DBG_CV_S_END, "S_END", "p", sz_end },
   { DBG_CV_S_OBJNAME, "S_OBJNAME", "Usp", sz_objname },
+  { DBG_CV_S_THUNK32, "S_THUNK32", "uuuAwbsp", sz_thunk32 },
   { DBG_CV_S_CONSTANT, "S_CONSTANT", "uwsp", sz_constant },
   { DBG_CV_S_UDT, "S_UDT", "usp", sz_udt },
   { DBG_CV_S_LDATA32, "S_LDATA32", "uAsp", sz_gdata32 },
@@ -59,6 +63,8 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_TOKENREF, "S_TOKENREF", "uuwsp", sz_tokenref },
   { DBG_CV_S_GMANPROC, "S_GMANPROC", "uuuuuuUAbwsp", sz_gmanproc },
   { DBG_CV_S_LMANPROC, "S_LMANPROC", "uuuuuuUAbwsp", sz_gmanproc },
+  { DBG_CV_S_COMPILER, "S_COMPILER", "UWuUuUsp", sz_compiler},
+  { DBG_CV_S_BUILDCMD, "S_BUILDCMD", "S", sz_buildcmd },
   { 0, "SYM_UNKNOWN", "x", sz_unknown }
 };
 
@@ -117,6 +123,23 @@ static sDbgMemFile *dump_tag_element_sym (uint32_t tag, unsigned char *dta, size
 	  case 's':
 	    dbg_memfile_printf (ret, " %s:\"%s\"", h->names[el], (char *) &dta[doff]);
 	    break;
+	  case 'S':
+	    {
+	      int befirst = 1;
+	      dbg_memfile_printf (ret, " %s:{", h->names[el]);
+	      while (l != 0)
+	      {
+		size_t ll = strlen ((char*) &dta[doff]) + 1;
+		if (l < ll)
+		  break;
+		dbg_memfile_printf (ret, "%s\"%s\"", (befirst ? "" : ","),(char *) &dta[doff]);
+		doff += ll;
+		l-= ll;
+		befirst = 0;
+	      }
+	      dbg_memfile_printf (ret,"}\n");
+	    }
+	    break;
 	  case 'v':
 	    dbg_memfile_printf (ret, " %s:%u.%u", h->names[el], *((uint16_t *) &dta[doff]) & 0xff, (*((uint16_t *) &dta[doff]) >> 8) && 0xff);
 	    break;
@@ -127,7 +150,7 @@ static sDbgMemFile *dump_tag_element_sym (uint32_t tag, unsigned char *dta, size
 	    dbg_memfile_printf (ret, " %s:0x%x:0x%x", h->names[el], *((uint16_t *) &dta[doff + 4]), *((uint32_t *) &dta[doff]));
 	    break;
 	  case 'p':
-	    if (!l) break;
+	    if (!l || (((doff+l)&3) == 0 && l < 4)) break;
 	    dbg_memfile_printf (ret, " pad:");
 	    {
 	      size_t ll = 0;
@@ -190,6 +213,18 @@ static size_t get_tag_element_size (unsigned char *dta, size_t off, size_t size,
   case 'V': return sizeof (uint16_t) + sizeof (uint16_t);
   case 'v': return sizeof (uint16_t);
   case 's': return strlen ((char*) &dta[off]) + 1;
+  case 'S':
+    {
+      size_t l = 0;
+      while (l < (size - off))
+      {
+	size_t ll = strlen ((char*) &dta[off+l]) + 1;
+	if ((l+ll) > (size - off))
+	  break;
+	l += ll;
+      }
+      return l;
+    }
   case 'p': return size - off;
   case 'A': return sizeof (uint32_t) + sizeof (uint16_t);
   default:
