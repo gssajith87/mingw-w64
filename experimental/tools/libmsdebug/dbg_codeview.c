@@ -37,6 +37,7 @@ static const char *sz_udt[] = { "TypeIdx", "name", "pad" };
 static const char *sz_procref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_pub32[] = { "Flags","Addr","name","pad" };
 static const char *sz_proc32[] = { "pParent","pEnd","pNext","len","DbgStart","DbgEnd","TypeIdx","Addr","CV_PROCFLAGS","name","pad" };
+static const char *sz_compile2[] = { "Unk1", "Unk2", "Unk3", "Unk4", "WUnk1", "name", "pad" };
 static const char *sz_gmandata[] = { "UIndex", "Flag", "Unk3", "name", "pad" };
 static const char *sz_manslot[] = { "TypeIdx", "Unk1", "Unk2", "Unk3", "name", "pad" };
 static const char *sz_gdata32[] = { "TypeIdx", "Addr", "name", "pad" };
@@ -75,6 +76,7 @@ static sDbgTags stSYMs[] = {
   { DGB_CV_S_PUB32, "S_PUB32", "uAsp", sz_pub32 },
   { DBG_CV_S_LPROC32, "S_LPROC32","uuuuuuuAbsp", sz_proc32 },
   { DBG_CV_S_GPROC32, "S_GPROC32","uuuuuuuAbsp", sz_proc32 },
+  { DBG_CV_S_COMPILE2, "S_COMPILE2", "uuuuws", sz_compile2 },
   { DBG_CV_S_LMANDATA, "S_LMANDATA", "wUusp", sz_gmandata },
   { DBG_CV_S_GMANDATA, "S_GMANDATA", "wUusp", sz_gmandata },
   { DBG_CV_S_MANSLOT, "S_MANSLOT", "uUuusp", sz_manslot },
