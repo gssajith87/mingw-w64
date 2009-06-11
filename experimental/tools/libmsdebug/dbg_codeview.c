@@ -28,9 +28,11 @@ typedef struct sDbtTags {
 } sDbgTags;
 
 static const char *sz_compile[] = { "iLanguage", "Flag1", "Flag1Res", "Machine", "FE_Version","Version","Build-Version", "pad" };
+static const char *sz_frameproc[] = { "cbFrame", "cbPad", "offPad", "cbSaveRegs","ExHandlerAddr","FRAMEPROCFLAGS","pad" };
 static const char *sz_constant[] = { "TypeIdx", "Value", "name", "pad" };
 static const char *sz_objname[] = { "Signature", "name", "pad" };
 static const char *sz_thunk32[] = { "pParent","pEnd","pNext", "Addr", "len", "ord", "name", "pad" };
+static const char *sz_block32[] = { "pParent", "pEnd","len","Addr","name", "pad" };
 static const char *sz_udt[] = { "TypeIdx", "name", "pad" };
 static const char *sz_procref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_pub32[] = { "Flags","Addr","name","pad" };
@@ -48,8 +50,10 @@ static const char *sz_unknown[] = { "unknown" };
 static sDbgTags stSYMs[] = {
   { DBG_CV_S_COMPILE, "S_COMPILE", "bbwwVVvp", sz_compile },
   { DBG_CV_S_END, "S_END", "p", sz_end },
+  { DBG_CV_S_FRAMEPROC, "S_FRAMEPROC","uuuuAUp", sz_frameproc },
   { DBG_CV_S_OBJNAME, "S_OBJNAME", "Usp", sz_objname },
   { DBG_CV_S_THUNK32, "S_THUNK32", "uuuAwbsp", sz_thunk32 },
+  { DBG_CV_S_BLOCK32, "S_BLOCK32", "uuuAsp", sz_block32 },
   { DBG_CV_S_CONSTANT, "S_CONSTANT", "uwsp", sz_constant },
   { DBG_CV_S_UDT, "S_UDT", "usp", sz_udt },
   { DBG_CV_S_LDATA32, "S_LDATA32", "uAsp", sz_gdata32 },

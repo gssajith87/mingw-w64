@@ -6,8 +6,10 @@
 
 #define DBG_CV_S_COMPILE  0x1
 #define DBG_CV_S_END 0x6
+#define DBG_CV_S_FRAMEPROC  0x1012
 #define DBG_CV_S_OBJNAME  0x1101
 #define DBG_CV_S_THUNK32  0x1102
+#define DBG_CV_S_BLOCK32  0x1103
 #define DBG_CV_S_CONSTANT 0x1107
 #define DBG_CV_S_UDT 0x1108
 #define DBG_CV_S_LDATA32 0x110c
