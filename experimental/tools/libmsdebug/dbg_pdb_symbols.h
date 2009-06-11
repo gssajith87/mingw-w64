@@ -216,8 +216,7 @@ typedef struct sPdbSymbols
   sPdbSymbolSrcModules *srcmodules;
   sDbgMemFile *pdbimport_stream;
   sDbgMemFile *unknown1_stream;
-  sDbgMemFile *unknown2_stream;
-  sDbgMemFile *unknown3_stream;
+  sDbgMemFile *unknown2_stream; /* 2 + 3 */
   sDbgCV *gsyms;
 } sPdbSymbols;
 

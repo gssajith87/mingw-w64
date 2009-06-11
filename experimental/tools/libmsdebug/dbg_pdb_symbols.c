@@ -145,8 +145,6 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
     dbg_memfile_dump_in (ret, s->unknown1_stream);
   if (s->unknown2_stream)
     dbg_memfile_dump_in (ret, s->unknown2_stream);
-  if (s->unknown3_stream)
-    dbg_memfile_dump_in (ret, s->unknown3_stream);
   if (s->gsyms)
     ret = dbg_CV_dump (s->gsyms, ret);
   return ret;
@@ -206,7 +204,6 @@ static int sym2_load (sPdbSymbols *s)
       cnt = sym_sectioninfo_count (dptr, sym->sectioninfo_size);
       if (cnt != 0xffffffff)
         {
-          fprintf (stderr, "Found %u section info element(s)\n", (uint32_t) cnt);
           s->sym_section_info = sym_sectioninfo_read (dptr, sym->sectioninfo_size, cnt);
           if (s->sym_section_info)
             {
@@ -246,17 +243,11 @@ static int sym2_load (sPdbSymbols *s)
       dbg_memfile_write (s->unknown1_stream, 0, dptr, sym->unknown1_size);
       dptr += sym->unknown1_size;
     }
-  if (sym->unknown2_size != 0)
+  if (sym->unknown2_size != 0 || sym->unknown3_size != 0)
     {
-      s->unknown2_stream = dbg_memfile_create ("Symbol unknown2 stream", sym->unknown2_size);
-      dbg_memfile_write (s->unknown2_stream, 0, dptr, sym->unknown2_size);
+      s->unknown2_stream = dbg_memfile_create ("Symbol unknown2/3 stream", sym->unknown2_size + sym->unknown3_size);
+      dbg_memfile_write (s->unknown2_stream, 0, dptr, sym->unknown2_size + sym->unknown3_size);
       dptr += sym->unknown2_size;
-    }
-  if (sym->unknown3_size != 0)
-    {
-      s->unknown3_stream = dbg_memfile_create ("Symbol unknown3 stream", sym->unknown3_size);
-      dbg_memfile_write (s->unknown3_stream, 0, dptr, sym->unknown3_size);
-      dptr += sym->unknown3_size;
     }
   return 0;
 }
@@ -308,7 +299,6 @@ static int sym1_load (sPdbSymbols *s)
       cnt = sym_sectioninfo_count (dptr, sym->sectioninfo_size);
       if (cnt != 0xffffffff)
         {
-          fprintf (stderr, "Found %u section info element(s)\n", (uint32_t) cnt);
           s->sym_section_info = sym_sectioninfo_read (dptr, sym->sectioninfo_size, cnt);
           if (s->sym_section_info)
             {
@@ -411,9 +401,11 @@ static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext, sPdbSymbo
         {
           sDbgMemFile *h = DbgInterfacePDB_file(s->base, psf->file);
           DbgInterfacePDB_file_kind (s->base, psf->file) = "Symbol/Lineno stream";
-          if (h != NULL && psf->symbol_size != 0)
+          if (h != NULL && psf->symbol_size > 4)
             {
-              fprintf (stderr, "*** Sym/Lineno Version: %u\n", *((uint32_t *) h->data));
+	      if (*((uint32_t *) h->data) != 4)
+		fprintf (stderr, "*** Sym/Lineno Version: %u\n", *((uint32_t *) h->data));
+	      else fprintf (stderr,".");
               ret->sym_tags = dbg_CV_create (&h->data[4], (size_t) (psf->symbol_size) - 4, 1);
             }
         }
@@ -575,7 +567,6 @@ static int sym_release (sPdbSymbols *s)
   dbg_memfile_release (s->pdbimport_stream);
   dbg_memfile_release (s->unknown1_stream);
   dbg_memfile_release (s->unknown2_stream);
-  dbg_memfile_release (s->unknown3_stream);
   if (s->gsyms)
     dbg_CV_release (s->gsyms);
   s->gsyms = NULL;

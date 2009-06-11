@@ -279,15 +279,17 @@ sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms)
       max2 -= l;
       if (!l)
       {
-	fprintf (stderr, "*** CV create: %u %u (0x%x, 0x%x)\n", (uint32_t) max2, (uint32_t) l, *((uint32_t *) dta), *((uint32_t *) &dta[4]));
+	fprintf (stderr, "*** FATAL CV create: %u %u (0x%x, 0x%x)\n", (uint32_t) max2, (uint32_t) l, *((uint32_t *) dta), *((uint32_t *) &dta[4]));
 	exit(0);
 	return NULL;
       }
       count++;
     }
-  fprintf (stderr, "*** types: %u, remains:%u\n", (uint32_t) count, (uint32_t) max2);
   if (max2 != 0)
-    return NULL;
+    {
+      fprintf (stderr, "*** types: %u, remains:%u\n", (uint32_t) count, (uint32_t) max2);
+      return NULL;
+    }
   ret = (sDbgCV *) malloc (sizeof (sDbgCV));
   if (!ret)
     return NULL;
