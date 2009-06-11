@@ -36,6 +36,7 @@ static const char *sz_block32[] = { "pParent", "pEnd","len","Addr","name", "pad"
 static const char *sz_udt[] = { "TypeIdx", "name", "pad" };
 static const char *sz_procref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_pub32[] = { "Flags","Addr","name","pad" };
+static const char *sz_proc32[] = { "pParent","pEnd","pNext","len","DbgStart","DbgEnd","TypeIdx","Addr","CV_PROCFLAGS","name","pad" };
 static const char *sz_gmandata[] = { "UIndex", "Flag", "Unk3", "name", "pad" };
 static const char *sz_manslot[] = { "TypeIdx", "Unk1", "Unk2", "Unk3", "name", "pad" };
 static const char *sz_gdata32[] = { "TypeIdx", "Addr", "name", "pad" };
@@ -45,7 +46,16 @@ static const char *sz_gmanproc[] = { "pParent", "pEnd", "pNext", "len", "DbgStar
 static const char *sz_compiler[] = { "Unk1","Unk2","Unk3","Str1","Unk4","name", "pad" };
 static const char *sz_buildcmd[] = { "cmds" };
 static const char *sz_end[] = { "pad" };
+static const char *sz_with32[] = { "pParent", "pEnd", "len", "Addr", "expr", "pad" };
+static const char *sz_label32[] = { "Addr", "CV_PROCFLAGS", "name", "pad" };
+static const char *sz_section32[] = { "Id", "Unk1","StartOff", "EndOff","Attribute","name","pad"};
+static const char *sz_secitioninfo32[] = { "len", "Attribute","Addr","name", "pad" };
+static const char *sz_msunk1[] = { "Offset","Index","Len", "pad" };
+static const char *sz_msunk2[] = { "cbOffset", "Index", "pad" };
+static const char *sz_bprel32[] = { "Offset", "TypeIdx", "name", "pad" };
 static const char *sz_unknown[] = { "unknown" };
+
+static const char *sz_register[] = { "p" };
 
 static sDbgTags stSYMs[] = {
   { DBG_CV_S_COMPILE, "S_COMPILE", "bbwwVVvp", sz_compile },
@@ -54,11 +64,17 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_OBJNAME, "S_OBJNAME", "Usp", sz_objname },
   { DBG_CV_S_THUNK32, "S_THUNK32", "uuuAwbsp", sz_thunk32 },
   { DBG_CV_S_BLOCK32, "S_BLOCK32", "uuuAsp", sz_block32 },
+  { DBG_CV_S_WITH32, "S_WITH32", "uuuAsp", sz_with32 },
+  { DBG_CV_S_LABEL32, "S_LABEL32", "Absp", sz_label32 },
+  { DBG_CV_S_REGISTER, "S_REGISTER", "p", sz_register },
   { DBG_CV_S_CONSTANT, "S_CONSTANT", "uwsp", sz_constant },
   { DBG_CV_S_UDT, "S_UDT", "usp", sz_udt },
+  { DBG_CV_S_BPREL32, "S_BPREL32", "uusp", sz_bprel32 },
   { DBG_CV_S_LDATA32, "S_LDATA32", "uAsp", sz_gdata32 },
   { DBG_CV_S_GDATA32, "S_GDATA32", "uAsp", sz_gdata32 },
   { DGB_CV_S_PUB32, "S_PUB32", "uAsp", sz_pub32 },
+  { DBG_CV_S_LPROC32, "S_LPROC32","uuuuuuuAbsp", sz_proc32 },
+  { DBG_CV_S_GPROC32, "S_GPROC32","uuuuuuuAbsp", sz_proc32 },
   { DBG_CV_S_LMANDATA, "S_LMANDATA", "wUusp", sz_gmandata },
   { DBG_CV_S_GMANDATA, "S_GMANDATA", "wUusp", sz_gmandata },
   { DBG_CV_S_MANSLOT, "S_MANSLOT", "uUuusp", sz_manslot },
@@ -67,6 +83,10 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_TOKENREF, "S_TOKENREF", "uuwsp", sz_tokenref },
   { DBG_CV_S_GMANPROC, "S_GMANPROC", "uuuuuuUAbwsp", sz_gmanproc },
   { DBG_CV_S_LMANPROC, "S_LMANPROC", "uuuuuuUAbwsp", sz_gmanproc },
+  { DBG_CV_S_SECTION32, "S_SECTION32", "wwUUUsp", sz_section32 },
+  { DBG_CV_S_SECTIONINFO32, "S_SECTIONINFO", "uUAsp", sz_secitioninfo32 },
+  { DBG_CV_S_MSUNK1, "S_MSUNK1", "Uuup", sz_msunk1 },
+  { DBG_CV_S_MSUNK2, "S_MSUNK2", "Uup", sz_msunk2 },
   { DBG_CV_S_COMPILER, "S_COMPILER", "UWuUuUsp", sz_compiler},
   { DBG_CV_S_BUILDCMD, "S_BUILDCMD", "S", sz_buildcmd },
   { 0, "SYM_UNKNOWN", "x", sz_unknown }
