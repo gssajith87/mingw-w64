@@ -58,6 +58,12 @@ static int st_type1_load(struct sPdbTypes *f)
     {
       f->Gprec = dbg_memfile_create ("GP records", hdr->cbGprec);
       dbg_memfile_write (f->Gprec, 0, & f->memfile->data[hdr->cbHdr], hdr->cbGprec);
+      f->types = dbg_CV_create (f->Gprec->data, f->Gprec->size, 0);
+      if (f->types != NULL)
+        {
+          dbg_memfile_release (f->Gprec);
+          f->Gprec = NULL;
+        }
     }
   return 0;
 }
@@ -75,12 +81,18 @@ static int st_type1_release(struct sPdbTypes *f)
     dbg_memfile_release (f->hash);
   if (f->Gprec)
     dbg_memfile_release (f->Gprec);
+  if (f->types)
+    {
+      dbg_CV_release (f->types);
+      f->types = NULL;
+    }
   return 0;  
 }
 
 static sDbgMemFile *st_type1_dump(struct sPdbTypes *s, sDbgMemFile *t)
 {
   sDbgMemFile *ret = (t ? t : dbg_memfile_create_text ("type-information"));
+
   dbg_memfile_printf (ret, "Type information Version %u\n"
     "  TypeIndexMin = %u, TypeIndexMac=%u\n", s->version, s->tiMin, s->tiMac);
   dbg_memfile_printf (ret,
@@ -90,8 +102,12 @@ static sDbgMemFile *st_type1_dump(struct sPdbTypes *s, sDbgMemFile *t)
     s->tpiHash.offcbHashVals.off, s->tpiHash.offcbHashVals.cb,
     s->tpiHash.offcbTiOff.off, s->tpiHash.offcbTiOff.cb,
     s->tpiHash.offcbHashAdj.off, s->tpiHash.offcbHashAdj.cb);
-  dbg_memfile_dump_in (ret, s->hash);
-  dbg_memfile_dump_in (ret, s->Gprec);
+  if (s->hash)
+    dbg_memfile_dump_in (ret, s->hash);
+  if (s->Gprec)
+    dbg_memfile_dump_in (ret, s->Gprec);
+  if (s->types)
+    dbg_CV_dump (s->types, ret);
   return ret;
 }
 

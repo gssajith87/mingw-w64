@@ -13,14 +13,12 @@ typedef struct sDbgCVCommon {
 } sDbgCVCommon;
 
 static sDbgMemFile *cv_default_dump (sDbgCVtag *cv, sDbgMemFile *x);
-static sDbgMemFile *cv_dump_modifier (sDbgCVtag *cv, sDbgMemFile *x);
-
 static int cv_default_update (sDbgCVtag *cv, sDbgMemFile *to);
 static int cv_update_dta (sDbgCVtag *cv, sDbgMemFile *to);
 static int cv_fill (sDbgCVtag *cv, sDbgCVCommon *cm);
 static size_t dbg_CVtag_getsize (unsigned char *dta, size_t max);
 
-typedef struct sDbtTags {
+typedef struct sDbgTags {
   uint32_t tag;
   const char *tag_name;
   const char *fmt;
@@ -94,21 +92,41 @@ static sDbgTags stSYMs[] = {
   { 0, "SYM_UNKNOWN", "x", sz_unknown }
 };
 
+static const char *sz_fieldlist[] = { "LS","pad" };
+static sDbgTags stTYPs[] = {
+  { 0, "TYP_UNKNOWN", "x", sz_unknown }
+};
+
 static sDbgTags *find_tag_sym (uint32_t tag);
+static sDbgTags *find_tag_typ (uint32_t tag);
+static sDbgMemFile *dump_tag_element_typ (uint32_t tag, unsigned char *dta, size_t len, sDbgMemFile *x);
+static sDbgMemFile *dump_tag_element_int (uint32_t tag, unsigned char *dta, size_t len, sDbgMemFile *x, sDbgTags *h, const char *tag_kind);
 static sDbgMemFile *dump_tag_element_sym (uint32_t tag, unsigned char *dta, size_t len, sDbgMemFile *ret);
 static size_t get_tag_element_size (unsigned char *dta, size_t off, size_t size, char fmt);
 static size_t get_tag_element_off (unsigned char *dta, const char *fmt, int count, size_t size);
-static sDbgTags *find_tag_sym (uint32_t tag);
 static int get_tag_element_count (const sDbgTags *p);
 static int get_tag_element_name_idx (const sDbgTags *p, const char *name);
+
+static sDbgMemFile *dump_tag_element_typ (uint32_t tag, unsigned char *dta, size_t len, sDbgMemFile *x)
+{
+  sDbgTags *h = find_tag_typ (tag);
+  sDbgMemFile *ret = (x ? x : dbg_memfile_create_text ("Typ tag"));
+  return dump_tag_element_int (tag, dta, len, x, h, "TypTag");
+}
 
 static sDbgMemFile *dump_tag_element_sym (uint32_t tag, unsigned char *dta, size_t len, sDbgMemFile *x)
 {
   sDbgTags *h = find_tag_sym (tag);
   sDbgMemFile *ret = (x ? x : dbg_memfile_create_text ("Sym tag"));
+  return dump_tag_element_int (tag, dta, len, x, h, "SymTag");
+}
+
+static sDbgMemFile *dump_tag_element_int (uint32_t tag, unsigned char *dta, size_t len, sDbgMemFile *x, sDbgTags *h, const char *tag_kind)
+{
+  sDbgMemFile *ret = (x ? x : dbg_memfile_create_text ("Sym tag"));
   if (h->tag == 0)
     {
-      dbg_memfile_printf (ret, "  SymTag (0x%x):", tag);
+      dbg_memfile_printf (ret, "  %s (0x%x):", tag_kind, tag);
       while (len > 0)
         {
 	  dbg_memfile_printf (ret, " %02X", *dta);
@@ -122,7 +140,7 @@ static sDbgMemFile *dump_tag_element_sym (uint32_t tag, unsigned char *dta, size
       const char *fmt = h->fmt;
       size_t l, doff = 0;
       int el = 0;
-      dbg_memfile_printf (ret, "  SymTag %s:", h->tag_name);
+      dbg_memfile_printf (ret, "  %s %s:", tag_kind, h->tag_name);
       while(*fmt != 0)
         {
 	  l = get_tag_element_size (dta, doff,len,*fmt);
@@ -265,6 +283,14 @@ static sDbgTags *find_tag_sym (uint32_t tag)
   while (stSYMs[i].tag != 0 && stSYMs[i].tag != tag)
     i++;
   return &stSYMs[i];
+}
+
+static sDbgTags *find_tag_typ (uint32_t tag)
+{
+  int i = 0;
+  while (stTYPs[i].tag != 0 && stTYPs[i].tag != tag)
+    i++;
+  return &stTYPs[i];
 }
 
 sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms)
@@ -427,11 +453,15 @@ static sDbgMemFile *cv_default_dump (sDbgCVtag *cv, sDbgMemFile *x)
       sDbgTags *dt = NULL;
       if (cv->be_syms)
 	dt = find_tag_sym (cv->leaf);
-  /*    else $$$$
-	dt = find_tag_typ (cv->leaf); */
-      if (dt && cv->be_syms)
-	dump_tag_element_sym (cv->leaf, cv->dta, cv->length, ret);
-
+      else
+	dt = find_tag_typ (cv->leaf);
+      if (dt)
+        {
+          if(cv->be_syms)
+            dump_tag_element_sym (cv->leaf, cv->dta, cv->length, ret);
+          else
+            dump_tag_element_typ (cv->leaf, cv->dta, cv->length, ret);
+        }
     }
   return ret;
 }
@@ -454,13 +484,6 @@ static int cv_default_update (sDbgCVtag *cv, sDbgMemFile *to)
   return dbg_memfile_write (to, to->size, cv->unknown_leaf->data, cv->unknown_leaf->size);
 }
 
-static sDbgMemFile *cv_dump_modifier (sDbgCVtag *cv, sDbgMemFile *x)
-{
-  sDbgMemFile *ret = x != NULL ? x : dbg_memfile_create_text ("cv_type");
-  dbg_memfile_printf (ret, "  LF_MODIFIER: FollowUpType: 0x%x Flags:0x%x\n", cv->ui_dta[0], cv->ui_dta[1]);
-  return ret;
-}
-
 static int cv_fill (sDbgCVtag *cv, sDbgCVCommon *cm)
 {
   uint32_t *dw = (uint32_t *) cm->data;
@@ -470,18 +493,15 @@ static int cv_fill (sDbgCVtag *cv, sDbgCVCommon *cm)
   if (cv->be_syms)
     {
       sDbgTags * h = find_tag_sym (cm->leaf);
-      if (!h || h->tag == 0)
+      if (!h)
         return -1;
     }
   else
-  {
-    switch (cm->leaf)
-      {
-      case LF_MODIFIER: cv->dump = cv_dump_modifier;  break;
-      default:
+    {
+      sDbgTags * h = find_tag_typ (cm->leaf);
+      if (!h || h->tag == 0)
 	return -1;
-      }
-  }
+    }
   cv->dta = (unsigned char *) malloc (cv->length + 1);
   if (!cv->dta)
     return -1;

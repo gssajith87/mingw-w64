@@ -54,6 +54,7 @@ typedef struct sPdbTypes {
   uint32_t tiMin, tiMac;
   sDbgMemFile *hash;
   sDbgMemFile *Gprec;
+  sDbgCV *types;
   sDbgPdbTypeHash tpiHash;
 } sPdbTypes;
 
