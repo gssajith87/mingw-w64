@@ -3,6 +3,7 @@
 
 #include "dbg_interface.h"
 #include "dbg_pdb_info.h"
+#include "dbg_pdb_types.h"
 
 extern sDbgInterface interface_pdb2; /* pdb 2.0 */
 extern sDbgInterface interface_pdb7; /* pdb 7.0 */
@@ -16,6 +17,7 @@ typedef struct sDbgInterfacePDB {
   uint32_t streams;
   sPdbInfo *info; /* Stream #1  */
   struct sPdbSymbols *syms;
+  struct sPdbTypes *typs;
 } sDbgInterfacePDB;
 
 #define DbgInterfacePDB_streams(PTR)	((sDbgInterfacePDB *) (PTR))->streams

@@ -125,6 +125,10 @@ static int pdb2_load (sDbgInterface *pDCtx)
     }
   if (diPDB->files && diPDB->streams > 2)
     {
+      diPDB->typs = (sPdbTypes *) dbg_pdb_types_create (diPDB->files[2], diPDB);
+    }
+  if (diPDB->files && diPDB->streams > 3)
+    {
       diPDB->syms = (sPdbSymbols *) dbg_symbols_load (diPDB->files[3], diPDB, 3);
     }
   return 0;
@@ -143,6 +147,11 @@ pdb2_release (sDbgInterface *pDCtx)
   uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
   sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
 
+  if (diPDB->typs)
+    {
+      dbg_pdb_types_release (diPDB->typs);
+      diPDB->typs = NULL;
+    }
   if (diPDB->syms)
     {
       dbg_symbol_release ((sPdbSymbols *)diPDB->syms);
@@ -179,6 +188,10 @@ static sDbgMemFile *pdb2_dump (sDbgInterface *pDCtx)
   if (diPDB->syms)
     {
       (diPDB->syms->dump) (diPDB->syms, ret);
+    }
+  if (diPDB->typs)
+    {
+      ret = dbg_pdb_types_dump (diPDB->typs, ret);
     }
   for (i = 1; i < streams; i++)
     {
@@ -272,6 +285,10 @@ static int pdb7_load (sDbgInterface *pDCtx)
     }
   if (diPDB->files && diPDB->streams > 2)
     {
+      diPDB->typs = (sPdbTypes *) dbg_pdb_types_create (diPDB->files[2], diPDB);
+    }
+  if (diPDB->files && diPDB->streams > 3)
+    {
       diPDB->syms = dbg_symbols_load (diPDB->files[3], diPDB, 3);
     }
   return unknown_load (pDCtx);
@@ -291,6 +308,11 @@ pdb7_release (sDbgInterface *pDCtx)
   uint32_t streams = ((sDbgInterfacePDB *)pDCtx)->streams;
   sDbgMemFile **h = ((sDbgInterfacePDB *)pDCtx)->files;
 
+  if (diPDB->typs)
+    {
+      dbg_pdb_types_release (diPDB->typs);
+      diPDB->typs = NULL;
+    }
   if (diPDB->syms)
     {
       dbg_symbol_release (diPDB->syms);
@@ -327,6 +349,10 @@ static sDbgMemFile *pdb7_dump (sDbgInterface *pDCtx)
   if (diPDB->syms)
     {
       (* diPDB->syms->dump) (diPDB->syms, ret);
+    }
+  if (diPDB->typs)
+    {
+      ret = dbg_pdb_types_dump (diPDB->typs, ret);
     }
   for (i = 0; i < streams; i++)
     {
