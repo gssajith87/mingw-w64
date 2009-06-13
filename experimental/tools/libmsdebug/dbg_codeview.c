@@ -51,7 +51,7 @@ static const char *sz_section32[] = { "Id", "Unk1","StartOff", "EndOff","Attribu
 static const char *sz_secitioninfo32[] = { "len", "Attribute","Addr","name", "pad" };
 static const char *sz_msunk1[] = { "Offset","Index","Len", "pad" };
 static const char *sz_msunk2[] = { "cbOffset", "Index", "pad" };
-static const char *sz_bprel32[] = { "Offset", "TypeIdx", "name", "pad" };
+static const char *sz_bprel32[] = { "TypeIdx", "Addr", "name", "pad" };
 static const char *sz_unknown[] = { "unknown" };
 
 static const char *sz_register[] = { "p" };
@@ -68,7 +68,7 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_REGISTER, "S_REGISTER", "p", sz_register },
   { DBG_CV_S_CONSTANT, "S_CONSTANT", "uwsp", sz_constant },
   { DBG_CV_S_UDT, "S_UDT", "usp", sz_udt },
-  { DBG_CV_S_BPREL32, "S_BPREL32", "uusp", sz_bprel32 },
+  { DBG_CV_S_BPREL32, "S_BPREL32", "uAsp", sz_bprel32 },
   { DBG_CV_S_LDATA32, "S_LDATA32", "uAsp", sz_gdata32 },
   { DBG_CV_S_GDATA32, "S_GDATA32", "uAsp", sz_gdata32 },
   { DGB_CV_S_PUB32, "S_PUB32", "uAsp", sz_pub32 },
@@ -92,8 +92,17 @@ static sDbgTags stSYMs[] = {
   { 0, "SYM_UNKNOWN", "x", sz_unknown }
 };
 
-static const char *sz_fieldlist[] = { "LS","pad" };
+#include "dbg_cv_typ.inc"
+static const char *sz_p[] = { "pad" };
 static sDbgTags stTYPs[] = {
+  { LF_MODIFIER, "LF_MODIFIER", "p", sz_p },
+  { LF_POINTER, "LF_POINTER", "p", sz_p },
+  { LF_PROCEDURE, "LF_PROCEDURE", "p", sz_p },
+  { LF_ONEMETHOD, "LF_ONEMETHOD", "p", sz_p },
+  { LF_ENUM, "LF_ENUM", "p", sz_p },
+  { LF_FIELDLIST, "LF_FIELDLIST", "p", sz_p },
+  { LF_STRUCTURE, "LF_STRUCTURE", "p", sz_p },
+  { LF_CLASS, "LF_CLASS", "p", sz_p },
   { 0, "TYP_UNKNOWN", "x", sz_unknown }
 };
 
@@ -111,6 +120,35 @@ static sDbgMemFile *dump_tag_element_typ (uint32_t tag, unsigned char *dta, size
 {
   sDbgTags *h = find_tag_typ (tag);
   sDbgMemFile *ret = (x ? x : dbg_memfile_create_text ("Typ tag"));
+  switch (tag)
+    {
+    case LF_MODIFIER:
+      dump_lfModifier ((lfModifier *) dta,x);
+      return x;
+    case LF_POINTER:
+      dump_lfPointer ((lfPointer *) dta, x);
+      return x;
+    case LF_PROCEDURE:
+      dump_lfProc ((lfProc *) dta, x);
+      return x;
+    case LF_ONEMETHOD:
+      dump_lfOneMethod ((lfOneMethod *) dta, x);
+      return x;
+    case LF_ENUM:
+      dump_lfEnum ((lfEnum *) dta, x);
+      return x;
+    case LF_FIELDLIST:
+      dump_lfFieldList ((lfFieldList *) dta, len, x);
+      return x;
+    case LF_STRUCTURE:
+      dump_lfStruct ((lfStruct *) dta, x);
+      return x;
+    case LF_CLASS:
+      dump_lfClass ((lfClass *) dta, x);
+      return x;
+    default:
+      break;
+    }
   return dump_tag_element_int (tag, dta, len, x, h, "TypTag");
 }
 
@@ -360,7 +398,13 @@ sDbgMemFile *dbg_CV_dump (sDbgCV *cv, sDbgMemFile *x)
   for (i = 0; i < cv->count; i++)
     {
       if (cv->tag[i] != NULL)
-	ret = dbg_CVtag_dump (cv->tag[i], ret);
+      {
+	if (cv->tag[i]->be_syms == 0)
+	{
+	  dbg_memfile_printf (x, " #%u:\n", (uint32_t) i + 0x1000 /* tiMin */);
+	  ret = dbg_CVtag_dump (cv->tag[i], ret);
+	}
+      }
     }
   return ret;
 }
