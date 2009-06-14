@@ -6,6 +6,9 @@
 
 #include "dbg_codeview.h"
 
+int dbg_pdb_show_types = 1;
+int dbg_pdb_show_syms = 0;
+
 typedef struct sDbgCVCommon {
   uint16_t dSize;
   uint16_t leaf;
@@ -103,6 +106,10 @@ static sDbgTags stTYPs[] = {
   { LF_FIELDLIST, "LF_FIELDLIST", "p", sz_p },
   { LF_STRUCTURE, "LF_STRUCTURE", "p", sz_p },
   { LF_CLASS, "LF_CLASS", "p", sz_p },
+  { LF_ARRAY, "LF_ARRAY", "p", sz_p },
+  { LF_ARGLIST, "LF_ARGLIST", "p", sz_p},
+  { LF_MFUNCTION, "LF_MFUNCTION", "p", sz_p },
+  { LF_NESTTYPE, "LF_NESTTYPE", "p", sz_p },
   { 0, "TYP_UNKNOWN", "x", sz_unknown }
 };
 
@@ -145,6 +152,18 @@ static sDbgMemFile *dump_tag_element_typ (uint32_t tag, unsigned char *dta, size
       return x;
     case LF_CLASS:
       dump_lfClass ((lfClass *) dta, x);
+      return x;
+    case LF_ARRAY:
+      dump_lfArray ((lfArray *) dta, x);
+      return x;
+    case LF_ARGLIST:
+      dump_lfArgList ((lfArgList *)dta, x);
+      return x;
+    case LF_MFUNCTION:
+      dump_lmFunc ((lmFunc *) dta, x);
+      return x;
+    case LF_NESTTYPE:
+      dump_lfNestType ((lfNestType *)dta, x);
       return x;
     default:
       break;
@@ -399,9 +418,14 @@ sDbgMemFile *dbg_CV_dump (sDbgCV *cv, sDbgMemFile *x)
     {
       if (cv->tag[i] != NULL)
       {
-	if (cv->tag[i]->be_syms == 0)
+	if (cv->tag[i]->be_syms == 0 && dbg_pdb_show_types)
 	{
-	  dbg_memfile_printf (x, " #%u:\n", (uint32_t) i + 0x1000 /* tiMin */);
+	  dbg_memfile_printf (x, " #%u:", (uint32_t) i + 0x1000 /* tiMin */);
+	  ret = dbg_CVtag_dump (cv->tag[i], ret);
+	}
+	else if (cv->tag[i]->be_syms == 1 && dbg_pdb_show_syms)
+	{
+	  dbg_memfile_printf (x, " #%u:", (uint32_t) i);
 	  ret = dbg_CVtag_dump (cv->tag[i], ret);
 	}
       }

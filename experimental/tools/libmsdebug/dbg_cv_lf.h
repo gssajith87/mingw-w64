@@ -76,8 +76,8 @@ typedef struct CV_prop_t {
 } CV_prop_t;
 static void dump_CV_prop_t (CV_prop_t *m, sDbgMemFile *t);
 
-typedef struct lmFunc {
-  unsigned short leaf;
+typedef struct lmFunc { /* LF_MFUNCTION */
+  /*unsigned short leaf; */
   unsigned long rvtype;
   unsigned long classtype;
   unsigned long thistype;
@@ -87,12 +87,14 @@ typedef struct lmFunc {
   unsigned long arglist;
   long thisadjust;
 } lmFunc;
+static void dump_lmFunc (lmFunc *m, sDbgMemFile *t);
 
-typedef struct lfArgList {
-  unsigned short leaf;
+typedef struct lfArgList { /* LF_ARGLIST */
+  /* unsigned short leaf; */
   unsigned long count;
-  unsigned long arg[0];
+  unsigned long arg[0]; /* argument types */
 } lfArgList;
+static void dump_lfArgList (lfArgList *m, sDbgMemFile *t);
 
 typedef struct lfIndex {
   unsigned short leaf;
@@ -114,7 +116,7 @@ typedef struct lfProc { /* LF_PROCEDURE */
   unsigned short parmcount;
   unsigned long arglist;
 } lfProc;
-static void dump_lfPointer (lfProc *m, sDbgMemFile *t);
+static void dump_lfProc (lfProc *m, sDbgMemFile *t);
 
 typedef struct lfModifier { /* LF_MODIFIER */
   /*unsigned short leaf; */
@@ -124,11 +126,13 @@ typedef struct lfModifier { /* LF_MODIFIER */
 static void dump_lfModifier (lfModifier *m, sDbgMemFile *t);
 
 typedef struct lfArray { /* LF_ARRAY */
-  unsigned short leaf;
+  /* unsigned short leaf; */
   unsigned long elemtype;
   unsigned long idxtype;
-  unsigned char data[0];
+  unsigned short size;
+  unsigned char data[0]; /* size in bytes */
 } lfArray;
+static void dump_lfArray (lfArray *m, sDbgMemFile *t);
 
 typedef struct lfBitfield {
   /* unsigned short leaf; */
@@ -169,7 +173,7 @@ typedef struct lfPointer { /* LF_POINTER */
     } btype;
   } pbase;
 } lfPointer;
-static void dump_lfProc (lfPointer *m, sDbgMemFile *t);
+static void dump_lfPointer (lfPointer *m, sDbgMemFile *t);
 
 typedef struct lfChar {
   unsigned short leaf;
@@ -281,12 +285,13 @@ typedef struct lfMethod {
   unsigned char name[1];
 } lfMethod;
 
-typedef struct lfNestType {
-  unsigned short leaf;
+typedef struct lfNestType { /* LF_NESTTYPE */
+  /* unsigned short leaf; */
   unsigned short pad;
   unsigned long index;
   unsigned char name[1];
 } lfNestType;
+static void dump_lfNestType (lfNestType *m, sDbgMemFile *t);
 
 typedef struct lfOneMethod { /* LF_ONEMETHOD */
   /* unsigned short leaf; */
@@ -309,6 +314,14 @@ typedef struct lfEnumFieldList {
   char name[1];
 } lfEnumFieldList;
 
+typedef struct lfEnumFieldListWT {
+  unsigned short leaf;
+  unsigned short pad;
+  unsigned short value;
+  unsigned long valueEx;
+  char name[1];
+} lfEnumFieldListWT;
+
 typedef struct lfMemberFL {
   unsigned short leaf;
   unsigned short pad;
@@ -317,10 +330,34 @@ typedef struct lfMemberFL {
   char name[1];
 } lfMemberFL;
 
+typedef struct lfOneMethodFL {
+  unsigned short leaf; /* LF_ONEMETHOD */
+  unsigned short pad;
+  unsigned long index;
+  char name[1];
+} lfOneMethodFL;
+
+typedef struct lfNestTypeFL { /* LF_NESTTYPE */
+   unsigned short leaf;
+  unsigned short pad;
+  unsigned long index;
+  unsigned char name[1];
+} lfNestTypeFL;
+
+typedef struct lfBClassFL {
+  unsigned short leaf; /* LF_BCLASS */
+  unsigned short pad;
+  unsigned long utype;
+  unsigned short off; /* ??? */
+} lfBClassFL; /* TODO */
+
 typedef union lfEasy {
   unsigned short leaf;
   lfEnumFieldList enumFL;
+  lfEnumFieldListWT enumFLWT;
   lfMemberFL memberFL; /* LF_MEMBER lfMember */
+  lfOneMethodFL oneMethodFL;
+  lfNestTypeFL nestTypeFL;
 } lfEasy;
 
 typedef struct _GUID {

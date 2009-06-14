@@ -1,3 +1,42 @@
+static void dump_lfNestType (lfNestType *m, sDbgMemFile *t)
+{
+  if (!m || !t)
+    return;
+  dbg_memfile_printf (t, " LF_NESTTYPE(pad:%u, index:%u, %s)",
+    m->pad, m->index, m->name);
+}
+
+static void dump_lmFunc (lmFunc *m, sDbgMemFile *t)
+{
+  if (!m || !t)
+    return;
+  dbg_memfile_printf (t, " LF_MFUNCTION(returntype: %u, classtype: %u, thistype: %u, calltype: 0x%02x,",
+    m->rvtype, m->classtype, m->thistype, m->calltype);
+  dump_CV_funcattr_t (&m->funcattr, t);
+  dbg_memfile_printf (t, ", parmcount:%u, arglist: %u,thisadjust=%ld)\n", m->parmcount, m->arglist, m->thisadjust);
+}
+
+static void dump_lfArgList (lfArgList *m, sDbgMemFile *t)
+{
+  uint32_t i;
+  if (!m || !t)
+    return;
+  dbg_memfile_printf (t, "  LF_ARGLIST(count:%u", m->count);
+  if (m->count!=0)
+   dbg_memfile_printf (t, ", ArgTypes[%u]={", m->count);
+  for (i=0;i<m->count;i++)
+    dbg_memfile_printf (t, "%s%u", i==0 ? "" : ",", m->arg[i]);
+  dbg_memfile_printf (t, "%s)\n", m->count!=0 ? "}" : "");
+}
+
+static void dump_lfArray (lfArray *m, sDbgMemFile *t)
+{
+  if (!m || !t)
+    return;
+  dbg_memfile_printf (t, "  LF_ARRAY(elemtype:%u, idxType=%u, size:%u, %s[])\n",
+    m->elemtype, m->idxtype,m->size, m->data);
+}
+
 static void dump_lfClass (lfClass *m, sDbgMemFile *t)
 {
   if (!m || !t)
@@ -34,14 +73,33 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
     e=(lfEasy *) dta;
     switch (e->leaf)
     {
+    case LF_NESTTYPE:
+      dbg_memfile_printf (t, "  eNestType pad:%u, index:%u, %s\n",
+        e->nestTypeFL.pad, e->nestTypeFL.index, e->nestTypeFL.name);
+      l = strlen (e->nestTypeFL.name) + 1 + 4 + 2 + 2;
+      break;
     case LF_ENUMERATE:
-      dbg_memfile_printf (t, "   pad: %u, Value:0x%x, %s\n", e->enumFL.pad, e->enumFL.value,e->enumFL.name);
-      l = strlen (e->enumFL.name) + 1 + 4 + 2;
+      if ((e->enumFL.value & 0x8000)!=0)
+        {  
+		  dbg_memfile_printf (t, "  eEnum pad: %u, Value:0x%x, ValueEx:0x%x, %s\n", e->enumFLWT.pad, e->enumFLWT.value,
+		    e->enumFLWT.valueEx,
+		    e->enumFLWT.name);
+		  l = strlen (e->enumFLWT.name) + 1 + 2 + 2 + 4 + 2;
+		}
+      else
+        {
+		  dbg_memfile_printf (t, "  eEnum pad: %u, Value:0x%x, %s\n", e->enumFL.pad, e->enumFL.value,e->enumFL.name);
+		  l = strlen (e->enumFL.name) + 1 + 4 + 2;
+		}
       break;
     case LF_MEMBER:
-      dbg_memfile_printf (t, "   pad: %u, index:%u Offset:0x%x, %s\n", e->memberFL.pad, e->memberFL.index,
+      dbg_memfile_printf (t, "  eMember pad: %u, index:%u Offset:0x%x, %s\n", e->memberFL.pad, e->memberFL.index,
         e->memberFL.offset, e->memberFL.name );
       l = strlen (e->memberFL.name) + 1 + 4 + 4 + 2;
+      break;
+    case LF_ONEMETHOD:
+      dbg_memfile_printf (t, "  eOneMeth pad:%u, index:%u, %s\n", e->oneMethodFL.pad, e->oneMethodFL.index, e->oneMethodFL.name);
+      l = strlen (e->oneMethodFL.name) + 1 + 4 + 2 + 2;
       break;
     default:
       dbg_memfile_printf (t, "   Unknown fieldlist subtype 0x%x\n", e->leaf);
