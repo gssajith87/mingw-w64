@@ -123,6 +123,11 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
     e=(lfEasy *) dta;
     switch (e->leaf)
     {
+    case LF_VFUNCTAB:
+      dbg_memfile_printf (t, "  eVFuncTab pad:%u, type:%u)\n",
+        e->vfunctabFL.pad, e->vfunctabFL.type);
+      l = 2 + 2 + 4;
+      break;
     case LF_BCLASS:
       dbg_memfile_printf (t, "  eBClass pad:%u, indext:%u, offset:%u\n",
         e->bClassFL.pad, e->bClassFL.utype, e->bClassFL.off);

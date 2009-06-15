@@ -109,7 +109,7 @@ typedef struct lfIndex {
   uint32_t index;
 } lfIndex;
 
-typedef struct lfVFuncTab {
+typedef struct lfVFuncTab { /* LF_VFUNCTAB */
   uint16_t leaf;
   uint16_t pad;
   uint32_t type;
@@ -373,6 +373,7 @@ typedef union lfEasy {
   lfSTMemberFL stMemberFL;
   lfMethod methodFL;
   lfBClassFL bClassFL;
+  lfVFuncTab vfunctabFL;
 } lfEasy;
 
 typedef struct _GUID {
