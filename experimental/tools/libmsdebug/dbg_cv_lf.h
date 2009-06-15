@@ -105,11 +105,11 @@ typedef struct CV_prop_t {
 } CV_prop_t;
 static void dump_CV_prop_t (CV_prop_t *m, sDbgMemFile *t);
 
-typedef enum CV_SourceChksum_t {
-  CHKSUM_TYPE_NONE = 0,
-  CHKSUM_TYPE_MD5 = 1,
-  CHKSUM_TYPE_SHA1 = 2,
-} CV_SourceChksum_t;
+typedef enum eCV_sourcechksum {
+  CV_SRCCHKSUM_TYPE_NONE = 0,
+  CV_SRCCHKSUM_TYPE_MD5 = 1,
+  CV_SRCCHKSUM_TYPE_SHA1 = 2,
+} eCV_sourcechksum;
 
 typedef enum eCV_HFA {
   CV_HFA_none = 0,
@@ -154,15 +154,15 @@ typedef enum eCV_prmode {
 } eCV_prmode;
 
 typedef enum eCV_type {
-  CV_SP_NOTYPE = 0,
-  CV_SP_ABS = 1,
-  CV_SP_SEGMENT = 2,
-  CV_SP_VOID = 3,
-  CV_SP_CURRENCY = 4,
-  CV_SP_NBASICSTR = 5,
-  CV_SP_FBASICSTR = 6,
-  CV_SP_NOTTRANS = 7,
-  CV_SP_HRESULT = 8,
+  CV_SPECIAL = 0,
+  CV_SIGNED = 1,
+  CV_UNSIGNED = 2,
+  CV_BOOLEAN = 3,
+  CV_REAL = 4,
+  CV_COMPLEX = 5,
+  CV_SPECIAL2 = 6,
+  CV_INT = 7,
+  CV_CVRESERVED = 15
 } eCV_type;
 
 typedef enum eCV_real {
@@ -205,6 +205,18 @@ typedef enum eCV_pmtype {
   CV_PMTYPE_F_Virtual = 7,
   CV_PMTYPE_F_General = 8
 } eCV_pmtype;
+
+typedef enum eCV_special {
+  CV_SP_NOTYPE = 0,
+  CV_SP_ABS = 1,
+  CV_SP_SEGMENT = 2,
+  CV_SP_VOID = 3,
+  CV_SP_CURRENCY = 4,
+  CV_SP_NBASICSTR = 5,
+  CV_SP_FBASICSTR = 6,
+  CV_SP_NOTTRANS = 7,
+  CV_SP_HRESULT = 8,
+} eCV_special;
 
 typedef struct lmFunc { /* LF_MFUNCTION */
   /*uint16_t leaf; */
