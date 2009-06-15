@@ -4,23 +4,16 @@
 #pragma pack (push, 1)
 
 typedef struct CV_Line_t {
-  unsigned long offset;
-  unsigned long linenumStart;
-  unsigned long deltaLineEnd;
-  unsigned long fStatement;
+  uint32_t offset;
+  uint32_t linenumStart;
+  uint32_t deltaLineEnd;
+  uint32_t fStatement;
 } CV_Line_t;
-typedef struct CV_Column_t {
-  unsigned short offColumnStart;
-  unsigned short offColumnEnd;
-} CV_Column_t;
 
-typedef struct CV_modifier_t {
-  unsigned short MOD_const : 1;
-  unsigned short MOD_volatile : 1;
-  unsigned short MOD_unaligned : 1;
-  unsigned short MOD_unused : 3;
-} CV_modifier_t;
-static void dump_CV_modifier_t (CV_modifier_t *m, sDbgMemFile *t);
+typedef struct CV_Column_t {
+  uint16_t offColumnStart;
+  uint16_t offColumnEnd;
+} CV_Column_t;
 
 typedef enum eCV_access {
   CV_private = 1,
@@ -38,15 +31,23 @@ typedef enum eCV_methodprop {
   CV_MTpureintro = 6,
 } eCV_methodprop;
 
+typedef struct CV_modifier_t {
+  uint16_t MOD_const : 1;
+  uint16_t MOD_volatile : 1;
+  uint16_t MOD_unaligned : 1;
+  uint16_t MOD_unused : 13;
+} CV_modifier_t;
+static void dump_CV_modifier_t (CV_modifier_t *m, sDbgMemFile *t);
+
 typedef struct CV_fldattr_t {
-  unsigned short access : 2; /* eCV_access */
-  unsigned short mprop : 3;  /* eCV_methodprop */
-  unsigned short pseudo : 1;
-  unsigned short noinherit : 1;
-  unsigned short noconstruct : 1;
-  unsigned short compgenx : 1;
-  unsigned short sealed : 1;
-  unsigned short unused : 6;
+  uint16_t access : 2; /* eCV_access */
+  uint16_t mprop : 3;  /* eCV_methodprop */
+  uint16_t pseudo : 1;
+  uint16_t noinherit : 1;
+  uint16_t noconstruct : 1;
+  uint16_t compgenx : 1;
+  uint16_t sealed : 1;
+  uint16_t unused : 6;
 } CV_fldattr_t;
 static void dump_CV_fldattr_t (CV_fldattr_t *m, sDbgMemFile *t);
 
@@ -59,106 +60,106 @@ typedef struct CV_funcattr_t {
 static void dump_CV_funcattr_t (CV_funcattr_t *m, sDbgMemFile *t);
 
 typedef struct CV_prop_t {
-  unsigned short packed : 1;
-  unsigned short ctor : 1;
-  unsigned short ovlops : 1;
-  unsigned short isnested : 1;
-  unsigned short cnested : 1;
-  unsigned short opassign : 1;
-  unsigned short opcast : 1;
-  unsigned short fwdref : 1;
-  unsigned short scoped : 1;
-  unsigned short hasuniquename : 1;
-  unsigned short sealed : 1;
-  unsigned short hfa : 2;
-  unsigned short intrinsic : 1;
-  unsigned short reserved : 2;
+  uint16_t packed : 1;
+  uint16_t ctor : 1;
+  uint16_t ovlops : 1;
+  uint16_t isnested : 1;
+  uint16_t cnested : 1;
+  uint16_t opassign : 1;
+  uint16_t opcast : 1;
+  uint16_t fwdref : 1;
+  uint16_t scoped : 1;
+  uint16_t hasuniquename : 1;
+  uint16_t sealed : 1;
+  uint16_t hfa : 2;
+  uint16_t intrinsic : 1;
+  uint16_t reserved : 2;
 } CV_prop_t;
 static void dump_CV_prop_t (CV_prop_t *m, sDbgMemFile *t);
 
 typedef struct lmFunc { /* LF_MFUNCTION */
-  /*unsigned short leaf; */
-  unsigned long rvtype;
-  unsigned long classtype;
-  unsigned long thistype;
+  /*uint16_t leaf; */
+  uint32_t rvtype;
+  uint32_t classtype;
+  uint32_t thistype;
   unsigned char calltype;
   CV_funcattr_t funcattr;
-  unsigned short parmcount;
-  unsigned long arglist;
+  uint16_t parmcount;
+  uint32_t arglist;
   long thisadjust;
 } lmFunc;
 static void dump_lmFunc (lmFunc *m, sDbgMemFile *t);
 
 typedef struct lfArgList { /* LF_ARGLIST */
-  /* unsigned short leaf; */
-  unsigned long count;
-  unsigned long arg[0]; /* argument types */
+  /* uint16_t leaf; */
+  uint32_t count;
+  uint32_t arg[0]; /* argument types */
 } lfArgList;
 static void dump_lfArgList (lfArgList *m, sDbgMemFile *t);
 
 typedef struct lfIndex {
-  unsigned short leaf;
-  unsigned short pad;
-  unsigned long index;
+  uint16_t leaf;
+  uint16_t pad;
+  uint32_t index;
 } lfIndex;
 
 typedef struct lfVFuncTab {
-  unsigned short leaf;
-  unsigned short pad;
-  unsigned long type;
+  uint16_t leaf;
+  uint16_t pad;
+  uint32_t type;
 } lfVFuncTab;
 
 typedef struct lfProc { /* LF_PROCEDURE */
-  /* unsigned short leaf; */
-  unsigned long rvtype;
+  /* uint16_t leaf; */
+  uint32_t rvtype;
   unsigned char calltype;
   CV_funcattr_t funcattr;
-  unsigned short parmcount;
-  unsigned long arglist;
+  uint16_t parmcount;
+  uint32_t arglist;
 } lfProc;
 static void dump_lfProc (lfProc *m, sDbgMemFile *t);
 
 typedef struct lfModifier { /* LF_MODIFIER */
-  /*unsigned short leaf; */
-  unsigned long type;
+  /*uint16_t leaf; */
+  uint32_t type;
   CV_modifier_t attr;
 } lfModifier;
 static void dump_lfModifier (lfModifier *m, sDbgMemFile *t);
 
 typedef struct lfArray { /* LF_ARRAY */
-  /* unsigned short leaf; */
-  unsigned long elemtype;
-  unsigned long idxtype;
-  unsigned short size;
+  /* uint16_t leaf; */
+  uint32_t elemtype;
+  uint32_t idxtype;
+  uint16_t size;
   unsigned char data[0]; /* size in bytes */
 } lfArray;
 static void dump_lfArray (lfArray *m, sDbgMemFile *t);
 
 typedef struct lfBitfield {
-  /* unsigned short leaf; */
-  unsigned long type;
+  /* uint16_t leaf; */
+  uint32_t type;
   unsigned char length;
   unsigned char position;
 } lfBitfield;
 
 typedef struct lfPointerBody {
-  unsigned short leaf;
-  unsigned long utype;
+  uint16_t leaf;
+  uint32_t utype;
 } lfPointerBody;
 
 typedef struct lfPointer { /* LF_POINTER */
-  /*unsigned short leaf;*/
-  unsigned long utype;
+  /*uint16_t leaf;*/
+  uint32_t utype;
   struct lfPointerAttr {
-    unsigned long ptrtype : 5;
-    unsigned long ptrmode : 3;
-    unsigned long isflat32 : 1;
-    unsigned long isvolatile : 1;
-    unsigned long isconst : 1;
-    unsigned long isunaligned : 1;
-    unsigned long isrestrict : 1;
-    unsigned long size : 6;
-    unsigned long unused : 13;
+    uint32_t ptrtype : 5;
+    uint32_t ptrmode : 3;
+    uint32_t isflat32 : 1;
+    uint32_t isvolatile : 1;
+    uint32_t isconst : 1;
+    uint32_t isunaligned : 1;
+    uint32_t isrestrict : 1;
+    uint32_t size : 6;
+    uint32_t unused : 13;
   } attr;
   union {
     struct {
@@ -176,209 +177,216 @@ typedef struct lfPointer { /* LF_POINTER */
 static void dump_lfPointer (lfPointer *m, sDbgMemFile *t);
 
 typedef struct lfChar {
-  unsigned short leaf;
+  uint16_t leaf;
   unsigned char val;
 } lfChar;
 
 typedef struct lfShort {
-  unsigned short leaf;
+  uint16_t leaf;
   short val;
 } lfShort;
 
 typedef struct lfUShort {
-  unsigned short leaf;
-  unsigned short val;
+  uint16_t leaf;
+  uint16_t val;
 } lfUShort;
 
 typedef struct lfLong {
-  unsigned short leaf;
+  uint16_t leaf;
   long val;
 } lfLong;
 
 typedef struct lfULong {
-  unsigned short leaf;
-  unsigned long val;
+  uint16_t leaf;
+  uint32_t val;
 } lfULong;
 
 typedef struct lfQuad {
-  unsigned short leaf;
+  uint16_t leaf;
   unsigned char val[8];
 } lfQuad;
 
 typedef struct lfUQuad {
-  unsigned short leaf;
+  uint16_t leaf;
   unsigned char val[8];
 } lfUQuad;
 
 typedef struct lfClass {
-  /*unsigned short leaf;*/
-  unsigned short count;
+  /*uint16_t leaf;*/
+  uint16_t count;
   CV_prop_t property;
-  unsigned long field;
-  unsigned long derived;
-  unsigned long vshape;
-  unsigned short size;
+  uint32_t field;
+  uint32_t derived;
+  uint32_t vshape;
+  uint16_t size;
   unsigned char data[0];
 } lfClass;
 static void dump_lfClass (lfClass *m, sDbgMemFile *t);
 
 typedef struct lfStruct { /* LF_STRUCTURE */
-  /*unsigned short leaf; */
-  unsigned short count;
+  /*uint16_t leaf; */
+  uint16_t count;
   CV_prop_t property;
-  unsigned long field;
-  unsigned long derived;
-  unsigned long vshape;
-  unsigned short size;
+  uint32_t field;
+  uint32_t derived;
+  uint32_t vshape;
+  uint16_t size;
   unsigned char data[0];
 } lfStruct;
 static void dump_lfStruct (lfStruct *m, sDbgMemFile *t);
 
-typedef struct lfUnion {
-  unsigned short leaf;
-  unsigned short count;
+typedef struct lfUnion { /* LF_UNION */
+  /*uint16_t leaf;*/
+  uint16_t count;
   CV_prop_t property;
-  unsigned long field;
+  uint32_t field;
+  uint16_t size;
   unsigned char data[0];
 } lfUnion;
+static void dump_lfUnion (lfUnion *m, sDbgMemFile *t);
+
 typedef struct lfEnum { /* LF_ENUMERATE */
-  /* unsigned short leaf; */
-  unsigned short count;
+  /* uint16_t leaf; */
+  uint16_t count;
   CV_prop_t property;
-  unsigned long utype;
-  unsigned long field;
+  uint32_t utype;
+  uint32_t field;
   unsigned char name[1];
 } lfEnum;
 static void dump_lfEnum (lfEnum *m, sDbgMemFile *t);
 
-typedef struct lfBClass {
-  unsigned short leaf;
+typedef struct lfBClass { /* LF_BCLASS */
+  /*uint16_t leaf;*/
   CV_fldattr_t attr;
-  unsigned long index;
+  uint32_t index;
   unsigned char offset[0];
 } lfBClass;
+static void dump_lfBClass (lfBClass *m, sDbgMemFile *t);
+
 typedef struct lfVBClass {
-  unsigned short leaf;
+  uint16_t leaf;
   CV_fldattr_t attr;
-  unsigned long index;
-  unsigned long vbptr;
+  uint32_t index;
+  uint32_t vbptr;
   unsigned char vboff[0];
 } lfVBClass;
 
 typedef struct lfMember {
-  unsigned short leaf;
+  uint16_t leaf;
   CV_fldattr_t attr;
-  unsigned long index;
+  uint32_t index;
   unsigned char offset[0];
 } lfMember;
-typedef struct lfSTMember {
-  unsigned short leaf;
+
+typedef struct lfSTMember { /* LF_STMEMBER */
+  /*uint16_t leaf;*/
   CV_fldattr_t attr;
-  unsigned long index;
+  uint32_t index;
   unsigned char name[1];
 } lfSTMember;
+static void dump_lfSTMember (lfSTMember *m, sDbgMemFile *t);
 
-typedef struct lfMethod {
-  unsigned short leaf;
-  unsigned short count;
-  unsigned long mList;
+typedef struct lfMethod { /* LF_METHOD */
+  uint16_t leaf;
+  uint16_t count;
+  uint32_t mList;
   unsigned char name[1];
 } lfMethod;
 
 typedef struct lfNestType { /* LF_NESTTYPE */
-  /* unsigned short leaf; */
-  unsigned short pad;
-  unsigned long index;
+  /* uint16_t leaf; */
+  uint16_t pad;
+  uint32_t index;
   unsigned char name[1];
 } lfNestType;
 static void dump_lfNestType (lfNestType *m, sDbgMemFile *t);
 
 typedef struct lfOneMethod { /* LF_ONEMETHOD */
-  /* unsigned short leaf; */
+  /* uint16_t leaf; */
   CV_fldattr_t attr;
-  unsigned long index;
-  unsigned long vbaseoff[0];
+  uint32_t index;
+  uint32_t vbaseoff[0];
 } lfOneMethod;
 static void dump_lfOneMethod (lfOneMethod *m, sDbgMemFile *x);
 
 typedef struct lfFieldList { /* LF_FIELDLIST */
-  /* unsigned short leaf; */
+  /* uint16_t leaf; */
   char data[1];
 } lfFieldList;
 static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t);
 
 typedef struct lfEnumFieldList {
-  unsigned short leaf;
-  unsigned short pad;
-  unsigned short value;
-  char name[1];
+  uint16_t leaf;
+  CV_fldattr_t attr;
+  unsigned char value[1];
 } lfEnumFieldList;
 
-typedef struct lfEnumFieldListWT {
-  unsigned short leaf;
-  unsigned short pad;
-  unsigned short value;
-  unsigned long valueEx;
-  char name[1];
-} lfEnumFieldListWT;
-
 typedef struct lfMemberFL {
-  unsigned short leaf;
-  unsigned short pad;
-  unsigned long index;
-  unsigned short offset;
+  uint16_t leaf;
+  uint16_t pad;
+  uint32_t index;
+  uint16_t offset;
   char name[1];
 } lfMemberFL;
 
 typedef struct lfOneMethodFL {
-  unsigned short leaf; /* LF_ONEMETHOD */
-  unsigned short pad;
-  unsigned long index;
+  uint16_t leaf; /* LF_ONEMETHOD */
+  uint16_t pad;
+  uint32_t index;
   char name[1];
 } lfOneMethodFL;
 
 typedef struct lfNestTypeFL { /* LF_NESTTYPE */
-   unsigned short leaf;
-  unsigned short pad;
-  unsigned long index;
+   uint16_t leaf;
+  uint16_t pad;
+  uint32_t index;
   unsigned char name[1];
 } lfNestTypeFL;
 
+typedef struct lfSTMemberFL {
+  uint16_t leaf;
+  uint16_t pad;
+  uint32_t index;
+  char name[1];
+} lfSTMemberFL;
+
 typedef struct lfBClassFL {
-  unsigned short leaf; /* LF_BCLASS */
-  unsigned short pad;
-  unsigned long utype;
-  unsigned short off; /* ??? */
+  uint16_t leaf; /* LF_BCLASS */
+  uint16_t pad;
+  uint32_t utype;
+  uint16_t off; /* ??? */
 } lfBClassFL; /* TODO */
 
 typedef union lfEasy {
-  unsigned short leaf;
+  uint16_t leaf;
   lfEnumFieldList enumFL;
-  lfEnumFieldListWT enumFLWT;
   lfMemberFL memberFL; /* LF_MEMBER lfMember */
   lfOneMethodFL oneMethodFL;
   lfNestTypeFL nestTypeFL;
+  lfSTMemberFL stMemberFL;
+  lfMethod methodFL;
+  lfBClassFL bClassFL;
 } lfEasy;
 
 typedef struct _GUID {
-  unsigned long data1;
-  unsigned short data2;
-  unsigned short data3;
+  uint32_t data1;
+  uint16_t data2;
+  uint16_t data3;
   unsigned char data4[8];
 } _GUID;
 
 typedef struct lfTypeServer2 { /* LF_TYPESERVER2 */
-  unsigned short leaf;
+  uint16_t leaf;
   struct _GUID sig70;
-  unsigned long age;
+  uint32_t age;
   unsigned char name[0];
 } lfTypeServer2;
 
 typedef struct lfPreComp { /* LF_PRECOMP */
-  unsigned short leaf;
-  unsigned long start;
-  unsigned long count;
-  unsigned long signature;
+  uint16_t leaf;
+  uint32_t start;
+  uint32_t count;
+  uint32_t signature;
   unsigned char name[0];
 } lfPreComp;
 
@@ -558,8 +566,8 @@ typedef struct Scpx8_t {
 
 typedef struct PchHd_s {
   unsigned char signature[12];
-  unsigned long version;
-  unsigned long sizecheck;
+  uint32_t version;
+  uint32_t sizecheck;
   char buildTimeStamp[20];
 } PchHd_s;
 typedef struct PchHD_s_pchILsizes {

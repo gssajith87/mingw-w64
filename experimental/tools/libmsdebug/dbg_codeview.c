@@ -110,6 +110,9 @@ static sDbgTags stTYPs[] = {
   { LF_ARGLIST, "LF_ARGLIST", "p", sz_p},
   { LF_MFUNCTION, "LF_MFUNCTION", "p", sz_p },
   { LF_NESTTYPE, "LF_NESTTYPE", "p", sz_p },
+  { LF_STMEMBER, "LF_STMEMBER", "p", sz_p },
+  { LF_UNION, "LF_UNION", "p", sz_p },
+  { LF_BCLASS, "LF_BCLASS", "p", sz_p },
   { 0, "TYP_UNKNOWN", "x", sz_unknown }
 };
 
@@ -164,6 +167,15 @@ static sDbgMemFile *dump_tag_element_typ (uint32_t tag, unsigned char *dta, size
       return x;
     case LF_NESTTYPE:
       dump_lfNestType ((lfNestType *)dta, x);
+      return x;
+    case LF_STMEMBER:
+      dump_lfSTMember ((lfSTMember *)dta, x);
+      return x;
+    case LF_UNION:
+      dump_lfUnion ((lfUnion *)dta, x);
+      return x;
+    case LF_BCLASS:
+      dump_lfBClass ((lfBClass *)dta, x);
       return x;
     default:
       break;

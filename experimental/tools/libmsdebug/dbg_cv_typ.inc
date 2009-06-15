@@ -1,3 +1,30 @@
+static size_t dump_lfvar (unsigned char *value, sDbgMemFile *t);
+
+static void dump_lfBClass (lfBClass *m, sDbgMemFile *t)
+{
+  dbg_memfile_printf (t, " LF_BCLASS(Attr:");
+  dump_CV_fldattr_t (& m->attr, t);
+  dbg_memfile_printf (t, ", index:%u, bclass: %s)\n",
+    m->index, m->offset);
+}
+
+static void dump_lfUnion (lfUnion *m, sDbgMemFile *t)
+{
+  dbg_memfile_printf (t, " LF_UNION(count:%u, Prop:", m->count);
+  dump_CV_prop_t (& m->property, t);
+  dbg_memfile_printf (t, ", field:%u, size:%u, union %s, Undecorate:%s)\n",
+    m->field, m->size, m->data, &m->data[strlen(m->data) + 1]);
+}
+
+static void dump_lfSTMember (lfSTMember *m, sDbgMemFile *t)
+{
+  if (!m || !t)
+    return;
+  dbg_memfile_printf (t, " LF_STMEMBER(Attr:");
+  dump_CV_fldattr_t (&m->attr, t);
+  dbg_memfile_printf (t, ", index:%u, %s)\n", m->index, m->name);
+}
+
 static void dump_lfNestType (lfNestType *m, sDbgMemFile *t)
 {
   if (!m || !t)
@@ -73,33 +100,57 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
     e=(lfEasy *) dta;
     switch (e->leaf)
     {
+    case LF_BCLASS:
+      dbg_memfile_printf (t, "  eBClass pad:%u, indext:%u, offset:%u\n",
+        e->bClassFL.pad, e->bClassFL.utype, e->bClassFL.off);
+      l = 10;
+      break;
+    case LF_STMEMBER:
+      dbg_memfile_printf (t, "  eSTMember pad:%u, index:%u, %s\n",
+        e->stMemberFL.pad, e->stMemberFL.index, e->stMemberFL.name);
+      l = strlen (e->stMemberFL.name) + 1 + 2 + 2 + 4;
+      break;
     case LF_NESTTYPE:
       dbg_memfile_printf (t, "  eNestType pad:%u, index:%u, %s\n",
         e->nestTypeFL.pad, e->nestTypeFL.index, e->nestTypeFL.name);
       l = strlen (e->nestTypeFL.name) + 1 + 4 + 2 + 2;
       break;
     case LF_ENUMERATE:
-      if ((e->enumFL.value & 0x8000)!=0)
-        {  
-		  dbg_memfile_printf (t, "  eEnum pad: %u, Value:0x%x, ValueEx:0x%x, %s\n", e->enumFLWT.pad, e->enumFLWT.value,
-		    e->enumFLWT.valueEx,
-		    e->enumFLWT.name);
-		  l = strlen (e->enumFLWT.name) + 1 + 2 + 2 + 4 + 2;
-		}
-      else
-        {
-		  dbg_memfile_printf (t, "  eEnum pad: %u, Value:0x%x, %s\n", e->enumFL.pad, e->enumFL.value,e->enumFL.name);
-		  l = strlen (e->enumFL.name) + 1 + 4 + 2;
-		}
+      {
+        size_t vs;
+        unsigned char *value;
+        dbg_memfile_printf (t, "  eEnum Attr:");
+        dump_CV_fldattr_t (& e->enumFL.attr, t);
+        l = 2 + 2;
+        value = e->enumFL.value;
+        dbg_memfile_printf (t, ", Value:");
+        vs = dump_lfvar (value, t);
+        l += vs;
+        value += vs;
+        dbg_memfile_printf (t, ", %s\n", value);
+        l += strlen (value) + 1;
+      }
       break;
     case LF_MEMBER:
       dbg_memfile_printf (t, "  eMember pad: %u, index:%u Offset:0x%x, %s\n", e->memberFL.pad, e->memberFL.index,
         e->memberFL.offset, e->memberFL.name );
       l = strlen (e->memberFL.name) + 1 + 4 + 4 + 2;
       break;
+    case LF_METHOD:
+      dbg_memfile_printf (t, "  eMethod count:%u, mList:%u, %s\n",
+        e->methodFL.count, e->methodFL.mList, e->methodFL.name);
+      l = strlen (e->methodFL.name) + 1 + 8;
+      break;
     case LF_ONEMETHOD:
-      dbg_memfile_printf (t, "  eOneMeth pad:%u, index:%u, %s\n", e->oneMethodFL.pad, e->oneMethodFL.index, e->oneMethodFL.name);
-      l = strlen (e->oneMethodFL.name) + 1 + 4 + 2 + 2;
+      if ((e->oneMethodFL.pad & 0x10) == 0) {
+		dbg_memfile_printf (t, "  eOneMeth pad:%u, index:%u, %s\n",
+		  e->oneMethodFL.pad, e->oneMethodFL.index, e->oneMethodFL.name);
+		l = strlen (e->oneMethodFL.name) + 1 + 4 + 2 + 2;
+	  } else {
+		dbg_memfile_printf (t, "  eOneMeth pad:%u, index:%u, size:0x%x, %s\n",
+		  e->oneMethodFL.pad, e->oneMethodFL.index, *((uint32_t *) e->oneMethodFL.name), &e->oneMethodFL.name[4]);
+		l = strlen (&e->oneMethodFL.name[4]) + 1 + 4 + 2 + 2 + 2 + 4;
+      }
       break;
     default:
       dbg_memfile_printf (t, "   Unknown fieldlist subtype 0x%x\n", e->leaf);
@@ -282,4 +333,52 @@ static void dump_CV_modifier_t (CV_modifier_t *m, sDbgMemFile *t)
     dbg_memfile_printf (t, " __unaligned");
   if (m->MOD_unused != 0)
     dbg_memfile_printf (t, " /* CV_modifier_t has unknown flags 0x%x */", m->MOD_unused);
+}
+
+static size_t dump_lfvar (unsigned char *value, sDbgMemFile *t)
+{
+  size_t len = 2;
+  unsigned short *us = (unsigned short *) value;
+  value += 2;
+  if ((us[0] & 0x8000) == 0)
+    {
+      if (t)
+        dbg_memfile_printf (t, " %u", us[0]);
+      return 2;
+    }
+  switch (us[0])
+    {
+    case LF_CHAR:
+      dbg_memfile_printf (t, "(unsigned char) %u", value[0]);
+      len += 1;
+      break;
+    case LF_SHORT:
+      dbg_memfile_printf (t, "(short) %d", *((short *)value));
+      len += 2;
+      break;
+    case LF_USHORT:
+      dbg_memfile_printf (t, "(unsigned short) %u", us[1]);
+      len += 2;
+      break;
+    case LF_LONG:
+      dbg_memfile_printf (t, "(long) %d", *((int *)value));
+      len += 4;
+      break;
+    case LF_ULONG:
+      dbg_memfile_printf (t, "(unsigned long) %u", *((unsigned int *)value));
+      len += 4;
+      break;
+    case LF_REAL32:
+      dbg_memfile_printf (t, "(float) %f", *((float *)value));
+      len += 4;
+      break;
+    case LF_REAL64:
+      dbg_memfile_printf (t, "(double) %g", *((double *)value));
+      len += 8;
+      break;
+    default:
+      dbg_memfile_printf (t, "lftype=0x%x unknown", us[0]);
+      break;
+    }
+  return len;
 }
