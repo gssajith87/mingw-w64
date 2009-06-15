@@ -147,7 +147,8 @@ static void dump_lfArgList (lfArgList *m, sDbgMemFile *t)
      dbg_memfile_printf (t, "%s", i==0 ? "" : ",");
     dump_typeid (m->arg[i], t);
    }
-  dbg_memfile_printf (t, "%s)\n", m->count!=0 ? "}" : "");
+  dbg_memfile_printf (t, "%s", m->count!=0 ? "}" : "");
+  dbg_memfile_printf (t, ")\n");
 }
 
 static void dump_lfArray (lfArray *m, sDbgMemFile *t)
@@ -198,24 +199,29 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
     switch (e->leaf)
     {
     case LF_VFUNCTAB:
-      dbg_memfile_printf (t, "  eVFuncTab pad:%u, type:%u)\n",
-        e->vfunctabFL.pad, e->vfunctabFL.type);
+      dbg_memfile_printf (t, "  eVFuncTab pad:%u, type:", e->vfunctabFL.pad);
+      dump_typeid (e->vfunctabFL.type, t);
+      dbg_memfile_printf (t, ")\n");
       l = 2 + 2 + 4;
       break;
     case LF_BCLASS:
-      dbg_memfile_printf (t, "  eBClass pad:%u, indext:%u, offset:%u\n",
-        e->bClassFL.pad, e->bClassFL.utype, e->bClassFL.off);
+      dbg_memfile_printf (t, "  eBClass pad:%u, indext:", e->bClassFL.pad);
+      dump_typeid (e->bClassFL.utype, t);
+      dbg_memfile_printf (t, ", offset:%u\n", e->bClassFL.off);
       l = 10;
       break;
     case LF_STMEMBER:
       dbg_memfile_printf (t, "  eSTMember Attr:");
       dump_CV_fldattr_t (& e->stMemberFL.attr, t);
-      dbg_memfile_printf (t, ", Index:%u, %s\n", e->stMemberFL.index, e->stMemberFL.name);
+      dbg_memfile_printf (t, ", Index:");
+      dump_typeid (e->stMemberFL.index, t);
+      dbg_memfile_printf (t, ", %s\n", e->stMemberFL.name);
       l = strlen (e->stMemberFL.name) + 1 + 2 + 2 + 4;
       break;
     case LF_NESTTYPE:
-      dbg_memfile_printf (t, "  eNestType pad:%u, index:%u, %s\n",
-        e->nestTypeFL.pad, e->nestTypeFL.index, e->nestTypeFL.name);
+      dbg_memfile_printf (t, "  eNestType pad:%u, index:", e->nestTypeFL.pad);
+      dump_typeid (e->nestTypeFL.index, t);
+      dbg_memfile_printf (t, ", %s\n",e->nestTypeFL.name);
       l = strlen (e->nestTypeFL.name) + 1 + 4 + 2 + 2;
       break;
     case LF_ENUMERATE:
@@ -235,13 +241,15 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
       }
       break;
     case LF_MEMBER:
-      dbg_memfile_printf (t, "  eMember pad: %u, index:%u Offset:0x%x, %s\n", e->memberFL.pad, e->memberFL.index,
-        e->memberFL.offset, e->memberFL.name );
+      dbg_memfile_printf (t, "  eMember pad: %u, index:", e->memberFL.pad);
+      dump_typeid (e->memberFL.index, t);
+      dbg_memfile_printf (t, ", Offset:0x%x, %s\n", e->memberFL.offset, e->memberFL.name);
       l = strlen (e->memberFL.name) + 1 + 4 + 4 + 2;
       break;
     case LF_METHOD:
-      dbg_memfile_printf (t, "  eMethod count:%u, mList:%u, %s\n",
-        e->methodFL.count, e->methodFL.mList, e->methodFL.name);
+      dbg_memfile_printf (t, "  eMethod count:%u, mList:", e->methodFL.count);
+      dump_typeid (e->methodFL.mList, t);
+      dbg_memfile_printf (t, ", %s\n", e->methodFL.name);
       l = strlen (e->methodFL.name) + 1 + 8;
       break;
     case LF_ONEMETHOD:
@@ -249,7 +257,8 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
         uint32_t *vboff = e->oneMethodFL.vbaseoff;
 		dbg_memfile_printf (t, "  eOneMeth Attr:");
 		dump_CV_fldattr_t (& e->oneMethodFL.attr, t);
-		dbg_memfile_printf (t, ", Index:%u", e->oneMethodFL.index);
+		dbg_memfile_printf (t, ", Index:");
+		dump_typeid (e->oneMethodFL.index, t);
 		l = 8;
 		if (has_CV_fldattr_t_VBase (& e->oneMethodFL.attr))
 		  {
@@ -285,8 +294,11 @@ static void dump_lfEnum (lfEnum *m, sDbgMemFile *t)
     return;
   dbg_memfile_printf (t, " LF_ENUM(count:%u, prop:", m->count);
   dump_CV_prop_t (& m->property, t);
-  dbg_memfile_printf (t, ", utype:%u, field:%u, enum ",
-   m->utype,m->field);
+  dbg_memfile_printf (t, ", utype:");
+  dump_typeid (m->utype, t);
+  dbg_memfile_printf (t, ", field:");
+  dump_typeid (m->field, t);
+  dbg_memfile_printf (t, ", enum ");
   n = &m->name[0];
   dbg_memfile_printf (t, "%s", n); n+=strlen (n) + 1;
   dbg_memfile_printf (t, ", Undecorated:%s",n);
@@ -299,25 +311,34 @@ static void dump_lfOneMethod (lfOneMethod *m, sDbgMemFile *t)
     return;
   dbg_memfile_printf (t, " LF_ONEMETHOD(Attr:");
   dump_CV_fldattr_t (& m->attr, t);
-  dbg_memfile_printf (t, ", Index:%u, vbaseoff:%u)\n",m->index,m->vbaseoff[0]);
+  dbg_memfile_printf (t, ", Index:");
+  dump_typeid (m->index, t);
+  dbg_memfile_printf (t, ", vbaseoff:%u)\n",m->vbaseoff[0]);
 }
 
 static void dump_lfProc (lfProc *m, sDbgMemFile *t)
 {
+  char *name;
   if (!m || !t)
     return;
-  dbg_memfile_printf (t, " LF_PROCEDURE(returntype: %u, calltype:",m->rvtype);
+  dbg_memfile_printf (t, " LF_PROCEDURE(returntype:");
+  dump_typeid (m->rvtype, t);
+  dbg_memfile_printf (t, ", calltype:");
   dump_CV_call (m->calltype, t);
   dbg_memfile_printf (t, ", attr:");
   dump_CV_funcattr_t (&m->funcattr, t);
-  dbg_memfile_printf (t, ", parmcount:%u, arglist: %u)\n", m->parmcount, m->arglist);
+  dbg_memfile_printf (t, ", parmcount:%u, arglist:", m->parmcount);
+  dump_typeid (m->arglist, t);
+  dbg_memfile_printf (t, ")\n");
 }
 
 static void dump_lfPointer (lfPointer *m, sDbgMemFile *t)
 {
   if (!m || !t)
     return;
-  dbg_memfile_printf (t, " LF_POINTER(type: %u, ptrtype: %u, ptrmode: %u", m->utype, m->attr.ptrtype,m->attr.ptrmode);
+  dbg_memfile_printf (t, " LF_POINTER(type:");
+  dump_typeid (m->utype, t);
+  dbg_memfile_printf (t, ", ptrtype: %u, ptrmode: %u", m->attr.ptrtype,m->attr.ptrmode);
   if (m->attr.isflat32)
     dbg_memfile_printf (t, " flat32");
   if (m->attr.isvolatile)
@@ -339,7 +360,9 @@ static void dump_lfModifier (lfModifier *m, sDbgMemFile *t)
 {
   if (!m || !t)
     return;
-  dbg_memfile_printf (t, " LF_MODIFER(type: %u, ", m->type);
+  dbg_memfile_printf (t, " LF_MODIFER(type:");
+  dump_typeid (m->type, t);
+  dbg_memfile_printf (t, ", ");
   dump_CV_modifier_t (& m->attr, t);
   dbg_memfile_printf (t, ")\n");
 }
