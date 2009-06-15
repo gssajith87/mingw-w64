@@ -1,6 +1,63 @@
 static size_t dump_lfvar (unsigned char *value, sDbgMemFile *t);
 static int has_CV_fldattr_t_VBase (CV_fldattr_t *t);
 
+static void dump_CV_call (unsigned char call, sDbgMemFile *t)
+{
+  if (!t)
+    return;
+  switch (call)
+    {
+	case CV_CALL_NEAR_C:
+	  dbg_memfile_printf (t, " __cdecl"); break;
+	case CV_CALL_FAR_C:
+	  dbg_memfile_printf (t, " __cdecl __far"); break;
+	case CV_CALL_NEAR_PASCAL:
+	  dbg_memfile_printf (t, " __pascal"); break;
+	case CV_CALL_FAR_PASCAL:
+	  dbg_memfile_printf (t, " __pascal __far"); break;
+	case CV_CALL_NEAR_FAST:
+	  dbg_memfile_printf (t, " __fastcall"); break;
+	case CV_CALL_FAR_FAST:
+	  dbg_memfile_printf (t, " __fastcall __far"); break;
+	case CV_CALL_SKIPPED:
+	  dbg_memfile_printf (t, " __unknown"); break;
+	case CV_CALL_NEAR_STD:
+	  dbg_memfile_printf (t, " __stdcall"); break;
+	case CV_CALL_FAR_STD:
+	  dbg_memfile_printf (t, " __stdcall __far"); break;
+	case CV_CALL_NEAR_SYS:
+	  dbg_memfile_printf (t, " __syscall"); break;
+	case CV_CALL_FAR_SYS:
+	  dbg_memfile_printf (t, " __syscall __far"); break;
+	case CV_CALL_THISCALL:
+	  dbg_memfile_printf (t, " __thiscall"); break;
+	case CV_CALL_MIPSCALL:
+	  dbg_memfile_printf (t, " __mipscall"); break;
+	case CV_CALL_GENERIC:
+	  dbg_memfile_printf (t, " __generic"); break;
+	case CV_CALL_ALPHACALL:
+	  dbg_memfile_printf (t, " __alphacall"); break;
+	case CV_CALL_PPCCALL:
+	  dbg_memfile_printf (t, " __ppccall"); break;
+	case CV_CALL_SHCALL:
+	  dbg_memfile_printf (t, " __shcall"); break;
+	case CV_CALL_ARMCALL:
+	  dbg_memfile_printf (t, " __armcall"); break;
+	case CV_CALL_AM33CALL:
+	  dbg_memfile_printf (t, " __am33call"); break;
+	case CV_CALL_TRICALL:
+	  dbg_memfile_printf (t, " __tricall"); break;
+	case CV_CALL_SH5CALL:
+	  dbg_memfile_printf (t, " __sh5call"); break;
+	case CV_CALL_M32RCALL:
+	  dbg_memfile_printf (t, " __m32rcall"); break;
+	case  CV_CALL_CLRCALL:
+	  dbg_memfile_printf (t, " __clrcall"); break;
+	default:
+	  dbg_memfile_printf (t, " Unknown calling convention 0x%x", call); break;
+    }
+}
+
 static void dump_lfBitfield (lfBitfield *m, sDbgMemFile *t)
 {
   dbg_memfile_printf (t, " LF_BITFIELD(Type:%u, length:%u, bitpos:%u)\n",
@@ -60,8 +117,10 @@ static void dump_lmFunc (lmFunc *m, sDbgMemFile *t)
 {
   if (!m || !t)
     return;
-  dbg_memfile_printf (t, " LF_MFUNCTION(returntype: %u, classtype: %u, thistype: %u, calltype: 0x%02x,",
-    m->rvtype, m->classtype, m->thistype, m->calltype);
+  dbg_memfile_printf (t, " LF_MFUNCTION(returntype: %u, classtype: %u, thistype: %u, calltype:",
+    m->rvtype, m->classtype, m->thistype);
+  dump_CV_call (m->calltype, t);
+  dbg_memfile_printf (t, ", attr:");
   dump_CV_funcattr_t (&m->funcattr, t);
   dbg_memfile_printf (t, ", parmcount:%u, arglist: %u,thisadjust=%ld)\n", m->parmcount, m->arglist, m->thisadjust);
 }
@@ -232,7 +291,9 @@ static void dump_lfProc (lfProc *m, sDbgMemFile *t)
 {
   if (!m || !t)
     return;
-  dbg_memfile_printf (t, " LF_PROCEDURE(returntype: %u, calltype: 0x%02x,",m->rvtype, m->calltype);
+  dbg_memfile_printf (t, " LF_PROCEDURE(returntype: %u, calltype:",m->rvtype);
+  dump_CV_call (m->calltype, t);
+  dbg_memfile_printf (t, ", attr:");
   dump_CV_funcattr_t (&m->funcattr, t);
   dbg_memfile_printf (t, ", parmcount:%u, arglist: %u)\n", m->parmcount, m->arglist);
 }
@@ -331,7 +392,7 @@ static void dump_CV_fldattr_t (CV_fldattr_t *m, sDbgMemFile *t)
   }
   switch (m->mprop)
   {
-  case CV_MTvanilla: dbg_memfile_printf (t, " vanilla"); break;
+  case CV_MTvanilla: break;
   case CV_MTvirtual: dbg_memfile_printf (t, " virtual"); break;
   case CV_MTstatic: dbg_memfile_printf (t, " static"); break;
   case CV_MTfriend: dbg_memfile_printf (t, " friend"); break;

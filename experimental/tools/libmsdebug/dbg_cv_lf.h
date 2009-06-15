@@ -21,6 +21,34 @@ typedef enum eCV_access {
   CV_public = 3,
 } eCV_access;
 
+typedef enum eCV_call {
+  CV_CALL_NEAR_C = 0,
+  CV_CALL_FAR_C = 1,
+  CV_CALL_NEAR_PASCAL = 2,
+  CV_CALL_FAR_PASCAL = 3,
+  CV_CALL_NEAR_FAST = 4,
+  CV_CALL_FAR_FAST = 5,
+  CV_CALL_SKIPPED = 6,
+  CV_CALL_NEAR_STD = 7,
+  CV_CALL_FAR_STD = 8,
+  CV_CALL_NEAR_SYS = 9,
+  CV_CALL_FAR_SYS = 10,
+  CV_CALL_THISCALL = 11,
+  CV_CALL_MIPSCALL = 12,
+  CV_CALL_GENERIC = 13,
+  CV_CALL_ALPHACALL = 14,
+  CV_CALL_PPCCALL = 15,
+  CV_CALL_SHCALL = 16,
+  CV_CALL_ARMCALL = 17,
+  CV_CALL_AM33CALL = 18,
+  CV_CALL_TRICALL = 19,
+  CV_CALL_SH5CALL = 20,
+  CV_CALL_M32RCALL = 21,
+  CV_CALL_CLRCALL = 22,
+  CV_CALL_RESERVED = 23
+} eCV_call;
+static void dump_CV_call (unsigned char call, sDbgMemFile *t);
+
 typedef enum eCV_methodprop {
   CV_MTvanilla = 0,
   CV_MTvirtual = 1,
@@ -76,6 +104,107 @@ typedef struct CV_prop_t {
   uint16_t reserved : 2;
 } CV_prop_t;
 static void dump_CV_prop_t (CV_prop_t *m, sDbgMemFile *t);
+
+typedef enum CV_SourceChksum_t {
+  CHKSUM_TYPE_NONE = 0,
+  CHKSUM_TYPE_MD5 = 1,
+  CHKSUM_TYPE_SHA1 = 2,
+} CV_SourceChksum_t;
+
+typedef enum eCV_HFA {
+  CV_HFA_none = 0,
+  CV_HFA_float = 1,
+  CV_HFA_double = 2,
+} eCV_HFA;
+
+typedef enum eCV_ptrmode {
+  CV_PTR_MODE_PTR = 0,
+  CV_PTR_MODE_REF = 1,
+  CV_PTR_MODE_PMEM = 2,
+  CV_PTR_MODE_PMFUNC = 3,
+  CV_PTR_MODE_RESERVED = 4
+} eCV_ptrmode;
+
+typedef enum eCV_ptrtype {
+  CV_PTR_NEAR = 0,
+  CV_PTR_FAR = 1,
+  CV_PTR_HUGE = 2,
+  CV_PTR_BASE_SEG = 3,
+  CV_PTR_BASE_VAL = 4,
+  CV_PTR_BASE_SEGVAL = 5,
+  CV_PTR_BASE_ADDR = 6,
+  CV_PTR_BASE_SEGADDR = 7,
+  CV_PTR_BASE_TYPE = 8,
+  CV_PTR_BASE_SELF = 9,
+  CV_PTR_NEAR32 = 10,
+  CV_PTR_FAR32 = 11,
+  CV_PTR_64 = 12,
+  CV_PTR_UNUSEDPTR = 13
+} eCV_ptrtype;
+
+typedef enum eCV_prmode {
+  CV_TM_DIRECT = 0,
+  CV_TM_NPTR = 1,
+  CV_TM_FPTR = 2,
+  CV_TM_HPTR = 3,
+  CV_TM_NPTR32 = 4,
+  CV_TM_FPTR32 = 5,
+  CV_TM_NPTR64 = 6,
+  CV_TM_NPTR128 = 7,
+} eCV_prmode;
+
+typedef enum eCV_type {
+  CV_SP_NOTYPE = 0,
+  CV_SP_ABS = 1,
+  CV_SP_SEGMENT = 2,
+  CV_SP_VOID = 3,
+  CV_SP_CURRENCY = 4,
+  CV_SP_NBASICSTR = 5,
+  CV_SP_FBASICSTR = 6,
+  CV_SP_NOTTRANS = 7,
+  CV_SP_HRESULT = 8,
+} eCV_type;
+
+typedef enum eCV_real {
+  CV_RC_REAL32 = 0,
+  CV_RC_REAL64 = 1,
+  CV_RC_REAL80 = 2,
+  CV_RC_REAL128 = 3,
+  CV_RC_REAL48 = 4
+} eCV_real;
+
+typedef enum eCV_int {
+  CV_RI_CHAR = 0, CV_RI_INT1 = 0,
+  CV_RI_WCHAR = 1, CV_RI_UINT1 = 1,
+  CV_RI_INT2 = 2,
+  CV_RI_UINT2 = 3,
+  CV_RI_INT4 = 4,
+  CV_RI_UINT4 = 5,
+  CV_RI_INT8 = 6,
+  CV_RI_UINT8 = 7,
+  CV_RI_INT16 = 8,
+  CV_RI_UINT16 = 9
+} eCV_int;
+
+typedef enum eCV_integral {
+  CV_IN_1BYTE = 0,
+  CV_IN_2BYTE = 1,
+  CV_IN_4BYTE = 2,
+  CV_IN_8BYTE = 3,
+  CV_IN_16BYTE = 4
+} eCV_integral;
+
+typedef enum eCV_pmtype {
+  CV_PMTYPE_Undef = 0,
+  CV_PMTYPE_D_Single = 1,
+  CV_PMTYPE_D_Multiple = 2,
+  CV_PMTYPE_D_Virtual = 3,
+  CV_PMTYPE_D_General = 4,
+  CV_PMTYPE_F_Single = 5,
+  CV_PMTYPE_F_Multiple = 6,
+  CV_PMTYPE_F_Virtual = 7,
+  CV_PMTYPE_F_General = 8
+} eCV_pmtype;
 
 typedef struct lmFunc { /* LF_MFUNCTION */
   /*uint16_t leaf; */
