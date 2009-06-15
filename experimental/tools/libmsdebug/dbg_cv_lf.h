@@ -175,7 +175,7 @@ typedef enum eCV_real {
 
 typedef enum eCV_int {
   CV_RI_CHAR = 0, CV_RI_INT1 = 0,
-  CV_RI_WCHAR = 1, CV_RI_UINT1 = 1,
+  CV_RI_UCHAR = 1, CV_RI_UINT1 = 1,
   CV_RI_INT2 = 2,
   CV_RI_UINT2 = 3,
   CV_RI_INT4 = 4,
@@ -193,6 +193,26 @@ typedef enum eCV_integral {
   CV_IN_8BYTE = 3,
   CV_IN_16BYTE = 4
 } eCV_integral;
+  
+typedef enum eCV_special {
+  CV_SP_NOTYPE = 0,
+  CV_SP_ABS = 1,
+  CV_SP_SEGMENT = 2,
+  CV_SP_VOID = 3,
+  CV_SP_CURRENCY = 4,
+  CV_SP_NBASICSTR = 5,
+  CV_SP_FBASICSTR = 6,
+  CV_SP_NOTTRANS = 7,
+  CV_SP_HRESULT = 8,
+} eCV_special;
+
+  typedef union uCV_type {
+  uint32_t type;
+  __extension__ struct {
+    unsigned short type_spec : 4; /* eCV_real, eCV_int, eCV_integral, eCV_special */
+    unsigned short type_kind : 4; /* eCV_type */
+  };
+} uCV_type;
 
 typedef enum eCV_pmtype {
   CV_PMTYPE_Undef = 0,
@@ -205,18 +225,6 @@ typedef enum eCV_pmtype {
   CV_PMTYPE_F_Virtual = 7,
   CV_PMTYPE_F_General = 8
 } eCV_pmtype;
-
-typedef enum eCV_special {
-  CV_SP_NOTYPE = 0,
-  CV_SP_ABS = 1,
-  CV_SP_SEGMENT = 2,
-  CV_SP_VOID = 3,
-  CV_SP_CURRENCY = 4,
-  CV_SP_NBASICSTR = 5,
-  CV_SP_FBASICSTR = 6,
-  CV_SP_NOTTRANS = 7,
-  CV_SP_HRESULT = 8,
-} eCV_special;
 
 typedef struct lmFunc { /* LF_MFUNCTION */
   /*uint16_t leaf; */

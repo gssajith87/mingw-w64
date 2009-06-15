@@ -1,3 +1,4 @@
+static void dump_typeid (uint32_t ty, sDbgMemFile *t);
 static size_t dump_lfvar (unsigned char *value, sDbgMemFile *t);
 static int has_CV_fldattr_t_VBase (CV_fldattr_t *t);
 
@@ -102,23 +103,31 @@ static void dump_lfSTMember (lfSTMember *m, sDbgMemFile *t)
     return;
   dbg_memfile_printf (t, " LF_STMEMBER(Attr:");
   dump_CV_fldattr_t (&m->attr, t);
-  dbg_memfile_printf (t, ", index:%u, %s)\n", m->index, m->name);
+  dbg_memfile_printf (t, ", index:");
+  dump_typeid (m->index, t);
+  dbg_memfile_printf (t, ", %s)\n", m->index, m->name);
 }
 
 static void dump_lfNestType (lfNestType *m, sDbgMemFile *t)
 {
   if (!m || !t)
     return;
-  dbg_memfile_printf (t, " LF_NESTTYPE(pad:%u, index:%u, %s)",
-    m->pad, m->index, m->name);
+  dbg_memfile_printf (t, " LF_NESTTYPE(pad:%u, index:", m->pad);
+  dump_typeid (m->index, t);
+  dbg_memfile_printf (t, ", %s)\n", m->name);
 }
 
 static void dump_lmFunc (lmFunc *m, sDbgMemFile *t)
 {
   if (!m || !t)
     return;
-  dbg_memfile_printf (t, " LF_MFUNCTION(returntype: %u, classtype: %u, thistype: %u, calltype:",
-    m->rvtype, m->classtype, m->thistype);
+  dbg_memfile_printf (t, " LF_MFUNCTION(returntype:");
+  dump_typeid (m->rvtype, t);
+  dbg_memfile_printf (t, ", classtype:");
+  dump_typeid (m->classtype, t);
+  dbg_memfile_printf (t, ", thistype:");
+  dump_typeid (m->thistype, t);
+  dbg_memfile_printf (t, ", calltype:");
   dump_CV_call (m->calltype, t);
   dbg_memfile_printf (t, ", attr:");
   dump_CV_funcattr_t (&m->funcattr, t);
@@ -134,7 +143,10 @@ static void dump_lfArgList (lfArgList *m, sDbgMemFile *t)
   if (m->count!=0)
    dbg_memfile_printf (t, ", ArgTypes[%u]={", m->count);
   for (i=0;i<m->count;i++)
-    dbg_memfile_printf (t, "%s%u", i==0 ? "" : ",", m->arg[i]);
+   {
+     dbg_memfile_printf (t, "%s", i==0 ? "" : ",");
+    dump_typeid (m->arg[i], t);
+   }
   dbg_memfile_printf (t, "%s)\n", m->count!=0 ? "}" : "");
 }
 
@@ -142,8 +154,11 @@ static void dump_lfArray (lfArray *m, sDbgMemFile *t)
 {
   if (!m || !t)
     return;
-  dbg_memfile_printf (t, "  LF_ARRAY(elemtype:%u, idxType=%u, size:%u, %s[])\n",
-    m->elemtype, m->idxtype,m->size, m->data);
+  dbg_memfile_printf (t, "  LF_ARRAY(elemtype:");
+  dump_typeid (m->elemtype, t);
+  dbg_memfile_printf (t, ", idxType=");
+  dump_typeid (m->idxtype, t);
+  dbg_memfile_printf (t, ", size:%u, %s[])\n",m->size, m->data);
 }
 
 static void dump_lfClass (lfClass *m, sDbgMemFile *t)
@@ -487,4 +502,60 @@ static size_t dump_lfvar (unsigned char *value, sDbgMemFile *t)
       break;
     }
   return len;
+}
+
+static void dump_typeid (uint32_t ty, sDbgMemFile *t)
+{
+  static const char *sp[9] = { "<none>","<absolute>","<segment>","void", "<currency>","basicstring","__far basicstring","<not-translated>","HRESULT" };
+  const char *bsign;
+  uCV_type u;
+  u.type = ty;
+  if (ty >= 0x100)
+    {
+      dbg_memfile_printf (t, "#%u", ty);
+      return;
+    }
+  switch (u.type_kind)
+  {
+  case CV_SPECIAL:
+    if (u.type_spec > 8) break;
+    dbg_memfile_printf(t, "%s", sp[u.type_spec]); return;
+  case CV_SIGNED:
+    bsign="signed"; goto cv1;
+  case CV_UNSIGNED:
+    bsign="unsigned";
+cv1:
+	switch (u.type_spec) {
+	case  CV_IN_1BYTE: dbg_memfile_printf (t, "%s char", bsign); return;
+	case  CV_IN_2BYTE: dbg_memfile_printf (t, "%s short", bsign); return;
+	case  CV_IN_4BYTE: dbg_memfile_printf (t, "%s int", bsign); return;
+	case  CV_IN_8BYTE: dbg_memfile_printf (t, "%s __int64", bsign); return;
+	case  CV_IN_16BYTE: dbg_memfile_printf (t, "%s __int128", bsign); return;
+    default: break;
+    }
+    break;
+  case CV_INT:
+    switch (u.type_spec) {
+    case CV_RI_CHAR: dbg_memfile_printf (t, "char"); return;
+    case CV_RI_UCHAR: dbg_memfile_printf (t, "uchar"); return;
+    case CV_RI_INT2: dbg_memfile_printf (t, "short"); return;
+    case CV_RI_UINT2: dbg_memfile_printf (t, "ushort"); return;
+    case CV_RI_INT4: dbg_memfile_printf (t, "int"); return;
+    case CV_RI_UINT4: dbg_memfile_printf (t, "uint"); return;
+    case CV_RI_INT8: dbg_memfile_printf (t, "__int64"); return;
+    case CV_RI_UINT8: dbg_memfile_printf (t, "unsigned __int64"); return;
+    case CV_RI_INT16: dbg_memfile_printf (t, "__int128"); return;
+    case CV_RI_UINT16: dbg_memfile_printf (t, "unsigned __int128"); return;
+    default: break;
+    }
+    break;
+  case CV_BOOLEAN:
+    break;
+  case CV_REAL:
+  case CV_COMPLEX:
+  case CV_SPECIAL2:
+  default:
+    break;
+  }
+  dbg_memfile_printf (t, "#%u(0x%x)", ty, ty);
 }
