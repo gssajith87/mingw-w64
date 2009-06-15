@@ -142,15 +142,23 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
       l = strlen (e->methodFL.name) + 1 + 8;
       break;
     case LF_ONEMETHOD:
-      if ((e->oneMethodFL.pad & 0x10) == 0) {
-		dbg_memfile_printf (t, "  eOneMeth pad:%u, index:%u, %s\n",
-		  e->oneMethodFL.pad, e->oneMethodFL.index, e->oneMethodFL.name);
-		l = strlen (e->oneMethodFL.name) + 1 + 4 + 2 + 2;
-	  } else {
-		dbg_memfile_printf (t, "  eOneMeth pad:%u, index:%u, size:0x%x, %s\n",
-		  e->oneMethodFL.pad, e->oneMethodFL.index, *((uint32_t *) e->oneMethodFL.name), &e->oneMethodFL.name[4]);
-		l = strlen (&e->oneMethodFL.name[4]) + 1 + 4 + 2 + 2 + 2 + 4;
-      }
+      {
+        uint32_t *vboff = e->oneMethodFL.vbaseoff;
+		dbg_memfile_printf (t, "  eOneMeth Attr:");
+		dump_CV_fldattr_t (& e->oneMethodFL.attr, t);
+		dbg_memfile_printf (t, ", Index:%u", e->oneMethodFL.index);
+		l = 8;
+		switch (e->oneMethodFL.attr.mprop)
+		{
+		case CV_MTintro: case CV_MTpurevirt: case CV_MTpureintro:
+		  dbg_memfile_printf (t, ", VBase:0x%x", vboff[0]);
+		  vboff++;
+		  l += 4;
+		  break;  
+		}
+	    dbg_memfile_printf (t, ", %s\n", (char *) vboff);
+	    l += strlen ((char*)vboff) + 1;
+	  }
       break;
     default:
       dbg_memfile_printf (t, "   Unknown fieldlist subtype 0x%x\n", e->leaf);

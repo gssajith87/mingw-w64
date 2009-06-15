@@ -331,9 +331,9 @@ typedef struct lfMemberFL {
 
 typedef struct lfOneMethodFL {
   uint16_t leaf; /* LF_ONEMETHOD */
-  uint16_t pad;
+  CV_fldattr_t attr;
   uint32_t index;
-  char name[1];
+  uint32_t vbaseoff[0];
 } lfOneMethodFL;
 
 typedef struct lfNestTypeFL { /* LF_NESTTYPE */
