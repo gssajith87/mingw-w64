@@ -113,6 +113,8 @@ static sDbgTags stTYPs[] = {
   { LF_STMEMBER, "LF_STMEMBER", "p", sz_p },
   { LF_UNION, "LF_UNION", "p", sz_p },
   { LF_BCLASS, "LF_BCLASS", "p", sz_p },
+  { LF_METHODLIST, "LF_METHODLIST", "p", sz_p },
+  { LF_BITFIELD, "LF_BITFIELD", "p", sz_p },
   { 0, "TYP_UNKNOWN", "x", sz_unknown }
 };
 
@@ -176,6 +178,12 @@ static sDbgMemFile *dump_tag_element_typ (uint32_t tag, unsigned char *dta, size
       return x;
     case LF_BCLASS:
       dump_lfBClass ((lfBClass *)dta, x);
+      return x;
+    case LF_METHODLIST:
+      dump_lfMethodList ((lfMethodList *)dta, len, x);
+      return x;
+    case LF_BITFIELD:
+      dump_lfBitfield ((lfBitfield *)dta, x);
       return x;
     default:
       break;

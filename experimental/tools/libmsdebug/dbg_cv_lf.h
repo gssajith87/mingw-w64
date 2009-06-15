@@ -90,6 +90,12 @@ typedef struct lmFunc { /* LF_MFUNCTION */
 } lmFunc;
 static void dump_lmFunc (lmFunc *m, sDbgMemFile *t);
 
+typedef struct lfMethodList { /* LF_METHODLIST */
+  /* uint16_t leaf; */
+  uint32_t offset[1];
+} lfMethodList;
+static void dump_lfMethodList (lfMethodList *m, size_t size, sDbgMemFile *t);
+
 typedef struct lfArgList { /* LF_ARGLIST */
   /* uint16_t leaf; */
   uint32_t count;
@@ -135,12 +141,13 @@ typedef struct lfArray { /* LF_ARRAY */
 } lfArray;
 static void dump_lfArray (lfArray *m, sDbgMemFile *t);
 
-typedef struct lfBitfield {
+typedef struct lfBitfield { /* LF_BITFIELD */
   /* uint16_t leaf; */
   uint32_t type;
   unsigned char length;
   unsigned char position;
 } lfBitfield;
+static void dump_lfBitfield (lfBitfield *m, sDbgMemFile *t);
 
 typedef struct lfPointerBody {
   uint16_t leaf;
@@ -345,7 +352,7 @@ typedef struct lfNestTypeFL { /* LF_NESTTYPE */
 
 typedef struct lfSTMemberFL {
   uint16_t leaf;
-  uint16_t pad;
+  CV_fldattr_t attr;
   uint32_t index;
   char name[1];
 } lfSTMemberFL;

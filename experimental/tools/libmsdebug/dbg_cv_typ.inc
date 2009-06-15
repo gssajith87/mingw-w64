@@ -1,4 +1,27 @@
 static size_t dump_lfvar (unsigned char *value, sDbgMemFile *t);
+static int has_CV_fldattr_t_VBase (CV_fldattr_t *t);
+
+static void dump_lfBitfield (lfBitfield *m, sDbgMemFile *t)
+{
+  dbg_memfile_printf (t, " LF_BITFIELD(Type:%u, length:%u, bitpos:%u)\n",
+    m->type, m->length, m->position);
+}
+
+static void dump_lfMethodList (lfMethodList *m, size_t size, sDbgMemFile *t)
+{
+  size_t i;
+  dbg_memfile_printf (t, " LF_METHODLIST(\n");
+  i = 0;
+  while (size >= 8)
+    {
+      dbg_memfile_printf (t, "  #%u: Flags:0x%x,Index:%u\n", (uint32_t) i, m->offset[i*2], m->offset[i*2+1]);
+      size -=8; i++;
+    }
+  if (size != 0)
+    dbg_memfile_printf (t, " Remains:%u bytes)\n", (uint32_t) size);
+  else
+    dbg_memfile_printf (t, " )\n");
+}
 
 static void dump_lfBClass (lfBClass *m, sDbgMemFile *t)
 {
@@ -106,8 +129,9 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
       l = 10;
       break;
     case LF_STMEMBER:
-      dbg_memfile_printf (t, "  eSTMember pad:%u, index:%u, %s\n",
-        e->stMemberFL.pad, e->stMemberFL.index, e->stMemberFL.name);
+      dbg_memfile_printf (t, "  eSTMember Attr:");
+      dump_CV_fldattr_t (& e->stMemberFL.attr, t);
+      dbg_memfile_printf (t, ", Index:%u, %s\n", e->stMemberFL.index, e->stMemberFL.name);
       l = strlen (e->stMemberFL.name) + 1 + 2 + 2 + 4;
       break;
     case LF_NESTTYPE:
@@ -148,14 +172,12 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
 		dump_CV_fldattr_t (& e->oneMethodFL.attr, t);
 		dbg_memfile_printf (t, ", Index:%u", e->oneMethodFL.index);
 		l = 8;
-		switch (e->oneMethodFL.attr.mprop)
-		{
-		case CV_MTintro: case CV_MTpurevirt: case CV_MTpureintro:
-		  dbg_memfile_printf (t, ", VBase:0x%x", vboff[0]);
-		  vboff++;
-		  l += 4;
-		  break;  
-		}
+		if (has_CV_fldattr_t_VBase (& e->oneMethodFL.attr))
+		  {
+		    dbg_memfile_printf (t, ", VBase:0x%x", vboff[0]);
+		    vboff++;
+		    l += 4;
+		  }
 	    dbg_memfile_printf (t, ", %s\n", (char *) vboff);
 	    l += strlen ((char*)vboff) + 1;
 	  }
@@ -327,6 +349,16 @@ static void dump_CV_fldattr_t (CV_fldattr_t *m, sDbgMemFile *t)
     dbg_memfile_printf (t, " sealed");
   if (m->unused)
     dbg_memfile_printf (t, " /* CV_fldattr_t has unknown flags 0x%x */", m->unused);
+}
+
+static int has_CV_fldattr_t_VBase (CV_fldattr_t *t)
+{
+  switch (t->mprop)
+    {
+    case CV_MTintro: case CV_MTpurevirt: case CV_MTpureintro:
+	  return 1;
+	}
+  return 0;
 }
 
 static void dump_CV_modifier_t (CV_modifier_t *m, sDbgMemFile *t)
