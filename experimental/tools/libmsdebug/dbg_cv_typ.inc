@@ -140,15 +140,28 @@ static void dump_lfBitfield (lfBitfield *m, sDbgMemFile *t)
 
 static void dump_lfMethodList (lfMethodList *m, size_t size, sDbgMemFile *t)
 {
-  size_t i;
+  uint32_t i;
+  unsigned char *d = m->data;
+  ct_methodlist *ml;
   dbg_memfile_printf (t, " LF_METHODLIST(\n");
   i = 0;
   while (size >= 8)
     {
-      dbg_memfile_printf (t, "  #%u: Flags:0x%x,Index:", (uint32_t) i, m->offset[i*2]);
-      dump_typeid (m->offset[i*2+1], t);
+      dbg_memfile_printf (t, "  %%%u: Attr:", i);
+      ml = (ct_methodlist *) d;
+      d += 8;
+      size -=8;
+      dump_CV_fldattr_t (& ml->attr, t);
+      dbg_memfile_printf (t, ",Flags:%u,Index:", (uint32_t) ml->unk);
+      dump_typeid (ml->index, t);
+      if(has_CV_fldattr_t_VBase (& ml->attr))
+        {
+          dbg_memfile_printf (t, ", VBase:0x%x", ml->offset[0]);
+          size -= 4;
+          d+=4;
+        }
       dbg_memfile_printf (t, "\n");
-      size -=8; i++;
+      i++;
     }
   if (size != 0)
     dbg_memfile_printf (t, " Remains:%u bytes)\n", (uint32_t) size);
@@ -209,7 +222,9 @@ static void dump_lmFunc (lmFunc *m, sDbgMemFile *t)
   dump_CV_call (m->calltype, t);
   dbg_memfile_printf (t, ", attr:");
   dump_CV_funcattr_t (&m->funcattr, t);
-  dbg_memfile_printf (t, ", parmcount:%u, arglist: %u,thisadjust=%ld)\n", m->parmcount, m->arglist, m->thisadjust);
+  dbg_memfile_printf (t, ", parmcount:%u, arglist:", m->parmcount);
+  dump_typeid (m->arglist, t);
+  dbg_memfile_printf (t, ",thisadjust=%ld)\n", m->thisadjust);
 }
 
 static void dump_lfArgList (lfArgList *m, sDbgMemFile *t)
@@ -291,7 +306,9 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
       l = 2 + 2 + 4;
       break;
     case LF_BCLASS:
-      dbg_memfile_printf (t, "  eBClass pad:%u, indext:", e->bClassFL.pad);
+      dbg_memfile_printf (t, "  eBClass Attr:");
+      dump_CV_fldattr_t (& e->bClassFL.attr, t);
+      dbg_memfile_printf (t, ", indext:");
       dump_typeid (e->bClassFL.utype, t);
       dbg_memfile_printf (t, ", offset:%u\n", e->bClassFL.off);
       l = 10;

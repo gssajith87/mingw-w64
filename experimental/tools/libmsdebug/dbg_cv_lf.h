@@ -259,9 +259,16 @@ typedef struct lmFunc { /* LF_MFUNCTION */
 } lmFunc;
 static void dump_lmFunc (lmFunc *m, sDbgMemFile *t);
 
+typedef struct ct_methodlist {
+  CV_fldattr_t attr;
+  unsigned short unk;
+  uint32_t index;
+  uint32_t offset[1];
+} ct_methodlist;
+
 typedef struct lfMethodList { /* LF_METHODLIST */
   /* uint16_t leaf; */
-  uint32_t offset[1];
+  unsigned char data[1];
 } lfMethodList;
 static void dump_lfMethodList (lfMethodList *m, size_t size, sDbgMemFile *t);
 
@@ -528,7 +535,7 @@ typedef struct lfSTMemberFL {
 
 typedef struct lfBClassFL {
   uint16_t leaf; /* LF_BCLASS */
-  uint16_t pad;
+  CV_fldattr_t attr;
   uint32_t utype;
   uint16_t off; /* ??? */
 } lfBClassFL; /* TODO */
