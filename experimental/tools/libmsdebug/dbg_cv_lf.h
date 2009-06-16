@@ -323,10 +323,10 @@ typedef struct lfPointer { /* LF_POINTER */
       uint16_t pmenum;
     } pm;
     uint16_t bseg;
-    unsigned char Sym[];
+    unsigned char Sym[1];
     struct {
       uint32_t index;
-      unsigned char name [];
+      unsigned char name [1];
     } btype;
   } pbase;
 } lfPointer;
