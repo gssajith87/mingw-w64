@@ -213,8 +213,9 @@ static sDbgMemFile *dump_tag_element_int (uint32_t tag, unsigned char *dta, size
 	  dbg_memfile_printf (ret, " %02X", *dta);
 	  dta++;
 	  len--;
+	  if ((len & 0xf) == 0)
+            dbg_memfile_printf (ret, "\n");
         }
-      dbg_memfile_printf (ret, "\n");
     }
   else
     {

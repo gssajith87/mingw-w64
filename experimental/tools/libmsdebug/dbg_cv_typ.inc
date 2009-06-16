@@ -674,6 +674,10 @@ cv1:
     }
     break;
   case CV_BOOLEAN:
+    if (u.type_spec == 0)
+      {
+        dbg_memfile_printf (t, "BOOL"); return;
+      }
     break;
   case CV_COMPLEX:
   case CV_SPECIAL2:
