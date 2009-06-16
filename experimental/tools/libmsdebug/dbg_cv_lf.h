@@ -105,6 +105,17 @@ typedef struct CV_prop_t {
 } CV_prop_t;
 static void dump_CV_prop_t (CV_prop_t *m, sDbgMemFile *t);
 
+typedef enum eCV_vtshape {
+  CV_VTNEAR = 0,
+  CV_VTFAR = 1,
+  CV_VTTHIN = 2,
+  CV_VTAPDISP = 3,
+  CV_VTFPMETA = 4,
+  CV_VTNEAR32 = 5,
+  CV_VTFAR32 = 6,
+} eCV_vtshape;
+static void dump_CV_vtshape (unsigned char vt, sDbgMemFile *t);
+
 typedef enum eCV_sourcechksum {
   CV_SRCCHKSUM_TYPE_NONE = 0,
   CV_SRCCHKSUM_TYPE_MD5 = 1,
@@ -227,6 +238,13 @@ typedef enum eCV_pmtype {
   CV_PMTYPE_F_Virtual = 7,
   CV_PMTYPE_F_General = 8
 } eCV_pmtype;
+
+typedef struct lfVTshape { /* LF_VTSHAPE */
+  /* uint16_t leaf; */
+  uint16_t count;
+  unsigned char vtshape[1];
+} lfVTshape;
+static void dump_lfVTshape (lfVTshape *m, sDbgMemFile *t);
 
 typedef struct lmFunc { /* LF_MFUNCTION */
   /*uint16_t leaf; */

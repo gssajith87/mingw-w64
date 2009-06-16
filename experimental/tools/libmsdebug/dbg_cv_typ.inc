@@ -2,6 +2,41 @@ static void dump_typeid (uint32_t ty, sDbgMemFile *t);
 static size_t dump_lfvar (unsigned char *value, sDbgMemFile *t);
 static int has_CV_fldattr_t_VBase (CV_fldattr_t *t);
 
+static void dump_lfVTshape (lfVTshape *m, sDbgMemFile *t)
+{
+  uint16_t i;
+  unsigned char *d = m->vtshape;
+  dbg_memfile_printf (t," LF_VTSHAPE(eCV_vtshape[%u]={", m->count);
+  for (i=0;i < m->count;i++) {
+    if (i!=0) dbg_memfile_printf (t, ",");
+    if ((i&1)==0)
+      dump_CV_vtshape (d[0]>>4, t);
+    else
+      {
+        dump_CV_vtshape (d[0]&0xf, t);
+        d++;
+      }
+  }
+  dbg_memfile_printf(t, "})\n");
+}
+
+static void dump_CV_vtshape (unsigned char vt, sDbgMemFile *t)
+{
+  vt &= 0x0f;
+  switch (vt) {
+  case CV_VTNEAR: dbg_memfile_printf(t, "__vtnear"); break;
+  case CV_VTFAR: dbg_memfile_printf(t, "__vtfar"); break;
+  case CV_VTTHIN: dbg_memfile_printf(t, "__vtthin"); break;
+  case CV_VTAPDISP: dbg_memfile_printf(t, "__vtapdisp"); break;
+  case CV_VTFPMETA: dbg_memfile_printf(t, "__vtfpmeta"); break;
+  case CV_VTNEAR32: dbg_memfile_printf(t, "__vtnear"); break;
+  case CV_VTFAR32: dbg_memfile_printf(t, "__vtfar"); break;
+  default:
+    dbg_memfile_printf (t,"unknownVTshape%u", vt);
+    break;
+  }
+}
+
 static void dump_CV_ptrtype (uint32_t pt, sDbgMemFile *t)
 {
   switch (pt) {

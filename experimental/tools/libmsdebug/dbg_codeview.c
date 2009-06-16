@@ -98,6 +98,7 @@ static sDbgTags stSYMs[] = {
 #include "dbg_cv_typ.inc"
 static const char *sz_p[] = { "pad" };
 static sDbgTags stTYPs[] = {
+  { LF_VTSHAPE, "LF_VTSHAPE", "p", sz_p },
   { LF_MODIFIER, "LF_MODIFIER", "p", sz_p },
   { LF_POINTER, "LF_POINTER", "p", sz_p },
   { LF_PROCEDURE, "LF_PROCEDURE", "p", sz_p },
@@ -184,6 +185,9 @@ static sDbgMemFile *dump_tag_element_typ (uint32_t tag, unsigned char *dta, size
       return x;
     case LF_BITFIELD:
       dump_lfBitfield ((lfBitfield *)dta, x);
+      return x;
+    case LF_VTSHAPE:
+      dump_lfVTshape ((lfVTshape *)dta, x);
       return x;
     default:
       break;
