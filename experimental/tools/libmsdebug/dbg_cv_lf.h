@@ -124,6 +124,7 @@ typedef enum eCV_ptrmode {
   CV_PTR_MODE_PMFUNC = 3,
   CV_PTR_MODE_RESERVED = 4
 } eCV_ptrmode;
+static void dump_CV_ptrmode (uint32_t pm, sDbgMemFile *t);
 
 typedef enum eCV_ptrtype {
   CV_PTR_NEAR = 0,
@@ -141,6 +142,7 @@ typedef enum eCV_ptrtype {
   CV_PTR_64 = 12,
   CV_PTR_UNUSEDPTR = 13
 } eCV_ptrtype;
+static void dump_CV_ptrtype (uint32_t pt, sDbgMemFile *t);
 
 typedef enum eCV_prmode {
   CV_TM_DIRECT = 0,
@@ -479,7 +481,7 @@ typedef struct lfEnumFieldList {
 
 typedef struct lfMemberFL {
   uint16_t leaf;
-  uint16_t pad;
+  CV_fldattr_t attr;
   uint32_t index;
   uint16_t offset;
   char name[1];

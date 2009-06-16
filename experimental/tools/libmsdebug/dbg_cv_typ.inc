@@ -2,6 +2,42 @@ static void dump_typeid (uint32_t ty, sDbgMemFile *t);
 static size_t dump_lfvar (unsigned char *value, sDbgMemFile *t);
 static int has_CV_fldattr_t_VBase (CV_fldattr_t *t);
 
+static void dump_CV_ptrtype (uint32_t pt, sDbgMemFile *t)
+{
+  switch (pt) {
+  case CV_PTR_NEAR: break;
+  case CV_PTR_FAR: dbg_memfile_printf (t, " __far"); break;
+  case CV_PTR_HUGE: dbg_memfile_printf (t, " __huge"); break;
+  case CV_PTR_BASE_SEG: dbg_memfile_printf (t, " __baseseg"); break;
+  case CV_PTR_BASE_VAL: dbg_memfile_printf (t, " __baseval"); break;
+  case CV_PTR_BASE_SEGVAL:  dbg_memfile_printf (t, " __segval"); break;
+  case CV_PTR_BASE_ADDR:  dbg_memfile_printf (t, " __baseaddr"); break;
+  case CV_PTR_BASE_SEGADDR: dbg_memfile_printf (t, " __segaddr"); break;
+  case CV_PTR_BASE_TYPE: dbg_memfile_printf (t, " __basetype"); break;
+  case CV_PTR_BASE_SELF: dbg_memfile_printf (t, " __self"); break;
+  case CV_PTR_NEAR32: break;
+  case CV_PTR_FAR32: dbg_memfile_printf (t, " __far"); break;
+  case CV_PTR_64: dbg_memfile_printf (t, " __w64"); break;
+  case CV_PTR_UNUSEDPTR: dbg_memfile_printf (t, " __unusedptr"); break;
+  default:
+    dbg_memfile_printf (t, " __unknown%u", pt); break;
+  }  
+}
+
+static void dump_CV_ptrmode (uint32_t pm, sDbgMemFile *t)
+{
+  switch (pm)
+  {
+  case CV_PTR_MODE_PTR: dbg_memfile_printf (t, " *"); break;
+  case CV_PTR_MODE_REF: dbg_memfile_printf (t, " &"); break;
+  case CV_PTR_MODE_PMEM: dbg_memfile_printf (t, " * /* mem */"); break;
+  case CV_PTR_MODE_PMFUNC: dbg_memfile_printf (t, " (*) /* mfunc */"); break;
+  case CV_PTR_MODE_RESERVED: dbg_memfile_printf (t, " * /* reserved */"); break;
+  default:
+    dbg_memfile_printf (t, " /* unknown ptr mode%u */*", pm); break;
+  }
+}
+
 static void dump_CV_call (unsigned char call, sDbgMemFile *t)
 {
   if (!t)
@@ -61,8 +97,10 @@ static void dump_CV_call (unsigned char call, sDbgMemFile *t)
 
 static void dump_lfBitfield (lfBitfield *m, sDbgMemFile *t)
 {
-  dbg_memfile_printf (t, " LF_BITFIELD(Type:%u, length:%u, bitpos:%u)\n",
-    m->type, m->length, m->position);
+  dbg_memfile_printf (t, " LF_BITFIELD(Type:");
+  dump_typeid (m->type, t);
+  dbg_memfile_printf (t, ", length:%u, bitpos:%u)\n",
+    m->length, m->position);
 }
 
 static void dump_lfMethodList (lfMethodList *m, size_t size, sDbgMemFile *t)
@@ -72,7 +110,9 @@ static void dump_lfMethodList (lfMethodList *m, size_t size, sDbgMemFile *t)
   i = 0;
   while (size >= 8)
     {
-      dbg_memfile_printf (t, "  #%u: Flags:0x%x,Index:%u\n", (uint32_t) i, m->offset[i*2], m->offset[i*2+1]);
+      dbg_memfile_printf (t, "  #%u: Flags:0x%x,Index:", (uint32_t) i, m->offset[i*2]);
+      dump_typeid (m->offset[i*2+1], t);
+      dbg_memfile_printf (t, "\n");
       size -=8; i++;
     }
   if (size != 0)
@@ -85,16 +125,19 @@ static void dump_lfBClass (lfBClass *m, sDbgMemFile *t)
 {
   dbg_memfile_printf (t, " LF_BCLASS(Attr:");
   dump_CV_fldattr_t (& m->attr, t);
-  dbg_memfile_printf (t, ", index:%u, bclass: %s)\n",
-    m->index, m->offset);
+  dbg_memfile_printf (t, ", index:");
+  dump_typeid (m->index, t);
+  dbg_memfile_printf (t, ", bclass: %s)\n", m->offset);
 }
 
 static void dump_lfUnion (lfUnion *m, sDbgMemFile *t)
 {
   dbg_memfile_printf (t, " LF_UNION(count:%u, Prop:", m->count);
   dump_CV_prop_t (& m->property, t);
-  dbg_memfile_printf (t, ", field:%u, size:%u, union %s, Undecorate:%s)\n",
-    m->field, m->size, m->data, &m->data[strlen(m->data) + 1]);
+  dbg_memfile_printf (t, ", field:");
+  dump_typeid (m->field, t);
+  dbg_memfile_printf (t, ", size:%u, union %s, Undecorate:%s)\n",
+    m->size, m->data, &m->data[strlen(m->data) + 1]);
 }
 
 static void dump_lfSTMember (lfSTMember *m, sDbgMemFile *t)
@@ -168,8 +211,12 @@ static void dump_lfClass (lfClass *m, sDbgMemFile *t)
     return;
   dbg_memfile_printf (t, "  LF_CLASS(count:%u, Prop:",m->count);
   dump_CV_prop_t (& m->property, t);
-  dbg_memfile_printf (t, ", field:%u, derived:%u, vshape:0x%x, size:%u,\n   struct %s, Undecorated: %s)\n",
-    m->field, m->derived,m->vshape,m->size,
+  dbg_memfile_printf (t, ", field:");
+  dump_typeid (m->field, t);
+  dbg_memfile_printf (t, ", derived:");
+  dump_typeid (m->derived, t);
+  dbg_memfile_printf (t, ", vshape:%u, size:%u,\n   struct %s, Undecorated: %s)\n",
+    m->vshape,m->size,
     m->data, & m->data[strlen (m->data) + 1]);
 }
 
@@ -179,8 +226,12 @@ static void dump_lfStruct (lfStruct *m, sDbgMemFile *t)
     return;
   dbg_memfile_printf (t, "  LF_STRUCTURE(count:%u, Prop:",m->count);
   dump_CV_prop_t (& m->property, t);
-  dbg_memfile_printf (t, ", field:%u, derived:%u, vshape:0x%x, size:%u,\n   struct %s, Undecorated: %s)\n",
-    m->field, m->derived,m->vshape,m->size,
+  dbg_memfile_printf (t, ", field:");
+  dump_typeid (m->field, t);
+  dbg_memfile_printf (t, ", derived:");
+  dump_typeid (m->derived, t);
+  dbg_memfile_printf (t, ", vshape:%u, size:%u,\n   struct %s, Undecorated: %s)\n",
+    m->vshape,m->size,
     m->data, & m->data[strlen (m->data) + 1]);
 }
 
@@ -241,7 +292,9 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
       }
       break;
     case LF_MEMBER:
-      dbg_memfile_printf (t, "  eMember pad: %u, index:", e->memberFL.pad);
+      dbg_memfile_printf (t, "  eMember Attr:");
+      dump_CV_fldattr_t (& e->memberFL.attr, t);
+      dbg_memfile_printf (t, ", index:");
       dump_typeid (e->memberFL.index, t);
       dbg_memfile_printf (t, ", Offset:0x%x, %s\n", e->memberFL.offset, e->memberFL.name);
       l = strlen (e->memberFL.name) + 1 + 4 + 4 + 2;
@@ -338,7 +391,9 @@ static void dump_lfPointer (lfPointer *m, sDbgMemFile *t)
     return;
   dbg_memfile_printf (t, " LF_POINTER(type:");
   dump_typeid (m->utype, t);
-  dbg_memfile_printf (t, ", ptrtype: %u, ptrmode: %u", m->attr.ptrtype,m->attr.ptrmode);
+  dbg_memfile_printf (t, ",");
+  dump_CV_ptrtype (m->attr.ptrtype, t);
+  dump_CV_ptrmode (m->attr.ptrmode, t);
   if (m->attr.isflat32)
     dbg_memfile_printf (t, " flat32");
   if (m->attr.isvolatile)
@@ -572,9 +627,19 @@ cv1:
     default: break;
     }
     break;
+  case CV_REAL:
+    switch (u.type_spec) {
+    case CV_RC_REAL32: dbg_memfile_printf (t, "float"); return;
+    case CV_RC_REAL64: dbg_memfile_printf (t, "double"); return;
+    case CV_RC_REAL80: dbg_memfile_printf (t, "long double"); return;
+    case CV_RC_REAL128:  dbg_memfile_printf (t, "__m128"); return;
+    case CV_RC_REAL48:  dbg_memfile_printf (t, "__float48"); return;
+    default:
+      break;
+    }
+    break;
   case CV_BOOLEAN:
     break;
-  case CV_REAL:
   case CV_COMPLEX:
   case CV_SPECIAL2:
   default:
