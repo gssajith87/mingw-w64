@@ -7,7 +7,7 @@
 #include "dbg_codeview.h"
 
 int dbg_pdb_show_types = 1;
-int dbg_pdb_show_syms = 0;
+int dbg_pdb_show_syms = 1;
 
 typedef struct sDbgCVCommon {
   uint16_t dSize;
@@ -69,18 +69,18 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_WITH32, "S_WITH32", "uuuAsp", sz_with32 },
   { DBG_CV_S_LABEL32, "S_LABEL32", "Absp", sz_label32 },
   { DBG_CV_S_REGISTER, "S_REGISTER", "p", sz_register },
-  { DBG_CV_S_CONSTANT, "S_CONSTANT", "uwsp", sz_constant },
-  { DBG_CV_S_UDT, "S_UDT", "usp", sz_udt },
-  { DBG_CV_S_BPREL32, "S_BPREL32", "uAsp", sz_bprel32 },
-  { DBG_CV_S_LDATA32, "S_LDATA32", "uAsp", sz_gdata32 },
-  { DBG_CV_S_GDATA32, "S_GDATA32", "uAsp", sz_gdata32 },
+  { DBG_CV_S_CONSTANT, "S_CONSTANT", "tlsp", sz_constant },
+  { DBG_CV_S_UDT, "S_UDT", "tsp", sz_udt },
+  { DBG_CV_S_BPREL32, "S_BPREL32", "tAsp", sz_bprel32 },
+  { DBG_CV_S_LDATA32, "S_LDATA32", "tAsp", sz_gdata32 },
+  { DBG_CV_S_GDATA32, "S_GDATA32", "tAsp", sz_gdata32 },
   { DGB_CV_S_PUB32, "S_PUB32", "uAsp", sz_pub32 },
-  { DBG_CV_S_LPROC32, "S_LPROC32","uuuuuuuAbsp", sz_proc32 },
-  { DBG_CV_S_GPROC32, "S_GPROC32","uuuuuuuAbsp", sz_proc32 },
-  { DBG_CV_S_COMPILE2, "S_COMPILE2", "uuuuws", sz_compile2 },
+  { DBG_CV_S_LPROC32, "S_LPROC32","uuuuuutAbsp", sz_proc32 },
+  { DBG_CV_S_GPROC32, "S_GPROC32","uuuuuutAbsp", sz_proc32 },
+  { DBG_CV_S_COMPILE2, "S_COMPILE2", "uUUuws", sz_compile2 },
   { DBG_CV_S_LMANDATA, "S_LMANDATA", "wUusp", sz_gmandata },
   { DBG_CV_S_GMANDATA, "S_GMANDATA", "wUusp", sz_gmandata },
-  { DBG_CV_S_MANSLOT, "S_MANSLOT", "uUuusp", sz_manslot },
+  { DBG_CV_S_MANSLOT, "S_MANSLOT", "tUuusp", sz_manslot },
   { DBG_CV_S_PROCREF, "S_PROCREF", "uuwsp", sz_procref },
   { DBG_CV_S_LPROCREF, "S_LPROGREF", "uuwsp", sz_procref },
   { DBG_CV_S_TOKENREF, "S_TOKENREF", "uuwsp", sz_tokenref },
@@ -234,6 +234,9 @@ static sDbgMemFile *dump_tag_element_int (uint32_t tag, unsigned char *dta, size
 	  case 'B':
 	    dbg_memfile_printf (ret, " %s:0x%02u", h->names[el], (uint32_t) dta[doff]);
 	    break;
+	  case 'l':
+	    dump_lfvar (&dta[doff], ret);
+	    break;
 	  case 'w':
 	    dbg_memfile_printf (ret, " %s:%u", h->names[el], *((uint16_t *) &dta[doff]));
 	    break;
@@ -242,6 +245,10 @@ static sDbgMemFile *dump_tag_element_int (uint32_t tag, unsigned char *dta, size
 	    break;
 	  case 'u':
 	    dbg_memfile_printf (ret, " %s:%u", h->names[el], *((uint32_t *) &dta[doff]));
+	    break;
+	  case 't':
+	  dbg_memfile_printf (ret, " %s:", h->names[el]);
+	    dump_typeid (*((uint32_t *) &dta[doff]), ret);
 	    break;
 	  case 'U':
 	    dbg_memfile_printf (ret, " %s:0x%08x", h->names[el], *((uint32_t *) &dta[doff]));
@@ -333,7 +340,8 @@ static size_t get_tag_element_size (unsigned char *dta, size_t off, size_t size,
 {
   switch (fmt)
   {
-  case 'u': case 'U': return sizeof (uint32_t);
+  case 't': case 'u': case 'U': return sizeof (uint32_t);
+  case 'l': return dump_lfvar (&dta[off], NULL);
   case 'w': case 'W': return sizeof (uint16_t);
   case 'b': case 'B': return sizeof (unsigned char);
   case 'V': return sizeof (uint16_t) + sizeof (uint16_t);
@@ -450,7 +458,7 @@ sDbgMemFile *dbg_CV_dump (sDbgCV *cv, sDbgMemFile *x)
 	}
 	else if (cv->tag[i]->be_syms == 1 && dbg_pdb_show_syms)
 	{
-	  dbg_memfile_printf (x, " #%u:", (uint32_t) i);
+	  dbg_memfile_printf (x, " @%u:", (uint32_t) i);
 	  ret = dbg_CVtag_dump (cv->tag[i], ret);
 	}
       }

@@ -218,13 +218,13 @@ static void dump_lmFunc (lmFunc *m, sDbgMemFile *t)
   dump_typeid (m->classtype, t);
   dbg_memfile_printf (t, ", thistype:");
   dump_typeid (m->thistype, t);
-  dbg_memfile_printf (t, ", calltype:");
+  dbg_memfile_printf (t, " ");
   dump_CV_call (m->calltype, t);
   dbg_memfile_printf (t, ", attr:");
   dump_CV_funcattr_t (&m->funcattr, t);
-  dbg_memfile_printf (t, ", parmcount:%u, arglist:", m->parmcount);
+  dbg_memfile_printf (t, " /*parmcount:%u*/ (", m->parmcount);
   dump_typeid (m->arglist, t);
-  dbg_memfile_printf (t, ",thisadjust=%ld)\n", m->thisadjust);
+  dbg_memfile_printf (t, "); /*thisadjust=%ld*/)\n", m->thisadjust);
 }
 
 static void dump_lfArgList (lfArgList *m, sDbgMemFile *t)
@@ -232,16 +232,13 @@ static void dump_lfArgList (lfArgList *m, sDbgMemFile *t)
   uint32_t i;
   if (!m || !t)
     return;
-  dbg_memfile_printf (t, "  LF_ARGLIST(count:%u", m->count);
-  if (m->count!=0)
-   dbg_memfile_printf (t, ", ArgTypes[%u]={", m->count);
+  dbg_memfile_printf (t, "  LF_ARGLIST(");
   for (i=0;i<m->count;i++)
    {
      dbg_memfile_printf (t, "%s", i==0 ? "" : ",");
-    dump_typeid (m->arg[i], t);
+     dump_typeid (m->arg[i], t);
    }
-  dbg_memfile_printf (t, "%s", m->count!=0 ? "}" : "");
-  dbg_memfile_printf (t, ")\n");
+  dbg_memfile_printf (t, ");\n");
 }
 
 static void dump_lfArray (lfArray *m, sDbgMemFile *t)
@@ -252,7 +249,7 @@ static void dump_lfArray (lfArray *m, sDbgMemFile *t)
   dump_typeid (m->elemtype, t);
   dbg_memfile_printf (t, ", idxType=");
   dump_typeid (m->idxtype, t);
-  dbg_memfile_printf (t, ", size:%u, %s[])\n",m->size, m->data);
+  dbg_memfile_printf (t, " %s[%u])\n", m->data,m->size);
 }
 
 static void dump_lfClass (lfClass *m, sDbgMemFile *t)
@@ -428,13 +425,13 @@ static void dump_lfProc (lfProc *m, sDbgMemFile *t)
     return;
   dbg_memfile_printf (t, " LF_PROCEDURE(returntype:");
   dump_typeid (m->rvtype, t);
-  dbg_memfile_printf (t, ", calltype:");
+  dbg_memfile_printf (t, " ");
   dump_CV_call (m->calltype, t);
-  dbg_memfile_printf (t, ", attr:");
+  dbg_memfile_printf (t, " ");
   dump_CV_funcattr_t (&m->funcattr, t);
-  dbg_memfile_printf (t, ", parmcount:%u, arglist:", m->parmcount);
+  dbg_memfile_printf (t, " (", m->parmcount);
   dump_typeid (m->arglist, t);
-  dbg_memfile_printf (t, ")\n");
+  dbg_memfile_printf (t, ");)\n");
 }
 
 static void dump_lfPointer (lfPointer *m, sDbgMemFile *t)

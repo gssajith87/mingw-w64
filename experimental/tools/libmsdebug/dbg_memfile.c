@@ -188,7 +188,10 @@ int
 dbg_memfile_vprintf (sDbgMemFile *pDFile, const char *fmt, va_list argp)
 {
   char *h;
-  int len = get_vprintf_len (fmt, argp);
+  int len;
+  if (!pDFile)
+    return 0;
+  len = get_vprintf_len (fmt, argp);
   if (!len)
     return 0;
   h = (char *) malloc (len + 1);
