@@ -40,13 +40,13 @@ static const char *sz_pub32[] = { "Flags","Addr","name","pad" };
 static const char *sz_proc32[] = { "pParent","pEnd","pNext","len","DbgStart","DbgEnd","TypeIdx","Addr","CV_PROCFLAGS","name","pad" };
 static const char *sz_compile2[] = { "Unk1", "Unk2", "Unk3", "Unk4", "WUnk1", "name", "pad" };
 static const char *sz_gmandata[] = { "UIndex", "Flag", "Unk3", "name", "pad" };
-static const char *sz_manslot[] = { "Index", "Unk0", "Unk1", "Unk2", "Unk3", "name", "pad" };
-static const char *sz_gdata32[] = { "TypeIdx", "Addr", "name", "pad" };
+static const char *sz_manslot[] = { "Index", "Unk0", "Unk1", "Unk2", "Unk3", "Unk4", "name", "pad" };
+static const char *sz_gdata32[] = { "index", "Addr", "name", "pad" };
 static const char *sz_tokenref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_gmanproc[] = { "pParent", "pEnd", "pNext", "len", "DbgStart", "DbgEnd", "token", "Addr",
   "CV_PROCFLAGS", "retReg", "name", "pad" };
 static const char *sz_compiler[] = { "Unk1","Unk2","Unk3","Str1","Unk4","name", "pad" };
-static const char *sz_buildcmd[] = { "cmds" };
+static const char *sz_buildcmd[] = { "flag", "cmds", "pad" };
 static const char *sz_end[] = { "pad" };
 static const char *sz_with32[] = { "pParent", "pEnd", "len", "Addr", "expr", "pad" };
 static const char *sz_label32[] = { "Addr", "CV_PROCFLAGS", "name", "pad" };
@@ -80,7 +80,7 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_COMPILE2, "S_COMPILE2", "uUUuws", sz_compile2 },
   { DBG_CV_S_LMANDATA, "S_LMANDATA", "wUusp", sz_gmandata },
   { DBG_CV_S_GMANDATA, "S_GMANDATA", "wUusp", sz_gmandata },
-  { DBG_CV_S_MANSLOT, "S_MANSLOT", "uwwuusp", sz_manslot },
+  { DBG_CV_S_MANSLOT, "S_MANSLOT", "UWWUWWsp", sz_manslot },
   { DBG_CV_S_PROCREF, "S_PROCREF", "uuwsp", sz_procref },
   { DBG_CV_S_LPROCREF, "S_LPROGREF", "uuwsp", sz_procref },
   { DBG_CV_S_TOKENREF, "S_TOKENREF", "uuwsp", sz_tokenref },
@@ -91,7 +91,7 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_MSUNK1, "S_MSUNK1", "Uuup", sz_msunk1 },
   { DBG_CV_S_MSUNK2, "S_MSUNK2", "Uup", sz_msunk2 },
   { DBG_CV_S_COMPILER, "S_COMPILER", "UWuUuUsp", sz_compiler},
-  { DBG_CV_S_BUILDCMD, "S_BUILDCMD", "S", sz_buildcmd },
+  { DBG_CV_S_BUILDCMD, "S_BUILDCMD", "bSp", sz_buildcmd },
   { 0, "SYM_UNKNOWN", "x", sz_unknown }
 };
 
