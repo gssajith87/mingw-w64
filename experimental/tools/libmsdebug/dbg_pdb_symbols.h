@@ -8,6 +8,42 @@
 
 #pragma pack(push, 1)
 
+typedef struct seg_desc_flags
+{
+  uint16_t fRead : 1;
+  uint16_t fWrite : 1;
+  uint16_t fExecute : 1;
+  uint16_t f32 : 1;
+  uint16_t res3 : 4;
+  uint16_t fSel : 1;
+  uint16_t fAbs : 1;
+  uint16_t res2 : 2;
+  uint16_t fGroup : 1;
+  uint16_t res : 3;
+} seg_desc_flags;
+
+typedef struct seg_desc
+{
+  __extension__ union {
+    seg_desc_flags b;
+    uint16_t flags;
+  };
+  uint16_t ovl;
+  uint16_t group;
+  uint16_t frame;
+  uint16_t iSegName;
+  uint16_t iClassName;
+  uint32_t offset;
+  uint32_t cbSeg;
+} seg_desc;
+
+typedef struct CV_sst_seg_map
+{
+  uint16_t cSeg;
+  uint16_t cSegLog;
+  seg_desc segdesc[1];
+} CV_sst_seg_map;
+
 typedef struct sPdbStreamSymbolsV1
 {
   uint16_t hash1_file; /* GS */

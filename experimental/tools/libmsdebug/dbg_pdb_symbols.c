@@ -83,7 +83,7 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
       {
         sPdbStreamSymbolsV1 *sy1 = (sPdbStreamSymbolsV1 *) s->memfile->data;
         dbg_memfile_printf (ret,
-          "Symbols Version 1 (Stream #%u)\n"
+          "Symbols Version 1 (Stream # %u)\n"
           "  file(s): Hash1=%x, Hash2=%x, GlobalSyms:%x\n"
           "  size(s): Module=%u, SectionInfo=%u, SectionMap=%u, SrcModule=%u\n",
           s->stream_idx, sy1->hash1_file, sy1->hash2_file, sy1->gsym_file,
@@ -94,7 +94,7 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
       {
         sPdbStreamSymbolsV2 *sy1 = (sPdbStreamSymbolsV2 *) s->memfile->data;
         dbg_memfile_printf (ret,
-          "Symbols Version %u (ext=0x%x) (Stream #%u)\n"
+          "Symbols Version %u (ext=0x%x) (Stream # %u)\n"
           "  file(s): Hash1=%u, Version DLL> 0x%04x, Hash2=%u Version DLL-Build 0x%04x, GlobalSyms:%u (0x%x)\n"
           "  size(s): Module=%u, SectionInfo=%u, SectionMap=%u, SrcModule=%u, Imports=%u\n"
           "           Unk1=%u, Unk2=%u, Unk3=%u\n"
@@ -125,8 +125,40 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
     }
   if (s->sectioninfo_stream)
     dbg_memfile_dump_in (ret, s->sectioninfo_stream);
-  if (s->sectionmap_stream)
-    dbg_memfile_dump_in (ret, s->sectionmap_stream);
+  if (s->sectionmap_stream && s->sectionmap_stream->size >= 4)
+    {
+      uint16_t i;
+      CV_sst_seg_map *sm = (CV_sst_seg_map *) s->sectionmap_stream->data;
+      dbg_memfile_printf (ret, "Section Map stream\n  count of segs:%u [log %u]\n", sm->cSeg, sm->cSegLog);
+      for (i = 0;i < sm->cSeg; i++)
+        {
+          dbg_memfile_printf (ret, "   # %u: Flags:", (uint32_t) i);
+          if (sm->segdesc[i].b.res3)
+            dbg_memfile_printf (ret, " res3_%x", sm->segdesc[i].b.res3);
+          if (sm->segdesc[i].b.res2)
+            dbg_memfile_printf (ret, " res2_%x", sm->segdesc[i].b.res2);
+          if (sm->segdesc[i].b.res)
+            dbg_memfile_printf (ret, " res_%x", sm->segdesc[i].b.res);
+          if (sm->segdesc[i].b.fRead)
+            dbg_memfile_printf (ret, " read");
+          if (sm->segdesc[i].b.fWrite)
+            dbg_memfile_printf (ret, " write");
+          if (sm->segdesc[i].b.fExecute)
+            dbg_memfile_printf (ret, " execute");
+          if (!sm->segdesc[i].b.f32)
+            dbg_memfile_printf (ret, " 16-bit");
+          if (sm->segdesc[i].b.fSel)
+            dbg_memfile_printf (ret, " sel");
+          if (sm->segdesc[i].b.fAbs)
+            dbg_memfile_printf (ret, " abs");
+          if (sm->segdesc[i].b.fGroup)
+            dbg_memfile_printf (ret, " group");
+          dbg_memfile_printf (ret, ", ovl:0x%x, group:0x%x, frame:%u, iSegName:0x%x, iClassName:0x%x, offset:0x%08x, cbSeg:0x%08x\n",
+            sm->segdesc[i].ovl, sm->segdesc[i].group, sm->segdesc[i].frame, sm->segdesc[i].iSegName, sm->segdesc[i].iClassName,
+            sm->segdesc[i].offset, sm->segdesc[i].cbSeg);
+          
+        }
+    }
   if (s->srcmodule_stream)
     dbg_memfile_dump_in (ret, s->srcmodule_stream);
   if (s->srcmodules != NULL)
@@ -136,7 +168,7 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
 	(uint32_t) s->srcmodules->symbol_size, (uint32_t) s->srcmodules->hash_size);
       for (i = 0; i < s->srcmodules->symbol_size; i++)
 	{
-	  dbg_memfile_printf (ret, "   #%u \"%s\"\n", (uint32_t) i, & s->srcmodules->strs[s->srcmodules->str_off[i]]);
+	  dbg_memfile_printf (ret, "   s$%u \"%s\"\n", (uint32_t) i, & s->srcmodules->strs[s->srcmodules->str_off[i]]);
 	}
     }
   if (s->pdbimport_stream)
