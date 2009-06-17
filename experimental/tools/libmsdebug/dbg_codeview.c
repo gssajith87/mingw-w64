@@ -40,7 +40,7 @@ static const char *sz_pub32[] = { "Flags","Addr","name","pad" };
 static const char *sz_proc32[] = { "pParent","pEnd","pNext","len","DbgStart","DbgEnd","TypeIdx","Addr","CV_PROCFLAGS","name","pad" };
 static const char *sz_compile2[] = { "Unk1", "Unk2", "Unk3", "Unk4", "WUnk1", "name", "pad" };
 static const char *sz_gmandata[] = { "UIndex", "Flag", "Unk3", "name", "pad" };
-static const char *sz_manslot[] = { "TypeIdx", "Unk1", "Unk2", "Unk3", "name", "pad" };
+static const char *sz_manslot[] = { "Index", "Unk0", "Unk1", "Unk2", "Unk3", "name", "pad" };
 static const char *sz_gdata32[] = { "TypeIdx", "Addr", "name", "pad" };
 static const char *sz_tokenref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_gmanproc[] = { "pParent", "pEnd", "pNext", "len", "DbgStart", "DbgEnd", "token", "Addr",
@@ -54,7 +54,7 @@ static const char *sz_section32[] = { "Id", "Unk1","StartOff", "EndOff","Attribu
 static const char *sz_secitioninfo32[] = { "len", "Attribute","Addr","name", "pad" };
 static const char *sz_msunk1[] = { "Offset","Index","Len", "pad" };
 static const char *sz_msunk2[] = { "cbOffset", "Index", "pad" };
-static const char *sz_bprel32[] = { "TypeIdx", "Addr", "name", "pad" };
+static const char *sz_bprel32[] = { "BPOffset", "Index", "name", "pad" };
 static const char *sz_unknown[] = { "unknown" };
 
 static const char *sz_register[] = { "p" };
@@ -71,7 +71,7 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_REGISTER, "S_REGISTER", "p", sz_register },
   { DBG_CV_S_CONSTANT, "S_CONSTANT", "tlsp", sz_constant },
   { DBG_CV_S_UDT, "S_UDT", "tsp", sz_udt },
-  { DBG_CV_S_BPREL32, "S_BPREL32", "tAsp", sz_bprel32 },
+  { DBG_CV_S_BPREL32, "S_BPREL32", "uusp", sz_bprel32 },
   { DBG_CV_S_LDATA32, "S_LDATA32", "tAsp", sz_gdata32 },
   { DBG_CV_S_GDATA32, "S_GDATA32", "tAsp", sz_gdata32 },
   { DGB_CV_S_PUB32, "S_PUB32", "uAsp", sz_pub32 },
@@ -80,7 +80,7 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_COMPILE2, "S_COMPILE2", "uUUuws", sz_compile2 },
   { DBG_CV_S_LMANDATA, "S_LMANDATA", "wUusp", sz_gmandata },
   { DBG_CV_S_GMANDATA, "S_GMANDATA", "wUusp", sz_gmandata },
-  { DBG_CV_S_MANSLOT, "S_MANSLOT", "tUuusp", sz_manslot },
+  { DBG_CV_S_MANSLOT, "S_MANSLOT", "uwwuusp", sz_manslot },
   { DBG_CV_S_PROCREF, "S_PROCREF", "uuwsp", sz_procref },
   { DBG_CV_S_LPROCREF, "S_LPROGREF", "uuwsp", sz_procref },
   { DBG_CV_S_TOKENREF, "S_TOKENREF", "uuwsp", sz_tokenref },

@@ -158,6 +158,9 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
             sm->segdesc[i].offset, sm->segdesc[i].cbSeg);
           
         }
+      if (s->sectionmap_stream->size > 4 + (5 * sizeof (uint32_t) * (size_t) sm->cSeg))
+        dbg_memfile_dump_in (ret, s->sectionmap_stream);
+      
     }
   if (s->srcmodule_stream)
     dbg_memfile_dump_in (ret, s->srcmodule_stream);
@@ -176,7 +179,42 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
   if (s->unknown1_stream)
     dbg_memfile_dump_in (ret, s->unknown1_stream);
   if (s->unknown2_stream)
-    dbg_memfile_dump_in (ret, s->unknown2_stream);
+    {
+      unsigned char *d = s->unknown2_stream->data;
+      if (((uint32_t *) d)[0] == 0xeffeeffe)
+	{
+	  unsigned char *strs;
+	  uint32_t strpool_size = ((uint32_t *) d)[2];
+	  uint32_t strmap_cnt, imc;
+	  uint32_t *strmap;
+	  uint16_t hash_map_cnt;
+	  uint16_t *hash_map;
+	  d += 12;
+	  strs = d;
+	  d += strpool_size;
+	  strmap_cnt = ((uint32_t *) d)[0];
+	  d += 4;
+	  strmap = (uint32_t *) d;
+	  d += sizeof (uint32_t) * strmap_cnt;
+	  hash_map = (uint16_t *) d;
+	  hash_map_cnt = (uint32_t) (s->unknown2_stream->size - (size_t) (d - &(s->unknown2_stream->data[0]))) / 2;
+	  dbg_memfile_printf (ret, " Unknown2 string map with %u elements and hash of %u\n", strmap_cnt, hash_map_cnt);
+	  imc = 0;
+	  for (; strpool_size > 0; )
+	    {
+	      size_t len;
+	      dbg_memfile_printf (ret, "  u$%u=\"%s\"\n", (uint32_t) imc, strs);
+	      len = strlen (strs) + 1;
+	      strs += len;
+	      strpool_size -= len;
+	      imc++;
+	    }
+	}
+      else
+	{
+	  dbg_memfile_dump_in (ret, s->unknown2_stream);
+	}
+    }
   if (s->gsyms)
     ret = dbg_CV_dump (s->gsyms, ret);
   return ret;
