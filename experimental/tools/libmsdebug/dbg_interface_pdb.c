@@ -125,7 +125,7 @@ static int pdb2_load (sDbgInterface *pDCtx)
     }
   if (diPDB->files && diPDB->streams > 2)
     {
-      diPDB->typs = (sPdbTypes *) dbg_pdb_types_create (diPDB->files[2], diPDB);
+      diPDB->typs = (sPdbTypes *) dbg_pdb_types_create (diPDB->files[2], diPDB, 2);
     }
   if (diPDB->files && diPDB->streams > 3)
     {
@@ -285,7 +285,7 @@ static int pdb7_load (sDbgInterface *pDCtx)
     }
   if (diPDB->files && diPDB->streams > 2)
     {
-      diPDB->typs = (sPdbTypes *) dbg_pdb_types_create (diPDB->files[2], diPDB);
+      diPDB->typs = (sPdbTypes *) dbg_pdb_types_create (diPDB->files[2], diPDB, 2);
     }
   if (diPDB->files && diPDB->streams > 3)
     {

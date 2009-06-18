@@ -58,7 +58,7 @@ typedef struct sPdbTypes {
   sDbgPdbTypeHash tpiHash;
 } sPdbTypes;
 
-sPdbTypes *dbg_pdb_types_create (sDbgMemFile *d, struct sDbgInterfacePDB *base);
+sPdbTypes *dbg_pdb_types_create (sDbgMemFile *d, struct sDbgInterfacePDB *base, int stream_idx);
 void dbg_pdb_types_release (sPdbTypes *p);
 sDbgMemFile *dbg_pdb_types_dump (sPdbTypes *p, sDbgMemFile *t);
 

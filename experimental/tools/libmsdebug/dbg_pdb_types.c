@@ -103,7 +103,47 @@ static sDbgMemFile *st_type1_dump(struct sPdbTypes *s, sDbgMemFile *t)
     s->tpiHash.offcbTiOff.off, s->tpiHash.offcbTiOff.cb,
     s->tpiHash.offcbHashAdj.off, s->tpiHash.offcbHashAdj.cb);
   if (s->hash)
-    dbg_memfile_dump_in (ret, s->hash);
+    {
+      unsigned char *x = s->hash->data;
+      unsigned char *xhvals = (s->tpiHash.offcbHashVals.cb != 0 ? (x + s->tpiHash.offcbHashVals.off) : NULL);
+      unsigned char *xtiOff = (s->tpiHash.offcbTiOff.cb != 0 ? (x + s->tpiHash.offcbTiOff.off) : NULL);
+      unsigned char *xhadj = (s->tpiHash.offcbHashAdj.cb != 0 ? (x + s->tpiHash.offcbHashAdj.off) : NULL);
+      uint32_t hvals_cnt = (s->tpiHash.cbHashKey == 0 ? 0 : (s->tpiHash.offcbHashVals.cb / s->tpiHash.cbHashKey));
+      uint32_t hadj_cnt = (s->tpiHash.cbHashKey == 0 ? 0 : (s->tpiHash.offcbHashAdj.cb / s->tpiHash.cbHashKey));
+      uint32_t tiOff = (s->tpiHash.offcbTiOff.cb / 4);
+      uint32_t i;
+      dbg_memfile_printf (ret, "uint32_t HashValues[%u] = {\n", hvals_cnt);
+      for (i=0;i < hvals_cnt;)
+        {
+          int k;
+          dbg_memfile_printf (ret, "  ");
+          for (k = 0;k < 8 && i < hvals_cnt; k++,i++)
+            dbg_memfile_printf (ret, "0x%x,", ((uint32_t *) xhvals)[i]);
+          dbg_memfile_printf (ret, "\n");
+        }
+      dbg_memfile_printf (ret, "};\n");
+      dbg_memfile_printf (ret, "uint32_t TIoffset[%u] = {\n", tiOff);
+      for (i=0;i < tiOff;)
+        {
+          int k;
+          dbg_memfile_printf (ret, "  ");
+          for (k = 0;k < 8 && i < tiOff; k++,i++)
+            dbg_memfile_printf (ret, "0x%x,", ((uint32_t *) xtiOff)[i]);
+          dbg_memfile_printf (ret, "\n");
+        }
+      dbg_memfile_printf (ret, "};\n");
+      dbg_memfile_printf (ret, "uint32_t HashAdjust[%u] = {\n", hadj_cnt);
+      for (i=0;i < hadj_cnt;)
+        {
+          int k;
+          dbg_memfile_printf (ret, "  ");
+          for (k = 0;k < 8 && i < hadj_cnt; k++,i++)
+            dbg_memfile_printf (ret, "0x%x,", ((uint32_t *) xhadj)[i]);
+          dbg_memfile_printf (ret, "\n");
+        }
+      dbg_memfile_printf (ret, "};\n");
+      /*dbg_memfile_dump_in (ret, s->hash);*/
+    }
   if (s->Gprec)
     dbg_memfile_dump_in (ret, s->Gprec);
   if (s->types)
@@ -111,7 +151,7 @@ static sDbgMemFile *st_type1_dump(struct sPdbTypes *s, sDbgMemFile *t)
   return ret;
 }
 
-sPdbTypes *dbg_pdb_types_create (sDbgMemFile *d, struct sDbgInterfacePDB *base)
+sPdbTypes *dbg_pdb_types_create (sDbgMemFile *d, struct sDbgInterfacePDB *base, int stream_idx)
 {
   sPdbTypes *ret;
   if (!d || st_type1_probe (d) != 0)
@@ -122,6 +162,7 @@ sPdbTypes *dbg_pdb_types_create (sDbgMemFile *d, struct sDbgInterfacePDB *base)
   ret->memfile = d;
   if (ret->load)
     (* ret->load)(ret);
+  DbgInterfacePDB_file_kind (base, stream_idx) = "types stream";
   return ret;
 }
 
