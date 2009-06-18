@@ -357,20 +357,46 @@ static void dump_lfFieldList (lfFieldList *m, size_t size, sDbgMemFile *t)
     case LF_ONEMETHOD:
       {
         uint32_t *vboff = e->oneMethodFL.vbaseoff;
-		dbg_memfile_printf (t, "  eOneMeth Attr:");
-		dump_CV_fldattr_t (& e->oneMethodFL.attr, t);
-		dbg_memfile_printf (t, ", Index:");
-		dump_typeid (e->oneMethodFL.index, t);
-		l = 8;
-		if (has_CV_fldattr_t_VBase (& e->oneMethodFL.attr))
-		  {
-		    dbg_memfile_printf (t, ", VBase:0x%x", vboff[0]);
-		    vboff++;
-		    l += 4;
-		  }
-	    dbg_memfile_printf (t, ", %s\n", (char *) vboff);
-	    l += strlen ((char*)vboff) + 1;
+	dbg_memfile_printf (t, "  eOneMeth Attr:");
+	dump_CV_fldattr_t (& e->oneMethodFL.attr, t);
+	dbg_memfile_printf (t, ", Index:");
+	dump_typeid (e->oneMethodFL.index, t);
+	l = 8;
+	if (has_CV_fldattr_t_VBase (& e->oneMethodFL.attr))
+	  {
+	    dbg_memfile_printf (t, ", VBase:0x%x", vboff[0]);
+	    vboff++;
+	    l += 4;
 	  }
+	  dbg_memfile_printf (t, ", %s\n", (char *) vboff);
+	  l += strlen ((char*)vboff) + 1;
+	}
+      break;
+    case LF_VBCLASS:
+      {
+        uint32_t *vboff = (uint32_t *) e->vbClassFL.vboff;
+	dbg_memfile_printf (t, "  eVBClass Attr:");
+	dump_CV_fldattr_t (& e->vbClassFL.attr, t);
+	dbg_memfile_printf (t, ", Index:");
+	dump_typeid (e->vbClassFL.index, t);
+	dbg_memfile_printf (t, ", VbPtr:");
+	dump_typeid (e->vbClassFL.vbptr, t);
+	dbg_memfile_printf (t, ", Offset:%u\n", vboff[0]);
+	l = 2 + 2 + 4 + 4 + 4;
+      }
+      break;
+    case LF_IVBCLASS:
+      {
+        uint32_t *vboff = (uint32_t *) e->vbClassFL.vboff;
+	dbg_memfile_printf (t, "  eIVBClass Attr:");
+	dump_CV_fldattr_t (& e->vbClassFL.attr, t);
+	dbg_memfile_printf (t, ", Index:");
+	dump_typeid (e->vbClassFL.index, t);
+	dbg_memfile_printf (t, ", VbPtr:");
+	dump_typeid (e->vbClassFL.vbptr, t);
+	dbg_memfile_printf (t, ", Offset:%u\n", vboff[0]);
+	l = 2 + 2 + 4 + 4 + 4;
+      }
       break;
     default:
       dbg_memfile_printf (t, "   Unknown fieldlist subtype 0x%x\n", e->leaf);
@@ -633,68 +659,94 @@ static size_t dump_lfvar (unsigned char *value, sDbgMemFile *t)
 
 static void dump_typeid (uint32_t ty, sDbgMemFile *t)
 {
-  static const char *sp[9] = { "<none>","<absolute>","<segment>","void", "<currency>","basicstring","__far basicstring","<not-translated>","HRESULT" };
+  static const char *sp[9] = { "<notype>","<absolute-symbol>","<segment>","void", "<currency>","basicstring","__far basicstring","<not-translated>","HRESULT" };
   const char *bsign;
+  char mode_kind[128];
   uCV_type u;
   u.type = ty;
-  if (ty >= 0x100)
+  if (ty >= 0x1000)
     {
       dbg_memfile_printf (t, "#%u", ty);
       return;
+    }
+  mode_kind[0]=0;
+  switch (u.type_mode)
+    {
+    case CV_MODE_DIRECT: break;
+    case CV_MODE_32NEARPTR:
+    case CV_MODE_NEARPTR: strcpy (mode_kind," *"); break;
+    case CV_MODE_32FARPTR:
+    case CV_MODE_FARPTR: strcpy (mode_kind," __far *"); break;
+    case CV_MODE_HUGEPTR:strcpy (mode_kind," __huge *"); break;
+    case CV_MODE_64NEARPTR: strcpy (mode_kind, " _w64 *"); break;
+    default: sprintf (mode_kind, " /* mode:0x%x */", u.type_mode); break;
     }
   switch (u.type_kind)
   {
   case CV_SPECIAL:
     if (u.type_spec > 8) break;
-    dbg_memfile_printf(t, "%s", sp[u.type_spec]); return;
+    dbg_memfile_printf(t, "%s%s", sp[u.type_spec], mode_kind); return;
   case CV_SIGNED:
-    bsign="signed"; goto cv1;
+    bsign="signed "; goto cv1;
   case CV_UNSIGNED:
-    bsign="unsigned";
+    bsign="unsigned ";
 cv1:
 	switch (u.type_spec) {
-	case  CV_IN_1BYTE: dbg_memfile_printf (t, "%s char", bsign); return;
-	case  CV_IN_2BYTE: dbg_memfile_printf (t, "%s short", bsign); return;
-	case  CV_IN_4BYTE: dbg_memfile_printf (t, "%s int", bsign); return;
-	case  CV_IN_8BYTE: dbg_memfile_printf (t, "%s __int64", bsign); return;
-	case  CV_IN_16BYTE: dbg_memfile_printf (t, "%s __int128", bsign); return;
+	case  CV_IN_1BYTE: dbg_memfile_printf (t, "%schar%s", bsign, mode_kind); return;
+	case  CV_IN_2BYTE: dbg_memfile_printf (t, "%sshort%s", bsign, mode_kind); return;
+	case  CV_IN_4BYTE: dbg_memfile_printf (t, "%sint%s", bsign, mode_kind); return;
+	case  CV_IN_8BYTE: dbg_memfile_printf (t, "%s__int64%s", bsign, mode_kind); return;
+	case  CV_IN_16BYTE: dbg_memfile_printf (t, "%s__int128%s", bsign, mode_kind); return;
     default: break;
     }
     break;
   case CV_INT:
     switch (u.type_spec) {
-    case CV_RI_CHAR: dbg_memfile_printf (t, "char"); return;
-    case CV_RI_UCHAR: dbg_memfile_printf (t, "uchar"); return;
-    case CV_RI_INT2: dbg_memfile_printf (t, "short"); return;
-    case CV_RI_UINT2: dbg_memfile_printf (t, "ushort"); return;
-    case CV_RI_INT4: dbg_memfile_printf (t, "int"); return;
-    case CV_RI_UINT4: dbg_memfile_printf (t, "uint"); return;
-    case CV_RI_INT8: dbg_memfile_printf (t, "__int64"); return;
-    case CV_RI_UINT8: dbg_memfile_printf (t, "unsigned __int64"); return;
-    case CV_RI_INT16: dbg_memfile_printf (t, "__int128"); return;
-    case CV_RI_UINT16: dbg_memfile_printf (t, "unsigned __int128"); return;
+    case CV_RI_CHAR: dbg_memfile_printf (t, "char%s", mode_kind); return;
+    case CV_RI_UCHAR: dbg_memfile_printf (t, "uchar%s", mode_kind); return;
+    case CV_RI_INT2: dbg_memfile_printf (t, "short%s", mode_kind); return;
+    case CV_RI_UINT2: dbg_memfile_printf (t, "ushort%s", mode_kind); return;
+    case CV_RI_INT4: dbg_memfile_printf (t, "int%s", mode_kind); return;
+    case CV_RI_UINT4: dbg_memfile_printf (t, "uint%s", mode_kind); return;
+    case CV_RI_INT8: dbg_memfile_printf (t, "__int64%s", mode_kind); return;
+    case CV_RI_UINT8: dbg_memfile_printf (t, "unsigned __int64%s", mode_kind); return;
+    case CV_RI_INT16: dbg_memfile_printf (t, "__int128%s", mode_kind); return;
+    case CV_RI_UINT16: dbg_memfile_printf (t, "unsigned __int128%s", mode_kind); return;
     default: break;
     }
     break;
   case CV_REAL:
     switch (u.type_spec) {
-    case CV_RC_REAL32: dbg_memfile_printf (t, "float"); return;
-    case CV_RC_REAL64: dbg_memfile_printf (t, "double"); return;
-    case CV_RC_REAL80: dbg_memfile_printf (t, "long double"); return;
-    case CV_RC_REAL128:  dbg_memfile_printf (t, "__m128"); return;
-    case CV_RC_REAL48:  dbg_memfile_printf (t, "__float48"); return;
+    case CV_RC_REAL32: dbg_memfile_printf (t, "float%s", mode_kind); return;
+    case CV_RC_REAL64: dbg_memfile_printf (t, "double%s", mode_kind); return;
+    case CV_RC_REAL80: dbg_memfile_printf (t, "long double%s", mode_kind); return;
+    case CV_RC_REAL128:  dbg_memfile_printf (t, "__m128%s", mode_kind); return;
+    case CV_RC_REAL48:  dbg_memfile_printf (t, "__float48%s", mode_kind); return;
     default:
       break;
     }
     break;
   case CV_BOOLEAN:
-    if (u.type_spec == 0)
-      {
-        dbg_memfile_printf (t, "BOOL"); return;
-      }
-    break;
+    bsign = "BOOL"; goto cv1;
   case CV_COMPLEX:
+    switch (u.type_spec) {
+    case CV_RC_REAL32: dbg_memfile_printf (t, "__complex float%s", mode_kind); return;
+    case CV_RC_REAL64: dbg_memfile_printf (t, "__complex double%s", mode_kind); return;
+    case CV_RC_REAL80: dbg_memfile_printf (t, "__complex long double%s", mode_kind); return;
+    case CV_RC_REAL128:  dbg_memfile_printf (t, "__complex __m128%s", mode_kind); return;
+    case CV_RC_REAL48:  dbg_memfile_printf (t, "__complex __float48%s", mode_kind); return;
+    default:
+      break;
+    }
+    break;
   case CV_SPECIAL2:
+    switch (u.type_spec) {
+    case CV_SP2_BIT: dbg_memfile_printf (t, "__bit%s", mode_kind); return;
+    case CV_SP2_PASCALCHAR: dbg_memfile_printf (t, "__pascalchar%s", mode_kind); return;
+    default:
+      break;
+    }
+    break;
   default:
     break;
   }

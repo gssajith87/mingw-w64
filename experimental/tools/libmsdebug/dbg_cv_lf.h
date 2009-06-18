@@ -219,11 +219,28 @@ typedef enum eCV_special {
   CV_SP_HRESULT = 8,
 } eCV_special;
 
-  typedef union uCV_type {
+typedef enum eCV_special2 {
+  CV_SP2_BIT = 0,
+  CV_SP2_PASCALCHAR = 1,
+} eCV_special2;
+
+typedef enum eCV_mode {
+  CV_MODE_DIRECT = 0,
+  CV_MODE_NEARPTR = 1,
+  CV_MODE_FARPTR = 2,
+  CV_MODE_HUGEPTR = 3,
+  CV_MODE_32NEARPTR = 4,
+  CV_MODE_32FARPTR = 5,
+  CV_MODE_64NEARPTR = 6,
+} eCV_mode;
+
+typedef union uCV_type {
   uint32_t type;
   __extension__ struct {
-    unsigned short type_spec : 4; /* eCV_real, eCV_int, eCV_integral, eCV_special */
-    unsigned short type_kind : 4; /* eCV_type */
+    uint32_t type_spec : 4; /* eCV_real, eCV_int, eCV_integral, eCV_special, eCV_special2 */
+    uint32_t type_kind : 4; /* eCV_type */
+    uint32_t type_mode : 4; /* eCV_mode */
+    
   };
 } uCV_type;
 
@@ -446,7 +463,7 @@ typedef struct lfBClass { /* LF_BCLASS */
 } lfBClass;
 static void dump_lfBClass (lfBClass *m, sDbgMemFile *t);
 
-typedef struct lfVBClass {
+typedef struct lfVBClass { /* LF_VBCLASS, LF_IVBCLASS*/
   uint16_t leaf;
   CV_fldattr_t attr;
   uint32_t index;
@@ -550,6 +567,7 @@ typedef union lfEasy {
   lfMethod methodFL;
   lfBClassFL bClassFL;
   lfVFuncTab vfunctabFL;
+  lfVBClass vbClassFL;
 } lfEasy;
 
 typedef struct _GUID {

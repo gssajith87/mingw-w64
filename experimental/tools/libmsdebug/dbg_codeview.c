@@ -37,25 +37,27 @@ static const char *sz_block32[] = { "pParent", "pEnd","len","Addr","name", "pad"
 static const char *sz_udt[] = { "TypeIdx", "name", "pad" };
 static const char *sz_procref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_pub32[] = { "Flags","Addr","name","pad" };
-static const char *sz_proc32[] = { "pParent","pEnd","pNext","len","DbgStart","DbgEnd","TypeIdx","Addr","CV_PROCFLAGS","name","pad" };
+static const char *sz_proc32[] = { "pParent","pEnd","pNext","len","DbgStart","DbgEnd","TypeIdx","Addr","PROCFLAGS","name","pad" };
 static const char *sz_compile2[] = { "Unk1", "Unk2", "Unk3", "Unk4", "WUnk1", "name", "pad" };
 static const char *sz_gmandata[] = { "UIndex", "Flag", "Unk3", "name", "pad" };
 static const char *sz_manslot[] = { "Index", "Unk0", "Unk1", "Unk2", "Unk3", "Unk4", "name", "pad" };
 static const char *sz_gdata32[] = { "index", "Addr", "name", "pad" };
 static const char *sz_tokenref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
 static const char *sz_gmanproc[] = { "pParent", "pEnd", "pNext", "len", "DbgStart", "DbgEnd", "token", "Addr",
-  "CV_PROCFLAGS", "retReg", "name", "pad" };
+  "PROCFLAGS", "retReg", "name", "pad" };
 static const char *sz_compiler[] = { "Unk1","Unk2","Unk3","Str1","Unk4","name", "pad" };
 static const char *sz_buildcmd[] = { "flag", "cmds", "pad" };
 static const char *sz_end[] = { "pad" };
 static const char *sz_with32[] = { "pParent", "pEnd", "len", "Addr", "expr", "pad" };
-static const char *sz_label32[] = { "Addr", "CV_PROCFLAGS", "name", "pad" };
+static const char *sz_label32[] = { "Addr", "PROCFLAGS", "name", "pad" };
 static const char *sz_section32[] = { "Id", "Unk1","StartOff", "EndOff","Attribute","name","pad"};
 static const char *sz_secitioninfo32[] = { "len", "Attribute","Addr","name", "pad" };
 static const char *sz_msunk1[] = { "Offset","Index","Len", "pad" };
 static const char *sz_msunk2[] = { "cbOffset", "Index", "pad" };
 static const char *sz_bprel32[] = { "BPOffset", "Index", "name", "pad" };
+static const char *sz_trampoline[] = { "TrampType","cbThunk","OffThunk","OffTarget","SectionThunk", "SectionTarget", "pad" };
 static const char *sz_unknown[] = { "unknown" };
+static const char *sz_p[] = { "pad" };
 
 static const char *sz_register[] = { "p" };
 
@@ -86,6 +88,7 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_TOKENREF, "S_TOKENREF", "uuwsp", sz_tokenref },
   { DBG_CV_S_GMANPROC, "S_GMANPROC", "uuuuuuUAbwsp", sz_gmanproc },
   { DBG_CV_S_LMANPROC, "S_LMANPROC", "uuuuuuUAbwsp", sz_gmanproc },
+  { DBG_CV_S_TRAMPOLINE, "S_TRAMPOLINE", "wwUUwwp", sz_trampoline },
   { DBG_CV_S_SECTION32, "S_SECTION32", "wwUUUsp", sz_section32 },
   { DBG_CV_S_SECTIONINFO32, "S_SECTIONINFO", "uUAsp", sz_secitioninfo32 },
   { DBG_CV_S_MSUNK1, "S_MSUNK1", "Uuup", sz_msunk1 },
@@ -96,7 +99,7 @@ static sDbgTags stSYMs[] = {
 };
 
 #include "dbg_cv_typ.inc"
-static const char *sz_p[] = { "pad" };
+
 static sDbgTags stTYPs[] = {
   { LF_VTSHAPE, "LF_VTSHAPE", "p", sz_p },
   { LF_MODIFIER, "LF_MODIFIER", "p", sz_p },
