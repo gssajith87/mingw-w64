@@ -58,7 +58,7 @@ static int st_type1_load(struct sPdbTypes *f)
     {
       f->Gprec = dbg_memfile_create ("GP records", hdr->cbGprec);
       dbg_memfile_write (f->Gprec, 0, & f->memfile->data[hdr->cbHdr], hdr->cbGprec);
-      f->types = dbg_CV_create (f->Gprec->data, f->Gprec->size, 0);
+      f->types = dbg_CV_create (f->Gprec->data, f->Gprec->size, 0, (size_t) f->tiMin);
       if (f->types != NULL)
         {
           dbg_memfile_release (f->Gprec);

@@ -386,7 +386,7 @@ static sDbgTags *find_tag_typ (uint32_t tag)
   return &stTYPs[i];
 }
 
-sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms)
+sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms, size_t startDelta)
 {
   unsigned char *d = dta;
   size_t max2 = max, count = 0;
@@ -423,7 +423,7 @@ sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms)
   for (count = 0; count < ret->count; count++)
     {
       size_t l = dbg_CVtag_getsize (dta, max);
-      ret->tag[count] = dbg_CVtag_create (dta, max, be_syms,(!be_syms ? count : (size_t) (dta - d) + 4), l);
+      ret->tag[count] = dbg_CVtag_create (dta, max, be_syms,(!be_syms ? count : (size_t) (dta - d)) + startDelta, l);
       dta += l;
       max -= l;
     }

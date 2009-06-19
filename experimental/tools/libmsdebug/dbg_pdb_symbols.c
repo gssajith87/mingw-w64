@@ -234,7 +234,7 @@ static int sym2_load (sPdbSymbols *s)
       sDbgMemFile *gs = DbgInterfacePDB_file (s->base, sym->gsym_file);
       DbgInterfacePDB_file_kind (s->base, sym->gsym_file) = "Global Symbol stream";
       if (gs)
-	s->gsyms = dbg_CV_create (gs->data, gs->size, 1);
+	s->gsyms = dbg_CV_create (gs->data, gs->size, 1, 0);
     }
   if (DbgInterfacePDB_streams (s->base) > sym->hash1_file)
     DbgInterfacePDB_file_kind (s->base, sym->hash1_file) = "Hash1 stream";
@@ -337,7 +337,7 @@ static int sym1_load (sPdbSymbols *s)
       sDbgMemFile *gs = DbgInterfacePDB_file (s->base, sym->gsym_file);
       DbgInterfacePDB_file_kind (s->base, sym->gsym_file) = "Global Symbol stream";
       if (gs)
-	s->gsyms = dbg_CV_create (gs->data, gs->size, 1);
+	s->gsyms = dbg_CV_create (gs->data, gs->size, 1, 0);
     }
   if (DbgInterfacePDB_streams (s->base) > sym->hash1_file)
     DbgInterfacePDB_file_kind (s->base, sym->hash1_file) = "Hash1 stream";
@@ -477,7 +477,7 @@ static sPdbSymbolFile *sym_file_new (unsigned char *ptr, uint32_t ext, sPdbSymbo
 	      if (*((uint32_t *) h->data) != 4)
 		fprintf (stderr, "*** Sym/Lineno Version: %u\n", *((uint32_t *) h->data));
 	      else fprintf (stderr,".");
-              ret->sym_tags = dbg_CV_create (&h->data[4], (size_t) (psf->symbol_size) - 4, 1);
+              ret->sym_tags = dbg_CV_create (&h->data[4], (size_t) (psf->symbol_size) - 4, 1, 4);
             }
         }
     }

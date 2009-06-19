@@ -67,7 +67,7 @@ typedef struct sDbgCV {
   sDbgCVtag **tag;
 } sDbgCV;
 
-sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms);
+sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms, size_t startDelta);
 void dbg_CV_release (sDbgCV *);
 sDbgMemFile *dbg_CV_dump (sDbgCV *cv, sDbgMemFile *x);
 int dbg_CV_update (sDbgCV *cv, sDbgMemFile *f);
