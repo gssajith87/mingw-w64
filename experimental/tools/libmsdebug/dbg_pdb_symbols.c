@@ -181,16 +181,16 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
   if (s->unknown2_stream)
     {
       unsigned char *d = s->unknown2_stream->data;
-      if (((uint32_t *) d)[0] == 0xeffeeffe + 1)
+      if (((uint32_t *) d)[0] == 0xeffeeffe)
 	{
-	  unsigned char *strs;
+	  unsigned char *strs, *strs_start;
 	  uint32_t strpool_size = ((uint32_t *) d)[2];
 	  uint32_t strmap_cnt, imc;
 	  uint32_t *strmap;
 	  uint16_t hash_map_cnt;
 	  uint16_t *hash_map;
 	  d += 12;
-	  strs = d;
+	  strs_start = strs = d;
 	  d += strpool_size;
 	  strmap_cnt = ((uint32_t *) d)[0];
 	  d += 4;
@@ -203,12 +203,13 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
 	  for (; strpool_size > 0; )
 	    {
 	      size_t len;
-	      dbg_memfile_printf (ret, "  u$%u=\"%s\"\n", (uint32_t) imc, strs);
+	      dbg_memfile_printf (ret, "  u$%u=\"%s\"\n", (uint32_t) (size_t) (strs - strs_start), strs);
 	      len = strlen (strs) + 1;
 	      strs += len;
 	      strpool_size -= len;
 	      imc++;
 	    }
+	  dbg_memfile_printf (ret, "  Has %u elements in strtab\n", imc);
 	}
       else
 	{

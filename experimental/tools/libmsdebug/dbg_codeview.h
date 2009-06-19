@@ -53,9 +53,11 @@ typedef struct sDbgCVtag {
     uint16_t *us_dta;
     uint32_t *ui_dta;
   };
+  size_t tag_id;
+  size_t tag_len;
 } sDbgCVtag;
 
-sDbgCVtag *dbg_CVtag_create (unsigned char *dta, size_t max, int be_syms);
+sDbgCVtag *dbg_CVtag_create (unsigned char *dta, size_t max, int be_syms, size_t id, size_t len);
 void dbg_CVtag_release (sDbgCVtag *);
 sDbgMemFile *dbg_CVtag_dump (sDbgCVtag *cv,sDbgMemFile *x);
 int dbg_CVtag_update (sDbgCVtag *cv, sDbgMemFile *f);

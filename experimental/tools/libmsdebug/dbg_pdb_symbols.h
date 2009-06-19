@@ -259,18 +259,4 @@ typedef struct sPdbSymbols
 sPdbSymbols *dbg_symbols_load (sDbgMemFile *f, sDbgInterfacePDB *base, int stream_idx);
 void dbg_symbol_release (sPdbSymbols *s);
 
-/*
-Dump of 'Symbol unknown2 stream':
-0x00000000: FE EF FE EF 01 00 00 00 52 0C 00 00 00 72 75 6E - ........R....run
-0x00000010: 74 69 6D 65 2D 70 0B 00 20 00 00 00 23 91 00 00 - time-p.. ...#...
-
-0x00000000: FE EF FE EF 01 00 00 00 01 00 00 00 00 01 00 00
-0x00000010: 00 00 00 00 00 00 00 00 BC F4 00 00 23 00 00 00
-uint32_t signature; // 0xeffeeffe
-uint32_t version; // always 1
-uint32_t unk_size; // 0xc52, 1,
-char [12];
-uint32_t unk2_size; // 0x20, 0xf4bc
-uint32_t unk3_size; // 0x9123, 0x23
-*/
 #endif

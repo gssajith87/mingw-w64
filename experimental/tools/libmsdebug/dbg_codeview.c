@@ -419,10 +419,11 @@ sDbgCV *dbg_CV_create (unsigned char *dta, size_t max, int be_syms)
       return NULL;
     }
   ret->count = count;
+  d = dta;
   for (count = 0; count < ret->count; count++)
     {
       size_t l = dbg_CVtag_getsize (dta, max);
-      ret->tag[count] = dbg_CVtag_create (dta, max, be_syms);
+      ret->tag[count] = dbg_CVtag_create (dta, max, be_syms,(!be_syms ? count : (size_t) (dta - d) + 4), l);
       dta += l;
       max -= l;
     }
@@ -456,12 +457,10 @@ sDbgMemFile *dbg_CV_dump (sDbgCV *cv, sDbgMemFile *x)
       {
 	if (cv->tag[i]->be_syms == 0 && dbg_pdb_show_types)
 	{
-	  dbg_memfile_printf (x, " #%u:", (uint32_t) i + 0x1000 /* tiMin */);
 	  ret = dbg_CVtag_dump (cv->tag[i], ret);
 	}
 	else if (cv->tag[i]->be_syms == 1 && dbg_pdb_show_syms)
 	{
-	  dbg_memfile_printf (x, " @%u:", (uint32_t) i);
 	  ret = dbg_CVtag_dump (cv->tag[i], ret);
 	}
       }
@@ -496,7 +495,7 @@ static size_t dbg_CVtag_getsize (unsigned char *dta, size_t max)
   return ret;
 }
 
-sDbgCVtag *dbg_CVtag_create (unsigned char *dta, size_t max, int be_syms)
+sDbgCVtag *dbg_CVtag_create (unsigned char *dta, size_t max, int be_syms, size_t id, size_t len)
 {
   size_t tagSize;
   sDbgCVtag *ret = NULL;
@@ -512,6 +511,8 @@ sDbgCVtag *dbg_CVtag_create (unsigned char *dta, size_t max, int be_syms)
   if (!ret)
     return NULL;
   memset (ret, 0, sizeof (sDbgCVtag));
+  ret->tag_id = id;
+  ret->tag_len = len;
   ret->be_syms = be_syms;
   ret->dump = cv_default_dump;
   ret->update = cv_default_update;
@@ -528,6 +529,7 @@ sDbgMemFile *dbg_CVtag_dump (sDbgCVtag *cv,sDbgMemFile *x)
 {
   sDbgMemFile *ret = x;
   if (!ret) ret = dbg_memfile_create_text ("CV tag");
+  dbg_memfile_printf (ret, (!cv->be_syms ? " #%u: " : " @0x%08x: "), cv->tag_id);
   if (cv->dump)
     ret = (* cv->dump)(cv, ret);
   else
