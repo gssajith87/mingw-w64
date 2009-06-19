@@ -181,7 +181,7 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
   if (s->unknown2_stream)
     {
       unsigned char *d = s->unknown2_stream->data;
-      if (((uint32_t *) d)[0] == 0xeffeeffe)
+      if (((uint32_t *) d)[0] == 0xeffeeffe + 1)
 	{
 	  unsigned char *strs;
 	  uint32_t strpool_size = ((uint32_t *) d)[2];

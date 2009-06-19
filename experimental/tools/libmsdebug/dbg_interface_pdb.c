@@ -203,7 +203,7 @@ static sDbgMemFile *pdb2_dump (sDbgInterface *pDCtx)
       if (h[i])
 	{
 	  dbg_memfile_printf (ret, "Stream: %u with size %u\n", i, h[i]->size);
-	  //dbg_memfile_dump_in (ret, h[i]);
+	  dbg_memfile_dump_in (ret, h[i]);
 	}
     }
 
@@ -364,7 +364,7 @@ static sDbgMemFile *pdb7_dump (sDbgInterface *pDCtx)
       if (h[i])
 	{
 	  dbg_memfile_printf (ret, "Stream: %u with size %u\n", i, h[i]->size);
-	  //dbg_memfile_dump_in (ret, h[i]);
+	  dbg_memfile_dump_in (ret, h[i]);
 	}
     }
 

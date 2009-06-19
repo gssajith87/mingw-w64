@@ -33,11 +33,11 @@ static const char *sz_frameproc[] = { "cbFrame", "cbPad", "offPad", "cbSaveRegs"
 static const char *sz_constant[] = { "TypeIdx", "Value", "name", "pad" };
 static const char *sz_objname[] = { "Signature", "name", "pad" };
 static const char *sz_thunk32[] = { "pParent","pEnd","pNext", "Addr", "len", "ord", "name", "pad" };
-static const char *sz_block32[] = { "pParent", "pEnd","len","Addr","name", "pad" };
+static const char *sz_block32[] = { "pParent", "pEnd","Length","Addr","name", "pad" };
 static const char *sz_udt[] = { "TypeIdx", "name", "pad" };
 static const char *sz_procref[] = { "sumName", "ibSym", "iMod", "name", "pad" };
-static const char *sz_pub32[] = { "Flags","Addr","name","pad" };
-static const char *sz_proc32[] = { "pParent","pEnd","pNext","len","DbgStart","DbgEnd","TypeIdx","Addr","PROCFLAGS","name","pad" };
+static const char *sz_pub32[] = { "SymType","Addr","name","pad" };
+static const char *sz_proc32[] = { "pParent","pEnd","pNext","Proc_len","DbgStart","DbgEnd","ProcType","Addr","PROCFLAGS","name","pad" };
 static const char *sz_compile2[] = { "Unk1", "Unk2", "Unk3", "Unk4", "WUnk1", "name", "pad" };
 static const char *sz_gmandata[] = { "UIndex", "Flag", "Unk3", "name", "pad" };
 static const char *sz_manslot[] = { "Index", "Unk0", "Unk1", "Unk2", "Unk3", "Unk4", "name", "pad" };
@@ -54,12 +54,12 @@ static const char *sz_section32[] = { "Id", "Unk1","StartOff", "EndOff","Attribu
 static const char *sz_secitioninfo32[] = { "len", "Attribute","Addr","name", "pad" };
 static const char *sz_msunk1[] = { "Offset","Index","Len", "pad" };
 static const char *sz_msunk2[] = { "cbOffset", "Index", "pad" };
-static const char *sz_bprel32[] = { "BPOffset", "Index", "name", "pad" };
+static const char *sz_bprel32[] = { "BPOffset", "SymType", "name", "pad" };
 static const char *sz_trampoline[] = { "TrampType","cbThunk","OffThunk","OffTarget","SectionThunk", "SectionTarget", "pad" };
 static const char *sz_unknown[] = { "unknown" };
 static const char *sz_p[] = { "pad" };
 
-static const char *sz_register[] = { "p" };
+static const char *sz_register[] = { "Type","Register","name","pad" };
 
 static sDbgTags stSYMs[] = {
   { DBG_CV_S_COMPILE, "S_COMPILE", "bbwwVVvp", sz_compile },
@@ -67,18 +67,18 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_FRAMEPROC, "S_FRAMEPROC","uuuuAUp", sz_frameproc },
   { DBG_CV_S_OBJNAME, "S_OBJNAME", "Usp", sz_objname },
   { DBG_CV_S_THUNK32, "S_THUNK32", "uuuAwbsp", sz_thunk32 },
-  { DBG_CV_S_BLOCK32, "S_BLOCK32", "uuuAsp", sz_block32 },
+  { DBG_CV_S_BLOCK32, "S_BLOCK32", "UUuAsp", sz_block32 },
   { DBG_CV_S_WITH32, "S_WITH32", "uuuAsp", sz_with32 },
   { DBG_CV_S_LABEL32, "S_LABEL32", "Absp", sz_label32 },
-  { DBG_CV_S_REGISTER, "S_REGISTER", "p", sz_register },
+  { DBG_CV_S_REGISTER, "S_REGISTER", "twsp", sz_register },
   { DBG_CV_S_CONSTANT, "S_CONSTANT", "tlsp", sz_constant },
   { DBG_CV_S_UDT, "S_UDT", "tsp", sz_udt },
-  { DBG_CV_S_BPREL32, "S_BPREL32", "uusp", sz_bprel32 },
+  { DBG_CV_S_BPREL32, "S_BPREL32", "Utsp", sz_bprel32 },
   { DBG_CV_S_LDATA32, "S_LDATA32", "tAsp", sz_gdata32 },
   { DBG_CV_S_GDATA32, "S_GDATA32", "tAsp", sz_gdata32 },
   { DGB_CV_S_PUB32, "S_PUB32", "uAsp", sz_pub32 },
-  { DBG_CV_S_LPROC32, "S_LPROC32","uuuuuutAbsp", sz_proc32 },
-  { DBG_CV_S_GPROC32, "S_GPROC32","uuuuuutAbsp", sz_proc32 },
+  { DBG_CV_S_LPROC32, "S_LPROC32","UUUuUUtAbsp", sz_proc32 },
+  { DBG_CV_S_GPROC32, "S_GPROC32","UUUuUUtAbsp", sz_proc32 },
   { DBG_CV_S_COMPILE2, "S_COMPILE2", "uUUuws", sz_compile2 },
   { DBG_CV_S_LMANDATA, "S_LMANDATA", "wUusp", sz_gmandata },
   { DBG_CV_S_GMANDATA, "S_GMANDATA", "wUusp", sz_gmandata },
