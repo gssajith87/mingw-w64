@@ -120,7 +120,10 @@ static sDbgMemFile *sym_dump (sPdbSymbols *s, sDbgMemFile *t)
       for (i = 0; i < s->sym_files_count; i++)
         {
           if (s->sym_files[i])
-            (* s->sym_files[i]->dump) (s->sym_files[i], ret);
+	    {
+	      dbg_memfile_printf (ret, " m$%u:\n", (uint32_t) i);
+	      (* s->sym_files[i]->dump) (s->sym_files[i], ret);
+	    }
         }
     }
   if (s->sectioninfo_stream)
@@ -401,7 +404,7 @@ static int sym1_load (sPdbSymbols *s)
   return 0;
 }
 
-static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf,sDbgMemFile *t)
+static sDbgMemFile *sym_file_dump (sPdbSymbolFile *sf, sDbgMemFile *t)
 {
   sDbgMemFile *ret = t;
   if (t == NULL)

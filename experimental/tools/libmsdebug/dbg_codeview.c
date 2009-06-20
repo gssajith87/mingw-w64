@@ -86,8 +86,8 @@ static sDbgTags stSYMs[] = {
   { DBG_CV_S_PROCREF, "S_PROCREF", "uuwsp", sz_procref },
   { DBG_CV_S_LPROCREF, "S_LPROGREF", "uuwsp", sz_procref },
   { DBG_CV_S_TOKENREF, "S_TOKENREF", "uuwsp", sz_tokenref },
-  { DBG_CV_S_GMANPROC, "S_GMANPROC", "uuuuuuUAbwsp", sz_gmanproc },
-  { DBG_CV_S_LMANPROC, "S_LMANPROC", "uuuuuuUAbwsp", sz_gmanproc },
+  { DBG_CV_S_GMANPROC, "S_GMANPROC", "UUUuUUUAbwsp", sz_gmanproc },
+  { DBG_CV_S_LMANPROC, "S_LMANPROC", "UUUuUUUAbwsp", sz_gmanproc },
   { DBG_CV_S_TRAMPOLINE, "S_TRAMPOLINE", "wwUUwwp", sz_trampoline },
   { DBG_CV_S_SECTION32, "S_SECTION32", "wwUUUsp", sz_section32 },
   { DBG_CV_S_SECTIONINFO32, "S_SECTIONINFO", "uUAsp", sz_secitioninfo32 },
@@ -253,6 +253,10 @@ static sDbgMemFile *dump_tag_element_int (uint32_t tag, unsigned char *dta, size
 	  dbg_memfile_printf (ret, " %s:", h->names[el]);
 	    dump_typeid (*((uint32_t *) &dta[doff]), ret);
 	    break;
+	  case 'T':
+	    dbg_memfile_printf (ret, " %s:", h->names[el]);
+	    dump_typeid ((uint32_t) *((uint16_t *) &dta[doff]), ret);
+	    break;
 	  case 'U':
 	    dbg_memfile_printf (ret, " %s:0x%08x", h->names[el], *((uint32_t *) &dta[doff]));
 	    break;
@@ -345,7 +349,7 @@ static size_t get_tag_element_size (unsigned char *dta, size_t off, size_t size,
   {
   case 't': case 'u': case 'U': return sizeof (uint32_t);
   case 'l': return dump_lfvar (&dta[off], NULL);
-  case 'w': case 'W': return sizeof (uint16_t);
+  case 'w': case 'W': case 'T': return sizeof (uint16_t);
   case 'b': case 'B': return sizeof (unsigned char);
   case 'V': return sizeof (uint16_t) + sizeof (uint16_t);
   case 'v': return sizeof (uint16_t);
