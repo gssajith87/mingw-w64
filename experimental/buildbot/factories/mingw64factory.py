@@ -79,7 +79,9 @@ class Mingw64Factory(factory.BuildFactory):
     if self.clobber:
       self.addStep(ShellCommand(name="clobber",
                                 workdir=".",
-                                command=["rm", "-rfv", "build"],
+                                command=["bash", "-c", """
+                                          junction -d build/root/mingw || true ;
+                                          rm -rfv build"""],
                                 haltOnFailure=False,
                                 description=["clobber all"],
                                 descriptionDone=["clobbered"]))
