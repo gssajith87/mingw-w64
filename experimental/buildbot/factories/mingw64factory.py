@@ -75,6 +75,32 @@ class Mingw64Factory(factory.BuildFactory):
                                       WithProperties("%(binutils_revision:-)s")]))
 
 
+    # dump info about this slave
+    self.addStep(ShellCommand(name="sys-info",
+                              workdir=".",
+                              command=["bash", "-c", r"""true
+                              ; echo -e "\n----------\nuname:\n----------"
+                              ; uname -a
+                              ; echo -e "\n----------\ndistro:\n----------"
+                              ; cat /etc/issue
+                              ; echo -e "\n----------\ncompiler version:\n----------"
+                              ; gcc --version
+                              ; echo -e "\n----------\nlinker version:\n----------"
+                              ; ld --version
+                              ; echo -e "\n----------\nassembler version:\n----------"
+                              ; as --version
+                              ; echo -e "\n----------\nflex version:\n----------"
+                              ; flex --version
+                              ; echo -e "\n----------\nbison version:\n----------"
+                              ; bison --version
+                              ; echo -e "\n----------\nmake version:\n----------"
+                              ; make --version
+                              ; true
+                              """.replace("\n", "")],
+                              haltOnFailure=False,
+                              description=["system info"],
+                              descriptionDone=["system info"]))
+
     # set up build root
     if self.clobber:
       self.addStep(ShellCommand(name="clobber",
@@ -125,7 +151,8 @@ class Mingw64Factory(factory.BuildFactory):
 
     # Install mingw headers
     self.addStep(Compile(name="mingw-headers-install",
-                         description=["mingw headers install"],
+                         description=["mingw headers","install"],
+                         descriptionDone=["mingw headers", "installed"],
                          command=["make", "-f", "mingw-makefile", "headers-install"],
                          env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
