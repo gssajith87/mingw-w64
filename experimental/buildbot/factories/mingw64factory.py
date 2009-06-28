@@ -204,6 +204,15 @@ class Mingw64Factory(factory.BuildFactory):
     # make the tarball
     self._step_Archive()
 
+    # do a very simple test
+    self.addStep(Compile(name="sanity-check",
+                         description=["sanity check"],
+                         descriptionDone=["sanity check", "completed"],
+                         command=["bash", "-c",
+                                  WithProperties("""echo "int main(){return 0;}" > test.c ;
+                                                 %(basedir)s/build/root/bin/%(target_arch)s-gcc -o test test.c""")],
+                         haltOnFailure=True))
+
     # upload the tarball (to the build master)
     self.addStep(FileUpload,
                  slavesrc=WithProperties("%(filename)s"),
