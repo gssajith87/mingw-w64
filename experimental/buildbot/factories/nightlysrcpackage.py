@@ -202,7 +202,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                        prop_prefix="mingw_",
                                        config_dir=WithProperties("%(basedir:-.)s")))
     self.addStep(SetProperty(property="datestamp",
-                             command=WithProperties("echo '_%(mingw_datestamp:-)s' | tr -d -")))
+                             command=["date", "-u", "+_%Y%m%d"]))
     self.addStep(ShellCommand(name="mingw-datestamp",
                               workdir="src/mingw/mingw-w64-crt",
                               description=["writing", "buildstamp"],
