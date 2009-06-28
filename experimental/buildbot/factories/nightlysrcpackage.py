@@ -39,11 +39,13 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              command=["echo", WithProperties("%(gcc_branch:-trunk)s")]))
     self.addStep(SetProperty(property="mingw_branch",
                              command=["echo", WithProperties("%(mingw_branch:-trunk)s")]))
+    self.addStep(SetProperty(property="filename",
+                             command=["echo", WithProperties("mingw-w64-src.tar.bz2")]))
     #self.addStep(M64NightlyRev)
 
     if self.clobber:
       self.addStep(ShellCommand(name="clobber",
-                                command=["rm", "-rfv", "build", "src"],
+                                command=["rm", "-rfv", "build", "src", WithProperties("%(filename)s")],
                                 haltOnFailure=False,
                                 description=["clobber all"],
                                 descriptionDone=["clobbered"]))
@@ -212,8 +214,6 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                          """ > revstamp.h """)]))
 
     # make the tarball
-    self.addStep(SetProperty(property="filename",
-                             command=["echo", WithProperties("mingw-w64-src.tar.bz2")]))
     self.addStep(SetProperty(property="destname",
                              command=["echo", WithProperties("mingw-w64-src%(datestamp:-)s.tar.bz2")]))
     self.addStep(Compile(name="src-package",
