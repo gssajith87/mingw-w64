@@ -20,14 +20,17 @@ all:: # default target
 ########################################
 TARGET_ARCH ?= x86_64-w64-mingw32
 HOST_ARCH ?=
+BINUTILS_UPDATE ?= # force update binutils
 BINUTILS_CONFIG_EXTRA_ARGS ?=
 GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --disable-multilib
 GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
 GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
+GCC_UPDATE ?= # force update gcc
 GMP_VERSION ?= 4.3.0 # GMP release version
 MPFR_VERSION ?= 2.4.1 # MPFR release version
 MINGW_BRANCH ?= trunk # ... not that we have any!
 MINGW_REVISION ?= HEAD
+MINGW_UPDATE ?= # force update mingw
 MINGW_CONFIG_EXTRA_ARGS ?=
 SRC_ARCHIVE ?= mingw-w64-src.tar.bz2
 BIN_ARCHIVE ?= mingw-w64-bin_$(shell uname -s).tar.bz2
@@ -50,9 +53,8 @@ ifneq (,$(filter MINGW%,$(shell uname -s)))
 endif
 ifneq (,${HOST_ARCH})
   HOST_TYPE := posix
-  BINUTILS_CONFIG_EXTRA_ARGS += --host=${HOST_ARCH}
-  GCC_CONFIG_EXTRA_ARGS += --host=${HOST_ARCH}
-  MINGW_CONFIG_EXTRA_RAGS += --host=${HOST_ARCH}
+  BINUTILS_CONFIG_HOST_ARGS = --host=${HOST_ARCH}
+  GCC_CONFIG_HOST_ARGS = --host=${HOST_ARCH}
 endif
 ifneq (,$(filter %-mingw32,${HOST_ARCH}))
   HOST_TYPE := windows
@@ -84,10 +86,18 @@ binutils-pull: \
 src/binutils/.binutils.pull.marker: \
     src/binutils/.mkdir.marker
 	### XXX Mook: todo: specify revision
+ifeq (,$(BINUTILS_UPDATE))
 	cd $(dir $@) && \
 	cvs -d ":pserver:anoncvs@sourceware.org:/cvs/src" -z3 \
 	    checkout -d . -N binutils
 	@touch $@
+else
+	cd $(dir $@) && \
+	cvs -d ":pserver:anoncvs@sourceware.org:/cvs/src" -z3 \
+	    update
+	@touch $@
+.PHONY: src/binutils/.binutils.pull.marker
+endif
 
 ########################################
 # Pull GCC
@@ -125,6 +135,10 @@ src/gcc/gcc/.gcc.pull.marker: \
 	svn co --non-interactive --no-auth-cache --revision $(GCC_REVISION) \
 	       svn://gcc.gnu.org/svn/gcc/$(strip $(GCC_BRANCH))/ .
 	@touch $@
+
+  ifneq (,$(GCC_UPDATE))
+.PHONY: src/gcc/gcc/.gcc.pull.marker
+  endif
 
 ########################################
 # Download gmp
@@ -200,6 +214,10 @@ src/mingw/.mingw.pull.marker: \
 	    $(dir $@)
 	@touch $@
 
+  ifneq (,$(MINGW_UPDATE))
+.PHONY: src/mingw/.mingw.pull.marker
+  endif
+
 ## XXX Mook: stamp the source with the revision used
 
 ########################################
@@ -272,6 +290,7 @@ build/binutils/obj/.config.marker: \
     build/.root.init.marker
 	cd $(dir $@) && \
 	../src/configure --target=$(TARGET_ARCH) \
+	                 $(BINUTILS_CONFIG_HOST_ARGS) \
 	                 --prefix=$(CURDIR)/build/root \
 	                 --with-sysroot=$(CURDIR)/build/root \
 	                 $(BINUTILS_CONFIG_EXTRA_ARGS)
@@ -336,6 +355,7 @@ build/gcc/obj/.config.marker: \
     build/.root.init.marker
 	cd $(dir $@) && \
 	../gcc/configure --target=$(TARGET_ARCH) \
+	                 $(GCC_CONFIG_HOST_ARGS) \
 	                 --prefix=$(CURDIR)/build/root \
 	                 --with-sysroot=$(CURDIR)/build/root \
 	                 --enable-languages=all,obj-c++ \
