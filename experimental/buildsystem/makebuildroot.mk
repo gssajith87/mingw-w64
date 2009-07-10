@@ -38,12 +38,12 @@ BIN_ARCHIVE ?= mingw-w64-bin_$(shell uname -s).tar.bz2
 ########################################
 # Configure
 ########################################
-ifeq (,$(filter-out x86_64-%,$(TARGET_ARCH)))
+ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
   MINGW_LIBDIR := lib64
-else ifeq (,$(filter-out i386-% i486-% i586-% i686-%,$(TARGET_ARCH)))
+else ifeq (,$(filter-out i386-% i486-% i586-% i686-%,${TARGET_ARCH}))
   MIGNW_LIBDIR := lib
 else
-  $(error Unknown CPU for target arch $(TARGET_ARCH))
+  $(error Unknown CPU for target arch ${TARGET_ARCH})
 endif
 
 # the type of _host_ to run on (n.b. not build)
@@ -86,7 +86,7 @@ binutils-pull: \
 src/binutils/.binutils.pull.marker: \
     src/binutils/.mkdir.marker
 	### XXX Mook: todo: specify revision
-ifeq (,$(BINUTILS_UPDATE))
+ifeq (,${BINUTILS_UPDATE})
 	cd $(dir $@) && \
 	cvs -d ":pserver:anoncvs@sourceware.org:/cvs/src" -z3 \
 	    checkout -d . -N binutils
@@ -102,28 +102,28 @@ endif
 ########################################
 # Pull GCC
 ########################################
-## find a gcc revision (r???) and a stamp for the file name $(GCC_REV_STAMP)
-ifneq (,$(findstring -,$(GCC_REVISION)))
+## find a gcc revision (r???) and a stamp for the file name ${GCC_REV_STAMP}
+ifneq (,$(findstring -,${GCC_REVISION}))
   # GCC_REVISION is a date
-  GCC_REV_STAMP := d$(subst -,,$(GCC_REVISION))
+  GCC_REV_STAMP := d$(subst -,,${GCC_REVISION})
   GCC_REVISION := $(shell TZ=Z svn log --non-interactive --no-auth-cache \
-                                       -r "{$(subst -,,$(GCC_REVISION))T0000Z}:{$(subst -,,$(GCC_REVISION))T0030Z}" \
+                                       -r "{$(subst -,,${GCC_REVISION})T0000Z}:{$(subst -,,${GCC_REVISION})T0030Z}" \
                                        svn://gcc.gnu.org/svn/gcc/trunk | \
                           grep gccadmin | \
-                          grep $(GCC_REVISION) | \
+                          grep ${GCC_REVISION} | \
                           cut -d ' ' -f 1)
-  GCC_REVISION := $(subst r,,$(GCC_REVISION))
-else ifeq (_,$(if $(GCC_REVISION),,false)_$(strip \
+  GCC_REVISION := $(subst r,,${GCC_REVISION})
+else ifeq (_,$(if ${GCC_REVISION},,false)_$(strip \
               $(subst 0,, $(subst 1,, $(subst 2,, \
               $(subst 3,, $(subst 4,, $(subst 5,, \
               $(subst 6,, $(subst 7,, $(subst 8,, \
-              $(subst 9,, $(subst 0,, $(GCC_REVISION) )))))))))))))
+              $(subst 9,, $(subst 0,, ${GCC_REVISION} )))))))))))))
   # GCC_REVISION is a number
-  GCC_REVISION := $(GCC_REVISION)
-  GCC_REV_STAMP := r$(GCC_REVISION)
+  GCC_REVISION := ${GCC_REVISION}
+  GCC_REV_STAMP := r${GCC_REVISION}
 else
   # GCC_REVISION is some opaque string (e.g. "head")
-  GCC_REV_STAMP := r$(GCC_REVISION)
+  GCC_REV_STAMP := r${GCC_REVISION}
 endif # GCC revision
 
 gcc-pull: \
@@ -132,11 +132,11 @@ gcc-pull: \
 src/gcc/gcc/.gcc.pull.marker: \
     src/gcc/gcc/.mkdir.marker
 	cd $(dir $@) && \
-	svn co --non-interactive --no-auth-cache --revision $(GCC_REVISION) \
-	       svn://gcc.gnu.org/svn/gcc/$(strip $(GCC_BRANCH))/ .
+	svn co --non-interactive --no-auth-cache --revision ${GCC_REVISION} \
+	       svn://gcc.gnu.org/svn/gcc/$(strip ${GCC_BRANCH})/ .
 	@touch $@
 
-  ifneq (,$(GCC_UPDATE))
+  ifneq (,${GCC_UPDATE})
 .PHONY: src/gcc/gcc/.gcc.pull.marker
   endif
 
@@ -149,7 +149,7 @@ gmp-download: \
 
 src/gmp.tar.bz2: \
     src/.mkdir.marker
-	wget -O $@ ftp://ftp.gnu.org/gnu/gmp/gmp-$(strip $(GMP_VERSION)).tar.bz2
+	wget -O $@ ftp://ftp.gnu.org/gnu/gmp/gmp-$(strip ${GMP_VERSION}).tar.bz2
 
 ########################################
 # Extract gmp
@@ -161,7 +161,7 @@ gmp-extract: \
 src/gcc/.gmp.extract.marker: \
     src/gmp.tar.bz2
 	tar -C $(dir $@) -xjvf $<
-	mv $(dir $@)/gmp-$(strip $(GMP_VERSION)) $(dir $@)/gcc/gmp
+	mv $(dir $@)/gmp-$(strip ${GMP_VERSION}) $(dir $@)/gcc/gmp
 	@touch $@
 
 ########################################
@@ -185,7 +185,7 @@ mpfr-download: \
 
 src/mpfr.tar.bz2: \
     src/.mkdir.marker
-	wget -O $@ http://www.mpfr.org/mpfr-current/mpfr-$(strip $(MPFR_VERSION)).tar.bz2
+	wget -O $@ http://www.mpfr.org/mpfr-current/mpfr-$(strip ${MPFR_VERSION}).tar.bz2
 
 ########################################
 # Extract mpfr
@@ -197,7 +197,7 @@ mpfr-extract: \
 src/gcc/.mpfr.extract.marker: \
     src/mpfr.tar.bz2
 	tar -C $(dir $@) -xjvf $<
-	mv $(dir $@)/mpfr-$(strip $(MPFR_VERSION)) $(dir $@)/gcc/mpfr
+	mv $(dir $@)/mpfr-$(strip ${MPFR_VERSION}) $(dir $@)/gcc/mpfr
 	@touch $@
 
 ########################################
@@ -209,12 +209,12 @@ mingw-pull: \
 
 src/mingw/.mingw.pull.marker: \
     src/mingw/.mkdir.marker
-	svn checkout --non-interactive --no-auth-cache --revision $(MINGW_REVISION) \
-	    https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/$(strip $(MINGW_BRANCH))/ \
+	svn checkout --non-interactive --no-auth-cache --revision ${MINGW_REVISION} \
+	    https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/$(strip ${MINGW_BRANCH})/ \
 	    $(dir $@)
 	@touch $@
 
-  ifneq (,$(MINGW_UPDATE))
+  ifneq (,${MINGW_UPDATE})
 .PHONY: src/mingw/.mingw.pull.marker
   endif
 
@@ -224,10 +224,10 @@ src/mingw/.mingw.pull.marker: \
 # Create source tarball
 ########################################
 
-src-archive:  $(SRC_ARCHIVE)
+src-archive:  ${SRC_ARCHIVE}
 
-ifeq (,$(wildcard $(SRC_ARCHIVE)))
-$(SRC_ARCHIVE): \
+ifeq (,$(wildcard ${SRC_ARCHIVE}))
+${SRC_ARCHIVE}: \
     src/binutils/.binutils.pull.marker \
     src/gcc/gcc/.gcc.pull.marker \
     src/gcc/gcc/gmp/configure \
@@ -235,9 +235,15 @@ $(SRC_ARCHIVE): \
     src/mingw/.mingw.pull.marker
 endif
 
-$(SRC_ARCHIVE):
+${SRC_ARCHIVE}:
 	tar cjf $@ --owner 0 --group 0 --checkpoint --exclude=.svn --exclude=.*.marker \
             --exclude=CVS --exclude=gmp.tar.bz2 --exclude=mpfr.tar.bz2 -C src .
+
+################################################################################
+# Build
+################################################################################
+
+BUILD_DIR := build
 
 ########################################
 # Extract source tarball
@@ -246,22 +252,22 @@ src-extract:: \
     build/.extract.marker
 
 build/.extract.marker: \
-    $(SRC_ARCHIVE)
+    ${SRC_ARCHIVE}
 	-mkdir -p $(dir $@)
 	tar -C $(dir $@) -xvjpf $<
 	@touch $@
 
-build/.root.init.marker: \
-    build/root/${TARGET_ARCH}/.mkdir.marker \
+${BUILD_DIR}/root/.root.init.marker: \
+    ${BUILD_DIR}/root/${TARGET_ARCH}/.mkdir.marker \
     build/.extract.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
-	test -e build/root/mingw  || \
-	  junction build/root/mingw "build/root/${TARGET_ARCH}"
-	test -e build/root/mingw
+	test -e ${BUILD_DIR}/root/mingw  || \
+	  junction ${BUILD_DIR}/root/mingw "${BUILD_DIR}/root/${TARGET_ARCH}"
+	test -e ${BUILD_DIR}/root/mingw
 else
-	test -h build/root/mingw  || \
-	  ln -s "${TARGET_ARCH}" build/root/mingw
-	test -h build/root/mingw
+	test -h ${BUILD_DIR}/root/mingw  || \
+	  ln -s "${TARGET_ARCH}" ${BUILD_DIR}/root/mingw
+	test -h ${BUILD_DIR}/root/mingw
 endif
 	@touch $@
 
@@ -269,41 +275,42 @@ endif
 # Install mingw-w64 headers
 ########################################
 headers-install: \
-    build/root/mingw/.headers.install.marker
+    ${BUILD_DIR}/root/mingw/.headers.install.marker
 
-build/root/mingw/.headers.install.marker: \
-    build/.root.init.marker \
-    build/root/$(TARGET_ARCH)/include/.mkdir.marker
+${BUILD_DIR}/root/mingw/.headers.install.marker: \
+    ${BUILD_DIR}/root/.root.init.marker \
+    ${BUILD_DIR}/root/${TARGET_ARCH}/include/.mkdir.marker
 	tar cf - --exclude=.svn -C build/mingw/mingw-w64-headers/include . | \
-	  tar xpvf - -C build/root/$(TARGET_ARCH)/include
+	  tar xpvf - -C ${BUILD_DIR}/root/${TARGET_ARCH}/include
 	@touch $@
 
 ########################################
 # Configure binutils
 ########################################
 binutils-configure: \
-    build/binutils/obj/.config.marker
+    ${BUILD_DIR}/binutils/obj/.config.marker
 
-build/binutils/obj/.config.marker: \
-    build/root/mingw/.headers.install.marker\
-    build/binutils/obj/.mkdir.marker \
-    build/.root.init.marker
+${BUILD_DIR}/binutils/obj/.config.marker: \
+    ${BUILD_DIR}/root/mingw/.headers.install.marker\
+    ${BUILD_DIR}/binutils/obj/.mkdir.marker \
+    ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
-	../src/configure --target=$(TARGET_ARCH) \
-	                 $(BINUTILS_CONFIG_HOST_ARGS) \
-	                 --prefix=$(CURDIR)/build/root \
-	                 --with-sysroot=$(CURDIR)/build/root \
-	                 $(BINUTILS_CONFIG_EXTRA_ARGS)
+	${CURDIR}/build/binutils/src/configure \
+	    --target=${TARGET_ARCH} \
+	    ${BINUTILS_CONFIG_HOST_ARGS} \
+	    --prefix=${CURDIR}/${BUILD_DIR}/root \
+	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
+	    ${BINUTILS_CONFIG_EXTRA_ARGS}
 	@touch $@
 
 ########################################
 # Compile binutils
 ########################################
 binutils-compile: \
-    build/binutils/obj/.compile.marker
+    ${BUILD_DIR}/binutils/obj/.compile.marker
 
-build/binutils/obj/.compile.marker: \
-    build/binutils/obj/.config.marker
+${BUILD_DIR}/binutils/obj/.compile.marker: \
+    ${BUILD_DIR}/binutils/obj/.config.marker
 	make -C $(dir $@)
 	@touch $@
 
@@ -311,10 +318,10 @@ build/binutils/obj/.compile.marker: \
 # Install binutils
 ########################################
 binutils-install: \
-    build/binutils/obj/.install.marker
+    ${BUILD_DIR}/binutils/obj/.install.marker
 
-build/binutils/obj/.install.marker: \
-    build/binutils/obj/.compile.marker
+${BUILD_DIR}/binutils/obj/.install.marker: \
+    ${BUILD_DIR}/binutils/obj/.compile.marker
 	make -C $(dir $@) install
 	@touch $@
 
@@ -325,15 +332,15 @@ gcc-winsup: \
     build/gcc/gcc/.winsup.marker
 
 build/gcc/gcc/.winsup.marker: \
-    build/.extract.marker \
-    build/.root.init.marker
+    ${BUILD_DIR}/.extract.marker \
+    ${BUILD_DIR}/root/.root.init.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
 	test -e build/gcc/gcc/winsup  || \
-	  junction build/gcc/gcc/winsup "build/root"
+	  junction build/gcc/gcc/winsup "${BUILD_DIR}/root"
 	test -e build/gcc/gcc/winsup
 else
 	test -h build/gcc/gcc/winsup  || \
-	  ln -s "../../root" build/gcc/gcc/winsup
+	  ln -s "../../../${BUILD_DIR}/root" build/gcc/gcc/winsup
 	test -h build/gcc/gcc/winsup
 endif
 	@touch $@
@@ -342,24 +349,25 @@ endif
 # Configure GCC
 ########################################
 gcc-configure: \
-    build/gcc/obj/.config.marker
+    ${BUILD_DIR}/gcc/obj/.config.marker
 
 ifneq (,$(filter %-mingw32,${HOST_ARCH}))
-build/gcc/obj/.config.marker: \
-    build/gcc/gcc/.winsup.marker
+${BUILD_DIR}/gcc/obj/.config.marker: \
+    ${BUILD_DIR}/gcc/gcc/.winsup.marker
 endif
 
-build/gcc/obj/.config.marker: \
-    build/gcc/obj/.mkdir.marker \
-    build/binutils/obj/.install.marker \
-    build/.root.init.marker
+${BUILD_DIR}/gcc/obj/.config.marker: \
+    ${BUILD_DIR}/gcc/obj/.mkdir.marker \
+    ${BUILD_DIR}/binutils/obj/.install.marker \
+    ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
-	../gcc/configure --target=$(TARGET_ARCH) \
-	                 $(GCC_CONFIG_HOST_ARGS) \
-	                 --prefix=$(CURDIR)/build/root \
-	                 --with-sysroot=$(CURDIR)/build/root \
-	                 --enable-languages=all,obj-c++ \
-	                 $(GCC_CONFIG_EXTRA_ARGS)
+	${CURDIR}/build/gcc/gcc/configure \
+	    --target=${TARGET_ARCH} \
+	    ${GCC_CONFIG_HOST_ARGS} \
+	    --prefix=${CURDIR}/${BUILD_DIR}/root \
+	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
+	    --enable-languages=all,obj-c++ \
+	    ${GCC_CONFIG_EXTRA_ARGS}
 	@touch $@
 
 ########################################
@@ -370,7 +378,7 @@ gcc-bootstrap-compile: \
 
 build/gcc/obj/.bootstrap.compile.marker: \
     build/gcc/obj/.config.marker \
-    build/root/mingw/.headers.install.marker
+    ${BUILD_DIR}/root/mingw/.headers.install.marker
 	found_asm=yes make -C $(dir $@) all-gcc
 	@touch $@
 
@@ -389,27 +397,28 @@ build/gcc/obj/.bootstrap.install.marker: \
 # Configure mingw-w64 CRT
 ########################################
 crt-configure: \
-    build/mingw/obj/.config.marker
+    ${BUILD_DIR}/mingw/obj/.config.marker
 
-build/mingw/obj/.config.marker: \
+${BUILD_DIR}/mingw/obj/.config.marker: \
     build/gcc/obj/.bootstrap.install.marker \
-    build/mingw/obj/.mkdir.marker
+    ${BUILD_DIR}/mingw/obj/.mkdir.marker
 	cd $(dir $@) && \
 	PATH=$(realpath build/root/bin):$$PATH \
-	../mingw-w64-crt/configure --host=$(TARGET_ARCH) \
-	                           --prefix=$(CURDIR)/build/root \
-	                           --with-sysroot=$(CURDIR)/build/root \
-	                           $(MINGW_CONFIG_EXTRA_ARGS)
+	${CURDIR}/build/mingw/mingw-w64-crt/configure \
+	    --host=${TARGET_ARCH} \
+	    --prefix=${CURDIR}/${BUILD_DIR}/root \
+	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
+	    ${MINGW_CONFIG_EXTRA_ARGS}
 	@touch $@
 
 ########################################
 # Compile mingw-w64 CRT
 ########################################
 crt-compile: \
-    build/mingw/obj/.compile.marker
+    ${BUILD_DIR}/mingw/obj/.compile.marker
 
-build/mingw/obj/.compile.marker: \
-    build/mingw/obj/.config.marker
+${BUILD_DIR}/mingw/obj/.compile.marker: \
+    ${BUILD_DIR}/mingw/obj/.config.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	make -C $(dir $@)
 	@touch $@
@@ -418,10 +427,10 @@ build/mingw/obj/.compile.marker: \
 # Install mingw-w64 CRT
 ########################################
 crt-install: \
-    build/mingw/obj/.install.marker
+    ${BUILD_DIR}/mingw/obj/.install.marker
 
-build/mingw/obj/.install.marker: \
-    build/mingw/obj/.compile.marker
+${BUILD_DIR}/mingw/obj/.install.marker: \
+    ${BUILD_DIR}/mingw/obj/.compile.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	make -C $(dir $@) install
 	@touch $@
@@ -430,12 +439,12 @@ build/mingw/obj/.install.marker: \
 # Compile full GCC
 ########################################
 gcc-compile: \
-    build/gcc/obj/.compile.marker \
-    build/mingw/obj/.install.marker
+    ${BUILD_DIR}/gcc/obj/.compile.marker \
+    ${BUILD_DIR}/mingw/obj/.install.marker
 
-build/gcc/obj/.compile.marker: \
-    build/gcc/obj/.config.marker \
-    build/mingw/obj/.install.marker
+${BUILD_DIR}/gcc/obj/.compile.marker: \
+    ${BUILD_DIR}/gcc/obj/.config.marker \
+    ${BUILD_DIR}/mingw/obj/.install.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	make -C $(dir $@)
 	@touch $@
@@ -444,10 +453,10 @@ build/gcc/obj/.compile.marker: \
 # Install full GCC
 ########################################
 gcc-install: \
-    build/gcc/obj/.install.marker
+    ${BUILD_DIR}/gcc/obj/.install.marker
 
-build/gcc/obj/.install.marker: \
-    build/gcc/obj/.compile.marker
+${BUILD_DIR}/gcc/obj/.install.marker: \
+    ${BUILD_DIR}/gcc/obj/.compile.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	make -C $(dir $@) install
 	@touch $@
@@ -456,23 +465,221 @@ build/gcc/obj/.install.marker: \
 # Create release tarball
 ########################################
 release-archive: \
-    $(BIN_ARCHIVE)
+    ${BIN_ARCHIVE}
 
-$(BIN_ARCHIVE): \
-    build/gcc/obj/.install.marker
-ifeq (windows,$(HOST_TYPE))
-	cd build/root && \
-	zip -r -9 ../../$(patsubst %.tar.bz2,%.zip,$(BIN_ARCHIVE)) \
+${BIN_ARCHIVE}: \
+    ${BUILD_DIR}/gcc/obj/.install.marker
+ifeq (windows,${HOST_TYPE})
+	cd ${BUILD_DIR}/root && \
+	zip -r -9 ../../$(patsubst %.tar.bz2,%.zip,$@) \
 	     . -x .*.marker *.*.marker
 else
-	tar cjf $(BIN_ARCHIVE) -C build/root --owner 0 --group 0 --checkpoint \
+	tar cjf $@ -C ${BUILD_DIR}/root --owner 0 --group 0 --checkpoint \
 	    --exclude=CVS --exclude=.svn --exclude=.*.marker \
             .
 endif
 
+################################################################################
+# Native (only active when native_dir != build_dir)
+################################################################################
+
+NATIVE_DIR := native
+
+ifneq (${NATIVE_DIR},${BUILD_DIR})
+
 ########################################
+# Initialize build root
+########################################
+
+${NATIVE_DIR}/root/.root.init.marker: \
+    ${NATIVE_DIR}/root/${TARGET_ARCH}/.mkdir.marker \
+    ${BUILD_DIR}/gcc/obj/.install.marker \
+    build/.extract.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Install mingw-w64 headers
+########################################
+native-headers-install: \
+    ${NATIVE_DIR}/root/mingw/.headers.install.marker
+
+${NATIVE_DIR}/root/mingw/.headers.install.marker: \
+    ${NATIVE_DIR}/root/.root.init.marker \
+    ${NATIVE_DIR}/root/${TARGET_ARCH}/include/.mkdir.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Configure binutils
+########################################
+native-binutils-configure: \
+    ${NATIVE_DIR}/binutils/obj/.config.marker
+
+${NATIVE_DIR}/binutils/obj/.config.marker: \
+    ${NATIVE_DIR}/root/mingw/.headers.install.marker\
+    ${NATIVE_DIR}/binutils/obj/.mkdir.marker \
+    ${NATIVE_DIR}/root/.root.init.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Compile binutils
+########################################
+native-binutils-compile: \
+    ${NATIVE_DIR}/binutils/obj/.compile.marker
+
+${NATIVE_DIR}/binutils/obj/.compile.marker: \
+    ${NATIVE_DIR}/binutils/obj/.config.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Install binutils
+########################################
+native-binutils-install: \
+    ${NATIVE_DIR}/binutils/obj/.install.marker
+
+${NATIVE_DIR}/binutils/obj/.install.marker: \
+    ${BUILD_DIR}/binutils/obj/.compile.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# GCC cross compiling support - winsup
+########################################
+native-gcc-winsup: \
+    ${NATIVE_DIR}/gcc/gcc/.winsup.marker
+
+${NATIVE_DIR}/gcc/gcc/.winsup.marker: \
+    build/.extract.marker \
+    ${NATIVE_DIR}/gcc/gcc/.mkdir.marker \
+    ${NATIVE_DIR}/root/.root.init.marker
+ifneq (,$(filter MINGW%,$(shell uname -s)))
+	-test -e build/gcc/gcc/winsup  && \
+	  junction -d build/gcc/gcc/winsup
+	junction build/gcc/gcc/winsup "${NATIVE_DIR}/root"
+	test -e build/gcc/gcc/winsup
+else
+	-test -h build/gcc/gcc/winsup && \
+	  rm build/gcc/gcc/winsup
+	ln -s "../../../${NATIVE_DIR}/root" build/gcc/gcc/winsup
+	test -h build/gcc/gcc/winsup
+endif
+	@touch $@
+
+########################################
+# Configure GCC
+########################################
+native-gcc-configure: \
+    ${NATIVE_DIR}/gcc/obj/.config.marker
+
+${NATIVE_DIR}/gcc/obj/.config.marker: \
+    ${NATIVE_DIR}/gcc/gcc/.winsup.marker \
+    ${NATIVE_DIR}/gcc/obj/.mkdir.marker \
+    ${NATIVE_DIR}/binutils/obj/.install.marker \
+    ${NATIVE_DIR}/root/.root.init.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Configure mingw-w64 CRT
+########################################
+native-crt-configure: \
+    ${NATIVE_DIR}/mingw/obj/.config.marker
+
+${NATIVE_DIR}/mingw/obj/.config.marker: \
+    build/gcc/obj/.bootstrap.install.marker \
+    ${NATIVE_DIR}/mingw/obj/.mkdir.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Compile mingw-w64 CRT
+########################################
+native-crt-compile: \
+    ${NATIVE_DIR}/mingw/obj/.compile.marker
+
+${NATIVE_DIR}/mingw/obj/.compile.marker: \
+    ${NATIVE_DIR}/mingw/obj/.config.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Install mingw-w64 CRT
+########################################
+native-crt-install: \
+    ${NATIVE_DIR}/mingw/obj/.install.marker
+
+${NATIVE_DIR}/mingw/obj/.install.marker: \
+    ${NATIVE_DIR}/mingw/obj/.compile.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Compile full GCC
+########################################
+native-gcc-compile: \
+    ${NATIVE_DIR}/gcc/obj/.compile.marker \
+    ${NATIVE_DIR}/mingw/obj/.install.marker
+
+${NATIVE_DIR}/gcc/obj/.compile.marker: \
+    ${NATIVE_DIR}/gcc/obj/.config.marker \
+    ${NATIVE_DIR}/mingw/obj/.install.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Install full GCC
+########################################
+native-gcc-install: \
+    ${NATIVE_DIR}/gcc/obj/.install.marker
+
+${NATIVE_DIR}/gcc/obj/.install.marker: \
+    ${NATIVE_DIR}/gcc/obj/.compile.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=x86_64-w64-mingw32 \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Create release tarball
+########################################
+native-release-archive: \
+    native-${BIN_ARCHIVE}
+
+native-${BIN_ARCHIVE}: \
+    ${NATIVE_DIR}/gcc/obj/.install.marker
+	cd ${NATIVE_DIR}/root && \
+	zip -r -9 ${CURDIR}/$(patsubst %.tar.bz2,%.zip,$@) \
+	     . -x .*.marker *.*.marker
+
+
+endif # native_dir != build_dir
+
+################################################################################
 # Helper targets
-########################################
+################################################################################
 
 %/.mkdir.marker:
 	-mkdir -p $(dir $@)
@@ -480,10 +687,11 @@ endif
 
 help::
 	@echo Available targets:
-	@echo -e $(foreach t,all $(TARGETS) $@,\\t$(t)\\n)
+	@echo -e $(foreach t,all ${TARGETS} $@,\\t${t}\\n)
 
+# build only the cross-compiler by default
 all:: \
-  $(BIN_ARCHIVE)
+  ${BIN_ARCHIVE}
 
 TARGETS := \
   patch-pull \
@@ -510,11 +718,22 @@ TARGETS := \
   gcc-compile \
   gcc-install \
   release-archive \
-  $(NULL)
+  native-binutils-configure \
+  native-binutils-compile \
+  native-binutils-install \
+  native-gcc-configure \
+  native-headers-install \
+  native-crt-configure \
+  native-crt-compile \
+  native-crt-install \
+  native-gcc-compile \
+  native-gcc-install \
+  native-release-archive \
+  ${NULL}
 
 
 .PHONY: \
   all \
-  $(TARGETS) \
+  ${TARGETS} \
   help \
-  $(NULL)
+  ${NULL}
