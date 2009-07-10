@@ -497,7 +497,8 @@ ${NATIVE_DIR}/root/.root.init.marker: \
     build/.extract.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
@@ -511,7 +512,8 @@ ${NATIVE_DIR}/root/mingw/.headers.install.marker: \
     ${NATIVE_DIR}/root/${TARGET_ARCH}/include/.mkdir.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
@@ -526,7 +528,8 @@ ${NATIVE_DIR}/binutils/obj/.config.marker: \
     ${NATIVE_DIR}/root/.root.init.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
@@ -539,7 +542,8 @@ ${NATIVE_DIR}/binutils/obj/.compile.marker: \
     ${NATIVE_DIR}/binutils/obj/.config.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
@@ -552,7 +556,8 @@ ${NATIVE_DIR}/binutils/obj/.install.marker: \
     ${BUILD_DIR}/binutils/obj/.compile.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
@@ -591,7 +596,8 @@ ${NATIVE_DIR}/gcc/obj/.config.marker: \
     ${NATIVE_DIR}/root/.root.init.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
@@ -605,7 +611,8 @@ ${NATIVE_DIR}/mingw/obj/.config.marker: \
     ${NATIVE_DIR}/mingw/obj/.mkdir.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
@@ -618,7 +625,8 @@ ${NATIVE_DIR}/mingw/obj/.compile.marker: \
     ${NATIVE_DIR}/mingw/obj/.config.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
@@ -631,7 +639,8 @@ ${NATIVE_DIR}/mingw/obj/.install.marker: \
     ${NATIVE_DIR}/mingw/obj/.compile.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
@@ -646,7 +655,8 @@ ${NATIVE_DIR}/gcc/obj/.compile.marker: \
     ${NATIVE_DIR}/mingw/obj/.install.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
@@ -659,7 +669,8 @@ ${NATIVE_DIR}/gcc/obj/.install.marker: \
     ${NATIVE_DIR}/gcc/obj/.compile.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=x86_64-w64-mingw32 \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
