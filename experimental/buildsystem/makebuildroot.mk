@@ -295,7 +295,7 @@ ${BUILD_DIR}/binutils/obj/.config.marker: \
     ${BUILD_DIR}/binutils/obj/.mkdir.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
-	${CURDIR}/build/binutils/src/configure \
+	../../../build/binutils/src/configure \
 	    --target=${TARGET_ARCH} \
 	    ${BINUTILS_CONFIG_HOST_ARGS} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
@@ -361,7 +361,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/binutils/obj/.install.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
-	${CURDIR}/build/gcc/gcc/configure \
+	../../../build/gcc/gcc/configure \
 	    --target=${TARGET_ARCH} \
 	    ${GCC_CONFIG_HOST_ARGS} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
@@ -404,7 +404,7 @@ ${BUILD_DIR}/mingw/obj/.config.marker: \
     ${BUILD_DIR}/mingw/obj/.mkdir.marker
 	cd $(dir $@) && \
 	PATH=$(realpath build/root/bin):$$PATH \
-	${CURDIR}/build/mingw/mingw-w64-crt/configure \
+	../../../build/mingw/mingw-w64-crt/configure \
 	    --host=${TARGET_ARCH} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
 	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
