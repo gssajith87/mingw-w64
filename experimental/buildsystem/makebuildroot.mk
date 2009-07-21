@@ -493,8 +493,7 @@ ifneq (${NATIVE_DIR},${BUILD_DIR})
 
 ${NATIVE_DIR}/root/.root.init.marker: \
     ${NATIVE_DIR}/root/${TARGET_ARCH}/.mkdir.marker \
-    ${BUILD_DIR}/gcc/obj/.install.marker \
-    build/.extract.marker
+    ${BUILD_DIR}/.extract.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
@@ -523,6 +522,7 @@ native-binutils-configure: \
     ${NATIVE_DIR}/binutils/obj/.config.marker
 
 ${NATIVE_DIR}/binutils/obj/.config.marker: \
+    ${BUILD_DIR}/gcc/obj/.install.marker \
     ${NATIVE_DIR}/root/mingw/.headers.install.marker\
     ${NATIVE_DIR}/binutils/obj/.mkdir.marker \
     ${NATIVE_DIR}/root/.root.init.marker
@@ -553,7 +553,7 @@ native-binutils-install: \
     ${NATIVE_DIR}/binutils/obj/.install.marker
 
 ${NATIVE_DIR}/binutils/obj/.install.marker: \
-    ${BUILD_DIR}/binutils/obj/.compile.marker
+    ${NATIVE_DIR}/binutils/obj/.compile.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
