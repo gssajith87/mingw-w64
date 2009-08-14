@@ -1,6 +1,7 @@
 # -*- python -*-
 
 from buildbot.steps.shell import ShellCommand, SetProperty
+from buildbot.steps.trigger import Trigger
 from buildbot.status.builder import SKIPPED
 import datetime
 from xml.dom import minidom
@@ -32,6 +33,34 @@ class M64CVS(ShellCommand):
             return ["pulling " + self.cvsmodule]
         else:
             return [self.cvsmodule + " pulled"]
+
+#def ConditionalStep(_baseClass, callback):
+#    class __derivedClass(_baseClass):
+#        def __init__(self, **kwargs):
+#            _baseClass.__init__(self, **kwargs)
+#
+#        def start(self):
+#            result = callback(self)
+#            if result != SUCCESS:
+#                return result
+#            return _baseClass.start(self)
+#    return __derivedClass
+#
+#def PropertyConditionalStep(_baseClass, condProp=None, condInvert=False, condValue = None):
+#    def conditionCallback(instance):
+#        if condProp is not None:
+#            if instance.build.getProperties().has_key(condProp):
+#                matched = True
+#                if condValue is None:
+#                    matched = self.build.getProperty(condProp)
+#                else:
+#                    matched = (self.build.getProperty(condProp) == condValue)
+#                if condInvert:
+#                    matched = not matched
+#                if not matched:
+#                    return SKIPPED
+#        return SUCCESS
+#    return ConditionalStep(_baseClass, conditionalCallback)
 
 class ShellCommandConditional(ShellCommand):
     """Runs a remote command if a property (given by "condprop") is set"""
@@ -68,18 +97,40 @@ class ShellCommandConditional(ShellCommand):
 
 class SetPropertyConditional(SetProperty):
     """Sets a property if a different property (given by "condprop") is set"""
-    def __init__(self, condprop=None, **kwargs):
+    def __init__(self, condprop=None, condinvert=False, condvalue=None, **kwargs):
         SetProperty.__init__(self, **kwargs)
-        self.addFactoryArguments(condprop=condprop)
-        self.condprop = condprop
+        self.addFactoryArguments(condprop=condprop,
+                                 condinvert=condinvert,
+                                 condvalue=condvalue)
+        self.condProp = condprop
+        self.condInvert = condinvert
+        self.condValue = None
 
     def start(self):
-        if self.condprop is not None:
-            if not (self.build.getProperties().has_key(self.condprop) and
-                    self.build.getProperty(self.condprop)):
-                # we have a conditional that's not met
-                return SKIPPED
+        if self.condProp is not None:
+            if self.build.getProperties().has_key(self.condProp):
+                matched = True
+                if self.condValue is None:
+                    matched = self.build.getProperty(self.condProp)
+                else:
+                    matched = (self.build.getProperty(self.condProp) == self.condValue)
+                if self.condInvert:
+                    matched = not matched
+                if not matched:
+                    return SKIPPED
         SetProperty.start(self)
+
+class TriggerBuilders(Trigger):
+    """Trigger a schedulre.Triggerable with the builders specified in a property"""
+    def __init__(self, propertyName="schedulerNames", **kwargs):
+        Trigger.__init__(self, **kwargs)
+        self.propertyName = propertyName
+        self.addFactoryArguments(propertyName=propertyName)
+
+    def start(self):
+        if self.build.getProperties().has_key(self.propertyName):
+            self.schedulerNames = self.build.getProperty(self.propertyName).split(",")
+        return Trigger.start(self)
 
 class M64NightlyRev(SetPropertyConditional):
     """Sets the revision based on the gcc daily time stamp"""

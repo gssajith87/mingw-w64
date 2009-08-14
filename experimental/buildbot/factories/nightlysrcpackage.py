@@ -10,7 +10,7 @@ from buildbot.steps.source import CVS, SVN
 from buildbot.steps.shell import Configure, Compile, ShellCommand, WithProperties, SetProperty
 from buildbot.steps.transfer import FileDownload, FileUpload
 from buildbot.steps.trigger import Trigger
-from scripts.buildsteps import M64CVS, M64NightlyRev, ShellCommandConditional, SubversionRevProperty
+from scripts.buildsteps import M64CVS, M64NightlyRev, ShellCommandConditional, SetPropertyConditional, SubversionRevProperty, TriggerBuilders
 
 from ConfigParser import RawConfigParser as ConfigParser
 gConfig = ConfigParser()
@@ -29,10 +29,14 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              command=["echo", os.getcwd()]))
     self.addStep(SetProperty(property="basedir",
                              command=["bash", "-c", "builtin pwd"]))
-    self.addStep(SetProperty(property="gmp_version",
-                             command=["echo", gConfig.get("libraries", "gmp")]))
-    self.addStep(SetProperty(property="mpfr_version",
-                             command=["echo", gConfig.get("libraries", "mpfr")]))
+    self.addStep(SetPropertyConditional(property="gmp_version",
+                                        command=["echo", gConfig.get("libraries", "gmp")],
+                                        condprop="gmp_version",
+                                        condinvert=True))
+    self.addStep(SetPropertyConditional(property="mpfr_version",
+                                        command=["echo", gConfig.get("libraries", "mpfr")],
+                                        condprop="mpfr_version",
+                                        condinvert=True))
     self.addStep(SetProperty(property="binutils_branch",
                              command=["echo", WithProperties("%(binutils_branch:-trunk)s")]))
     self.addStep(SetProperty(property="gcc_branch",
@@ -40,7 +44,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(SetProperty(property="mingw_branch",
                              command=["echo", WithProperties("%(mingw_branch:-trunk)s")]))
     self.addStep(SetProperty(property="filename",
-                             command=["echo", WithProperties("mingw-w64-src.tar.bz2")]))
+                             command=["echo", WithProperties("%(src_archive:-mingw-w64-src.tar.bz2)s")]))
     #self.addStep(M64NightlyRev)
 
     if self.clobber:
@@ -204,7 +208,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(SetProperty(property="datestamp",
                              command=["date", "-u", "+_%Y%m%d"]))
     self.addStep(ShellCommand(name="mingw-datestamp",
-                              workdir="src/mingw/mingw-w64-crt",
+                              workdir="build/src/mingw/mingw-w64-crt",
                               description=["writing", "buildstamp"],
                               descriptionDone=["buildstamp", "written"],
                               command=["bash", "-c", WithProperties(
@@ -228,21 +232,26 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                             masterdest=WithProperties("%(filename)s")))
 
     # trigger building
-    self.addStep(Trigger(name="start-build",
-                         schedulerNames=["trigger-linux-x86_64-x86_64",
-                                         "trigger-linux-x86_64-x86",
-                                         "trigger-linux-x86-x86_64",
-                                         "trigger-linux-x86-x86",
-                                         "trigger-cygwin-x86-x86_64",
-                                         "trigger-cygwin-x86-x86",
-                                         "trigger-mingw-x86-x86_64",
-                                         "trigger-mingw-x86-x86"],
-                         waitForFinish=False,
-                         updateSourceStamp=True,
-                         set_properties={'is_nightly':  WithProperties("%(is_nightly:-)s"),
-                                         'datestamp':   WithProperties("%(datestamp:-)s"),
-                                         'masterdir':   WithProperties("%(masterdir)s"),
-                                         'src_archive': WithProperties("%(filename)s")}))
+    self.addStep(TriggerBuilders
+                  (name="start-build",
+                   propertyName="builders",
+                   schedulerNames=["trigger-linux-x86_64-x86_64",
+                                   "trigger-linux-x86_64-x86",
+                                   "trigger-linux-x86-x86_64",
+                                   "trigger-linux-x86-x86",
+                                   "trigger-cygwin-x86-x86_64",
+                                   "trigger-cygwin-x86-x86",
+                                   "trigger-mingw-x86-x86_64",
+                                   "trigger-mingw-x86-x86"],
+                   waitForFinish=False,
+                   updateSourceStamp=True,
+                   set_properties={"is_nightly":      WithProperties("%(is_nightly:-)s"),
+                                   "datestamp":       WithProperties("%(datestamp:-)s"),
+                                   "binutils_branch": WithProperties("%(binutils_branch)s"),
+                                   "gcc_branch":      WithProperties("%(gcc_branch)s"),
+                                   "mingw_branch":    WithProperties("%(mingw_branch)s"),
+                                   "masterdir":       WithProperties("%(masterdir)s"),
+                                   "src_archive":     WithProperties("%(filename)s")}))
     # trigger upload
     self.addStep(Trigger(name="src-publish",
                          schedulerNames=["sourceforge-upload"],
