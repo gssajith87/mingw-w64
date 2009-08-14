@@ -47,7 +47,7 @@ start() {
 	if [ -z "$1" ]; then
 	    start_single master master
 	    start_single slave-uploader "uploader slave"
-	    start_single slave-linux "linux slave"
+	    #start_single slave-linux "linux slave"
 	else
 	    start_single "$1" "$1"
 	fi
