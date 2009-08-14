@@ -52,8 +52,9 @@ def main(argv):
 
   def configOptionReplacement(option, opt_str, value, parser, args, **kwargs):
     """ an option parser for a shorthand for a configOptionCallback """
-    value = "%s.%s=%s" % (kwargs["section"], kwargs["key"], value)
-    configOptionCallback(option, "--config", value, parser, args)
+    if value is not None and value is not "":
+      value = "%s.%s=%s" % (kwargs["section"], kwargs["key"], value)
+      configOptionCallback(option, "--config", value, parser, args)
   optparser.add_option("-u", "--user", action="callback", type="string",
                        help="specify sourceforge user name",
                        callback=configOptionReplacement, callback_args=(config,),
@@ -184,6 +185,9 @@ def publish(filename, config, opts):
                     "release_id": config.get("sourceforge", "release-" + opts.os)}
     publish_page = urllib2.urlopen(EDIT_URL, urllib.urlencode(publish_data))
     print "Skipping publish of %s due to dry-run..." % (filename)
+    if opts.verbose > 2:
+      for key in sorted(publish_data.keys()):
+        print "%s\t\t%s" % (key, publish_data[key])
   return publish_page
 
 def cleanup(filename, config, opts, page_data):
