@@ -111,8 +111,8 @@ def upload(srcfile, destfile, config, opts):
   command = ["rsync", "-zvtPc", "--bwlimit=200", "-e", "ssh -i %s -o UserKnownHostsFile=%s", srcfile,
              "%%s,%s@frs.sourceforge.net:%s" % (group_id, temppath)]
   print " ".join(command)
-  command[3] = command[3] % (config.get("sourceforge", "sshkey"), "ssh_known_hosts")
-  command[5] = command[5] % (config.get("sourceforge", "user"))
+  command[4] = command[4] % (config.get("sourceforge", "sshkey"), "ssh_known_hosts")
+  command[6] = command[6] % (config.get("sourceforge", "user"))
   if opts.dry_run:
     print "(rsync skipped due to dry-run)"
     return temppath
