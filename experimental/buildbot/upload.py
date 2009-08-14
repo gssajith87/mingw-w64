@@ -109,8 +109,6 @@ def main(argv):
   destpath = publish(temppath, destfile, config, opts)
   assert(destpath is not None)
 
-  ### XXX Mook: don't delete anything yet
-  opts.dry_run = 1
   cleanup(destpath, destfile, config, opts)
 
 def upload(srcfile, destfile, config, opts):
