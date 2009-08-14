@@ -260,5 +260,6 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                          "filename":   WithProperties("%(filename)s"),
                                          "destname":   WithProperties("%(destname)s"),
                                          "datestamp":  WithProperties("%(datestamp:-)s"),
+                                         "target-os":  "src",
                                          "is_nightly": WithProperties("%(is_nightly:-)s")}))
 
