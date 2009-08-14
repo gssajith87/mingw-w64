@@ -115,190 +115,145 @@ def main(argv):
   assert (-1 < srcfile.find(".tar.")) or (-1 < srcfile.find(".zip")), "%s is not a tarball" % (srcfile)
 
   ### argument processing complete, go do things
-  upload(srcfile, destfile, config, opts)
-  page = publish(destfile, config, opts)
-  cleanup(destfile, config, opts, page)
+  temppath = upload(srcfile, destfile, config, opts)
+  assert(temppath is not None)
+  destpath = publish(temppath, destfile, config, opts)
+  assert(destpath is not None)
+
+  ### XXX Mook: don't delete anything yet
+  opts.dry_run = 1
+  cleanup(destpath, destfile, config, opts)
 
 def upload(srcfile, destfile, config, opts):
+  group_id = config.get("sourceforge", "group_id")
+
+  assert destfile.find("/") == -1, "destination file name cannot contain path separators!"
+  assert destfile.find(" ") == -1, "destination file name cannot contain spaces!"
+
   if opts.verbose > 0:
-    print "processing upload of %s to %s..." % (srcfile, destfile)
-  command = ["rsync", "-avPc", "-e", "ssh -i %s -o UserKnownHostsFile=%s",
-             srcfile, "%%s@frs.sourceforge.net:uploads/%s" % (destfile)]
+    print "processing upload of %s to OldFiles/%s..." % (srcfile, destfile)
+  temppath = "/home/frs/project/%s/%s/%s/OldFiles/%s" % (
+             group_id[0], group_id[0:2], group_id, destfile)
+  command = ["rsync", "-zvtPc", "-e", "ssh -i %s -o UserKnownHostsFile=%s", srcfile,
+             "%%s,%s@frs.sourceforge.net:%s" % (group_id, temppath)]
   print " ".join(command)
   command[3] = command[3] % (config.get("sourceforge", "sshkey"), "ssh_known_hosts")
   command[5] = command[5] % (config.get("sourceforge", "user"))
   if opts.dry_run:
     print "(rsync skipped due to dry-run)"
+    return temppath
   else:
     for attempt in range(0, 5):  # 5 tries
       rsync = subprocess.Popen(command, stderr=subprocess.STDOUT)
       rsync.communicate()
       if rsync.returncode == 0:
-        return
+        return temppath
     assert(rsync.returncode == 0)
+  return None
 
-def publish(filename, config, opts):
+def publish(temppath, filename, config, opts):
+  group_id = config.get("sourceforge", "group_id")
+  try:
+    destpath = "%s/%s" % (
+      config.get("sourceforge", "package-" + opts.os),
+      config.get("sourceforge", "release-" + opts.os))
+  except:
+    destpath = "OldFiles/Automated Uploads"
+  destpath = "/home/frs/project/%s/%s/%s/%s/%s" % (
+    group_id[0], group_id[0:2], group_id, destpath, filename)
   if opts.verbose > 0:
-    print "processing publish of %s..." % (filename)
-  ### set up cookie management
-  cookiejar = cookielib.CookieJar()
-  opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar))
-  urllib2.install_opener(opener)
-
-  ### login to sourceforge
-  login_data = {"form_loginname": config.get("sourceforge", "user"),
-                "form_pw": config.get("sourceforge", "password"),
-                "ssl_status": 1,
-                "form_securemode": "yes",
-                "login": "Log in"}
-  if opts.verbose > 0:
-    for item in login_data:
-      if item == "form_pw":
-        print "%s = <*>" % (item)
-      else:
-        print "%s = %s" % (item, login_data[item])
-  request = urllib2.Request(LOGIN_URL)
-  request.add_data(urllib.urlencode(login_data))
-  login_page = urllib2.urlopen(request)
-  # sourceforge is being weird, we need to submit twice to pick up cookies
-  login_page = urllib2.urlopen(request)
-
-  # read the page and guess if we succeeded
-  for line in login_page:
-    if opts.verbose > 2:
-      print line[:-1]
-    assert (-1 == line.find(LOGIN_FAIL)), "sourceforge login error"
-
-  ### publish files
-  if not opts.dry_run:
-    publish_data = {"group_id" : config.get("sourceforge", "group_id"),
-                    "package_id": config.get("sourceforge", "package-" + opts.os),
-                    "release_id": config.get("sourceforge", "release-" + opts.os),
-                    "step2": 1,
-                    "file_list[]": filename,
-                    "submit": "Add Files and/or Refresh View"}
-    publish_page = urllib2.urlopen(EDIT_URL, urllib.urlencode(publish_data))
-    print "%s published to sourceforge; editing metadata..." % (filename)
+    print 'renaming file "%s" to "%s"...' % (temppath, destpath)
+  command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%%s,%s@frs.sourceforge.net" % (group_id)]
+  batch = 'rename "%s" "%s"' % (temppath, destpath)
+  print "%s | %s" % (batch, " ".join(command))
+  command[4] = command[4] % (config.get("sourceforge", "sshkey"))
+  command[5] = command[5] % (config.get("sourceforge", "user"))
+  if opts.dry_run:
+    print "(publish skipped due to dry-run)"
+    return destpath
   else:
-    publish_data = {"group_id" : config.get("sourceforge", "group_id"),
-                    "package_id": config.get("sourceforge", "package-" + opts.os),
-                    "release_id": config.get("sourceforge", "release-" + opts.os)}
-    publish_page = urllib2.urlopen(EDIT_URL, urllib.urlencode(publish_data))
-    print "Skipping publish of %s due to dry-run..." % (filename)
-    if opts.verbose > 2:
-      for key in sorted(publish_data.keys()):
-        print "%s\t\t%s" % (key, publish_data[key])
-  return publish_page
+    for attempt in range(0, 5):  # 5 tries
+      sftp = subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+      sftp.communicate(batch)
+      if sftp.returncode == 0:
+        return destpath
+    assert(sftp.returncode == 0)
+  return None
 
-def cleanup(filename, config, opts, page_data):
+def cleanup(destpath, filename, config, opts):
+  group_id = config.get("sourceforge", "group_id")
   if opts.verbose > 0:
     print "processing cleanup of %s..." % (filename)
-  items = []
-  item_data = {}
 
-  # figure out the desired file characteristics
-  processor = "Other"
-  if re.search(r'i.86', filename):
-    processor = 'i386'
-  if re.search(r'x86.64', filename):
-    processor = 'AMD64'
-  extension = filename[filename.rindex("."):]
   if opts.datestamp is not None and filename.find(opts.datestamp) != -1:
     prefix = filename[:filename.find(opts.datestamp)]
   else:
-    prefix = None
+    # we don't have enough information to clean anything up
+    if opts.verbose > 0:
+      print "no datestamp given or not found in file %s" % (filename)
+    return
 
-  if opts.debug:
-    print "prefix = %s" % (prefix)
+  command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%%s,%s@frs.sourceforge.net" % (group_id)]
 
-  ### scrape through the page to look for files we know about
-  r_name = re.compile('<td nowrap><font size="-1">([^<]+)</td>', re.IGNORECASE)
-  r_value = re.compile('name="([^"]+)"\s+value="([^"]+)"', re.IGNORECASE)
-  r_select = re.compile('<select NAME="(\w+)" >', re.IGNORECASE)
-  r_option = re.compile('<OPTION VALUE="(\d+)"[^>]*>([^<]+)</OPTION>', re.IGNORECASE)
-  in_form = False
-  in_select = None
-  for line in page_data.readlines():
-    if opts.verbose > 2:
-      print line[:-1]
-    if line.find('<form action="/project/admin/editreleases.php" method="post">') != -1:
-      # new file
-      item_data = {}
-      in_form = True
-    elif in_form and line.find('<input type="hidden" name="') != -1:
-      match = r_value.search(line)
-      item_data[match.group(1)] = match.group(2)
-    elif in_form and line.find('<select NAME="') != -1:
-      in_select = r_select.search(line).group(1)
-      item_data[in_select] = {}
-    elif in_form and in_select is not None and line.find('<OPTION VALUE=') != -1:
-      match = r_option.search(line)
-      item_data[in_select][match.group(2)] = match.group(1)
-    elif in_form and in_select is not None and line.find('</select>') != -1:
-      in_select = None
-    elif in_form and line.find('</form>') != -1:
-      in_form = False
-      if "file_id" in item_data and "file_name" in item_data:
-        if prefix is not None:
-          # calculate the date of the file
-          match = re.match("_*(\d{8})", item_data["file_name"][len(prefix):])
-          if match is not None:
-            datestring = match.group(1)
-            datestamp = datetime.date(int(datestring[0:4]), int(datestring[4:6]), int(datestring[6:8]))
-            item_data["datestamp"] = datestamp
-            items += [item_data]
-          else:
-            if opts.verbose > 0:
-              print "item %s doesn't look like the right type" % (item_data["file_name"])
-        else:
-          item_data["datestamp"] = datetime.date(datetime.MAXYEAR, 12, 31)
-          items += [item_data]
-    elif in_form and r_name.search(line):
-      item_data["file_name"] = r_name.search(line).group(1)
+  dir = "/".join(destpath.split("/")[:-1])
+  list_batch = "\n".join([
+    'cd "%s"' % (dir),
+    'ls %s*' % (prefix)])
 
-  items.sort(cmp=lambda x,y:cmp(x["datestamp"], y["datestamp"]), reverse=False)
+  print "%s | %s" % (list_batch, " ".join(command))
+  command[4] = command[4] % (config.get("sourceforge", "sshkey"))
+  command[5] = command[5] % (config.get("sourceforge", "user"))
 
-  skipped_items = 0
+  sftp = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  (stdout, stderr) = sftp.communicate(list_batch)
+  print stderr
+  assert sftp.returncode == 0, "failed to get list of existing files"
+
+  items = []
+  for line in stdout.split("\n"):
+    if line.startswith("sftp>"):
+      # echoing input
+      continue
+    if line == "":
+      # empty?
+      continue
+    filename = line.strip()
+    if not filename.startswith(prefix):
+      if opts.verbose > 0:
+        print 'item "%s" does not start with the correct prefix "%s"' % (filename, prefix)
+      continue
+    if filename.find('"') != -1:
+      if opts.verbose > 0:
+        print 'deletion of item "%s" skipped due to unsafe characters' % (filename)
+      continue
+    match = re.match("_*(\d{8})", filename[len(prefix):])
+    if match is not None:
+      datestring = match.group(1)
+      datestamp = datetime.date(int(datestring[0:4]), int(datestring[4:6]), int(datestring[6:8]))
+      items.append({"datestamp": datestamp,
+                    "file_name": filename})
+    else:
+      if opts.verbose > 0:
+        print "file %s does not seem to have a date" % (filename)
+      continue
+
+  items.sort(None, lambda x:x["datestamp"])
+
   days_to_keep = 7
   if config.has_option("sourceforge", "history"):
     days_to_keep = config.getint("sourceforge", "history")
 
-  for item in items:
-    if item["file_name"] == filename:
-      edit_data = {"group_id" : config.get("sourceforge", "group_id"),
-                   "package_id": config.get("sourceforge", "package-" + opts.os),
-                   "release_id": config.get("sourceforge", "release-" + opts.os),
-                   "new_release_id": config.get("sourceforge", "release-" + opts.os),
-                   "file_id": item["file_id"],
-                   "step3": 1,
-                   "processor_id": item["processor_id"][processor],
-                   "type_id": item["type_id"][filename[filename.rfind("."):]],
-                   "submit": "Update/Refresh"}
-      if opts.dry_run:
-        print "editing item %s (processor %s) skipped due to dry-run" % (
-                filename, processor)
-      else:
-        edit_page = urllib2.urlopen(EDIT_URL, urllib.urlencode(edit_data))
-        print "item %s edited (processor %s)" % (filename, processor)
+  for item in items[:-days_to_keep]:
+    file_to_delete = "%s/%s" % (dir, item["file_name"])
+    if opts.dry_run:
+      print 'deleting item "%s" skipped due to dry-run' % (file_to_delete)
+    else:
+      delete_batch = 'rm "%s"' % (file_to_delete)
+      sftp =  subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.stdout)
+      sftp.communicate(delete_batch)
+      assert sftp.returncode == 0, "failed to delete file %s" % (file_to_delete)
+      print "item %s deleted" % (file_to_delete)
 
-    elif prefix is not None and item["file_name"].startswith(prefix):
-      if skipped_items + 1 < days_to_keep:
-        if opts.verbose > 0:
-          print "keeping item %s" % (item["file_name"])
-        skipped_items = skipped_items + 1
-      else:
-        # should delete this old item
-        edit_data = {"group_id" : config.get("sourceforge", "group_id"),
-                     "package_id": config.get("sourceforge", "package-" + opts.os),
-                     "release_id": config.get("sourceforge", "release-" + opts.os),
-                     "file_id": item["file_id"],
-                     "im_sure": 1,
-                     "step3": "Delete File"}
-        if opts.dry_run:
-          print "deleting item %s skipped due to dry-run" % (item["file_name"])
-        else:
-          urllib2.urlopen(EDIT_URL, urllib.urlencode(edit_data))
-          print "item %s deleted" % (item["file_name"])
   print "Done"
 
 if __name__ == "__main__":
