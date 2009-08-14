@@ -4,11 +4,6 @@ from ConfigParser import RawConfigParser as ConfigParser
 import optparse, os, re, stat, subprocess, sys, datetime
 import cookielib, urllib, urllib2
 
-### random constants
-LOGIN_URL = "https://sourceforge.net/account/login.php"
-LOGIN_FAIL = '<form action="%s"' % (LOGIN_URL)
-EDIT_URL = "https://sourceforge.net/project/admin/editreleases.php"
-
 def main(argv):
   config = ConfigParser()
   config.read("config.ini")
@@ -67,10 +62,8 @@ def main(argv):
                        help="specify sourceforge group id",
                        callback=configOptionReplacement, callback_args=(config,),
                        callback_kwargs={"section": "sourceforge", "key": "group_id"})
-  optparser.add_option("--package-id", "--pkg-id", action="store", type="string",
-                       help="specify sourceforge package id", dest="package_id")
-  optparser.add_option("-r", "--release-id", action="store", type="string",
-                       help="specify sourceforge release id", dest="release_id")
+  optparser.add_option("-p", "--path", action="store", type="string",
+                       help="specify upload path", dest="path")
 
   (opts, args) = optparser.parse_args(args=argv)
   while "" == args[-1]:
@@ -84,15 +77,9 @@ def main(argv):
   filesize = os.stat(srcfile)[stat.ST_SIZE]
 
   ### deal with arguments that depended on other arguments
-  if opts.package_id:
-    # specify the package id, based on the given os
-    config.set("sourceforge", "package-%s" % (opts.os), opts.package_id)
-    delattr(opts, "package_id")
-
-  if opts.release_id:
-    # specify the release id, based on the given os
-    config.set("sourceforge", "release-%s" % (opts.os), opts.release_id)
-    delattr(opts, "release_id")
+  if opts.path:
+    config.set("sourceforge", "path-%s" % (opts.os), opts.path)
+    delattr(opts, "path")
 
   ### check for sane arguments
   if opts.datestamp is not None:
@@ -141,9 +128,7 @@ def upload(srcfile, destfile, config, opts):
 def publish(temppath, filename, config, opts):
   group_id = config.get("sourceforge", "group_id")
   try:
-    destpath = "%s/%s" % (
-      config.get("sourceforge", "package-" + opts.os),
-      config.get("sourceforge", "release-" + opts.os))
+    destpath = config.get("sourceforge", "path-%s" % (opts.os))
   except:
     destpath = "OldFiles/Automated Uploads"
   destpath = "/home/frs/project/%s/%s/%s/%s/%s" % (
@@ -236,7 +221,7 @@ def cleanup(destpath, filename, config, opts):
       print 'deleting item "%s" skipped due to dry-run' % (file_to_delete)
     else:
       delete_batch = 'rm "%s"' % (file_to_delete)
-      sftp =  subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.stdout)
+      sftp =  subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
       sftp.communicate(delete_batch)
       assert sftp.returncode == 0, "failed to delete file %s" % (file_to_delete)
       print "item %s deleted" % (file_to_delete)
