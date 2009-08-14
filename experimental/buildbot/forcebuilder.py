@@ -101,6 +101,10 @@ class ForceBuilder(HtmlResource):
         request.write("""
           <input name="p_%s" type="text" value="%s">
           """ % (prop, self.properties[prop]))
+      elif type(self.properties[prop]) is bool:
+        request.write("""
+          <input name="p_%s" type="checkbox" %s>
+          """ % (prop, {True: "checked='true'", False: ""}[self.properties[prop]]))
       elif type(self.properties[prop]) is list:
         request.write("""<select name="p_%s">""" % (prop))
         for item in self.properties[prop]:
