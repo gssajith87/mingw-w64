@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from ConfigParser import RawConfigParser as ConfigParser
-import optparse, os, re, stat, subprocess, sys, datetime, getpass
+import optparse, os, re, stat, subprocess, sys, datetime
 import cookielib, urllib, urllib2
 
 ### random constants
@@ -59,8 +59,6 @@ def main(argv):
                        help="specify sourceforge user name",
                        callback=configOptionReplacement, callback_args=(config,),
                        callback_kwargs={"section": "sourceforge", "key": "user"})
-  optparser.add_option("-p", "--password", action="store_true",
-                       help="prompt for sourceforge login password")
   optparser.add_option("-k", "--key", action="callback", type="string",
                        help="specify sourceforge ssh key",
                        callback=configOptionReplacement, callback_args=(config,),
@@ -86,15 +84,6 @@ def main(argv):
   filesize = os.stat(srcfile)[stat.ST_SIZE]
 
   ### deal with arguments that depended on other arguments
-  if opts.password:
-    # prompt for the password
-    delattr(opts, "password")
-    prompt = "Password for %s@sourceforge: " % (config.get("sourceforge", "user"))
-    password = getpass.getpass(prompt)
-    if not config.has_section("sourceforge"):
-      config.add_section("sourceforge")
-    config.set("sourceforge", "password", password)
-
   if opts.package_id:
     # specify the package id, based on the given os
     config.set("sourceforge", "package-%s" % (opts.os), opts.package_id)
