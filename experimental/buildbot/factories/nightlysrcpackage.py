@@ -250,6 +250,9 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                    "binutils_branch": WithProperties("%(binutils_branch)s"),
                                    "gcc_branch":      WithProperties("%(gcc_branch)s"),
                                    "mingw_branch":    WithProperties("%(mingw_branch)s"),
+                                   "sf_group_id": WithProperties("%(sf_group_id:-)s"),
+                                   "sf_package_id": WithProperties("%(sf_package_id:-)s"),
+                                   "sf_release_id": WithProperties("%(sf_release_id:-)s"),
                                    "masterdir":       WithProperties("%(masterdir)s"),
                                    "src_archive":     WithProperties("%(filename)s")}))
     # trigger upload
@@ -258,6 +261,9 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          waitForFinish=False, # don't hang :D
                          set_properties={"masterdir":  WithProperties("%(masterdir)s"),
                                          "filename":   WithProperties("%(filename)s"),
+                                         "sf_group_id": WithProperties("%(sf_group_id:-)s"),
+                                         "sf_package_id": WithProperties("%(sf_package_id:-)s"),
+                                         "sf_release_id": WithProperties("%(sf_release_id:-)s"),
                                          "destname":   WithProperties("%(destname)s"),
                                          "datestamp":  WithProperties("%(datestamp:-)s"),
                                          "is_nightly": WithProperties("%(is_nightly:-)s")}))
