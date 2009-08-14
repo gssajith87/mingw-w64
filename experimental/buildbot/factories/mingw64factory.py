@@ -258,9 +258,6 @@ class Mingw64Factory(factory.BuildFactory):
                                  "filename": WithProperties("%(filename)s"),
                                  "destname": WithProperties("%(destname)s"),
                                  "datestamp": WithProperties("%(datestamp:-)s"),
-                                 "sf_group_id": WithProperties("%(sf_group_id:-)s"),
-                                 "sf_package_id": WithProperties("%(sf_package_id:-)s"),
-                                 "sf_release_id": WithProperties("%(sf_release_id:-)s"),
                                  "is_nightly": WithProperties("%(is_nightly:-)s")})
 
   def _step_Archive(self):
