@@ -154,80 +154,92 @@ class Mingw64Factory(factory.BuildFactory):
                          description=["mingw headers","install"],
                          descriptionDone=["mingw headers", "installed"],
                          command=["make", "-f", "mingw-makefile", "headers-install"],
-                         env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     # Make binutils
     self.addStep(Configure(name="binutils-configure",
                            description=["binuils", "configure"],
                            descriptionDone=["binutils", "configured"],
                            command=["make", "-f", "mingw-makefile", "binutils-configure"],
-                           env={"BINUTILS_CONFIG_EXTRA_ARGS": WithProperties("%(binutils_config_args)s"),
+                           env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                                "BINUTILS_CONFIG_EXTRA_ARGS": WithProperties("%(binutils_config_args)s"),
                                 "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     self.addStep(Compile(name="binutils-compile",
                          description=["binutils compile"],
                          descriptionDone=["binutils compiled"],
                          command=["make", "-f", "mingw-makefile", "binutils-compile"],
-                         env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     self.addStep(Compile(name="binutils-install",
                          description=["binutils install"],
                          descriptionDone=["binutils installed"],
                          command=["make", "-f", "mingw-makefile", "binutils-install"],
-                         env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     # Make bootstrap gcc
     self.addStep(Configure(name="gcc-configure",
                            description=["gcc configure"],
                            descriptionDone=["gcc configured"],
                            command=["make", "-f", "mingw-makefile", "gcc-configure"],
-                           env={"GCC_CONFIG_EXTRA_ARGS": WithProperties("%(gcc_config_args)s"),
+                           env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                                "GCC_CONFIG_EXTRA_ARGS": WithProperties("%(gcc_config_args)s"),
                                 "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     self.addStep(Compile(name="gcc-bootstrap-compile",
                          description=["bootstrap gcc compile"],
                          descriptionDone=["bootstrap gcc compiled"],
                          command=["make", "-f", "mingw-makefile", "gcc-bootstrap-compile"],
-                         env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     self.addStep(Compile(name="gcc-bootstrap-install",
                          description=["bootstrap gcc install"],
                          descriptionDone=["bootstrap gcc install"],
                          command=["make", "-f", "mingw-makefile", "gcc-bootstrap-install"],
-                         env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     # Compile CRT
     self.addStep(Configure(name="crt-configure",
                            description=["CRT configure"],
                            descriptionDone=["CRT configured"],
                            command=["make", "-f", "mingw-makefile", "crt-configure"],
-                           env={"MINGW_CONFIG_EXTRA_ARGS": WithProperties("%(mingw_config_args)s"),
+                           env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                                "MINGW_CONFIG_EXTRA_ARGS": WithProperties("%(mingw_config_args)s"),
                                 "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     self.addStep(Compile(name="crt-compile",
                          description=["CRT compile"],
                          descriptionDone=["CRT compiled"],
                          command=["make", "-f", "mingw-makefile", "crt-compile"],
-                         env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     self.addStep(Compile(name="crt-install",
                          description=["CRT install"],
                          descriptionDone=["CRT installed"],
                          command=["make", "-f", "mingw-makefile", "crt-install"],
-                         env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     # Compile full gcc
     self.addStep(Compile(name="gcc-compile",
                          description=["gcc compiled"],
                          descriptionDone=["gcc compile"],
                          command=["make", "-f", "mingw-makefile", "gcc-compile"],
-                         env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
     self.addStep(Compile(name="gcc-install",
                          description=["gcc install"],
                          descriptionDone=["gcc installed"],
                          command=["make", "-f", "mingw-makefile", "gcc-install"],
-                         env={"TARGET_ARCH": WithProperties("%(target_arch)s")}))
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
 
     # make the tarball
