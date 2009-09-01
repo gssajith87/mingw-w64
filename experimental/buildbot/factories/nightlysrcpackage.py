@@ -245,13 +245,12 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                    "trigger-mingw-x86-x86"],
                    waitForFinish=False,
                    updateSourceStamp=True,
-                   set_properties={"is_nightly":      WithProperties("%(is_nightly:-)s"),
-                                   "datestamp":       WithProperties("%(datestamp:-)s"),
-                                   "binutils_branch": WithProperties("%(binutils_branch)s"),
-                                   "gcc_branch":      WithProperties("%(gcc_branch)s"),
-                                   "mingw_branch":    WithProperties("%(mingw_branch)s"),
-                                   "masterdir":       WithProperties("%(masterdir)s"),
-                                   "src_archive":     WithProperties("%(filename)s")}))
+                   copy_properties=['is_nightly', 'datestamp',
+                                    'binutils_branch', 'gcc_branch', 'mingw_branch',
+                                    'binutils_config_args', 'gcc_config_args', 'mingw_config_args',
+                                    'gcc_revision', 'mingw_revision',
+                                    'masterdir', 'path'],
+                   set_properties={"src_archive":          WithProperties("%(filename)s")}))
     # trigger upload
     self.addStep(Trigger(name="src-publish",
                          schedulerNames=["sourceforge-upload"],
@@ -261,5 +260,6 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                          "destname":   WithProperties("%(destname)s"),
                                          "datestamp":  WithProperties("%(datestamp:-)s"),
                                          "target-os":  "src",
+                                         "path":       WithProperties("%(path:-)s"),
                                          "is_nightly": WithProperties("%(is_nightly:-)s")}))
 

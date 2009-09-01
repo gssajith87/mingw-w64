@@ -253,11 +253,12 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(Trigger,
                  schedulerNames=["sourceforge-upload"],
                  waitForFinish=True,
-                 set_properties={"masterdir": WithProperties("%(masterdir)s"),
-                                 "target-os": WithProperties("%(target-os)s"),
-                                 "filename": WithProperties("%(filename)s"),
-                                 "destname": WithProperties("%(destname)s"),
-                                 "datestamp": WithProperties("%(datestamp:-)s"),
+                 set_properties={"masterdir":  WithProperties("%(masterdir)s"),
+                                 "target-os":  WithProperties("%(target-os)s"),
+                                 "filename":   WithProperties("%(filename)s"),
+                                 "destname":   WithProperties("%(destname)s"),
+                                 "datestamp":  WithProperties("%(datestamp:-)s"),
+                                 "path":       WithProperties("%(path:-)s"),
                                  "is_nightly": WithProperties("%(is_nightly:-)s")})
 
   def _step_Archive(self):
