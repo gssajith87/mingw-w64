@@ -126,8 +126,8 @@ class Mingw64Factory(factory.BuildFactory):
                               haltOnFailure=True))
 
     self.addStep(FileDownload(name="src-download",
-                              mastersrc="mingw-w64-src.tar.bz2",
-                              slavedest="mingw-w64-src.tar.bz2",
+                              mastersrc=WithProperties("%(src_archive)s"),
+                              slavedest=WithProperties("%(src_archive)s"),
                               mode=0644,
                               haltOnFailure=True))
 
