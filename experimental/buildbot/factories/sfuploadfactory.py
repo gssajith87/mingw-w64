@@ -32,6 +32,8 @@ class SourceForgeUploadFactory(factory.BuildFactory):
                           WithProperties("%(destname)s"),
                           WithProperties("%(target-os:+--os)s"),
                           WithProperties("%(target-os:-)s"),
+                          WithProperties("%(path:+--path)s"),
+                          WithProperties("%(path:-)s"),
                           WithProperties("%(datestamp:+--datestamp)s"),
                           WithProperties("%(datestamp:-)s")],
                  haltOnFailure=True)
