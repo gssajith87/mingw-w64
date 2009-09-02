@@ -60,6 +60,11 @@ ifneq (,$(filter %-mingw32,${HOST_ARCH}))
   HOST_TYPE := windows
 endif
 
+WGET=wget -O
+ifeq (,$(shell which wget))
+  WGET=curl -o
+endif
+
 
 ########################################
 # Pull mingw-w64-specific patches
@@ -149,7 +154,7 @@ gmp-download: \
 
 src/gmp.tar.bz2: \
     src/.mkdir.marker
-	wget -O $@ ftp://ftp.gnu.org/gnu/gmp/gmp-$(strip ${GMP_VERSION}).tar.bz2
+	$(WGET) $@ ftp://ftp.gnu.org/gnu/gmp/gmp-$(strip ${GMP_VERSION}).tar.bz2
 
 ########################################
 # Extract gmp
@@ -185,7 +190,7 @@ mpfr-download: \
 
 src/mpfr.tar.bz2: \
     src/.mkdir.marker
-	wget -O $@ http://www.mpfr.org/mpfr-current/mpfr-$(strip ${MPFR_VERSION}).tar.bz2
+	$(WGET) $@ http://www.mpfr.org/mpfr-current/mpfr-$(strip ${MPFR_VERSION}).tar.bz2
 
 ########################################
 # Extract mpfr
@@ -694,7 +699,7 @@ endif # native_dir != build_dir
 
 %/.mkdir.marker:
 	-mkdir -p $(dir $@)
-	@touch -d 1970-01-02 $@
+	@touch -t 197001020101 $@
 
 help::
 	@echo Available targets:
