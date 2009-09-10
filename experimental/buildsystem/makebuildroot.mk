@@ -20,17 +20,18 @@ all:: # default target
 ########################################
 TARGET_ARCH ?= x86_64-w64-mingw32
 HOST_ARCH ?=
-BINUTILS_UPDATE ?= # force update binutils
+ALL_UPDATE ?= # force update everything
+BINUTILS_UPDATE ?= ${ALL_UPDATE} # force update binutils
 BINUTILS_CONFIG_EXTRA_ARGS ?=
 GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --disable-multilib
 GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
 GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
-GCC_UPDATE ?= # force update gcc
+GCC_UPDATE ?= ${ALL_UPDATE} # force update gcc
 GMP_VERSION ?= 4.3.0 # GMP release version
 MPFR_VERSION ?= 2.4.1 # MPFR release version
 MINGW_BRANCH ?= trunk # ... not that we have any!
 MINGW_REVISION ?= HEAD
-MINGW_UPDATE ?= # force update mingw
+MINGW_UPDATE ?= ${ALL_UPDATE} # force update mingw
 MINGW_CONFIG_EXTRA_ARGS ?=
 SRC_ARCHIVE ?= mingw-w64-src.tar.bz2
 BIN_ARCHIVE ?= mingw-w64-bin_$(shell uname -s).tar.bz2
@@ -91,7 +92,7 @@ binutils-pull: \
 src/binutils/.binutils.pull.marker: \
     src/binutils/.mkdir.marker
 	### XXX Mook: todo: specify revision
-ifeq (,${BINUTILS_UPDATE})
+ifeq (,$(strip ${BINUTILS_UPDATE}))
 	cd $(dir $@) && \
 	cvs -d ":pserver:anoncvs@sourceware.org:/cvs/src" -z3 \
 	    checkout -d . -N binutils
@@ -141,7 +142,7 @@ src/gcc/gcc/.gcc.pull.marker: \
 	       svn://gcc.gnu.org/svn/gcc/$(strip ${GCC_BRANCH})/ .
 	@touch $@
 
-  ifneq (,${GCC_UPDATE})
+  ifneq (,$(strip ${GCC_UPDATE}))
 .PHONY: src/gcc/gcc/.gcc.pull.marker
   endif
 
@@ -219,7 +220,7 @@ src/mingw/.mingw.pull.marker: \
 	    $(dir $@)
 	@touch $@
 
-  ifneq (,${MINGW_UPDATE})
+  ifneq (,$(strip ${MINGW_UPDATE}))
 .PHONY: src/mingw/.mingw.pull.marker
   endif
 
