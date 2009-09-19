@@ -61,7 +61,7 @@ ifneq (,$(filter %-mingw32,${HOST_ARCH}))
   HOST_TYPE := windows
 endif
 
-WGET=wget -O
+WGET=wget -c -t0 -T60 -O
 ifeq (,$(shell which wget))
   WGET=curl -o
 endif
