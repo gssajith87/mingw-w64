@@ -91,7 +91,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  condvalue="try",
                  condinvert=True,
                  command=["bash", "-c",
-                          """if [ $( ls ../patches/binutils/*.patch ) ] ; then
+                          """if [ -n "$( ls ../patches/binutils/*.patch )" ] ; then
                                for i in ../patches/binutils/*.patch ; do
                                  patch -p0 -f -i "$i" ;
                                done ;
@@ -112,7 +112,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  condvalue="try",
                  condinvert=True,
                  command=["bash", "-c",
-                          """if [ $( ls ../../patches/gcc/*.patch ) ] ; then
+                          """if [ -n "$( ls ../../patches/gcc/*.patch )" ] ; then
                                for i in ../../patches/gcc/*.patch ; do
                                  patch -p0 -f -i "$i" ;
                                done ;
@@ -136,7 +136,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  workdir="build/src/gcc",
                  description=["patch", "gmp"],
                  command=["bash", "-c",
-                          """if [ $( ls ../patches/gmp/*.patch ) ] ; then
+                          """if [ -n "$( ls ../patches/gmp/*.patch )" ] ; then
                                for i in ../patches/gmp/*.patch ; do
                                  patch -p0 -f -i "$i" ;
                                done ;
@@ -168,7 +168,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  condvalue="try",
                  condinvert=True,
                  command=["bash", "-c",
-                          """if [ $( ls ../../patches/mpfr/*.patch ) ] ; then
+                          """if [ -n "$( ls ../../patches/mpfr/*.patch )" ] ; then
                                for i in ../../patches/mpfr/*.patch ; do
                                  patch -p0 -f -i "$i" ;
                                done ;
@@ -190,7 +190,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  condvalue="try",
                  condinvert=True,
                  command=["bash", "-c",
-                          """if [ $( ls ../patches/mingw/*.patch ) ] ; then
+                          """if [ -n "$( ls ../patches/mingw/*.patch )" ] ; then
                                for i in ../patches/mingw/*.patch ; do
                                  patch -p0 -f -i "$i" ;
                                done ;
