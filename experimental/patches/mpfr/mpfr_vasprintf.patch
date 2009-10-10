@@ -1,7 +1,8 @@
-applies to mpfr-2.4.2-rc1 and also to mpfr-2.4.1.  already in mpfr-2.4 branch.
+applies to mpfr-2.4.2-rc1 and also to mpfr-2.4.1.  already in mpfr-2.4 branch
+and should be in the official mpfr-2.4.2 release.
 
---- trunk/vasprintf.c	2009/09/08 08:49:33	6413
-+++ trunk/vasprintf.c	2009/09/11 22:03:10	6415
+--- gcc/mpfr/vasprintf.c	2009/09/08 08:49:33	6413
++++ gcc/mpfr/vasprintf.c	2009/09/11 22:03:10	6415
 @@ -56,7 +56,7 @@
  # include <inttypes.h> /* for intmax_t */
  #else
