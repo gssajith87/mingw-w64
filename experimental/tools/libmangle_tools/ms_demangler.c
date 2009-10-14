@@ -1,10 +1,18 @@
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <windows.h>
-#include <Dbghelp.h> /* Header found in PSDK. */
+#include <dbghelp.h>
+#ifdef HAVE_LIBMANGLE_H
+#include <libmangle.h>
+#endif
 
 #define output_buffer 100
+#ifndef __GNUC__
 #pragma comment (lib,"Dbghelp.lib")
+#endif
 
 int
 main (int argc, char **argv)
