@@ -12,6 +12,20 @@ size_t file_args_cnt = 0;
 char **file_args = NULL;
 const char *basedumpname = "test_dump";
 
+static void
+show_usage (void)
+{
+  fprintf (stderr, "Usage: genidl [options] files...\n");
+  fprintf (stderr, "\n");
+  fprintf (stderr, "Options:\n"
+    "  -b <arg> |\n"
+    "  -basedumpname=<arg> : Specify prefix of generated idl files.\n"
+    "  -d | -dump          : Dump additional internal debugging information.\n"
+    "  -h | -help          : Show this help.\n"
+  );
+  exit (1);
+}
+
 static int
 scanArgs (int argc, char **argv)
 {
@@ -74,8 +88,7 @@ int main(int argc,char **argv)
   unsigned char *dta = NULL;
   if (scanArgs (--argc, ++argv) < 0)
     {
-      fprintf (stderr, "Syntax error.\n");
-      exit (1);
+       show_usage ();
     }
   for (i=0;i<file_args_cnt;i++)
     {
