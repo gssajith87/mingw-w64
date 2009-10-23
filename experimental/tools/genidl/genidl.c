@@ -10,6 +10,7 @@ int show_dump_too = 0;
 /* Process files.  */
 size_t file_args_cnt = 0;
 char **file_args = NULL;
+const char *basedumpname = "test_dump";
 
 static int
 scanArgs (int argc, char **argv)
@@ -34,7 +35,16 @@ scanArgs (int argc, char **argv)
 	  case 'h':
 	    if (! strcmp(h, "help") || h[1] == 0)
 	      return -2;
-	    goto unknown_fail;
+	       goto unknown_fail;
+	  case 'b':
+	    if (! strncmp(h, "basedumpname=", 13))
+            basedumpname = &(h[13]);
+        else if (h[1] == 0)
+        {
+            basedumpname = *(++argv);
+            --argc;
+        }
+        break;
 	  default:
 unknown_fail:
 	    fprintf (stderr, "Option ,%s' is unknown.\n", h);
@@ -84,7 +94,7 @@ int main(int argc,char **argv)
       for (start = 0; start < end; start++)
 	{
       genidl_pe_typelib_resource_read (gp, start, &dta, &len);
-      sprintf (s, "test_dump_%d_%d.idl", (int) i, start);
+      sprintf (s, "%s_%d_%d.idl", basedumpname, (int) i, start);
       fp = fopen (s,"wt");
       {
 	sTI2TypLib *tl = TI2_typlib_init (dta, (size_t) len);
