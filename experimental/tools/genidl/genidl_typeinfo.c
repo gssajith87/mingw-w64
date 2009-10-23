@@ -5,32 +5,27 @@
 
 void dumpHexFp (FILE *fp,size_t off, const unsigned char *dta, size_t len);
 void dumpDecFp (FILE *fp, const unsigned char *dta, size_t len, const char *prefix);
-void printPrefix (FILE *fp, const char *name, int val);
-void printPrefix2 (FILE *fp, const char *name, int val);
+void printPrefix (FILE *fp, const char *name, int32_t val);
+void printPrefix2 (FILE *fp, const char *name, int32_t val);
 
 uint32_t printVT (FILE *fp, uint32_t vt, unsigned char *dta);
 void printVTData (FILE * fp,uint32_t vt,unsigned char *dta, uint32_t sz);
-const char *getFunkKindName (int fkind);
-const char *getInvokeKindName (int ikind);
-const char *getCallConvName (int cc);
-const char *getParamFlagName (unsigned int pflag);
+const char *getFunkKindName (int32_t fkind);
+const char *getInvokeKindName (int32_t ikind);
+const char *getCallConvName (int32_t cc);
+const char *getParamFlagName (uint32_t pflag);
 const char *getTKindName (uint32_t tkind);
-void printVarflags (FILE *fp, unsigned int flags);
-void printFuncFlags (FILE *fp, unsigned int flags);
-void printTypFlags (FILE *fp, unsigned int flags);
+void printVarflags (FILE *fp, uint32_t flags);
+void printFuncFlags (FILE *fp, uint32_t flags);
+void printTypFlags (FILE *fp, uint32_t flags);
 
 static void
-dumpMemInfo (FILE *fp, unsigned char *dta,unsigned int cVar, unsigned int cFunc,unsigned int tkind);
+dumpMemInfo (FILE *fp, unsigned char *dta,uint32_t cVar, uint32_t cFunc,uint32_t tkind);
 
 static const char *getVTTypeName (uint32_t vt, uint32_t *dataSize);
-static void
-dumpMem (FILE *fp, unsigned char *dta,unsigned char *umap,unsigned int cVar, unsigned int cFunc);
-
-static void
-dumpImpFile (FILE *fp, unsigned char *segImp, uint32_t length, int importinfos);
-static void
-dumpTypeInfo (FILE *fp, unsigned char *segImp, uint32_t length, int nr, unsigned char *umap,
-	      unsigned char *dta, size_t size, unsigned int *typinfo);
+static void dumpMem (FILE *fp, unsigned char *dta,unsigned char *umap, uint32_t cVar, uint32_t cFunc);
+static void dumpImpFile (FILE *fp, unsigned char *segImp, uint32_t length, int32_t importinfos);
+static void dumpTypeInfo (FILE *fp, unsigned char *segImp, uint32_t length, int32_t nr, unsigned char *umap, unsigned char *dta, size_t size, uint32_t *typinfo);
 static void
 dumpString (FILE *fp, unsigned char *segString, uint32_t length);
 static void
@@ -223,7 +218,7 @@ void dumpInfo (FILE *fp, unsigned char *dta, size_t size)
 	else
 	{
 	  off = 0;
-	  fprintf (fp," mem:0x%x\n", (int) li);
+	  fprintf (fp," mem:0x%x\n", (int32_t) li);
 	}
 	dumpHexFp (fp,off, &dta[li], (lr-li));
 	off += (lr-li);
@@ -234,11 +229,11 @@ void dumpInfo (FILE *fp, unsigned char *dta, size_t size)
 }
 
 static void
-dumpTypeInfo (FILE *fp, unsigned char *segImp, uint32_t length, int nr, unsigned char *umap,
-	      unsigned char *dta, size_t size, unsigned int *typinfo)
+dumpTypeInfo (FILE *fp, unsigned char *segImp, uint32_t length, int32_t nr, unsigned char *umap,
+	      unsigned char *dta, size_t size, uint32_t*typinfo)
 {
   sMSFT_TypeInfoBase *t = (sMSFT_TypeInfoBase *) segImp;
-  int i;
+  int32_t i;
   uint32_t off = 0;
 
   if (!length)
@@ -248,7 +243,7 @@ dumpTypeInfo (FILE *fp, unsigned char *segImp, uint32_t length, int nr, unsigned
     if (t[i].memoffset > 0 && umap[t[i].memoffset]!=1)
       umap[t[i].memoffset]=2;
     fprintf (fp, " ");
-    printPrefix2 (fp, "TypeB_", (int) off);
+    printPrefix2 (fp, "TypeB_", (int32_t) off);
     fprintf (fp, ": #%d, TypInfoId:%d",i, typinfo[i]);
     if (t[i].cElement != 0)
       fprintf (fp, "(mem:0x%x) ", t[i].memoffset);
@@ -309,10 +304,10 @@ dumpTypeInfo (FILE *fp, unsigned char *segImp, uint32_t length, int nr, unsigned
 }
 
 static void
-dumpMemInfo (FILE *fp, unsigned char *dta,unsigned int cVar, unsigned int cFunc,unsigned int tkind)
+dumpMemInfo (FILE *fp, unsigned char *dta, uint32_t cVar, uint32_t cFunc, uint32_t tkind)
 {
   uint32_t off = 0;
-  int max = cVar + cFunc;
+  int32_t max = cVar + cFunc;
   sMSFT_memblob *b;
   sMSFT_func *func;
   sMSFT_var *var;
@@ -327,7 +322,7 @@ dumpMemInfo (FILE *fp, unsigned char *dta,unsigned int cVar, unsigned int cFunc,
       {
 	sMSFT_FuncParam *params;
 	uint32_t oVars, *pData , *pCustData;
-	int c,cc;
+	int32_t c,cc;
 	char *rettyp = NULL;
 	char *fctname = NULL;
 
@@ -351,12 +346,12 @@ dumpMemInfo (FILE *fp, unsigned char *dta,unsigned int cVar, unsigned int cFunc,
 	fprintf (fp, ", Offset:0x%x\n", d[max*2]);
 	rettyp = TI_getVTorDref (&ti2_typs, func->datatype, "");
 	fctname = TI_get_typ_name (&ti2_typs, d[max], TITYP_NAME, "");
-	fprintf (fp, "\t[id(%d)", (int)d[0]);
+	fprintf (fp, "\t[id(%d)", (int32_t)d[0]);
 	printFuncFlags (fp, func->flags);
 	while ((char*) pData < (char *) params
 	       && (!pCustData || ((char*) pData < (char*) pCustData)))
 	{
-	  int jj;
+	  int32_t jj;
 	  fprintf (fp, "\t");
 	  for (jj=0;jj<8 && (char*) pData < (char *) params
 	       && (!pCustData || ((char*)pData < (char*) pCustData)); jj++,pData++)
@@ -385,7 +380,7 @@ dumpMemInfo (FILE *fp, unsigned char *dta,unsigned int cVar, unsigned int cFunc,
 	  if (params[cc].oName == -1)
 	    n = strdup ("");
 	  else
-	    n = TI_get_typ_name (&ti2_typs, (unsigned int) params[cc].oName, TITYP_NAME, "");
+	    n = TI_get_typ_name (&ti2_typs, (uint32_t) params[cc].oName, TITYP_NAME, "");
 	  x = TI_getVTorDref (&ti2_typs,params[cc].dataType, n);
 	  free (n);
 	  fprintf(fp,"[%s] %s",getParamFlagName(params[cc].flags), x);
@@ -437,7 +432,7 @@ dumpMemInfo (FILE *fp, unsigned char *dta,unsigned int cVar, unsigned int cFunc,
 }
 
 static void
-dumpMem (FILE *fp, unsigned char *dta,unsigned char *umap,unsigned int cVar, unsigned int cFunc)
+dumpMem (FILE *fp, unsigned char *dta, unsigned char *umap, uint32_t cVar, uint32_t cFunc)
 {
   uint32_t off;
   unsigned char *d = dta;
@@ -459,7 +454,7 @@ dumpMem (FILE *fp, unsigned char *dta,unsigned char *umap,unsigned int cVar, uns
 }
 
 static void
-dumpTypedesc (FILE *fp, unsigned char *d,uint32_t len)
+dumpTypedesc (FILE *fp, unsigned char *d, uint32_t len)
 {
   sMSFT_TypeDesc *p;
   uint32_t off = 0;
@@ -470,7 +465,7 @@ dumpTypedesc (FILE *fp, unsigned char *d,uint32_t len)
   {
     p = (sMSFT_TypeDesc *) &d[off];
     fprintf (fp, " ");
-    printPrefix2 (fp, "TypeD_", (int) off);
+    printPrefix2 (fp, "TypeD_", (int32_t) off);
     fprintf (fp, ": 0x%x, 0x%x, ",p->kind, p->flag);
     if ((p->flag & 0x7f00) == 0x7f00 || (p->flag & 0xf000)==0)
     {
@@ -505,7 +500,7 @@ dumpTypedesc (FILE *fp, unsigned char *d,uint32_t len)
 }
 
 static void
-dumpImpFile (FILE *fp, unsigned char *segImp, uint32_t length, int importinfos)
+dumpImpFile (FILE *fp, unsigned char *segImp, uint32_t length, int32_t importinfos)
 {
   MSFT_ImpInfo *p;
   uint32_t off = 0;
@@ -563,7 +558,7 @@ dumpImpFiles (FILE *fp, unsigned char *d, uint32_t len)
   fprintf (fp, "Import Files\n");
   while ((off + 13) < len)
   {
-    unsigned short l;
+    uint16_t l;
     p = (sMSFT_ImpFiles *) &d[off];
     fprintf (fp, " ");
     printPrefix (fp, "Imp_", (int) off);
@@ -611,11 +606,11 @@ static void
 dumpName (FILE *fp, unsigned char *segName, uint32_t len)
 {
   struct sMSFTNamePrologue {
-    int res1;
-    int res2;
+    int32_t res1;
+    int32_t res2;
     union {
       unsigned char v[4];
-      unsigned short us[2];
+      uint16_t us[2];
     };
   };
   union {
@@ -630,7 +625,7 @@ dumpName (FILE *fp, unsigned char *segName, uint32_t len)
   {
     unsigned char len;
     v.dta=&segName[off];
-    fprintf (fp, " Name_%x", (int) off);
+    fprintf (fp, " Name_%x", (int32_t) off);
     fprintf (fp, ": %d,",v.p->res1);
     printPrefix (fp,"Name_", v.p->res2);
     fprintf (fp, ", 0x%02x,0x%04x, \"", v.p->v[1], v.p->us[1]);
@@ -655,11 +650,11 @@ dumpGuid (FILE *fp, unsigned char *d, uint32_t length)
 {
   uint32_t off = 0;
   struct sGuidTab {
-    unsigned int data1;
-    unsigned short data2[2];
+    uint32_t data1;
+    uint16_t data2[2];
     unsigned char data3[8];
-    int res1;
-    int res2; /* Forwarder GUID */
+    int32_t res1;
+    int32_t res2; /* Forwarder GUID */
   };
   union {
     unsigned char *d;
@@ -671,7 +666,7 @@ dumpGuid (FILE *fp, unsigned char *d, uint32_t length)
   while ((off + 24) <= length)
     {
       fprintf (fp," ");
-      printPrefix2 (fp, "Guid_", (int) off);
+      printPrefix2 (fp, "Guid_", (int32_t) off);
       fprintf (fp,": ");
       v.d = &d[off];
       fprintf (fp,"%d,",v.g->res1);
@@ -723,7 +718,7 @@ dumpCustomData (FILE *fp, unsigned char *d, uint32_t len)
   {
     p = (sMSFT_CustomData *) &d[off];
     fprintf (fp, " ");
-    printPrefix2 (fp, "CD_", (int) off);
+    printPrefix2 (fp, "CD_", (int32_t) off);
     fprintf (fp, ": ");
     off += printVT (fp,p->vt,p->dta) - 2;
     off = (off + 3) & ~3;
@@ -735,10 +730,10 @@ static void
 dumpString (FILE *fp, unsigned char *segString, uint32_t length)
 {
   uint32_t off = 0;
-  unsigned short len;
+  uint16_t len;
   union {
     unsigned char *dta;
-    unsigned short *len;
+    uint16_t *len;
   } v;
   if (!length)
     return;
@@ -774,7 +769,7 @@ dumpHexFp (FILE *fp, size_t off, const unsigned char *dta, size_t len)
     return;
   for (i = 0; i < len;)
     {
-      fprintf (fp, "0x%08x:", (unsigned int) (off + i));
+      fprintf (fp, "0x%08x:", (uint32_t) (off + i));
       for (k=0; i < len && k < 16;k++,i++)
 	{
 	  fprintf (fp, " %02X", dta[i]);
@@ -799,18 +794,18 @@ dumpDecFp (FILE *fp, const unsigned char *dta, size_t len, const char *prefix)
   len = (len & ~3);
   for (i = 0; i < len;)
   {
-    fprintf (fp,"0x%x:", (unsigned int) (i/4));
+    fprintf (fp,"0x%x:", (uint32_t) (i/4));
     for (j=0;j< 4 && i < len;j++,i+=4)
     {
       fprintf (fp, "%s", (j == 0 ? " " : ","));
-      printPrefix2 (fp, prefix ? prefix : "0x", *((const int *) &dta[i]));
+      printPrefix2 (fp, prefix ? prefix : "0x", *((const int32_t *) &dta[i]));
     }
     fprintf (fp,"\n");
   }
 }
 
 void
-printPrefix2 (FILE *fp, const char *name, int val)
+printPrefix2 (FILE *fp, const char *name, int32_t val)
 {
   if (!name)
     name = "";
@@ -821,7 +816,7 @@ printPrefix2 (FILE *fp, const char *name, int val)
 }
 
 void
-printPrefix (FILE *fp, const char *name, int val)
+printPrefix (FILE *fp, const char *name, int32_t val)
 {
   if (!name)
     name = "";
@@ -831,10 +826,10 @@ printPrefix (FILE *fp, const char *name, int val)
   {
     char *nam = NULL;
     if (!strcmp (name, "Name_"))
-      nam = TI_get_typ_name (&ti2_typs, (unsigned int) val, TITYP_NAME, "");
+      nam = TI_get_typ_name (&ti2_typs, (uint32_t) val, TITYP_NAME, "");
     else if (!strcmp (name, "Str_"))
     {
-      nam = TI_get_typ_name (&ti2_typs, (unsigned int) val, TITYP_STR, "");
+      nam = TI_get_typ_name (&ti2_typs, (uint32_t) val, TITYP_STR, "");
       if (nam)
       {
 	fprintf (fp, "\"%s\"", nam);
@@ -844,14 +839,14 @@ printPrefix (FILE *fp, const char *name, int val)
     }
     else if (!strcmp (name, "Guid_"))
     {
-      nam = TI_get_typ_name (&ti2_typs, (unsigned int) val, TITYP_GUIDS, "");
+      nam = TI_get_typ_name (&ti2_typs, (uint32_t) val, TITYP_GUIDS, "");
     }
     else if (!strcmp (name, "TypeB_"))
-      nam = TI_get_typ_name (&ti2_typs, (unsigned int) val, TITYP_TYPINFO_NAMES, "");
+      nam = TI_get_typ_name (&ti2_typs, (uint32_t) val, TITYP_TYPINFO_NAMES, "");
     else if (!strcmp (name, "TypeD_"))
-      nam = TI_get_typ_name (&ti2_typs, (unsigned int) val, TITYP_DEREF, "");
+      nam = TI_get_typ_name (&ti2_typs, (uint32_t) val, TITYP_DEREF, "");
     else if (!strcmp (name, "CD_"))
-      nam = TI_get_typ_name (&ti2_typs, (unsigned int) val, TITYP_CUSTOMDATA, "");
+      nam = TI_get_typ_name (&ti2_typs, (uint32_t) val, TITYP_CUSTOMDATA, "");
     if (nam)
     {
       fprintf (fp,"%s",nam);
@@ -953,25 +948,25 @@ printVT (FILE *fp, uint32_t vt, unsigned char *dta)
 }
 
 void
-printVTData (FILE * fp,uint32_t vt,unsigned char *dta, uint32_t sz)
+printVTData (FILE * fp,uint32_t vt, unsigned char *dta, uint32_t sz)
 {
   if (!sz && vt != 8)
     return;
   switch (vt) {
   case 16: /* VT_I1 */ fprintf (fp," = %d", *((char *) dta)); break;
   case 17: /* VT_UI1 */ fprintf (fp," = %u", *((unsigned char *) dta)); break;
-  case 18: /* VT_UI2 */ fprintf (fp," = %u", *((unsigned short *) dta)); break;
+  case 18: /* VT_UI2 */ fprintf (fp," = %u", *((uint16_t *) dta)); break;
   case 23: /* VT_UINT */
-  case 19: /* VT_UI4 */ fprintf (fp," = %uU", *((unsigned int *) dta)); break;
-  case 20: /* VT_I8 */ fprintf (fp," = %I64dLL", *((__int64 *) dta)); break;
-  case 21: /* VT_UI8 */ fprintf (fp," = %I64uULL", *((unsigned __int64 *) dta)); break;
+  case 19: /* VT_UI4 */ fprintf (fp," = %uU", *((uint32_t *) dta)); break;
+  case 20: /* VT_I8 */ fprintf (fp," = %I64dLL", *((int64_t *) dta)); break;
+  case 21: /* VT_UI8 */ fprintf (fp," = %I64uULL", *((uint64_t *) dta)); break;
   case 11: /* VT_BOOL */
-  case 2: /* VT_I2 */ fprintf (fp," = %d", *((short *) dta)); break;
+  case 2: /* VT_I2 */ fprintf (fp," = %d", *((int16_t *) dta)); break;
   case 22: /* VT_INT */
-  case 3: /* VT_I4 */ fprintf (fp," = %d", *((int *) dta)); break;
+  case 3: /* VT_I4 */ fprintf (fp," = %d", *((int32_t *) dta)); break;
   case 4: /* VT_R4 */ fprintf (fp," = %f", *((float *) dta)); break;
   case 5: /* VT_R8 */ fprintf (fp," = %g", *((double *) dta)); break;
-  case 6: /* VT_CY */ fprintf (fp," = %I64d", *((__int64 *) dta)); break;
+  case 6: /* VT_CY */ fprintf (fp," = %I64d", *((int64_t *) dta)); break;
   case 8: /* VT_BSTR */
     fprintf (fp," = \"");
     while (sz>0)
@@ -993,7 +988,7 @@ printVTData (FILE * fp,uint32_t vt,unsigned char *dta, uint32_t sz)
 }
 
 const char *
-getInvokeKindName (int ikind)
+getInvokeKindName (int32_t ikind)
 {
   static char name[260];
   const char *ret;
@@ -1015,7 +1010,7 @@ getInvokeKindName (int ikind)
 }
 
 const char *
-getFunkKindName (int fkind)
+getFunkKindName (int32_t fkind)
 {
   static char name[260];
   const char *ret;
@@ -1035,7 +1030,7 @@ getFunkKindName (int fkind)
 }
 
 const char *
-getCallConvName (int cc)
+getCallConvName (int32_t cc)
 {
   static char name[260];
   const char *ret = &name[0];
@@ -1057,7 +1052,7 @@ getCallConvName (int cc)
 }
 
 const char *
-getParamFlagName (unsigned int pflag)
+getParamFlagName (uint32_t pflag)
 {
   static char name[260];
   const char *ret = &name[0];
@@ -1089,10 +1084,10 @@ printValue (FILE *fp, sTITyps *typs, uint32_t val)
     char *h = NULL;
     if (val == 0x60)
     {
-      h = TI_get_typ_name (typs, (unsigned int) val, TITYP_CUSTOMDATA,"");
+      h = TI_get_typ_name (typs, (uint32_t) val, TITYP_CUSTOMDATA,"");
     }
     else
-      h = TI_get_typ_name (typs, (unsigned int) val, TITYP_CUSTOMDATA,"");
+      h = TI_get_typ_name (typs, (uint32_t) val, TITYP_CUSTOMDATA,"");
     if (h)
       {
 	fprintf (fp, "%s", h);
@@ -1131,7 +1126,7 @@ getTKindName (uint32_t tkind)
 }
 
 void
-printVarflags (FILE *fp, unsigned int flags)
+printVarflags (FILE *fp, uint32_t flags)
 {
   if (!flags)
     return;
@@ -1166,7 +1161,7 @@ printVarflags (FILE *fp, unsigned int flags)
 }
 
 void
-printFuncFlags (FILE *fp, unsigned int flags)
+printFuncFlags (FILE *fp, uint32_t flags)
 {
   if ((flags & FUNCFLAG_FRESTRICTED) != 0)
     fprintf (fp, " restricted");
@@ -1199,7 +1194,7 @@ printFuncFlags (FILE *fp, unsigned int flags)
 }
 
 void
-printTypFlags (FILE *fp, unsigned int flags)
+printTypFlags (FILE *fp, uint32_t flags)
 {
   const char *first = "";
   if (flags!=0)

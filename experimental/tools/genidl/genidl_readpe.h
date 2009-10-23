@@ -183,7 +183,7 @@ typedef struct sImgSectionHdr {
  * @param[out] be64 indicates if PE is 64bit if 1, 32bit otherwise
  *@return Offset at which a PE signature is found
  */
-long genidl_ispe (FILE *fp, int *be64);
+int32_t genidl_ispe (FILE *fp, int32_t *be64);
 
 /**
  * Reads the typelib from a file
@@ -193,14 +193,14 @@ long genidl_ispe (FILE *fp, int *be64);
  * @param[out] szDta size of raw typelib infor
  * @return 1 for success
  */
-int genidl_pe_typelib_resource_read (FILE *fp, int noRes, unsigned char **pDta, size_t *szDta);
+int32_t genidl_pe_typelib_resource_read (FILE *fp, int32_t noRes, unsigned char **pDta, size_t *szDta);
 
 /**
  * Counts the number of typelib resources
  * @param[in] fp File to check
  * @return number of found typelib resource
  */
-int genidl_pe_typelib_resource_count (FILE *fp);
+int32_t genidl_pe_typelib_resource_count (FILE *fp);
 
 #pragma pack(pop)
 

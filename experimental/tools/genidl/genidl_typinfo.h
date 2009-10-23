@@ -20,10 +20,10 @@
 #define TITYP_MAX 12
 
 typedef struct sTITyp {
-  unsigned int memid;
-  int kind;
-  int refkind;
-  unsigned int refmem;
+  uint32_t memid;
+  int32_t kind;
+  int32_t refkind;
+  uint32_t refmem;
   char *refstr;
   char *poststr;
   char name[1];
@@ -40,30 +40,30 @@ typedef struct sTITyps {
   sTITypsHash buc[TITYP_MAX];
 } sTITyps;
 
-int TI_init_typs (sTITyps *ptyp);
-int TI_dest_typs (sTITyps *ptyp);
-int TI_add_typ (sTITyps *ptyp, unsigned int memid, int kind, int refkind, unsigned int refmem,
+int32_t TI_init_typs (sTITyps *ptyp);
+int32_t TI_dest_typs (sTITyps *ptyp);
+int32_t TI_add_typ (sTITyps *ptyp, uint32_t memid, int32_t kind, int32_t refkind, uint32_t refmem,
 		const char *refstr, const char *name, const char *poststr);
-sTITyp *TI_get_typ (sTITyps *ptyp, unsigned int memid, int kind);
-char *TI_get_typ_name (sTITyps *ptyp, unsigned int memid, int kind, const char *varName);
+sTITyp *TI_get_typ (sTITyps *ptyp, uint32_t memid, int32_t kind);
+char *TI_get_typ_name (sTITyps *ptyp, uint32_t memid, int32_t kind, const char *varName);
 
-int TI2_import_name (sTITyps *nptr, unsigned char *dta, uint32_t len);
-int TI2_import_guid (sTITyps *gptr, unsigned char *dta, uint32_t len);
-int TI2_import_typinfo_names (sTITyps *tptr, unsigned char *dta, uint32_t len);
-int TI2_import_string (sTITyps *sptr, unsigned char *dta, uint32_t len);
-int TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len);
-int TI2_import_customdata (sTITyps *dptr, unsigned char *dta, uint32_t len);
-int TI2_import_customdataguid (sTITyps *gptr, unsigned char *dta, uint32_t len);
-int TI2_import_importlibs (sTITyps *iptr, unsigned char *dta, uint32_t len);
-int TI2_import_ref (sTITyps *gptr, unsigned char *dta, uint32_t len);
-int TI2_import_array (sTITyps *gptr, unsigned char *dta, uint32_t len);
-int TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_name (sTITyps *nptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_guid (sTITyps *gptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_typinfo_names (sTITyps *tptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_string (sTITyps *sptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_customdata (sTITyps *dptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_customdataguid (sTITyps *gptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_importlibs (sTITyps *iptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_ref (sTITyps *gptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_array (sTITyps *gptr, unsigned char *dta, uint32_t len);
+int32_t TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t len);
 
 const char *decode_VT_name_tmp (unsigned short vt);
-size_t getVT_data (sTITyps *dptr, unsigned int vt, unsigned char *dta, char **ret);
-char *TI_getVTorDref (sTITyps *ptyp,unsigned int vt, const char *varName);
-size_t getVT_size (unsigned int vt, unsigned char *dta, size_t *basesz);
-size_t getVT_data (sTITyps *dptr, unsigned int vt, unsigned char *dta, char **ret);
+size_t getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret);
+char *TI_getVTorDref (sTITyps *ptyp,uint32_t vt, const char *varName);
+size_t getVT_size (uint32_t vt, unsigned char *dta, size_t *basesz);
+size_t getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret);
 
 typedef struct sTI2TypeBaseMemItem {
   int beFunc;
@@ -72,9 +72,9 @@ typedef struct sTI2TypeBaseMemItem {
     sMSFT_func *func;
     sMSFT_var *var;
   };
-  unsigned int *customData;
+  uint32_t *customData;
   sMSFT_FuncParam *funcParam;
-  unsigned int *extData;
+  uint32_t *extData;
   size_t max;
 } sTI2TypeBaseMemItem;
 
@@ -85,11 +85,11 @@ typedef struct sTI2TypeBaseMem
 } sTI2TypeBaseMem;
 
 typedef struct sTI2TypeBase {
-  unsigned int kind;
-  unsigned int kflags;
-  int cVars;
-  int cFuncs;
-  int flags;
+  uint32_t kind;
+  uint32_t kflags;
+  int32_t cVars;
+  int32_t cFuncs;
+  int32_t flags;
   char *name;
   char *guid;
   char *docstr;
@@ -101,20 +101,20 @@ typedef struct sTI2TypeBase {
 } sTI2TypeBase;
 
 typedef struct sTI2TypLib {
-  short ver_major;
-  short ver_minor;
-  int version;
+  int16_t ver_major;
+  int16_t ver_minor;
+  int32_t version;
   char *guid;
-  unsigned int lcid1;
-  unsigned int lcid2;
-  unsigned int flags;
-  unsigned int setFlags;
+  uint32_t lcid1;
+  uint32_t lcid2;
+  uint32_t flags;
+  uint32_t setFlags;
   char *helpstring;
   char *helpfile;
-  int helpstringctx;
-  int helpctx;
+  int32_t helpstringctx;
+  int32_t helpctx;
   char *name;
-  int dispatch;
+  int32_t dispatch;
   size_t nr_typinfos;
   size_t nr_impinfos;
   uint32_t *typinfos_hash;
@@ -125,8 +125,8 @@ typedef struct sTI2TypLib {
 sTI2TypLib *TI2_typlib_init (unsigned char *dta, size_t len);
 void TI2_typlib_dest (sTI2TypLib *tl);
 void TI2_typlib_idl (FILE *fp, sTI2TypLib *tl);
-const char *getCallConvName (int cc);
+const char *getCallConvName (int32_t cc);
 void printValue(FILE *fp, sTITyps *typs, uint32_t val);
-char *getTypeBOrImpRef (sTITyps *dptr, unsigned int off, const char *var);
+char *getTypeBOrImpRef (sTITyps *dptr, uint32_t off, const char *var);
 
 #endif

@@ -3,13 +3,13 @@
 
 #include "genidl_readpe.h"
 
-static int readResourceDirectory (FILE *fp, unsigned char **dta, size_t *length, size_t *resRVA);
+static int32_t readResourceDirectory (FILE *fp, unsigned char **dta, size_t *length, size_t *resRVA);
 
-static void walk_res_dir (PIMAGE_RESOURCE_DIRECTORY resDir, unsigned char *base,uint32_t level, uint32_t resourceType, int beTypelib, int *noRes,uint32_t *zOff, uint32_t *zSize);
+static void walk_res_dir (PIMAGE_RESOURCE_DIRECTORY resDir, unsigned char *base,uint32_t level, uint32_t resourceType, int32_t beTypelib, int32_t *noRes,uint32_t *zOff, uint32_t *zSize);
 
-int genidl_pe_typelib_resource_count (FILE *fp)
+int32_t genidl_pe_typelib_resource_count (FILE *fp)
 {
-  int cnt = 0x2000;
+  int32_t cnt = 0x2000;
   uint32_t zOff = 0,zSize = 0;
   size_t resRVA = 0;
   unsigned char *dta = NULL;
@@ -24,7 +24,7 @@ int genidl_pe_typelib_resource_count (FILE *fp)
   return 0x2000-cnt;
 }
 
-int genidl_pe_typelib_resource_read (FILE *fp, int noRes, unsigned char **pDta, size_t *szDta)
+int32_t genidl_pe_typelib_resource_read (FILE *fp, int32_t noRes, unsigned char **pDta, size_t *szDta)
 {
   uint32_t zOff,zSize;
   unsigned char *dta = NULL;
@@ -50,10 +50,10 @@ int genidl_pe_typelib_resource_read (FILE *fp, int noRes, unsigned char **pDta, 
 }
 
 static void get_res_name_by_id(uint32_t id, unsigned char *resourceBase, char *buffer, uint32_t cBytes);
-static void walk_res_entry(PIMAGE_RESOURCE_DIRECTORY_ENTRY resDirEntry, unsigned char *resourceBase, uint32_t level, int beTypelib, int *noRes,uint32_t *zOff,uint32_t *zSize);
+static void walk_res_entry(PIMAGE_RESOURCE_DIRECTORY_ENTRY resDirEntry, unsigned char *resourceBase, uint32_t level, int32_t beTypelib, int32_t *noRes,uint32_t *zOff,uint32_t *zSize);
 
 static void
-walk_res_dir (PIMAGE_RESOURCE_DIRECTORY resDir, unsigned char *base,uint32_t level, uint32_t resourceType, int beTypelib, int *noRes,uint32_t *zOff,uint32_t *zSize)
+walk_res_dir (PIMAGE_RESOURCE_DIRECTORY resDir, unsigned char *base,uint32_t level, uint32_t resourceType, int32_t beTypelib, int32_t *noRes,uint32_t *zOff,uint32_t *zSize)
 {
   PIMAGE_RESOURCE_DIRECTORY_ENTRY resDirEntry;
   char szType[64];
@@ -80,7 +80,7 @@ walk_res_dir (PIMAGE_RESOURCE_DIRECTORY resDir, unsigned char *base,uint32_t lev
     }
 }
 
-static void walk_res_entry(PIMAGE_RESOURCE_DIRECTORY_ENTRY resDirEntry, unsigned char *resourceBase, uint32_t level, int beTypelib,int *noRes,uint32_t *zOff,uint32_t *zSize)
+static void walk_res_entry(PIMAGE_RESOURCE_DIRECTORY_ENTRY resDirEntry, unsigned char *resourceBase, uint32_t level, int32_t beTypelib,int32_t *noRes,uint32_t *zOff,uint32_t *zSize)
 {
     PIMAGE_RESOURCE_DATA_ENTRY pResDataEntry;
     
@@ -153,7 +153,7 @@ static int readResourceDirectory (FILE *fp, unsigned char **dta, size_t *length,
       fread (&sec, 1, sizeof (sImgSectionHdr),fp);
       if (!strcmp (sec.Name, ".rsrc"))
       {
-	fseek (fp, (long) sec.PointerToRawData, SEEK_SET);
+	fseek (fp, (int32_t) sec.PointerToRawData, SEEK_SET);
 	resRVA[0] = sec.VirtualAddress;
 	dta[0] = (unsigned char *) malloc (res_size);
 	fread (dta[0], 1, res_size, fp);
@@ -165,8 +165,8 @@ static int readResourceDirectory (FILE *fp, unsigned char **dta, size_t *length,
   return 1;
 }
 
-long
-genidl_ispe (FILE *fp, int *be64)
+int32_t
+genidl_ispe (FILE *fp, int32_t *be64)
 {
   sDosHeader hdr;
   uImgHeader img;
@@ -179,7 +179,7 @@ genidl_ispe (FILE *fp, int *be64)
     return 0;
   if (hdr.lfanew == 0)
     return 0;
-  fseek (fp, (long) hdr.lfanew, SEEK_SET);
+  fseek (fp, (int32_t) hdr.lfanew, SEEK_SET);
   if (fread (&img, 1, sizeof (img), fp) != sizeof (img))
     return 0;
   if (img.hdr32.Signature != 0x4550)
@@ -190,5 +190,5 @@ genidl_ispe (FILE *fp, int *be64)
     *be64 = 1;
   else
     return 0;
-  return (long) hdr.lfanew;
+  return (int32_t) hdr.lfanew;
 }

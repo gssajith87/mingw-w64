@@ -83,8 +83,8 @@ typedef struct sMSFT_TypeInfoBase {
   int32_t helpstringcontext;  /*  */
   int32_t helpcontext;    /* */
   int32_t oCustData;          /* offset in customer data table */
-  INT16   cImplTypes;     /* nr of implemented interfaces */
-  INT16   cbSizeVft;      /* virtual table size, including inherits */
+  int16_t   cImplTypes;     /* nr of implemented interfaces */
+  int16_t   cbSizeVft;      /* virtual table size, including inherits */
   int32_t size;           /* size in bytes, at least for structures */
   /* FIXME: name of this field */
   int32_t datatype1;      /* position in type description table */

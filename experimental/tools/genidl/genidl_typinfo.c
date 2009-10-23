@@ -6,7 +6,7 @@
 #include <string.h>
 #include <memory.h>
 
-int
+int32_t
 TI_init_typs (sTITyps *ptyp)
 {
   if (!ptyp)
@@ -15,11 +15,11 @@ TI_init_typs (sTITyps *ptyp)
   return 0;
 }
 
-int
+int32_t
 TI_dest_typs (sTITyps *ptyp)
 {
   size_t i;
-  int j;
+  int32_t j;
   if (!ptyp)
     return -1;
   for (j=0;j<TITYP_MAX;j++)
@@ -41,7 +41,7 @@ TI_dest_typs (sTITyps *ptyp)
   return 0;
 }
 
-int TI_add_typ (sTITyps *ptyp, unsigned int memid, int kind, int refkind, unsigned int refmem,
+int32_t TI_add_typ (sTITyps *ptyp, uint32_t memid, int32_t kind, int32_t refkind, uint32_t refmem,
 		const char *refstr, const char *name, const char *poststr)
 {
   sTITyp *t, **h;
@@ -78,7 +78,7 @@ int TI_add_typ (sTITyps *ptyp, unsigned int memid, int kind, int refkind, unsign
 }
 
 sTITyp *
-TI_get_typ (sTITyps *ptyp, unsigned int memid, int kind)
+TI_get_typ (sTITyps *ptyp, uint32_t memid, int kind)
 {
   size_t i;
   if (!ptyp || kind < 0 || kind >= TITYP_MAX)
@@ -116,7 +116,7 @@ ti_cat_freel (char *t, const char *r)
   return ret;
 }
 
-static int
+static int32_t
 end_isref (const char *ret)
 {
   if (!ret || *ret == 0)
@@ -129,7 +129,7 @@ end_isref (const char *ret)
 
 
 char *
-TI_get_typ_name (sTITyps *ptyp, unsigned int memid, int kind, const char *varName)
+TI_get_typ_name (sTITyps *ptyp, uint32_t memid, int32_t kind, const char *varName)
 {
   static const char *szKind[TITYP_MAX] = {
     "Name_", "Str_", "Guid_", "TypeB_", "TypeD_", "Arr_", "Ref_", "Imp_",
@@ -183,15 +183,15 @@ TI_get_typ_name (sTITyps *ptyp, unsigned int memid, int kind, const char *varNam
   return ret;
 }
 
-int
+int32_t
 TI2_import_name (sTITyps *nptr, unsigned char *dta, uint32_t len)
 {
   struct sMSFTNamePrologue {
-    int res1;
-    int res2;
+    int32_t res1;
+    int32_t res2;
     union {
       unsigned char v[4];
-      unsigned short us[2];
+      uint16_t us[2];
     };
   };
   union {
@@ -253,15 +253,15 @@ TI2_import_string (sTITyps *sptr, unsigned char *dta, uint32_t len)
   return 0;
 }
 
-int
+int32_t
 TI2_import_guid (sTITyps *gptr, unsigned char *dta, uint32_t length)
 {
   struct sGuidTab {
-    unsigned int data1;
-    unsigned short data2[2];
+    uint32_t data1;
+    uint16_t data2[2];
     unsigned char data3[8];
-    int res1;
-    int res2; /* Forwarder GUID */
+    int32_t res1;
+    int32_t res2; /* Forwarder GUID */
   };
 
   char str[260];
@@ -279,13 +279,13 @@ TI2_import_guid (sTITyps *gptr, unsigned char *dta, uint32_t length)
 	v.g->data1, v.g->data2[0], v.g->data2[1],
 	v.g->data3[0],v.g->data3[1],v.g->data3[2],v.g->data3[3],
 	v.g->data3[4],v.g->data3[5],v.g->data3[6],v.g->data3[7]);
-      TI_add_typ (gptr, (unsigned int) off, TITYP_GUIDS, 0, 0, "", str, "");
+      TI_add_typ (gptr, (uint32_t) off, TITYP_GUIDS, 0, 0, "", str, "");
       off += 24;
     }
   return 0;
 }
 
-int
+int32_t
 TI2_import_typinfo_names (sTITyps *tptr, unsigned char *dta, uint32_t length)
 {
   char name_unk[32];
@@ -294,8 +294,8 @@ TI2_import_typinfo_names (sTITyps *tptr, unsigned char *dta, uint32_t length)
   char *name;
   const char *prefix;
   sMSFT_TypeInfoBase *t = (sMSFT_TypeInfoBase *) dta;
-  int i;
-  int free_name;
+  int32_t i;
+  int32_t free_name;
   uint32_t off = 0;
 
   if (!length)
@@ -304,7 +304,7 @@ TI2_import_typinfo_names (sTITyps *tptr, unsigned char *dta, uint32_t length)
   while ((off + sizeof (sMSFT_TypeInfoBase)) <= length)
   {
     free_name = 1;
-    name = TI_get_typ_name (tptr, (unsigned int) t[i].NameOffset, TITYP_NAME,"");
+    name = TI_get_typ_name (tptr, (uint32_t) t[i].NameOffset, TITYP_NAME,"");
     prefix = "";
     if (!name)
     {
@@ -329,7 +329,7 @@ TI2_import_typinfo_names (sTITyps *tptr, unsigned char *dta, uint32_t length)
     }
     h = (char *) malloc (strlen (prefix) + strlen (name) + 1);
     sprintf (h, "%s%s", prefix, name);
-    TI_add_typ (tptr, (unsigned int) off, TITYP_TYPINFO_NAMES, 0,0, "", h, "");
+    TI_add_typ (tptr, (uint32_t) off, TITYP_TYPINFO_NAMES, 0,0, "", h, "");
     free (h);
     if (free_name)
       free (name);
@@ -339,9 +339,9 @@ TI2_import_typinfo_names (sTITyps *tptr, unsigned char *dta, uint32_t length)
   return 0;
 }
 
-char *getTypeBOrImpRef (sTITyps *dptr, unsigned int off, const char *var)
+char *getTypeBOrImpRef (sTITyps *dptr, uint32_t off, const char *var)
 {
-  if (off == (unsigned int) -1)
+  if (off == (uint32_t) -1)
     return NULL;
   if ((off&1) != 0)
     return TI_get_typ_name (dptr, off & ~1U,TITYP_IMPREF, var);
@@ -363,26 +363,26 @@ TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len)
       switch (p->kind)
       {
       case 0x1d:
-	TI_add_typ (dptr, (unsigned int) off, TITYP_DEREF,
-	  TITYP_TYPINFO_NAMES, (unsigned int) p->oTypeB, "", "", "");
+	TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	  TITYP_TYPINFO_NAMES, (uint32_t) p->oTypeB, "", "", "");
 	break;
       case 0x1a:
 	if ((p->oTypeB & 1) != 0)
-	  TI_add_typ (dptr, (unsigned int) off, TITYP_DEREF,
-	    TITYP_IMPREF, (unsigned int) p->oTypeB & ~1, "", "", "");
+	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	    TITYP_IMPREF, (uint32_t) p->oTypeB & ~1, "", "", "");
 	else
 	{
-	  TI_add_typ (dptr, (unsigned int) off, TITYP_DEREF,
-	    TITYP_DEREF, (unsigned int) p->oTypeB, "*", "", "");
+	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	    TITYP_DEREF, (uint32_t) p->oTypeB, "*", "", "");
 	}
 	break;
       case 0x1c:
-	TI_add_typ (dptr, (unsigned int) off, TITYP_DEREF, TITYP_ARRAY,
-	  (unsigned int) p->oArrayD, "", "", "");
+	TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF, TITYP_ARRAY,
+	  (uint32_t) p->oArrayD, "", "", "");
 	break;
       default:
-	TI_add_typ (dptr, (unsigned int) off, TITYP_DEREF, TITYP_UNKNOWN,
-	  (unsigned int) p->oArrayD, "", "", "");
+	TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF, TITYP_UNKNOWN,
+	  (uint32_t) p->oArrayD, "", "", "");
 	break;
       }
     }
@@ -393,8 +393,8 @@ TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len)
       name = decode_VT_name_tmp (((uint32_t) (p->vt)) & 0xffff);
       if ((p->flag & 0xf000) == 0x4000)
 	prefix = "*";
-      TI_add_typ (dptr, (unsigned int) off, TITYP_DEREF, TITYP_UNKNOWN,
-	  (unsigned int) p->oArrayD, prefix, &name[0], "");
+      TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF, TITYP_UNKNOWN,
+	  (uint32_t) p->oArrayD, prefix, &name[0], "");
     }
     off += 8;
   }
@@ -410,7 +410,7 @@ TI2_import_customdata (sTITyps *dptr, unsigned char *dta, uint32_t length)
     return 0;
   while (off < length)
   {
-    unsigned int soff = off;
+    uint32_t soff = off;
     char *s;
     s = NULL;
     p = (sMSFT_CustomData *) &dta[off];
@@ -424,7 +424,7 @@ TI2_import_customdata (sTITyps *dptr, unsigned char *dta, uint32_t length)
 }
 
 size_t
-getVT_data (sTITyps *dptr, unsigned int vt, unsigned char *dta, char **ret)
+getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret)
 {
   char s[4096];
   size_t b, l, sz;
@@ -436,18 +436,18 @@ getVT_data (sTITyps *dptr, unsigned int vt, unsigned char *dta, char **ret)
   switch (vt) {
   case 16: /* VT_I1 */ sprintf (s,"(char) %d", *((char *) dta)); break;
   case 17: /* VT_UI1 */ sprintf (s,"(unsigned char) %u", *((unsigned char *) dta)); break;
-  case 18: /* VT_UI2 */ sprintf (s,"(USHORT) %u", *((unsigned short *) dta)); break;
+  case 18: /* VT_UI2 */ sprintf (s,"(USHORT) %u", *((uint16_t *) dta)); break;
   case 23: /* VT_UINT */
-  case 19: /* VT_UI4 */ sprintf (s,"(UINT) %uU", *((unsigned int *) dta)); break;
-  case 20: /* VT_I8 */ sprintf (s,"(LONGLONG) %I64dLL", *((__int64 *) dta)); break;
-  case 21: /* VT_UI8 */ sprintf (s,"(ULONGLONG) %I64uULL", *((unsigned __int64 *) dta)); break;
-  case 11: /* VT_BOOL */ sprintf (s,"(WINBOOL) %d", *((short *) dta)); break;
-  case 2: /* VT_I2 */ sprintf (s,"(short) %d", *((short *) dta)); break;
+  case 19: /* VT_UI4 */ sprintf (s,"(UINT) %uU", *((uint32_t *) dta)); break;
+  case 20: /* VT_I8 */ sprintf (s,"(LONGLONG) %I64dLL", *((int64_t *) dta)); break;
+  case 21: /* VT_UI8 */ sprintf (s,"(ULONGLONG) %I64uULL", *((uint64_t *) dta)); break;
+  case 11: /* VT_BOOL */ sprintf (s,"(WINBOOL) %d", *((int16_t *) dta)); break;
+  case 2: /* VT_I2 */ sprintf (s,"(short) %d", *((int16_t *) dta)); break;
   case 22: /* VT_INT */
-  case 3: /* VT_I4 */ sprintf (s,"(int) %d", *((int *) dta)); break;
+  case 3: /* VT_I4 */ sprintf (s,"(int) %d", *((int32_t *) dta)); break;
   case 4: /* VT_R4 */ sprintf (s,"(float) %f", *((float *) dta)); break;
   case 5: /* VT_R8 */ sprintf (s,"(double) %g", *((double *) dta)); break;
-  case 6: /* VT_CY */ sprintf (s,"(CY) %I64d", *((__int64 *) dta)); break;
+  case 6: /* VT_CY */ sprintf (s,"(CY) %I64d", *((int64_t *) dta)); break;
   case 8: /* VT_BSTR */
     sprintf (s,"L\"");
     while (sz>0)
@@ -462,9 +462,9 @@ getVT_data (sTITyps *dptr, unsigned int vt, unsigned char *dta, char **ret)
     break;
   case 25: /* VT_HRESULT */
   case 26: /* VT_PTR */
-     sprintf (s,"(HRESULT) 0x%x", *((int *) dta)); break;
+     sprintf (s,"(HRESULT) 0x%x", *((int32_t *) dta)); break;
   default:
-    sprintf (s, "(%s) with %u size", decode_VT_name_tmp (vt), (unsigned int) l);
+    sprintf (s, "(%s) with %u size", decode_VT_name_tmp (vt), (uint32_t) l);
     break;
   }
   if (ret)
@@ -473,7 +473,7 @@ getVT_data (sTITyps *dptr, unsigned int vt, unsigned char *dta, char **ret)
 }
 
 size_t
-getVT_size (unsigned int vt, unsigned char *dta, size_t *basesz)
+getVT_size (uint32_t vt, unsigned char *dta, size_t *basesz)
 {
   size_t ret = 0;
   size_t bsz = 2;
@@ -530,7 +530,7 @@ getVT_size (unsigned int vt, unsigned char *dta, size_t *basesz)
   }
   if (bsz>2)
   {
-    ret = *((unsigned int *) dta);
+    ret = *((uint32_t *) dta);
   }
   if (basesz)
     *basesz = bsz;
@@ -538,7 +538,7 @@ getVT_size (unsigned int vt, unsigned char *dta, size_t *basesz)
 }
 
 const char *
-decode_VT_name_tmp (unsigned short vt)
+decode_VT_name_tmp (uint16_t vt)
 {
   static char str[128];
   const char *name = "???";
@@ -599,7 +599,7 @@ decode_VT_name_tmp (unsigned short vt)
 }
 
 char *
-TI_getVTorDref(sTITyps *ptyp,unsigned int vt, const char *varName)
+TI_getVTorDref(sTITyps *ptyp,uint32_t vt, const char *varName)
 {
   char *name;
   if ((vt & 0x80000000)!=0)
@@ -637,7 +637,7 @@ TI2_import_importlibs (sTITyps *iptr, unsigned char *dta, uint32_t len)
     memcpy (h, &dta[off + 14], l);
     h[l] = 0;
 
-    TI_add_typ (iptr, (unsigned int) off, TITYP_IMP, 0,0,"",h,"");
+    TI_add_typ (iptr, (uint32_t) off, TITYP_IMP, 0,0,"",h,"");
     off = (off + 14 + l + 3) & ~3;
   }
   return 0;
@@ -654,8 +654,8 @@ TI2_import_ref (sTITyps *gptr, unsigned char *dta, uint32_t len)
     {
       char *h;
       p = (sMSFT_RefTab *) & dta[off];
-      h = getTypeBOrImpRef (gptr, (unsigned int) p->oData1, "");
-      TI_add_typ (gptr, (unsigned int) off, TITYP_REF, p->data2, p->oNextRef,"",h,"");
+      h = getTypeBOrImpRef (gptr, (uint32_t) p->oData1, "");
+      TI_add_typ (gptr, (uint32_t) off, TITYP_REF, p->data2, p->oNextRef,"",h,"");
       free (h);
       off += sizeof (sMSFT_RefTab);
     }
@@ -672,10 +672,10 @@ TI2_import_array (sTITyps *gptr, unsigned char *dta, uint32_t len)
     return 0;
   while ((off + 7) < len)
   {
-    unsigned int num_dims;
-    unsigned int size;
+    uint32_t num_dims;
+    uint32_t size;
     char *name = NULL;
-    unsigned int i;
+    uint32_t i;
     p = (sMSFT_ArrayDesc *) &dta[off];
     if ((p->vt & 0x80000000) != 0)
       name = strdup (decode_VT_name_tmp (p->vt));
@@ -688,7 +688,7 @@ TI2_import_array (sTITyps *gptr, unsigned char *dta, uint32_t len)
     {
       sprintf (&postfix[strlen (postfix)], "[%u]", p->vt_offset[i*2]);
     }
-    TI_add_typ (gptr, (unsigned int) off, TITYP_ARRAY, TITYP_DEREF, (unsigned int) p->vt,"",
+    TI_add_typ (gptr, (uint32_t) off, TITYP_ARRAY, TITYP_DEREF, (uint32_t) p->vt,"",
       (name ? name : ""), postfix);
     off += 8 + size;
     off +=3; off &= ~3;
@@ -708,7 +708,7 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
   while ((off + 11) < length)
   {
     p = (MSFT_ImpInfo *) &dta[off];
-    iname = TI_get_typ_name (gptr, (unsigned int) p->oImpFile, TITYP_IMP, "");
+    iname = TI_get_typ_name (gptr, (uint32_t) p->oImpFile, TITYP_IMP, "");
     idstr = ("TypeB_");
     str = iname;
     while (*str != 0)
@@ -721,7 +721,7 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
     sprintf (str, "%s_%s%x",iname,idstr,p->oGuid);
     while (strrchr (str, '.')!=NULL)
       *strchr (str, '.')='_';
-    TI_add_typ (gptr, (unsigned int) off, TITYP_IMPREF, 0,0, "", str, "");
+    TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", str, "");
     free (str);
     free (iname);
     off += 12;

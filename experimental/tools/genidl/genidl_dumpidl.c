@@ -12,12 +12,12 @@ printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *
 static void
 printArgFlags (FILE *fp, uint32_t aflags);
 static void
-printFuncOption (FILE *fp, unsigned int flags, unsigned int id, unsigned int defid,
-		 unsigned int funcKind, const char **fctPrefix, const char *prefix,
-		 unsigned int invokeKind);
+printFuncOption (FILE *fp, uint32_t flags, uint32_t id, uint32_t defid,
+		 uint32_t funcKind, const char **fctPrefix, const char *prefix,
+		 uint32_t invokeKind);
 static void
-printVarOption (FILE *fp, unsigned int flags, unsigned int id, unsigned int defid,
-		unsigned int varKind, const char **varPrefix,
+printVarOption (FILE *fp, uint32_t flags, uint32_t id, uint32_t defid,
+		uint32_t varKind, const char **varPrefix,
 		const char *prefix);
 static void
 printEnum (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *prefix_);
@@ -134,14 +134,14 @@ fill_typb (sTI2TypLib *tl, sTI2TypeBase *tb, size_t off, unsigned char *dsrc, un
   tb->flags= t->flags;
   tb->cFuncs = t->cElement & 0xffff;
   tb->cVars = (t->cElement >> 16) & 0xffff;
-  tb->name = TI_get_typ_name (&tl->ti2_typs, (unsigned int) (off * sizeof (sMSFT_TypeInfoBase)),
+  tb->name = TI_get_typ_name (&tl->ti2_typs, (uint32_t) (off * sizeof (sMSFT_TypeInfoBase)),
     TITYP_TYPINFO_NAMES, "");
   if (t->posguid != -1)
-    tb->guid = TI_get_typ_name (&tl->ti2_typs, (unsigned int) t->posguid, TITYP_GUIDS, "");
+    tb->guid = TI_get_typ_name (&tl->ti2_typs, (uint32_t) t->posguid, TITYP_GUIDS, "");
   if (t->docstringoffs != -1)
-    tb->docstr = TI_get_typ_name (&tl->ti2_typs, (unsigned int) t->docstringoffs, TITYP_STR, "");
+    tb->docstr = TI_get_typ_name (&tl->ti2_typs, (uint32_t) t->docstringoffs, TITYP_STR, "");
   if (t->oCustData != -1)
-    tb->custData = TI_get_typ_name (&tl->ti2_typs, (unsigned int) t->oCustData,
+    tb->custData = TI_get_typ_name (&tl->ti2_typs, (uint32_t) t->oCustData,
       TITYP_CUSTOMDATA, "");
   tb->version = t->version;
   if (t->datatype1 != -1)
@@ -150,19 +150,19 @@ fill_typb (sTI2TypLib *tl, sTI2TypeBase *tb, size_t off, unsigned char *dsrc, un
       {
       case TKIND_COCLASS:
 	tb->dataType =
-	  TI_get_typ_name (&tl->ti2_typs, (unsigned int) t->datatype1, TITYP_REF, "");
+	  TI_get_typ_name (&tl->ti2_typs, (uint32_t) t->datatype1, TITYP_REF, "");
 	break;
       case TKIND_MODULE:
 	tb->dataType =
-	  TI_get_typ_name (&tl->ti2_typs, (unsigned int) t->datatype1, TITYP_STR, "");
+	  TI_get_typ_name (&tl->ti2_typs, (uint32_t) t->datatype1, TITYP_STR, "");
 	break;
       case TKIND_INTERFACE:
 	tb->dataType =
-	  getTypeBOrImpRef (&tl->ti2_typs, (unsigned int) t->datatype1,"");
+	  getTypeBOrImpRef (&tl->ti2_typs, (uint32_t) t->datatype1,"");
 	break;
       default:
 	tb->dataType =
-	  TI_getVTorDref (&tl->ti2_typs, (unsigned int) t->datatype1, "");
+	  TI_getVTorDref (&tl->ti2_typs, (uint32_t) t->datatype1, "");
 	break;
       }
     }
@@ -249,7 +249,7 @@ TI2_print_exports (FILE *fp, sTI2TypLib *tl)
     " * Exports for tlbdef.inc\n");
   for (i = 0;i < no; i++)
   {
-    unsigned int mem = tl->ti2_typs.buc[TITYP_TYPINFO_NAMES].arr[i]->memid;
+    uint32_t mem = tl->ti2_typs.buc[TITYP_TYPINFO_NAMES].arr[i]->memid;
     char *name = tl->ti2_typs.buc[TITYP_TYPINFO_NAMES].arr[i]->name;
     fprintf (fp, " \"%s_TypeD_%x\"=\"%s\"\n",
       tlbname, mem, name);
@@ -594,8 +594,8 @@ TI2_typlib_coclass (FILE *fp, sTI2TypLib *tl, const char *prefix)
 	char *ifname;
 	sTITyp *rtyp;
 	do {
-	  rtyp = TI_get_typ (&tl->ti2_typs, (unsigned int) offset_ref, TITYP_REF);
-	  ifname = TI_get_typ_name (&tl->ti2_typs, (unsigned int) offset_ref, TITYP_REF, "");
+	  rtyp = TI_get_typ (&tl->ti2_typs, (uint32_t) offset_ref, TITYP_REF);
+	  ifname = TI_get_typ_name (&tl->ti2_typs, (uint32_t) offset_ref, TITYP_REF, "");
 	  offset_ref = (rtyp == NULL ? -1 : (int) rtyp->refmem);
 	  if (ifname)
 	    fprintf (fp, "%s  %s;\n",prefix,ifname);
@@ -663,7 +663,7 @@ TI2_typlib_modules (FILE *fp, sTI2TypLib *tl, const char *prefix)
 static void
 printEnum (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *prefix_)
 {
-  unsigned int defid;
+  uint32_t defid;
   char *prefix;
   size_t i;
   if (!tl || !tb || (tb->cFuncs == 0 && tb->cVars == 0))
@@ -697,7 +697,7 @@ printEnum (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *prefix_)
 static void
 printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *prefix_)
 {
-  unsigned int defid;
+  uint32_t defid;
   char *prefix;
   size_t i;
   if (!tl || !tb || (tb->cFuncs == 0 && tb->cVars == 0))
@@ -709,7 +709,7 @@ printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *
   switch (tb->kind)
   {
   case TKIND_UNION: case TKIND_RECORD:
-    defid = (unsigned int) 1073741824; break;
+    defid = (uint32_t) 1073741824; break;
   default:
     defid = 0xfefefefe; break;
   }
@@ -775,7 +775,7 @@ printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *
 	fprintf (fp," = %d", mi->var->oValue);
       }
       else if (tb->kind != TKIND_RECORD && tb->kind != TKIND_UNION
-	&& mi->var->oValue != (unsigned int) -1)
+	&& mi->var->oValue != (uint32_t) -1)
         {
 	  fprintf (fp," = ");
 	  printValue (fp, &tl->ti2_typs,mi->var->oValue);
@@ -825,8 +825,8 @@ TI2_typlib_interfaces (FILE *fp, sTI2TypLib *tl, const char *prefix)
 }
 
 static void
-printVarOption (FILE *fp, unsigned int flags, unsigned int id, unsigned int defid,
-		unsigned int varKind, const char **varPrefix,
+printVarOption (FILE *fp, uint32_t flags, uint32_t id, uint32_t defid,
+		uint32_t varKind, const char **varPrefix,
 		const char *prefix)
 {
   int befirst = 1,idx = 0;
@@ -859,9 +859,9 @@ printVarOption (FILE *fp, unsigned int flags, unsigned int id, unsigned int defi
 }
 
 static void
-printFuncOption (FILE *fp, unsigned int flags, unsigned int id, unsigned int defid,
-		 unsigned int funcKind, const char **fctPrefix, const char *prefix,
-		 unsigned int invokeKind)
+printFuncOption (FILE *fp, uint32_t flags, uint32_t id, uint32_t defid,
+		 uint32_t funcKind, const char **fctPrefix, const char *prefix,
+		 uint32_t invokeKind)
 {
   int befirst = 1, idx = 0;
   const char *invoke = "";
