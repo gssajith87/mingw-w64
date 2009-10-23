@@ -3,152 +3,203 @@
 
 #pragma pack(push,1)
 
+/**
+ * PE header layout structure
+ * @see http://www.jbox.dk/sanos/source/include/os/pe.h.html
+ */
 typedef struct sDosHeader {
-  uint16_t magic;
-  uint16_t cblp;
-  uint16_t cp;
-  uint16_t crlc;
-  uint16_t cparhdr;
-  uint16_t minalloc;
-  uint16_t maxalloc;
-  uint16_t ss;
-  uint16_t sp;
-  uint16_t csum;
-  uint16_t ip;
-  uint16_t cs;
-  uint16_t lfarlc;
-  uint16_t ovno;
-  uint16_t res[4];
-  uint16_t oemid;
-  uint16_t oeminfo;
-  uint16_t res2[10];
-  int32_t lfanew;
+  uint16_t magic;       /**< PE signature, usually MZ or ZM */
+  uint16_t cblp;        /**< (PE image size) % (512) */
+  uint16_t cp;          /**< Size of PE image in 512 byte blocks */
+  uint16_t crlc;        /**< Number of relocation table entries*/
+  uint16_t cparhdr;     /**< Size of PE header */
+  uint16_t minalloc;    /**< Minimum required memory */
+  uint16_t maxalloc;    /**< Maximum required memory */
+  uint16_t ss;          /**< Stack seg offset in load module */
+  uint16_t sp;          /**< initial value of Stack Pointer */
+  uint16_t csum;        /**< Image checksum */
+  uint16_t ip;          /**< initial value of Instruction Pointer */
+  uint16_t cs;          /**< Initial value of the CS register, relative to the segment the program was loaded at. */
+  uint16_t lfarlc;      /**< Offset of the first relocation item in the file. */
+  uint16_t ovno;        /**< Overlay number. */
+  uint16_t res[4];      /**< Reserved slack space */
+  uint16_t oemid;       /**< OEM ID */
+  uint16_t oeminfo;     /**< OEM info */
+  uint16_t res2[10];    /**< Reserved slack space */
+  int32_t lfanew;       /**< Offset to new PE header */
 } sDosHeader;
 
+/**
+ * Data directory table structure layout
+ */
 typedef struct sImgDataDir {
-  uint32_t virtualAddress;
-  uint32_t size;
+  uint32_t virtualAddress;      /**< Relative Virtual Address */
+  uint32_t size;                /**< Size of the table in bytes */
 } sImgDataDir;
 
 #define IMG_NOOF_DIR_ENTRIES 16
 
+/**
+ * PE32 Optional header layout structure
+ * @see http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx
+ */
 typedef struct sImgOptionalHeaders32 {
-  uint16_t Magic;
-  unsigned char MajorLinkerVersion;
-  unsigned char MinorLinkerVersion;
-  uint32_t SizeOfCode;
-  uint32_t SizeOfInitializedData;
-  uint32_t SizeOfUninitializedData;
-  uint32_t AddressOfEntryPoint;
-  uint32_t BaseOfCode;
-  uint32_t BaseOfData;
-  uint32_t ImageBase;
-  uint32_t SectionAlignment;
-  uint32_t FileAlignment;
-  uint16_t MajorOperatingSystemVersion;
-  uint16_t MinorOperatingSystemVersion;
-  uint16_t MajorImageVersion;
-  uint16_t MinorImageVersion;
-  uint16_t MajorSubsystemVersion;
-  uint16_t MinorSubsystemVersion;
-  uint32_t Win32VersionValue;
-  uint32_t SizeOfImage;
-  uint32_t SizeOfHeaders;
-  uint32_t CheckSum;
-  uint16_t Subsystem;
-  uint16_t DllCharacteristics;
-  uint32_t SizeOfStackReserve;
-  uint32_t SizeOfStackCommit;
-  uint32_t SizeOfHeapReserve;
-  uint32_t SizeOfHeapCommit;
-  uint32_t LoaderFlags;
-  uint32_t NumberOfRvaAndSizes;
-  sImgDataDir DataDirectory[IMG_NOOF_DIR_ENTRIES];
+  uint16_t Magic;                           /**< Identifies the type of image */
+  unsigned char MajorLinkerVersion;         /**< Linker major version */
+  unsigned char MinorLinkerVersion;         /**< Linker minor version */
+  uint32_t SizeOfCode;                      /**< Size of excutable .text and related sections */
+  uint32_t SizeOfInitializedData;           /**< Size of initialized .data and related sections */
+  uint32_t SizeOfUninitializedData;         /**< Size of unitialized .bss and related sections */
+  uint32_t AddressOfEntryPoint;             /**< Address of image entry point relative to image base */
+  uint32_t BaseOfCode;                      /**< Address to start of .text section relative to image base */
+  uint32_t BaseOfData;                      /**< Address to start of .data section relative to image base */
+  uint32_t ImageBase;                       /**< Prefered load address of image */
+  uint32_t SectionAlignment;                /**< Section allignment when loaded in memory */
+  uint32_t FileAlignment;                   /**< Section allignment of image on disk */
+  uint16_t MajorOperatingSystemVersion;     /**< Minimum required OS version (Major version) */
+  uint16_t MinorOperatingSystemVersion;     /**< Minimum required OS version (Minor version) */
+  uint16_t MajorImageVersion;               /**< PE Image major version */
+  uint16_t MinorImageVersion;               /**< PE Image minor version */
+  uint16_t MajorSubsystemVersion;           /**< Subsystem major version */
+  uint16_t MinorSubsystemVersion;           /**< Subsystem minor version */
+  uint32_t Win32VersionValue;               /**< Reserved, set to 0 */
+  uint32_t SizeOfImage;                     /**< Total size of image in multiples of SectionAlignment */
+  uint32_t SizeOfHeaders;                   /**< Size of DOS stub header, PE header, and section headers in multiples of SectionAlignment */
+  uint32_t CheckSum;                        /**< Image checksum */
+  uint16_t Subsystem;                       /**< Image subsystem */
+  uint16_t DllCharacteristics;              /**< DLL characteristics */
+  uint32_t SizeOfStackReserve;              /**< Amount of stack to reserve */
+  uint32_t SizeOfStackCommit;               /**< Amount of stack to commit on start */
+  uint32_t SizeOfHeapReserve;               /**< Amount of heap to reserve */
+  uint32_t SizeOfHeapCommit;                /**< Amount of heap to commit on start */
+  uint32_t LoaderFlags;                     /**< Reserved, set to 0 */
+  uint32_t NumberOfRvaAndSizes;             /**< Number of DataDirectory entries at the end of the header */
+  sImgDataDir DataDirectory[IMG_NOOF_DIR_ENTRIES]; /**< Data directories */
 } sImgOptionalHeaders32;
 
+/**
+ * PE32+ Optional header layout structure
+ * @see http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx
+ */
 typedef struct sImgOptionalHeaders64 {
-  uint16_t Magic;
-  unsigned char MajorLinkerVersion;
-  unsigned char MinorLinkerVersion;
-  uint32_t SizeOfCode;
-  uint32_t SizeOfInitializedData;
-  uint32_t SizeOfUninitializedData;
-  uint32_t AddressOfEntryPoint;
-  uint32_t BaseOfCode;
-  uint64_t ImageBase;
-  uint32_t SectionAlignment;
-  uint32_t FileAlignment;
-  uint16_t MajorOperatingSystemVersion;
-  uint16_t MinorOperatingSystemVersion;
-  uint16_t MajorImageVersion;
-  uint16_t MinorImageVersion;
-  uint16_t MajorSubsystemVersion;
-  uint16_t MinorSubsystemVersion;
-  uint32_t Win32VersionValue;
-  uint32_t SizeOfImage;
-  uint32_t SizeOfHeaders;
-  uint32_t CheckSum;
-  uint16_t Subsystem;
-  uint16_t DllCharacteristics;
-  uint64_t SizeOfStackReserve;
-  uint64_t SizeOfStackCommit;
-  uint64_t SizeOfHeapReserve;
-  uint64_t SizeOfHeapCommit;
-  uint32_t LoaderFlags;
-  uint32_t NumberOfRvaAndSizes;
-  sImgDataDir DataDirectory[IMG_NOOF_DIR_ENTRIES];
+  uint16_t Magic;                           /**< Identifies the type of image */
+  unsigned char MajorLinkerVersion;         /**< Linker major version */
+  unsigned char MinorLinkerVersion;         /**< Linker minor version */
+  uint32_t SizeOfCode;                      /**< Size of excutable .text and related sections */
+  uint32_t SizeOfInitializedData;           /**< Size of initialized .data and related sections */
+  uint32_t SizeOfUninitializedData;         /**< Size of unitialized .bss and related sections */
+  uint32_t AddressOfEntryPoint;             /**< Address of image entry point relative to image base */
+  uint32_t BaseOfCode;                      /**< Address to start of .text section relative to image base */
+  uint64_t ImageBase;                       /**< Prefered load address of image */
+  uint32_t SectionAlignment;                /**< Section allignment when loaded in memory */
+  uint32_t FileAlignment;                   /**< Section allignment of image on disk */
+  uint16_t MajorOperatingSystemVersion;     /**< Minimum required OS version (Major version) */
+  uint16_t MinorOperatingSystemVersion;     /**< Minimum required OS version (Minor version) */
+  uint16_t MajorImageVersion;               /**< PE Image major version */
+  uint16_t MinorImageVersion;               /**< PE Image minor version */
+  uint16_t MajorSubsystemVersion;           /**< Subsystem major version */
+  uint16_t MinorSubsystemVersion;           /**< Subsystem minor version */
+  uint32_t Win32VersionValue;               /**< Reserved, set to 0 */
+  uint32_t SizeOfImage;                     /**< Total size of image in multiples of SectionAlignment */
+  uint32_t SizeOfHeaders;                   /**< Size of DOS stub header, PE header, and section headers in multiples of SectionAlignment */
+  uint32_t CheckSum;                        /**< Image checksum */
+  uint16_t Subsystem;                       /**< Image subsystem */
+  uint16_t DllCharacteristics;              /**< DLL characteristics */
+  uint64_t SizeOfStackReserve;              /**< Amount of stack to reserve */
+  uint64_t SizeOfStackCommit;               /**< Amount of stack to commit on start */
+  uint64_t SizeOfHeapReserve;               /**< Amount of heap to reserve */
+  uint64_t SizeOfHeapCommit;                /**< Amount of heap to commit on start */
+  uint32_t LoaderFlags;                     /**< Reserved, set to 0 */
+  uint32_t NumberOfRvaAndSizes;             /**< Number of DataDirectory entries at the end of the header */
+  sImgDataDir DataDirectory[IMG_NOOF_DIR_ENTRIES]; /**< Data directories */
 } sImgOptionalHeaders64;
 
+/**
+ * COFF header structure layout
+ */
 typedef struct sImgFileHeader {
-  uint16_t Machine;
-  uint16_t NumberOfSections;
-  uint32_t TimeDateStamp;
-  uint32_t PointerToSymbolTable;
-  uint32_t NumberOfSymbols;
-  uint16_t SizeOfOptionalHeader;
-  uint16_t Characteristics;
+  uint16_t Machine;                         /**< Machine ID to run image */
+  uint16_t NumberOfSections;                /**< Number of sections, maximum of 96 */
+  uint32_t TimeDateStamp;                   /**< 32bit time_t seconds since epoch */
+  uint32_t PointerToSymbolTable;            /**< File offset to COFF symbol table */
+  uint32_t NumberOfSymbols;                 /**< Number of symbol entries in COFF symbol table*/
+  uint16_t SizeOfOptionalHeader;            /**< Size of optional header */
+  uint16_t Characteristics;                 /**< Object/Image attribute flags */
 } sImgFileHeader;
 
 #define IMG_SIZEOF_NT_OPTIONAL32_HEADER 224
 #define IMG_SIZEOF_NT_OPTIONAL64_HEADER 240
 
+/**
+ * PE32+ Headers structure layout on disk
+ */
 typedef struct sImgNtHeaders64 {
-  uint32_t Signature;
-  sImgFileHeader FileHeader;
-  sImgOptionalHeaders64 OptionalHeader;
+  uint32_t Signature;                       /**< PE\0\0 signature */
+  sImgFileHeader FileHeader;                /**< Common PE32/PE32+ header */
+  sImgOptionalHeaders64 OptionalHeader;     /**< Optional fields for 64bit PE32+ executables */
 } sImgNtHeaders64;
 
+/**
+ * PE32 Headers structure layout on disk
+ */
 typedef struct sImgNtHeaders32 {
-  uint32_t Signature;
-  sImgFileHeader FileHeader;
-  sImgOptionalHeaders32 OptionalHeader;
+  uint32_t Signature;                       /**< PE\0\0 signature */
+  sImgFileHeader FileHeader;                /**< Common PE32/PE32+ header */
+  sImgOptionalHeaders32 OptionalHeader;     /**< Optional fields for 32bit PE32 executables */
 } sImgNtHeaders32;
 
+/**
+ * Generic object type to hold both PE32 and PE32+ headers
+ */
 typedef union uImgHeader {
-  sImgNtHeaders32 hdr32;
-  sImgNtHeaders64 hdr64;
+  sImgNtHeaders32 hdr32;                    /**< PE32 header */
+  sImgNtHeaders64 hdr64;                    /**< PE32+ header */
 } uImgHeader;
 
 #define IMG_FIRST_SECTION(ntheader) ((sImgSectionHdr *) ((ULONG_PTR)ntheader + FIELD_OFFSET(IMAGE_NT_HEADERS,OptionalHeader) + ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader))
 
+/**
+ *  Section header structure layout
+ */
 typedef struct sImgSectionHdr {
-  unsigned char Name[8];
+  unsigned char Name[8];            /**< Section Name */
   union {
-    uint32_t PhysicalAddress;
-    uint32_t VirtualSize;
+    uint32_t PhysicalAddress;       /**< */
+    uint32_t VirtualSize;           /**< Total section size when loaded in memory */
   } Misc;
-  uint32_t VirtualAddress;
-  uint32_t SizeOfRawData;
-  uint32_t PointerToRawData;
-  uint32_t PointerToRelocations;
-  uint32_t PointerToLinenumbers;
-  uint16_t NumberOfRelocations;
-  uint16_t NumberOfLinenumbers;
-  uint32_t Characteristics;
+  uint32_t VirtualAddress;          /**< Section offset from image base */
+  uint32_t SizeOfRawData;           /**< Size of section on disk */
+  uint32_t PointerToRawData;        /**< Pointer to first page of section */
+  uint32_t PointerToRelocations;    /**< Pointer to section relocation entries */
+  uint32_t PointerToLinenumbers;    /**< Pointer to COFF debug line-number entries */
+  uint16_t NumberOfRelocations;     /**< Number of relocation entries in section */
+  uint16_t NumberOfLinenumbers;     /**< Number of line-number entries in section */
+  uint32_t Characteristics;         /**< Section characteristics flag */
 } sImgSectionHdr;
 
+/**
+ * Finds PE signature in file associated with fp
+ * @param[in] fp Pointer to a file
+ * @param[out] be64 indicates if PE is 64bit if 1, 32bit otherwise
+ *@return Offset at which a PE signature is found
+ */
 long genidl_ispe (FILE *fp, int *be64);
+
+/**
+ * Reads the typelib from a file
+ * @param[in] fp Pointer to file
+ * @param[in] nores typelib to read in directory
+ * @param[out] pDta raw typelib info
+ * @param[out] szDta size of raw typelib infor
+ * @return 1 for success
+ */
 int genidl_pe_typelib_resource_read (FILE *fp, int noRes, unsigned char **pDta, size_t *szDta);
+
+/**
+ * Counts the number of typelib resources
+ * @param[in] fp File to check
+ * @return number of found typelib resource
+ */
 int genidl_pe_typelib_resource_count (FILE *fp);
 
 #pragma pack(pop)
