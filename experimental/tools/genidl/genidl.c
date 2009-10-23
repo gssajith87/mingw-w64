@@ -15,14 +15,17 @@ const char *basedumpname = "test_dump";
 static void
 show_usage (void)
 {
-  fprintf (stderr, "Usage: genidl [options] files...\n");
+  fprintf (stderr, "Usage: genidl [OPTION]... [FILE]...\n");
+  fprintf (stderr, "Dumps IDL information from typelib data found in PE32/PE32+ executables and\n"
+                   "TLB files.\n");
   fprintf (stderr, "\n");
   fprintf (stderr, "Options:\n"
-    "  -b <arg> |\n"
-    "  -basedumpname=<arg> : Specify prefix of generated idl files.\n"
-    "  -d | -dump          : Dump additional internal debugging information.\n"
-    "  -h | -help          : Show this help.\n"
+    "  -b ARG, --basedumpname=ARG\n"
+    "                           Specify ARG as prefix of generated idl files.\n"
+    "  -d, --dump               Dump additional internal debugging information.\n"
+    "  -h, --help               Show this help.\n"
   );
+  fprintf (stderr, "\nReport bugs to <mingw-w64-public@lists.sourceforge.net>\n");
   exit (1);
 }
 
@@ -40,28 +43,53 @@ scanArgs (int argc, char **argv)
 	{
 	  h++;
 	  switch (*h) {
+      case '-': /* Long arguments section */
+        h++;
+        switch (*h) {
+        case 'd':
+            if(! strcmp (h, "dump"))
+                {
+                    show_dump_too = 1;
+                    break;
+                }
+            else
+                goto unknown_fail;
+        case 'h':
+            if(! strcmp (h, "help")) return -2;
+            goto unknown_fail;
+        case 'b':
+            if (! strncmp(h, "basedumpname=", 13))
+                {
+                    basedumpname = &(h[13]);
+                    break;
+                }
+            else
+                goto unknown_fail;
+        default: goto unknown_fail;
+        }
+        break;
+        /* Short arguments section */
 	  case 'd':
-	    if (! strcmp (h, "dump") || h[1] == 0)
+	    if (h[1] == 0)
 	      show_dump_too = 1;
 	    else
 	      goto unknown_fail;
 	    break;
 	  case 'h':
-	    if (! strcmp(h, "help") || h[1] == 0)
+	    if (h[1] == 0)
 	      return -2;
 	       goto unknown_fail;
 	  case 'b':
-	    if (! strncmp(h, "basedumpname=", 13))
-            basedumpname = &(h[13]);
-        else if (h[1] == 0)
+        if (h[1] == 0)
         {
             basedumpname = *(++argv);
             --argc;
+            break;
         }
-        break;
+        goto unknown_fail;
 	  default:
 unknown_fail:
-	    fprintf (stderr, "Option ,%s' is unknown.\n", h);
+	    fprintf (stderr, "Option %s' is unknown.\n", *argv);
 	    seen_error = 1;
 	    break;
 	  }
