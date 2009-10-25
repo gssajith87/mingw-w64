@@ -6,6 +6,7 @@
 
 /* Configure globals.  */
 int show_dump_too = 0;
+int is_verbose = 0;
 
 /* Process files.  */
 size_t file_args_cnt = 0;
@@ -23,6 +24,7 @@ show_usage (void)
     "  -b ARG, --basedumpname=ARG\n"
     "                           Specify ARG as prefix of generated idl files.\n"
     "  -d, --dump               Dump additional internal debugging information.\n"
+    "  -v, --verbose            Show additional status prints.\n"
     "  -h, --help               Show this help.\n"
   );
   fprintf (stderr, "\nReport bugs to <mingw-w64-public@lists.sourceforge.net>\n");
@@ -57,6 +59,12 @@ scanArgs (int argc, char **argv)
         case 'h':
             if(! strcmp (h, "help")) return -2;
             goto unknown_fail;
+        case 'v':
+	    if (! strcmp (h, "verbose"))
+	       is_verbose++;
+	    else
+	      goto unknown_fail;
+	    break;
         case 'b':
             if (! strncmp(h, "basedumpname=", 13))
                 {
@@ -80,13 +88,18 @@ scanArgs (int argc, char **argv)
 	      return -2;
 	       goto unknown_fail;
 	  case 'b':
-        if (h[1] == 0)
-        {
-            basedumpname = *(++argv);
-            --argc;
-            break;
-        }
-        goto unknown_fail;
+	    if (h[1] == 0)
+	      {
+		basedumpname = *(++argv);
+		--argc;
+		break;
+	      }
+	    goto unknown_fail;
+	  case 'v':
+	    if (h[1] != 0)
+	      goto unknown_fail;
+	    is_verbose++;
+	    break;
 	  default:
 unknown_fail:
 	    fprintf (stderr, "Option %s' is unknown.\n", *argv);
@@ -129,9 +142,15 @@ int main(int argc,char **argv)
 	  continue;
 	}
       p = genidl_ispe (gp, &be64);
-      fprintf (stderr, "Found PE at %ld (%s bits)\n", p, be64 ? "32" : "64");
+
+      if (is_verbose)
+        fprintf (stderr, "Found PE at %ld (%s bits)\n", p, be64 ? "32" : "64");
+
       end = genidl_pe_typelib_resource_count (gp);
-      fprintf (stderr, "Contains %d typelib resource(s)\n", end);
+
+      if (is_verbose)
+	fprintf (stderr, "Contains %d typelib resource(s)\n", end);
+
       for (start = 0; start < end; start++)
 	{
       genidl_pe_typelib_resource_read (gp, start, &dta, &len);
