@@ -288,6 +288,8 @@ ${BUILD_DIR}/root/mingw/.headers.install.marker: \
     ${BUILD_DIR}/root/${TARGET_ARCH}/include/.mkdir.marker
 	tar cf - --exclude=.svn -C build/mingw/mingw-w64-headers/include . | \
 	  tar xpvf - -C ${BUILD_DIR}/root/${TARGET_ARCH}/include
+	tar cf - --exclude=.svn -C build/mingw/mingw-w64-headers/crt . | \
+	  tar xpvf - -C ${BUILD_DIR}/root/${TARGET_ARCH}/include
 	@touch $@
 
 ########################################
