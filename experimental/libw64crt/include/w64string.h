@@ -22,6 +22,7 @@ char *strlwr (char *);
 char *strupr (char *);
 char *strrev (char *);
 char *strstr (const char *, const char *);
+char *strpbrk(const char *, const char *);
 
 void *memcpy (void *, const void *, size_t);
 void *memccpy (void *, const void *, int, size_t);
