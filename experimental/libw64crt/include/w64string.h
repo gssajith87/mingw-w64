@@ -10,6 +10,8 @@ int strcmp (const char *, const char *);
 int strncmp (const char *, const char *, size_t);
 char *strcat (char *, const char *);
 char *strncat (char *, const char *, size_t);
+char *strchr (const char *, int);
+char *strrchr (const char *, int);
 
 void *memcpy (void *, const void *, size_t);
 
