@@ -13,5 +13,9 @@ else
 #error Architecture specific base C types not implemented for this compiler.
 #endif
 
+#ifndef NULL
+#define NULL (void *) 0
+#endif
+
 #endif
 
