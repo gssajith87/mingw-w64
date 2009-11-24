@@ -20,6 +20,7 @@ char *strnset (char *, int, size_t);
 char *strset (char *, int);
 char *strlwr (char *);
 char *strupr (char *);
+char *strrev (char *);
 char *strstr (const char *, const char *);
 
 void *memcpy (void *, const void *, size_t);
