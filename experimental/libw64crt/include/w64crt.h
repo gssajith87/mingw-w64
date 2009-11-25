@@ -25,5 +25,12 @@ extern void _w64_unlock (int no);
 #define _munlock(NO) do { } while (0);
 #endif
 
+/* Error reporting and misc.  */
+int __w64crt_MessageBoxA (const char *, const char *, unsigned int);
+int __w64crt_MessageBoxW (const wchar_t *, const wchar_t *, unsigned int);
+
+/* Todo. */
+#define _w64crt_get_winmajor() 4
+
 #endif
 
