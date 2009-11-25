@@ -5,5 +5,5 @@
 #define _UNICODE 1
 #endif
 
-#include "__w64crtMsgBox.c"
+#include "crtmsgboxA.c"
 
