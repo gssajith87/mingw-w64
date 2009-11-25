@@ -1,8 +1,8 @@
 #include <w64crt.h>
 #include <w64string.h>
 
-#define TOUPPER(ch) \
-  ((CH) >= 'a' && (CH) <= 'z') ? ((CH) - 'a' + 'A') : (CH))
+#define TOUPPER(CH) \
+  (((CH) >= 'a' && (CH) <= 'z') ? ((CH) - 'a' + 'A') : (CH))
 
 int
 stricmp (const char *s1, const char *s2)
