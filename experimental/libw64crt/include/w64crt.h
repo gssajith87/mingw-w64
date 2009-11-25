@@ -30,7 +30,7 @@ int __w64crt_MessageBoxA (const char *, const char *, unsigned int);
 int __w64crt_MessageBoxW (const wchar_t *, const wchar_t *, unsigned int);
 
 /* Todo. */
-#define _w64crt_get_winmajor() 4
+#define __w64crt_get_winmajor() 4
 
 #endif
 

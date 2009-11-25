@@ -68,7 +68,7 @@ __w64crt_MessageBox (LPCTSTR msg, LPCTSTR caption, unsigned int msg_type)
 	nia = 1;
     }
   if (nia)
-    msg_type |= (_w64crt_get_winmajor () >= 4 ? MB_SERVICE_NOTIFICATION : MB_SERVICE_NOTIFICATION_NT3X);
+    msg_type |= (__w64crt_get_winmajor () >= 4 ? MB_SERVICE_NOTIFICATION : MB_SERVICE_NOTIFICATION_NT3X);
   else
     {
       if (pGetActiveWindow)
