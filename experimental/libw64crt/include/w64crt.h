@@ -12,14 +12,14 @@ typedef enum eW64CrtLocks {
   _TOTAL_LOCKS
 } eW64CrtLocks;
 
-extern void _w64_init_mtlocks (void);
-extern void _w64_free_mtlocks (void);
-extern void _w64_lock (int no);
-extern void _w64_unlock (int no);
+extern void __w64crt_init_mtlocks (void);
+extern void __w64crt_free_mtlocks (void);
+extern void __w64crt_lock (int no);
+extern void __w64crt_unlock (int no);
 
 #ifdef _BUILD_MT
-#define _mlock(NO) _w64_lock ((NO))
-#define _munlock(NO) _w64_unlock ((NO))
+#define _mlock(NO) __w64crt_lock ((NO))
+#define _munlock(NO) __w64crt_unlock ((NO))
 #else
 #define _mlock(NO) do { } while (0)
 #define _munlock(NO) do { } while (0);

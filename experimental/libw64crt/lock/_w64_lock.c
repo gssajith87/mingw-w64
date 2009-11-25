@@ -7,73 +7,73 @@ typedef struct sLock {
 } sLock;
 
 /* Statics forwarders.  */
-static void _w64_lock_initialize (int);
-static void _w64_lock_uninitialize (int);
-static void _w64_lock_set_init (int, int);
+static void __w64crt_lock_initialize (int);
+static void __w64crt_lock_uninitialize (int);
+static void __w64crt_lock_set_init (int, int);
 
-static sLock _w64_locktbl[_TOTAL_LOCKS];
+static sLock __w64crt_locktbl[_TOTAL_LOCKS];
 
 void
-_w64_init_mtlocks (void)
+__w64crt_init_mtlocks (void)
 {
   int i;
 
   for (i = 0; i < (int) _TOTAL_LOCKS; i++)
-    _w64_set_init (i, 0);
+    __w64crt_lock_set_init (i, 0);
 
-  _w64_lock_initialize (_LOCKTAB_LOCK);
+  __w64crt_lock_initialize (_LOCKTAB_LOCK);
 }
 
 void
-_w64_free_mtlocks (void)
+__w64crt_free_mtlocks (void)
 {
   int i;
 
   for (i = 0; i < (int) _TOTAL_LOCKS; i++)
     {
-      if (_w64_locktbl[i].init != 0)
-        _w64_lock_uninitialize (i);
+      if (__w64crt_locktbl[i].init != 0)
+        __w64crt_lock_uninitialize (i);
     }
 }
 
 void
-_w64_lock (int no)
+__w64crt_lock (int no)
 {
-  if (!_w64_locktbl[no].init)
+  if (!__w64crt_locktbl[no].init)
     {
-      _w64_lock ((int) _LOCKTAB_LOCK);
+      __w64crt_lock ((int) _LOCKTAB_LOCK);
 
-      if (!_w64_locktbl[no].init)
-	_w64_lock_initialize (no);
+      if (!__w64crt_locktbl[no].init)
+	__w64crt_lock_initialize (no);
 
-      _w64_unlock ((int) _LOCKTAB_LOCK);
+      __w64crt_unlock ((int) _LOCKTAB_LOCK);
   }
 
-  EnterCriticalSection (&_w64_locktbl[no].critical_section);
+  EnterCriticalSection (&__w64crt_locktbl[no].critical_section);
 }
 
 void
-_w64_unlock (int no)
+__w64crt_unlock (int no)
 {
-  LeaveCriticalSection (&_w64_locktbl[no].critical_section);
+  LeaveCriticalSection (&__w64crt_locktbl[no].critical_section);
 }
 
 static void
-_w64_lock_initialize (int no)
+__w64crt_lock_initialize (int no)
 {
-  InitializeCriticalSection (&_w64_locktbl[no].critical_section);
-  _w64_lock_set_init (no, 1);
+  InitializeCriticalSection (&__w64crt_locktbl[no].critical_section);
+  __w64crt_lock_set_init (no, 1);
 }
 
-static void _w64_lock_uninitialize (int no)
+static void __w64crt_lock_uninitialize (int no)
 {
-  DeleteCriticalSection (&_w64_locktbl[no].critical_section);
-  _w64_lock_set_init (no, 0);
+  DeleteCriticalSection (&__w64crt_locktbl[no].critical_section);
+  __w64crt_lock_set_init (no, 0);
 }
 
 static void
-_w64_lock_set_init (int no, int init)
+__w64crt_lock_set_init (int no, int init)
 {
-  _w64_locktbl[no].init = init;
+  __w64crt_locktbl[no].init = init;
 }
 
