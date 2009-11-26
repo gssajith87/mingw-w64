@@ -1,6 +1,14 @@
 #include <w64crt.h>
 #include <windows.h>
 
+/* Global variables.  */
+unsigned long __w64crt__osplatform_0_0;
+unsigned long __w64crt__osver_0_0;
+unsigned long __w64crt__winver_0_0;
+unsigned long __w64crt__winmajor_0_0;
+unsigned long __w64crt__winminor_0_0;
+
+/* Helper macros.  */
 #define CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO(COND, ERRCODE) \
   do {				\
     if (!(COND))			\
@@ -9,6 +17,8 @@
 	return (ERRCODE);	\
       }
   } while (0)
+
+/* Functions implementation.  */
 
 int __w64crt__get_winmajor_0_0 (unsigned int *p)
 {
