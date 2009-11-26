@@ -18,7 +18,7 @@ extern void __w64crt_free_mtlocks (void);
 extern void __w64crt_lock (int no);
 extern void __w64crt_unlock (int no);
 
-#ifdef _BUILD_MT
+#ifdef BUILD_MT
 #define _mlock(NO) __w64crt_lock ((NO))
 #define _munlock(NO) __w64crt_unlock ((NO))
 #else
