@@ -33,8 +33,4 @@ int __w64crt_MessageBoxW (const wchar_t *, const wchar_t *, unsigned int);
 /* Errno and _doserrno functions.  */
 int __w64crt_get_errno_from_oserr_0_0 (unsigned long);
 
-
-/* Todo. */
-#define __w64crt_get_winmajor() 4
-
 #endif

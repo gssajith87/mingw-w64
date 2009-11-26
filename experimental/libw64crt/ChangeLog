@@ -1,5 +1,6 @@
 2009-11-26  Kai Tietz  <kai.tietz@onevision.com>
 
+	* misc/osdata.c: New.
 	* misc/maperr.c: New.
 	* include/w64crt_map.h: New.
 	* include/w64crt.h: Add use of w64crt_map.h header.
