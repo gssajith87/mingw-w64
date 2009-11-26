@@ -1,0 +1,9 @@
+2009-11-26  Kai Tietz  <kai.tietz@onevision.com>
+
+	* misc/maperr.c: New.
+	* include/w64crt_map.h: New.
+	* include/w64crt.h: Add use of w64crt_map.h header.
+	(__w64crt_get_errno_from_oserr_0_0): New prototype.
+
+Start of project.
+

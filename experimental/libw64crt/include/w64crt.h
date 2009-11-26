@@ -2,6 +2,7 @@
 #define __W64CRT_H
 
 #include <w64crt_defs.h>
+#include <w64crt_map.h>
 
 /* Internal crt locking.  */
 typedef enum eW64CrtLocks {
@@ -29,8 +30,11 @@ extern void __w64crt_unlock (int no);
 int __w64crt_MessageBoxA (const char *, const char *, unsigned int);
 int __w64crt_MessageBoxW (const wchar_t *, const wchar_t *, unsigned int);
 
+/* Errno and _doserrno functions.  */
+int __w64crt_get_errno_from_oserr_0_0 (unsigned long);
+
+
 /* Todo. */
 #define __w64crt_get_winmajor() 4
 
 #endif
-
