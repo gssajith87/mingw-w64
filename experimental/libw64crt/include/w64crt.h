@@ -7,6 +7,7 @@
 /* Internal crt locking.  */
 typedef enum eW64CrtLocks {
   _LOCKTAB_LOCK = 0,
+  _HEAP_LOCK,
   _GLOBAL_LOCK,
   _SIGNAL_LOCK,
   _EXIT_LOCK,
@@ -32,5 +33,10 @@ int __w64crt_MessageBoxW (const wchar_t *, const wchar_t *, unsigned int);
 
 /* Errno and _doserrno functions.  */
 int __w64crt_get_errno_from_oserr_0_0 (unsigned long);
+#define __w64crt_set_errno(ERR) do { ; } while (0)
+#define __w64crt_set_doserrno(WINERR) do { ; } while (0)
+
+#include <w64string.h>
+#include <w64memory.h>
 
 #endif

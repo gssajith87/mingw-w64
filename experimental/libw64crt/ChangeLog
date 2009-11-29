@@ -1,3 +1,10 @@
+2009-11-29  Kai Tietz  <kai.tietz@onevision.com>
+
+	* memory/: Add initial set of file.
+	* include/w64memory.h: Add prototypes and other heap related definitions.
+	* include/w64crt.h: Add automatic include of w64string.h and w64memory.h
+	headers.
+
 2009-11-26  Kai Tietz  <kai.tietz@onevision.com>
 
 	* misc/osdata.c: New.
