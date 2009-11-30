@@ -10,7 +10,7 @@ from buildbot.steps.source import CVS, SVN
 from buildbot.steps.shell import Configure, Compile, ShellCommand, WithProperties, SetProperty
 from buildbot.steps.transfer import FileDownload, FileUpload
 from buildbot.steps.trigger import Trigger
-from scripts.buildsteps import M64CVS, M64NightlyRev, ShellCommandConditional, SetPropertyConditional, SubversionRevProperty, TriggerBuilders
+from scripts.buildsteps import M64CVS, M64NightlyRev, ShellCommandConditional, SetPropertyConditional, SubversionRevProperty, TriggerBuilders, WithPropertiesRecursive
 
 from ConfigParser import RawConfigParser as ConfigParser
 gConfig = ConfigParser()
@@ -46,6 +46,12 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     self.addStep(SetProperty(property="filename",
                              command=["echo", WithProperties("%(src_archive:-mingw-w64-src.tar.bz2)s")]))
     #self.addStep(M64NightlyRev)
+
+    self.addStep(SetPropertyConditional,
+                 condprop="srcname_format",
+                 condinvert=True,
+                 command=["echo", "mingw-w64-src%(datestamp:-)s.tar.bz2"],
+                 property="srcname_format")
 
     if self.clobber:
       self.addStep(ShellCommand(name="clobber",
@@ -219,7 +225,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
 
     # make the tarball
     self.addStep(SetProperty(property="destname",
-                             command=["echo", WithProperties("mingw-w64-src%(datestamp:-)s.tar.bz2")]))
+                             command=["echo", WithPropertiesRecursive(WithProperties("%(srcname_format)s"))]))
     self.addStep(Compile(name="src-package",
                          description=["tarball", "package"],
                          descriptionDone=["packaged", "tarball"],
@@ -251,6 +257,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                     'binutils_branch', 'gcc_branch', 'mingw_branch',
                                     'binutils_config_args', 'gcc_config_args', 'mingw_config_args',
                                     'gcc_revision', 'mingw_revision',
+                                    'destname_format',
                                     'masterdir', 'path'],
                    set_properties={"src_archive":          WithProperties("%(filename)s")}))
     # trigger upload

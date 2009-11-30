@@ -267,7 +267,7 @@ class Mingw64Factory(factory.BuildFactory):
 
     self.addStep(SetProperty,
                  property="filename",
-                 command=["echo", WithProperties(WithProperties("%(filename_format)s"))])
+                 command=["echo", WithPropertiesRecursive(WithProperties("%(filename_format)s"))])
 
     # make the tarball
     self._step_Archive()
