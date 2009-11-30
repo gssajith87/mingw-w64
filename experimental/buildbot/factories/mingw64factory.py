@@ -345,6 +345,11 @@ class Mingw64MingwFactory(Mingw64Factory):
                           "-x", ".svn"],
                  haltOnFailure=True)
 
+class Mingw64Darwin32Factory(Mingw64Factory):
+  host_pair="i686-darwin"
+  def __init__(self, **kwargs):
+    Mingw64Factory.__init__(self, **kwargs)
+
 class Mingw32Linux32Factory(Mingw64Linux32Factory):
   target = "i686-w64-mingw32"
   crtConfigExtraArgs = "--enable-lib32 --disable-lib64"
@@ -368,4 +373,10 @@ class Mingw32MingwFactory(Mingw64MingwFactory):
   crtConfigExtraArgs = "--enable-lib32 --disable-lib64"
   def __init__(self, **kwargs):
     Mingw64MingwFactory.__init__(self, **kwargs)
+
+class Mingw32Darwin32Factory(Mingw64Darwin32Factory):
+  target = "i686-w64-mingw32"
+  crtConfigExtraArgs = "--enable-lib32 --disable-lib64"
+  def __init__(self, **kwargs):
+    Mingw64Darwin32Factory.__init__(self, **kwargs)
 
