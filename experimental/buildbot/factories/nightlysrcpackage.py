@@ -168,14 +168,14 @@ class NightlySrcPackageFactory(factory.BuildFactory):
 
     self.addStep(ShellCommandConditional,
                  name="mpfr-patch",
-                 workdir="build/src/gcc/mpfr",
+                 workdir="build/src/gcc/gcc/mpfr",
                  description=["patch", "mpfr"],
                  condprop="scheduler",
                  condvalue="try",
                  condinvert=True,
                  command=["bash", "-c",
-                          """if [ -n "$( ls ../../patches/mpfr/*.patch )" ] ; then
-                               for i in ../../patches/mpfr/*.patch ; do
+                          """if [ -n "$( ls ../../../patches/mpfr/*.patch )" ] ; then
+                               for i in ../../../patches/mpfr/*.patch ; do
                                  patch -p0 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
