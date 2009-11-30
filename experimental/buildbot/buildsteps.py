@@ -3,6 +3,7 @@
 from buildbot.steps.shell import ShellCommand, SetProperty
 from buildbot.steps.trigger import Trigger
 from buildbot.status.builder import SKIPPED
+from buildbot.process.properties import WithProperties
 import datetime
 from xml.dom import minidom
 
@@ -33,34 +34,6 @@ class M64CVS(ShellCommand):
             return ["pulling " + self.cvsmodule]
         else:
             return [self.cvsmodule + " pulled"]
-
-#def ConditionalStep(_baseClass, callback):
-#    class __derivedClass(_baseClass):
-#        def __init__(self, **kwargs):
-#            _baseClass.__init__(self, **kwargs)
-#
-#        def start(self):
-#            result = callback(self)
-#            if result != SUCCESS:
-#                return result
-#            return _baseClass.start(self)
-#    return __derivedClass
-#
-#def PropertyConditionalStep(_baseClass, condProp=None, condInvert=False, condValue = None):
-#    def conditionCallback(instance):
-#        if condProp is not None:
-#            if instance.build.getProperties().has_key(condProp):
-#                matched = True
-#                if condValue is None:
-#                    matched = self.build.getProperty(condProp)
-#                else:
-#                    matched = (self.build.getProperty(condProp) == condValue)
-#                if condInvert:
-#                    matched = not matched
-#                if not matched:
-#                    return SKIPPED
-#        return SUCCESS
-#    return ConditionalStep(_baseClass, conditionalCallback)
 
 class ShellCommandConditional(ShellCommand):
     """Runs a remote command if a property (given by "condprop") is set"""
@@ -227,3 +200,24 @@ class SubversionRevProperty(SetPropertyConditional):
         datestring = datestamp.strftime("%Y-%m-%d")
         return { self.prop_prefix + 'revision': revision,
                  self.prop_prefix + 'datestamp': datestring }
+
+class WithPropertiesRecursive(WithProperties):
+    """
+    This is a version of WithProperties that knows to recursively expand
+    """
+
+    def __init__(self, fmtstring, *args):
+        self.fmtstring = fmtstring
+        self.args = args
+
+    def render(self, pmap):
+        origfmtstring = self.fmtstring
+        if isinstance(origfmtstring, WithProperties):
+            self.fmtstring = origfmtstring.render(pmap)
+
+        try:
+            ret = WithProperties.render(self, pmap)
+        finally:
+            self.fmtstring = origfmtstring
+
+        return ret
