@@ -7,7 +7,7 @@
 #define TOK_NAME  256
 #define TOK_DIGIT 257
 #define TOK_STRING 258
-
+#define TOK_ALIAS 
 int genidl_read_config (const char *fname);
 
 static int rCh (void);
@@ -201,13 +201,164 @@ rCh (void)
   return r;
 }
 
-static void parseStmt (void)
+static char **
+parse_export (size_t *cnt, int *re, const char *tname)
+{
+  char **ret = NULL;
+  int r = lex ();
+  if (r == '=')
+    r = lex ();
+  if (r != '{')
+    {
+      printError ("Missing '{' for alias in ,%s'\n", tname);
+      *re = r;
+      return ret;
+    }
+  while ((r = lex ()) != -1)
+    {
+      if (r == '}')
+	break;
+      if (r == ',' || r == ';')
+	continue;
+      if (r == TOK_NAME || r == TOK_STRING)
+	{
+	  char *left = strdup (l_buffer);
+
+	  r = lex ();
+	  if (r == ',' || r == '=')
+	    r = lex ();
+	  if (r != TOK_NAME && r != TOK_STRING)
+	    {
+	      printError ("Expected in export second string.\n");
+	    }
+	  else
+	    {
+	    }
+	  free (left);
+	}
+      else
+	printError ("Ignore token in alias of ,%s'.\n", tname);
+    }
+  return ret;
+}
+
+static char **
+parse_alias (size_t *cnt, int *re, const char *tname)
+{
+  char **ret = NULL;
+  int r = lex ();
+  if (r == '=')
+    r = lex ();
+  if (r != '{')
+    {
+      printError ("Missing '{' for alias in ,%s'\n", tname);
+      *re = r;
+      return ret;
+    }
+  while ((r = lex ()) != -1)
+    {
+      if (r == '}')
+	break;
+      if (r == ',' || r == ';')
+	continue;
+      if (r == TOK_NAME || r == TOK_STRING)
+      {
+      }
+      else
+	printError ("Ignore token in alias of ,%s'.\n", tname);
+    }
+  return ret;
+}
+
+static int
+parseTableSub (const char *tname)
+{
+  char **alias = NULL;
+  char **exps;
+  size_t alias_cnt = 0;
+  size_t exps_cnt = 0;
+  int r = lex ();
+  while (r != '}')
+    {
+      if (r == ';')
+	{
+	  r = lex ();
+	  continue;
+	}
+      if (r != TOK_NAME)
+      {
+	printError ("Unknown content in ,%s'\n", tname);
+	break;
+      }
+      if (strcmp (l_buffer, "alias")  == 0)
+        {
+	  alias = parse_alias (&alias_cnt, &r, tname);
+	  if (r == -1)
+	    break;
+        }
+      else if (strcmp (l_buffer, "export") == 0)
+        {
+	  exps = parse_export (&exps_cnt, &r, tname);
+	  if (r == -1)
+	    break;
+        }
+      else
+      {
+	printError ("Unknown command %s in ,%s'\n", l_buffer, tname);
+	while ((r = lex ()) != -1 && r != ';');
+      }
+      r = lex ();
+    }
+  if (r != '}')
+    {
+    }
+  return r;
+}
+
+static int
+parseTable (void)
+{
+  char *table_name;
+  int r = lex ();
+
+  if (r == ';')
+    return 0;
+
+  switch (r)
+    {
+    case TOK_NAME:
+    case TOK_STRING:
+      table_name = strdup (l_buffer);
+      break;
+    case -1:
+      return -1;
+    default:
+      printError ("Unexpected token.\n");
+      return 0;
+    }
+  r = lex ();
+  if (r == '=')
+    r = lex ();
+  if (r != '{')
+    {
+      printError ("Missing '{' after ,%s'\n", table_name);
+      free (table_name);
+      return 0;
+    }
+  r = parseTableSub (table_name);
+  if (r != '}')
+    printError ("Missing '}' at end of ,%s'\n", table_name);
+  free (table_name);
+  return 0;
+}
+
+static void
+parseStmt (void)
 {
   int r;
 
-  while ((r = lex ()) != -1)
+  while ((r = parseTable ()) != -1)
   {
-    fprintf (stderr, " %s", l_buffer);
   }
 }
 
