@@ -1,8 +1,6 @@
 #ifndef GETIDL_TYPINFO_HXX
 #define GETIDL_TYPINFO_HXX
 
-#define strdup _strdup
-
 #define TITYP_NONE -1
 #define TITYP_NAME  0
 #define TITYP_STR   1

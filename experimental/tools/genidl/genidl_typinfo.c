@@ -78,7 +78,7 @@ int32_t TI_add_typ (sTITyps *ptyp, uint32_t memid, int32_t kind, int32_t refkind
 }
 
 sTITyp *
-TI_get_typ (sTITyps *ptyp, uint32_t memid, int kind)
+TI_get_typ (sTITyps *ptyp, uint32_t memid, int32_t kind)
 {
   size_t i;
   if (!ptyp || kind < 0 || kind >= TITYP_MAX)
@@ -225,7 +225,7 @@ TI2_import_name (sTITyps *nptr, unsigned char *dta, uint32_t len)
   return 0;
 }
 
-int
+int32_t
 TI2_import_string (sTITyps *sptr, unsigned char *dta, uint32_t len)
 {
   uint32_t off = 0;
@@ -339,7 +339,8 @@ TI2_import_typinfo_names (sTITyps *tptr, unsigned char *dta, uint32_t length)
   return 0;
 }
 
-char *getTypeBOrImpRef (sTITyps *dptr, uint32_t off, const char *var)
+char *
+getTypeBOrImpRef (sTITyps *dptr, uint32_t off, const char *var)
 {
   if (off == (uint32_t) -1)
     return NULL;
@@ -348,7 +349,7 @@ char *getTypeBOrImpRef (sTITyps *dptr, uint32_t off, const char *var)
   return TI_get_typ_name (dptr, off, TITYP_TYPINFO_NAMES, var);
 }
 
-int
+int32_t
 TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len)
 {
   sMSFT_TypeDesc *p;
@@ -401,7 +402,7 @@ TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len)
   return 0;
 }
 
-int
+int32_t
 TI2_import_customdata (sTITyps *dptr, unsigned char *dta, uint32_t length)
 {
   sMSFT_CustomData *p;
@@ -620,7 +621,7 @@ TI_getVTorDref(sTITyps *ptyp,uint32_t vt, const char *varName)
   return name;
 }
 
-int
+int32_t
 TI2_import_importlibs (sTITyps *iptr, unsigned char *dta, uint32_t len)
 {
   sMSFT_ImpFiles *p;
@@ -643,7 +644,7 @@ TI2_import_importlibs (sTITyps *iptr, unsigned char *dta, uint32_t len)
   return 0;
 }
 
-int
+int32_t
 TI2_import_ref (sTITyps *gptr, unsigned char *dta, uint32_t len)
 {
   sMSFT_RefTab *p;
@@ -662,7 +663,7 @@ TI2_import_ref (sTITyps *gptr, unsigned char *dta, uint32_t len)
   return 0;
 }
 
-int
+int32_t
 TI2_import_array (sTITyps *gptr, unsigned char *dta, uint32_t len)
 {
   char postfix[256];
@@ -696,7 +697,7 @@ TI2_import_array (sTITyps *gptr, unsigned char *dta, uint32_t len)
   return 0;
 }
 
-int
+int32_t
 TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
 {
   MSFT_ImpInfo *p;
@@ -728,7 +729,7 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
   }
 }
 
-int
+int32_t
 TI2_import_customdataguid (sTITyps *gptr, unsigned char *dta, uint32_t len)
 {
   return 0;

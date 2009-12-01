@@ -120,10 +120,10 @@ static void get_res_name_by_id(uint32_t id, unsigned char *resourceBase, PSTR bu
     buffer[ min(cBytes-1,prdsu->Length) ] = 0;  // Null terminate it!!!
 }
 
-static int readResourceDirectory (FILE *fp, unsigned char **dta, size_t *length, size_t *resRVA)
+static int32_t readResourceDirectory (FILE *fp, unsigned char **dta, size_t *length, size_t *resRVA)
 {
   long pe_header;
-  int be64;
+  int32_t be64;
   uImgHeader hdr;
   uint32_t res_size = 0;
   uint32_t sect_count;

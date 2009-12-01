@@ -8,6 +8,8 @@
 int show_dump_too = 0;
 int is_verbose = 0;
 
+int genidl_read_config (const char *fname);
+
 /* Process files.  */
 size_t file_args_cnt = 0;
 char **file_args = NULL;
@@ -123,7 +125,7 @@ int main(int argc,char **argv)
 {
   FILE *fp,*gp;
   long p;
-  int be64;
+  int32_t be64;
   size_t len;
   size_t i;
   unsigned char *dta = NULL;
@@ -131,6 +133,7 @@ int main(int argc,char **argv)
     {
        show_usage ();
     }
+  genidl_read_config ("./genidl.conf");
   for (i=0;i<file_args_cnt;i++)
     {
       char s[1024];
