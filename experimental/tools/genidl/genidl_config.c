@@ -85,7 +85,7 @@ rescan:
 	addCh (rCh ());
 	r = pCh ();
       } while (r == '_' || (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z')
-	       || (r >= '0' && r <= '9') || r == '$');
+	       || (r >= '0' && r <= '9') || r == '$' || r == '.');
       return TOK_NAME;
     }
   if (r >= '0' && r <= '9')
@@ -117,6 +117,7 @@ rescan:
   switch (r)
   {
   case '=': case '{': case '}': case ',':
+  case ';':
     return r;
   default:
     break;
