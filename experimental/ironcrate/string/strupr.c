@@ -1,5 +1,4 @@
-#include <w64crt.h>
-#include <w64string.h>
+#include <icrt.h>
 
 char *
 strupr (char *d)

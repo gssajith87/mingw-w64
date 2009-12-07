@@ -1,5 +1,4 @@
-#include <w64crt.h>
-#include <w64string.h>
+#include <icrt.h>
 
 void *
 memcpy (void *d, const void *s, size_t n)

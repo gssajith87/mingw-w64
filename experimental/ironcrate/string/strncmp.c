@@ -1,5 +1,4 @@
-#include <w64crt.h>
-#include <w64string.h>
+#include <icrt.h>
 
 int
 strncmp (const char *s1, const char *s2, size_t n)

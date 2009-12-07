@@ -1,5 +1,4 @@
-#include <w64crt.h>
-#include <w64string.h>
+#include <icrt.h>
 
 #define TOUPPER(CH) \
   (((CH) >= 'a' && (CH) <= 'z') ? ((CH) - 'a' + 'A') : (CH))

@@ -1,11 +1,11 @@
 #ifndef __W64CRT_H
 #define __W64CRT_H
 
-#include <w64crt_defs.h>
-#include <w64crt_map.h>
+#include <icrt_defs.h>
+#include <icrt_map.h>
 
 /* Internal crt locking.  */
-typedef enum eW64CrtLocks {
+typedef enum eiCrtLocks {
   _LOCKTAB_LOCK = 0,
   _HEAP_LOCK,
   _GLOBAL_LOCK,
@@ -36,7 +36,7 @@ int __w64crt_get_errno_from_oserr_0_0 (unsigned long);
 #define __w64crt_set_errno(ERR) do { ; } while (0)
 #define __w64crt_set_doserrno(WINERR) do { ; } while (0)
 
-#include <w64string.h>
-#include <w64memory.h>
+#include <icrt_string.h>
+#include <icrt_memory.h>
 
 #endif

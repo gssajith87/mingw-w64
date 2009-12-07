@@ -1,5 +1,4 @@
-#include <w64crt.h>
-#include <w64string.h>
+#include <icrt.h>
 
 int
 memcmp (const void *s1, const void *s2, size_t n)

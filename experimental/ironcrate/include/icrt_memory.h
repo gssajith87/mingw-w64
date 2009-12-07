@@ -1,7 +1,7 @@
 #ifndef __W64MEMORY_H
 #define __W64MEMORY_H
 
-#include <w64crt.h>
+#include <icrt.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,5 +1,4 @@
-#include <w64crt.h>
-#include <w64string.h>
+#include <icrt.h>
 
 /* Returns the amount of characters in a string without terminating zero.  */
 size_t
