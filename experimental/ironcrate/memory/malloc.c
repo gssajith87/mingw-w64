@@ -1,4 +1,4 @@
-#include <w64crt.h>
+#include <icrt.h>
 #include <windows.h>
 
 void *

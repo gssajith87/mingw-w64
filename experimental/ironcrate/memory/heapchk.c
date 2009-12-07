@@ -1,4 +1,4 @@
-#include <w64crt.h>
+#include <icrt.h>
 #include <windows.h>
 
 /* See http://msdn.microsoft.com/en-us/library/2xse74he%28VS.71%29.aspx */

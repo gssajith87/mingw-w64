@@ -1,4 +1,4 @@
-#include <w64crt.h>
+#include <icrt.h>
 #include <tchar.h>
 #include <windows.h>
 

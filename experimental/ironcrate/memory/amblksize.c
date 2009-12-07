@@ -1,4 +1,4 @@
-#include <w64crt.h>
+#include <icrt.h>
 
 static unsigned int __w64crt_amblksize = 16;
 

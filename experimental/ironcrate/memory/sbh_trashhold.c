@@ -1,4 +1,4 @@
-#include <w64crt.h>
+#include <icrt.h>
 
 static size_t sbh_threshold = 0;
 

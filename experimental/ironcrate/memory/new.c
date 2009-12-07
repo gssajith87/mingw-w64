@@ -1,4 +1,4 @@
-#include <w64crt.h>
+#include <icrt.h>
 #include <windows.h>
 
 static __w64crt_new_handler_func new_handler;
