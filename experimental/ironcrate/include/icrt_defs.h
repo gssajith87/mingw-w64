@@ -1,5 +1,5 @@
-#ifndef __W64CRT_DEFS_H
-#define __W64CRT_DEFS_H
+#ifndef __ICRT_DEFS_H
+#define __ICRT_DEFS_H
 
 /* Define architecture specific base C types.  */
 #ifdef __GNUC__

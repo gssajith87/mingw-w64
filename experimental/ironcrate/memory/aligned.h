@@ -1,5 +1,5 @@
-#ifndef _W64ALIGNED_H
-#define _W64ALIGNED_H
+#ifndef __ICRT_ALIGNED_H
+#define __ICRT_ALIGNED_H
 
 #define SAVED_PTR(x) ((void *)((uintptr_t) ((char *) x - sizeof (void *)) & ~(sizeof (void *) - 1)))
 #define ALIGN_PTR(ptr, alignment, offset) \

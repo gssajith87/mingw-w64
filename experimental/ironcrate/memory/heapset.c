@@ -4,7 +4,7 @@
 /* See http://msdn.microsoft.com/en-us/library/y6118zwe%28VS.71%29.aspx */
 
 int
-__w64crt_heapset (unsigned int value)
+__iCrt_heapset (unsigned int value)
 {
   int retval;
   _HEAPINFO heap;

@@ -2,11 +2,11 @@
 #include <windows.h>
 
 /* Global variables.  */
-unsigned long __w64crt__osplatform_0_0;
-unsigned long __w64crt__osver_0_0;
-unsigned long __w64crt__winver_0_0;
-unsigned long __w64crt__winmajor_0_0;
-unsigned long __w64crt__winminor_0_0;
+unsigned long __iCrt__osplatform;
+unsigned long __iCrt__osver;
+unsigned long __iCrt__winver;
+unsigned long __iCrt__winmajor;
+unsigned long __iCrt__winminor;
 
 /* Helper macros.  */
 #define CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO(COND, ERRCODE) \
@@ -20,73 +20,77 @@ unsigned long __w64crt__winminor_0_0;
 
 /* Functions implementation.  */
 
-int __w64crt__get_winmajor_0_0 (unsigned int *p)
+int
+__iCrt__get_winmajor (unsigned int *p)
 {
   CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (p, EINVAL);
-  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (__w64crt__winmajor_0_0 != 0, EINVAL);
-  *p = __w64crt__winmajor_0_0;
-  return 0;
-}
-
-int __w64crt__get_winminor_0_0 (unsigned int *p)
-{
-  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (p, EINVAL);
-  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (__w64crt__winminor_0_0 != 0, EINVAL);
-  *p = __w64crt__winminor_0_0;
+  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (__iCrt__winmajor != 0, EINVAL);
+  *p = __iCrt__winmajor;
   return 0;
 }
 
 int
-__w64crt__get_winver_0_0 (unsigned int *p)
+__iCrt__get_winminor (unsigned int *p)
 {
   CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (p, EINVAL);
-  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (__w64crt__winver_0_0 != 0, EINVAL);
-  *p = __w64crt__winver_0_0;
+  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (__iCrt__winminor != 0, EINVAL);
+  *p = __iCrt__winminor;
   return 0;
 }
 
 int
-__w64crt__get_osver_0_0 (unsigned int *p)
+__iCrt__get_winver (unsigned int *p)
 {
   CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (p, EINVAL);
-  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (__w64crt__osver_0_0 != 0, EINVAL);
-  *p = __w64crt__osver_0_0;
+  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (__iCrt__winver != 0, EINVAL);
+  *p = __iCrt__winver;
   return 0;
 }
 
 int
-__w64crt__get_osplatform_0_0 (unsigned int *p)
+__iCrt__get_osver (unsigned int *p)
 {
   CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (p, EINVAL);
-  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (__w64crt__osplatform_0_0 != 0, EINVAL);
-  *p = __w64crt__osplatform_0_0;
+  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (__iCrt__osver != 0, EINVAL);
+  *p = __iCrt__osver;
+  return 0;
+}
+
+int
+__iCrt__get_osplatform (unsigned int *p)
+{
+  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (p, EINVAL);
+  CHECK_AND_RETURN_ON_ERROR_WITH_ERRNO (__iCrt__osplatform != 0, EINVAL);
+  *p = __iCrt__osplatform;
   return 0;
 }
 
 unsigned int
-__w64crt_get_osver_0_0 (void)
+__iCrt_get_osver (void)
 {
-  return __w64crt__osver_0_0;
+  return __iCrt__osver;
 }
 
 unsigned int
-__w64crt_get_osplatform_0_0 (void)
+__iCrt_get_osplatform (void)
 {
-  return __w64crt__osplatform_0_0;
+  return __iCrt__osplatform;
 }
 
 unsigned int
-__w64crt_get_winver_0_0 (void)
+__iCrt_get_winver (void)
 {
-  return __w64crt__winver_0_0;
+  return __iCrt__winver;
 }
 
-unsigned int __w64crt_get_winmajor_0_0 (void)
+unsigned int
+__iCrt_get_winmajor (void)
 {
-  return __w64crt__winmajor_0_0;
+  return __iCrt__winmajor;
 }
 
-unsigned int __w64crt_get_winminor_0_0 (void)
+unsigned int
+__iCrt_get_winminor (void)
 {
-  return __w64crt__winminor_0_0;
+  return __iCrt__winminor;
 }

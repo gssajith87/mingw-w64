@@ -2,7 +2,7 @@
 #include <windows.h>
 
 void *
-__w64crt_realloc (void *ptr, size_t sz)
+__iCrt_realloc (void *ptr, size_t sz)
 {
   if (!ptr)
     return malloc (sz);

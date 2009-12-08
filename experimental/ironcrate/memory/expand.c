@@ -2,7 +2,7 @@
 #include <windows.h>
 
 void *
-__w64crt_expand (void *mem, size_t sz)
+__iCrt_expand (void *mem, size_t sz)
 {
   return HeapReAlloc (GetProcessHeap(), HEAP_REALLOC_IN_PLACE_ONLY, mem, sz);
 }

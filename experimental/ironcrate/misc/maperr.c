@@ -2,10 +2,10 @@
 #include <windows.h>
 #include <errno.h>
 
-static int __w64crt_mapsys2errno_0_0 (unsigned long);
+static int __iCrt_mapsys2errno (unsigned long);
 
 static int
-__w64crt_mapsys2errno_0_0 (unsigned long serr)
+__iCrt_mapsys2errno (unsigned long serr)
 {
   switch (serr)
     {
@@ -63,7 +63,7 @@ __w64crt_mapsys2errno_0_0 (unsigned long serr)
 }
 
 int
-__w64crt_get_errno_from_oserr_0_0 (unsigned long serr)
+__iCrt_get_errno_from_oserr (unsigned long serr)
 {
-  return __w64crt_mapsys2errno_0_0 (serr);
+  return __iCrt_mapsys2errno (serr);
 }

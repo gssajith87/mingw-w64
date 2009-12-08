@@ -1,5 +1,5 @@
-#ifndef __W64STRING_H
-#define __W64STRING_H
+#ifndef __ICRT_STRING_H
+#define __ICRT_STRING_H
 
 #include <icrt_defs.h>
 

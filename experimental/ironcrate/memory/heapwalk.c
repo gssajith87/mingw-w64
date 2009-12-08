@@ -4,7 +4,7 @@
 /* See http://msdn.microsoft.com/en-us/library/h0c183dk%28VS.71%29.aspx */
 
 int
-__w64crt_heapwalk (_HEAPINFO *next)
+__iCrt_heapwalk (_HEAPINFO *next)
 {
   PROCESS_HEAP_ENTRY phe;
 
@@ -17,7 +17,7 @@ __w64crt_heapwalk (_HEAPINFO *next)
       && !HeapValidate (GetProcessHeap (), 0, phe.lpData))
     {
       _munlock (_HEAP_LOCK);
-      __w64crt_set_doserrno (GetLastError ());
+      __iCrt_set_doserrno (GetLastError ());
       return _HEAPBADNODE;
     }
 
@@ -28,7 +28,7 @@ __w64crt_heapwalk (_HEAPINFO *next)
 	  _munlock (_HEAP_LOCK);
 	  if (GetLastError () == ERROR_NO_MORE_ITEMS)
 	    return _HEAPEND;
-	  __w64crt_set_doserrno (GetLastError ());
+	  __iCrt_set_doserrno (GetLastError ());
 	  if (!phe.lpData)
 	    return _HEAPBADBEGIN;
 	  return _HEAPBADNODE;

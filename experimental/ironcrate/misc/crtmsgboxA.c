@@ -5,9 +5,9 @@
 static int initFctPointers (void);
 
 #ifndef _UNICODE
-#define __w64crt_MessageBox __w64crt_MessageBoxA
+#define __iCrt_MessageBox __iCrt_MessageBoxA
 #else
-#define __w64crt_MessageBox __w64crt_MessageBoxW
+#define __iCrt_MessageBox __iCrt_MessageBoxW
 #endif
 
 typedef int (WINAPI *fMessageBox)(HWND, LPCTSTR, LPCTSTR, UINT);
@@ -50,7 +50,7 @@ initFctPointers (void)
 }
 
 int
-__w64crt_MessageBox (LPCTSTR msg, LPCTSTR caption, unsigned int msg_type)
+__iCrt_MessageBox (LPCTSTR msg, LPCTSTR caption, unsigned int msg_type)
 {
   HWND hWnd = NULL;
   int nia = 0;
@@ -68,7 +68,7 @@ __w64crt_MessageBox (LPCTSTR msg, LPCTSTR caption, unsigned int msg_type)
 	nia = 1;
     }
   if (nia)
-    msg_type |= (__w64crt_get_winmajor () >= 4 ? MB_SERVICE_NOTIFICATION : MB_SERVICE_NOTIFICATION_NT3X);
+    msg_type |= (__iCrt_get_winmajor () >= 4 ? MB_SERVICE_NOTIFICATION : MB_SERVICE_NOTIFICATION_NT3X);
   else
     {
       if (pGetActiveWindow)

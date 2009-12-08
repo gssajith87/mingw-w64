@@ -1,5 +1,5 @@
-#ifndef __W64MEMORY_H
-#define __W64MEMORY_H
+#ifndef __ICRT_MEMORY_H
+#define __ICRT_MEMORY_H
 
 #include <icrt.h>
 
@@ -58,39 +58,39 @@ extern "C" {
 #define _HEAP_EXPAND 6
 #endif
 
-typedef void (*__w64crt_new_handler_func)(size_t size);
+typedef void (*__iCrt_new_handler_func)(size_t size);
 
-unsigned int *__w64crt_p__amblksize (void);
-size_t __w64crt_get_sbh_threshold (void);
-int __w64crt_set_sbh_threshold (size_t threshold);
+unsigned int *__iCrt_p__amblksize (void);
+size_t __iCrt_get_sbh_threshold (void);
+int __iCrt_set_sbh_threshold (size_t threshold);
 
-void __w64crt_aligned_free_0_0 (void *);
-void *__w64crt_aligned_malloc_0_0 (size_t sz, size_t align);
-void *__w64crt_aligned_offset_malloc (size_t sz, size_t align, size_t off);
-void *__w64crt_aligned_offset_realloc (void *ptr, size_t sz, size_t align, size_t off);
-void *__w64crt_aligned_realloc (void *ptr, size_t sz, size_t align);
+void __iCrt_aligned_free (void *);
+void *__iCrt_aligned_malloc (size_t sz, size_t align);
+void *__iCrt_aligned_offset_malloc (size_t sz, size_t align, size_t off);
+void *__iCrt_aligned_offset_realloc (void *ptr, size_t sz, size_t align, size_t off);
+void *__iCrt_aligned_realloc (void *ptr, size_t sz, size_t align);
 
-void *__w64crt_expand (void *mem, size_t sz);
-int __w64crt_heapadd (void *mem, size_t sz);
-int __w64crt_heapchk (void);
-int __w64crt_heapmin (void);
-int __w64crt_heapset (unsigned int value);
-int __w64crt_heapwalk (struct _heapinfo *next);
+void *__iCrt_expand (void *mem, size_t sz);
+int __iCrt_heapadd (void *mem, size_t sz);
+int __iCrt_heapchk (void);
+int __iCrt_heapmin (void);
+int __iCrt_heapset (unsigned int value);
+int __iCrt_heapwalk (struct _heapinfo *next);
 
-size_t __w64crt_msize (void *ptr);
-void *__w64crt_calloc (size_t sz, size_t cnt);
-void __w64crt_free (void *ptr);
-void *__w64crt_malloc (size_t sz);
-void *__w64crt_realloc (void *ptr, size_t sz);
+size_t __iCrt_msize (void *ptr);
+void *__iCrt_calloc (size_t sz, size_t cnt);
+void __iCrt_free (void *ptr);
+void *__iCrt_malloc (size_t sz);
+void *__iCrt_realloc (void *ptr, size_t sz);
 
-int __w64crt_callnewh (size_t sz);
-int __w64crt_set_new_mode (int mode);
-__w64crt_new_handler_func __w64crt_set_new_handler (void *func);
-__w64crt_new_handler_func __w64crt__set_new_handler (__w64crt_new_handler_func func);
-int __w64crt_query_new_mode (void);
-__w64crt_new_handler_func __w64crt_query_new_handler (void);
-void __w64crt_operator_delete (void *ptr);
-void *__w64crt_operator_new (size_t sz);
+int __iCrt_callnewh (size_t sz);
+int __iCrt_set_new_mode (int mode);
+__iCrt_new_handler_func __iCrt_set_new_handler (void *func);
+__iCrt_new_handler_func __iCrt__set_new_handler (__iCrt_new_handler_func func);
+int __iCrt_query_new_mode (void);
+__iCrt_new_handler_func __iCrt_query_new_handler (void);
+void __iCrt_operator_delete (void *ptr);
+void *__iCrt_operator_new (size_t sz);
 
 #ifdef __cplusplus
 }
