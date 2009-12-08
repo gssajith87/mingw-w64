@@ -78,10 +78,14 @@ int __iCrt_heapset (unsigned int value);
 int __iCrt_heapwalk (struct _heapinfo *next);
 
 size_t __iCrt_msize (void *ptr);
-void *__iCrt_calloc (size_t sz, size_t cnt);
 void __iCrt_free (void *ptr);
+void __iCrt_free_noerrno (void *ptr);
 void *__iCrt_malloc (size_t sz);
+void *__iCrt_malloc_noerrno (size_t sz);
 void *__iCrt_realloc (void *ptr, size_t sz);
+void *__iCrt_realloc_noerrno (void *ptr, size_t sz);
+void *__iCrt_calloc (size_t sz, size_t cnt);
+void *__iCrt_calloc_noerrno (size_t sz, size_t cnt);
 
 int __iCrt_callnewh (size_t sz);
 int __iCrt_set_new_mode (int mode);

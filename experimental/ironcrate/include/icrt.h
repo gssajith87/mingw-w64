@@ -38,5 +38,6 @@ int __iCrt_get_errno_from_oserr (unsigned long);
 
 #include <icrt_string.h>
 #include <icrt_memory.h>
+#include <icrt_thread.h>
 
 #endif

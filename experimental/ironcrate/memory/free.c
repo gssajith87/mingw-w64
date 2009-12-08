@@ -4,5 +4,12 @@
 void
 __iCrt_free (void *ptr)
 {
-  HeapFree (GetProcessHeap (), 0, ptr);
+  __iCrt_free_noerrno (ptr);
+}
+
+void
+__iCrt_free_noerrno (void *ptr)
+{
+  if (ptr)
+    HeapFree (GetProcessHeap (), 0, ptr);
 }

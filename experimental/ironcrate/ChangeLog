@@ -1,3 +1,12 @@
+2009-12-07  Kai Tietz  <kai.tietz@onevision.com>
+
+	* include/icrt.h: Add include of icrt_thread.h header.
+	* include/icrt_thread.h: Add intial header for TLS/FLS stuff.
+	* include/icrt_memory.h: Add prototypes for noerrno versions of
+	realloc, malloc, free, and calloc.
+	* memory/: Add noerrno versions of realloc, malloc, free, and calloc.
+	* Rename w64crt to iCrt.
+
 2009-11-29  Kai Tietz  <kai.tietz@onevision.com>
 
 	* memory/: Add initial set of file.
