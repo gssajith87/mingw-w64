@@ -10,7 +10,7 @@ typedef struct sCfgAlias {
 } sCfgAlias;
 
 typedef struct sCfgItem {
-  struct sCfgAlias *next;
+  struct sCfgItem *next;
   char *type;
   char name[1];
 } sCfgItem;
@@ -29,7 +29,11 @@ typedef struct sCfgLib {
 int genidl_read_config (const char *fname);
 
 static sCfgLib *gen_cfglib (const char *);
-static sCfgLib *has_cfglib (const char *);
+static sCfgLib *has_cfglib (const char *, int);
+static sCfgAlias *gen_cfglib_alias (sCfgLib *, const char *);
+static sCfgAlias *has_cfglib_alias (sCfgLib *, const char *);
+static sCfgItem *has_cfglib_item (sCfgLib *, const char *);
+static sCfgItem *gen_cfglib_item (sCfgLib *, const char *, const char *);
 
 static int rCh (void);
 static void bCh (int r);
@@ -49,13 +53,82 @@ static size_t l_max, l_cur;
 
 static sCfgLib *cfg_head = NULL;
 
+static sCfgItem *
+has_cfglib_item (sCfgLib *c, const char *name)
+{
+}
+
+static sCfgItem *
+gen_cfglib_item (sCfgLib *c, const char *name, const char *type)
+{
+  sCfgItem *a, *p = NULL, *e = c->item;
+  a = has_cfglib_item (c, name);
+  if (!a)
+    {
+      a = (sCfgItem *) malloc (sizeof (sCfgItem) + strlen (name) + 1);
+      memset (a, 0, sizeof (sCfgItem));
+      strcpy (a->name, name);
+    }
+  if (a->type != NULL)
+    free (a->type);
+  a->type = strdup (type);
+  while (e != NULL)
+    {
+      p = e;
+      e = e->next;
+    }
+  if (!p)
+    c->item = a;
+  else
+    p->next = a;
+  return a;
+}
+
+static sCfgAlias *
+gen_cfglib_alias (sCfgLib *c, const char *name)
+{
+  sCfgAlias *p, *e;
+  sCfgAlias *a = has_cfglib_alias (c, name);
+  if (a)
+    return a;
+  a = (sCfgAlias *) malloc (sizeof (sCfgAlias) + strlen (name) + 1);
+  memset (a, 0, sizeof (sCfgAlias));
+  strcpy (a->name, name);
+  p = NULL; e = c->alias;
+  while (e != NULL)
+    {
+      p = e;
+      e = e->next;
+    }
+  if (!p)
+    c->alias = a;
+  else
+    p->next = a;
+  return a;
+}
+
+static sCfgAlias *
+has_cfglib_alias (sCfgLib *c, const char *name)
+{
+  sCfgAlias *a = (c ? c->alias : NULL);
+  while (a != NULL)
+    {
+      if (!strcmp (a->name, name))
+        return a;
+      a = a->next;
+    }
+  return NULL;
+}
+
 static sCfgLib *
-has_cfglib (const char *name)
+has_cfglib (const char *name, int withAlias)
 {
   sCfgLib *r = cfg_head;
   while (r != NULL)
     {
       if (!strcmp (r->name, name))
+        return r;
+      if (withAlias && has_cfglib_alias (r, name) != NULL)
         return r;
       r = r->next;
     }
@@ -66,7 +139,7 @@ static sCfgLib *
 gen_cfglib (const char *name)
 {
   sCfgLib *r, *p, *e;
-  if ((r = has_cfglib (name)) != NULL)
+  if ((r = has_cfglib (name, 0)) != NULL)
     return r;
   r = (sCfgLib *) malloc (sizeof (sCfgLib) + strlen (name) + 1);
   memset (r, 0, sizeof (sCfgLib));
