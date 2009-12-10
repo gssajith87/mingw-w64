@@ -4,11 +4,32 @@
 #include <malloc.h>
 #include <string.h>
 
+typedef struct sCfgAlias {
+  struct sCfgAlias *next;
+  char name[1];
+} sCfgAlias;
+
+typedef struct sCfgItem {
+  struct sCfgAlias *next;
+  char *type;
+  char name[1];
+} sCfgItem;
+
+typedef struct sCfgLib {
+  struct sCfgLib *next;
+  sCfgAlias *alias;
+  sCfgItem *item;
+  char name[1];
+} sCfgLib;
+
 #define TOK_NAME  256
 #define TOK_DIGIT 257
 #define TOK_STRING 258
 #define TOK_ALIAS 
 int genidl_read_config (const char *fname);
+
+static sCfgLib *gen_cfglib (const char *);
+static sCfgLib *has_cfglib (const char *);
 
 static int rCh (void);
 static void bCh (int r);
@@ -25,6 +46,40 @@ static int line_no = 1;
 static int seen_eof = 0;
 static char *l_buffer = NULL;
 static size_t l_max, l_cur;
+
+static sCfgLib *cfg_head = NULL;
+
+static sCfgLib *
+has_cfglib (const char *name)
+{
+  sCfgLib *r = cfg_head;
+  while (r != NULL)
+    {
+      if (!strcmp (r->name, name))
+        return r;
+      r = r->next;
+    }
+  return NULL;
+}
+
+static sCfgLib *
+gen_cfglib (const char *name)
+{
+  sCfgLib *r, *p, *e;
+  if ((r = has_cfglib (name)) != NULL)
+    return r;
+  r = (sCfgLib *) malloc (sizeof (sCfgLib) + strlen (name) + 1);
+  memset (r, 0, sizeof (sCfgLib));
+  strcpy (r->name, name);
+  p = NULL; e = cfg_head;
+  while (e != NULL)
+    {
+      p = e; e = e->next;
+    }
+  if (!p) cfg_head = r;
+  else p->next = r;
+  return r;
+}
 
 static void
 printError (const char *fmt, ...)
