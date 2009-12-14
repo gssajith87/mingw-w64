@@ -228,7 +228,8 @@ TI2_update_config (sTI2TypLib *tl)
   genidl_add_lib (tl->name);
   /* We remove possibly old items.  */
   genidl_del_lib_iten (tl->name);
-  if (!no)
+  if (!no && tl->ti2_typs.buc[TITYP_NAME].count != 0
+      && tl->ti2_typs.buc[TITYP_GUIDS].count != 0)
     return;
   tlbname = (char *) malloc (strlen ("TypeD_") + 8 + 1);
   *tlbname = 0;
@@ -239,6 +240,27 @@ TI2_update_config (sTI2TypLib *tl)
       char *name = tl->ti2_typs.buc[TITYP_TYPINFO_NAMES].arr[i]->name;
       sprintf (tlbname, "TypeB_%x", mem);
       genidl_add_lib_item (tl->name, tlbname, name);
+    }
+  for (i = 0;i < tl->ti2_typs.buc[TITYP_NAME].count; i++)
+    {
+      uint32_t mem = tl->ti2_typs.buc[TITYP_NAME].arr[i]->memid;
+      char *name = tl->ti2_typs.buc[TITYP_NAME].arr[i]->name;
+      sprintf (tlbname, "Name_%x", mem);
+      genidl_add_lib_item (tl->name, tlbname, name);
+    }
+  for (i = 0;i < tl->ti2_typs.buc[TITYP_GUIDS].count; i++)
+    {
+      uint32_t mem = tl->ti2_typs.buc[TITYP_GUIDS].arr[i]->memid;
+      char *name = TI_get_typ_name (&tl->ti2_typs, (uint32_t) mem, TITYP_GUIDS, "");
+      sprintf (tlbname, "Guid_%x", mem);
+      if (name)
+      {
+	name = strdup (name);
+	if (strrchr (name + 1, '\"') != NULL)
+	  *strrchr (name + 1, '\"') = 0;
+	genidl_add_lib_item (tl->name, tlbname, name + 1);
+	free (name);
+      }
     }
   free (tlbname);
 }

@@ -716,20 +716,33 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
   {
     const char *str;
     char s[128];
+    const char *typStr;
     p = (MSFT_ImpInfo *) &dta[off];
     iname = TI_get_typ_name (gptr, (uint32_t) p->oImpFile, TITYP_IMP, "");
     
-    if ((p->flags & 1) != 0)
-      sprintf (s, "TypeG_%x", p->oGuid);
-    else
-      sprintf (s, "TypeB_%x", p->oGuid);
+    switch (p->tkind)
+    {
+    case TKIND_ENUM: case TKIND_RECORD:
+    case TKIND_MODULE: case TKIND_DISPATCH:
+    case TKIND_COCLASS: case TKIND_UNION:
+      typStr = "TypeB"; break;
+    case TKIND_INTERFACE:
+      typStr = "Guid"; break;
+    case TKIND_ALIAS:
+      typStr = "Name"; break;
+    default:
+      typStr = "???"; break;
+    }
+    sprintf (s, "%s_%x", typStr, p->oGuid);
     str = genidl_find_type (iname, &s[0]);
     if (str)
+    {
       TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", str, "");
+    }
     else
       {
-        idstr = (char *) malloc (strlen (s) + strlen (iname) + 2 + 10);
-        sprintf (idstr, "%s_%s_%02x_%02x", iname, s, p->flags, p->tkind);
+        idstr = (char *) malloc (strlen (s) + strlen (iname) + 2 + 10 + strlen (typStr));
+        sprintf (idstr, "%s_%s_%02x_%s", iname, s, p->flags, typStr);
         fprintf (stderr, "Type %s count: 0x%x not found\n", idstr, p->count);
         TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", idstr, "");  
         free (idstr);
