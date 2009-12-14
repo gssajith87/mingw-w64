@@ -1,32 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <malloc.h>
-#include <string.h>
-
-typedef struct sCfgAlias {
-  struct sCfgAlias *next;
-  char name[1];
-} sCfgAlias;
-
-typedef struct sCfgItem {
-  struct sCfgItem *next;
-  char *type;
-  char name[1];
-} sCfgItem;
-
-typedef struct sCfgLib {
-  struct sCfgLib *next;
-  sCfgAlias *alias;
-  sCfgItem *item;
-  char name[1];
-} sCfgLib;
+#include "genidl_cfg.h"
 
 #define TOK_NAME  256
 #define TOK_DIGIT 257
 #define TOK_STRING 258
-#define TOK_ALIAS 
-int genidl_read_config (const char *fname);
 
 static sCfgLib *gen_cfglib (const char *);
 static sCfgLib *has_cfglib (const char *, int);
@@ -52,26 +28,42 @@ static char *l_buffer = NULL;
 static size_t l_max, l_cur;
 
 static sCfgLib *cfg_head = NULL;
+static int is_modified = 0;
 
 static sCfgItem *
 has_cfglib_item (sCfgLib *c, const char *name)
 {
+  sCfgItem *h;
+  if (!c || c->item == NULL)
+    return NULL;
+  h = c->item;
+  do {
+    if (!strcmp (h->name, name))
+      return h;
+    h = h->next;
+  } while (h != NULL);
+  return NULL;
 }
 
 static sCfgItem *
 gen_cfglib_item (sCfgLib *c, const char *name, const char *type)
 {
   sCfgItem *a, *p = NULL, *e = c->item;
+  int is_new = 0;
   a = has_cfglib_item (c, name);
   if (!a)
     {
       a = (sCfgItem *) malloc (sizeof (sCfgItem) + strlen (name) + 1);
       memset (a, 0, sizeof (sCfgItem));
       strcpy (a->name, name);
+      is_new = 1;
     }
+  is_modified = 1;
   if (a->type != NULL)
     free (a->type);
   a->type = strdup (type);
+  if (!is_new)
+    return a;
   while (e != NULL)
     {
       p = e;
@@ -104,6 +96,7 @@ gen_cfglib_alias (sCfgLib *c, const char *name)
     c->alias = a;
   else
     p->next = a;
+  is_modified = 1;
   return a;
 }
 
@@ -151,6 +144,7 @@ gen_cfglib (const char *name)
     }
   if (!p) cfg_head = r;
   else p->next = r;
+  is_modified = 1;
   return r;
 }
 
@@ -330,7 +324,7 @@ rCh (void)
 }
 
 static char **
-parse_export (size_t *cnt, int *re, const char *tname)
+parse_export (sCfgLib *cfg, size_t *cnt, int *re, const char *tname)
 {
   char **ret = NULL;
   int r = lex ();
@@ -361,6 +355,7 @@ parse_export (size_t *cnt, int *re, const char *tname)
 	    }
 	  else
 	    {
+	      gen_cfglib_item (cfg, left, l_buffer);
 	    }
 	  free (left);
 	}
@@ -371,7 +366,7 @@ parse_export (size_t *cnt, int *re, const char *tname)
 }
 
 static char **
-parse_alias (size_t *cnt, int *re, const char *tname)
+parse_alias (sCfgLib *cfg, size_t *cnt, int *re, const char *tname)
 {
   char **ret = NULL;
   int r = lex ();
@@ -390,8 +385,9 @@ parse_alias (size_t *cnt, int *re, const char *tname)
       if (r == ',' || r == ';')
 	continue;
       if (r == TOK_NAME || r == TOK_STRING)
-      {
-      }
+	{
+	  gen_cfglib_alias (cfg, l_buffer);
+	}
       else
 	printError ("Ignore token in alias of ,%s'.\n", tname);
     }
@@ -406,6 +402,7 @@ parseTableSub (const char *tname)
   size_t alias_cnt = 0;
   size_t exps_cnt = 0;
   int r = lex ();
+  sCfgLib *cfg = gen_cfglib (tname);
   while (r != '}')
     {
       if (r == ';')
@@ -420,13 +417,13 @@ parseTableSub (const char *tname)
       }
       if (strcmp (l_buffer, "alias")  == 0)
         {
-	  alias = parse_alias (&alias_cnt, &r, tname);
+	  alias = parse_alias (cfg, &alias_cnt, &r, tname);
 	  if (r == -1)
 	    break;
         }
       else if (strcmp (l_buffer, "export") == 0)
         {
-	  exps = parse_export (&exps_cnt, &r, tname);
+	  exps = parse_export (cfg, &exps_cnt, &r, tname);
 	  if (r == -1)
 	    break;
         }
@@ -511,8 +508,148 @@ genidl_read_config (const char *fname)
   line_no = 1;
   seen_eof = 0;
   parseStmt ();
+  is_modified = 0;
   free (l_buffer);
   fclose (conf_fp);
   return 0;
 }
 
+int
+genidl_save_config (const char *file)
+{
+  FILE *fp;
+  int ret;
+
+  if (!genidl_ismodified_config ())
+    return 1;
+  if (!file)
+    return 0;
+  fp = fopen (file, "wb");
+  ret = !genidl_save_config_fp (fp);
+  if (fp)
+    fclose (fp);
+  is_modified = 0;
+  return ret;
+}
+
+int
+genidl_save_config_fp (FILE *fp)
+{
+  sCfgLib *h = cfg_head;
+  sCfgAlias *alias;
+  sCfgItem *item;
+
+  if (!fp)
+    return 1;
+  fprintf (fp, "/* Configuration of genidl tool.  */\n");
+  if (!h)
+    return 0;
+  do {
+    alias = h->alias;
+    item = h->item;
+    fprintf (fp, "\"%s\" = {\n", h->name);
+    if (alias)
+      {
+        fprintf (fp,"  alias = {\n");
+        do {
+          fprintf (fp, "    \"%s\"%s\n", alias->name, (alias->next != NULL ? "," : ""));
+          alias = alias->next;
+        } while (alias);
+        fprintf (fp, "  };\n");
+      }
+    if (item)
+      {
+        fprintf (fp, "  export = {\n");
+        do {
+          fprintf (fp, "    \"%s\" = \"%s\";\n", item->name, item->type);
+          item = item->next;
+        } while (item);
+        fprintf (fp, "  };\n");
+      }
+    fprintf (fp, "};\n\n");
+    h = h->next;
+  } while (h != NULL);
+  return 0;
+}
+
+int
+genidl_ismodified_config (void)
+{
+  return is_modified;
+}
+
+int
+genidl_add_lib (const char *lib)
+{
+  if (!lib || *lib == 0)
+    return 0;
+  if (gen_cfglib (lib))
+    return 1;
+  return 0;
+}
+
+int
+genidl_add_lib_alias (const char *lib, const char *alias)
+{
+  sCfgLib *l;
+  if (!lib || *lib == 0 || !alias || *alias == 0)
+    return 0;
+  l = gen_cfglib (lib);
+  if (!l)
+    return 0;
+  if (gen_cfglib_alias (l, alias))
+    return 1;
+  return 0;
+}
+
+int
+genidl_add_lib_item (const char *lib, const char *name, const char *typ)
+{
+  sCfgLib *l;
+  if (!lib || *lib == 0 || !name || *name == 0 || !typ || *typ == 0)
+    return 0;
+  l = gen_cfglib (lib);
+  if (!l)
+    return 0;
+  if (gen_cfglib_item (l, name, typ))
+    return 1;
+  return 0;
+}
+
+const char *
+genidl_find_type (const char *lib, const char *name)
+{
+  sCfgLib *l;
+  sCfgItem *h;
+
+  if (!lib || *lib == 0)
+    return NULL;
+  l = has_cfglib (lib, 1);
+  if (!l)
+    return;
+  h = has_cfglib_item (l, name);
+  if (!h)
+    return NULL;
+  return h->type;
+}
+
+int
+genidl_del_lib_iten (const char *lib)
+{
+  sCfgLib *l;
+  sCfgItem *h;
+  if (!lib || *lib == 0)
+    return 0;
+  l = gen_cfglib (lib);
+  if (!l)
+    return 1;
+  if (l->item == NULL)
+    return 1;
+  while ((h = l->item) != NULL)
+    {
+      l->item = h->next;
+      if (h->type)
+        free (h->type);
+      free (h);
+    }
+}

@@ -364,8 +364,14 @@ TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len)
       switch (p->kind)
       {
       case 0x1d:
-	TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	  TITYP_TYPINFO_NAMES, (uint32_t) p->oTypeB, "", "", "");
+	if ((p->oTypeB & 1) != 0)
+	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	    TITYP_IMPREF, (uint32_t) p->oTypeB & ~1, "", "", "");
+	else
+	{
+	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	    TITYP_TYPINFO_NAMES, (uint32_t) p->oTypeB, "", "", "");
+	}
 	break;
       case 0x1a:
 	if ((p->oTypeB & 1) != 0)
@@ -702,28 +708,32 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
 {
   MSFT_ImpInfo *p;
   uint32_t off = 0;
-  const char *idstr;
-  char *iname, *str;
+  char *idstr;
+  char *iname;
   if (!length)
     return;
   while ((off + 11) < length)
   {
+    const char *str;
+    char s[128];
     p = (MSFT_ImpInfo *) &dta[off];
     iname = TI_get_typ_name (gptr, (uint32_t) p->oImpFile, TITYP_IMP, "");
-    idstr = ("TypeB_");
-    str = iname;
-    while (*str != 0)
-    {
-      if (*str >= 'A' && *str <='Z')
-	str[0] = str[0] - 'A' + 'a';
-      str++;
-    }
-    str = (char *) malloc (strlen (iname) + 1 + strlen(idstr) + 8 + 1);
-    sprintf (str, "%s_%s%x",iname,idstr,p->oGuid);
-    while (strrchr (str, '.')!=NULL)
-      *strchr (str, '.')='_';
-    TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", str, "");
-    free (str);
+    
+    if ((p->flags & 1) != 0)
+      sprintf (s, "TypeG_%x", p->oGuid);
+    else
+      sprintf (s, "TypeB_%x", p->oGuid);
+    str = genidl_find_type (iname, &s[0]);
+    if (str)
+      TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", str, "");
+    else
+      {
+        idstr = (char *) malloc (strlen (s) + strlen (iname) + 2 + 10);
+        sprintf (idstr, "%s_%s_%02x_%02x", iname, s, p->flags, p->tkind);
+        fprintf (stderr, "Type %s count: 0x%x not found\n", idstr, p->count);
+        TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", idstr, "");  
+        free (idstr);
+      }
     free (iname);
     off += 12;
   }

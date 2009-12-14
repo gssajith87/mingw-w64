@@ -8,8 +8,6 @@
 int show_dump_too = 0;
 int is_verbose = 0;
 
-int genidl_read_config (const char *fname);
-
 /* Process files.  */
 size_t file_args_cnt = 0;
 char **file_args = NULL;
@@ -129,11 +127,11 @@ int main(int argc,char **argv)
   size_t len;
   size_t i;
   unsigned char *dta = NULL;
+  genidl_read_config ("./genidl.conf");
   if (scanArgs (--argc, ++argv) < 0)
     {
        show_usage ();
     }
-  genidl_read_config ("./genidl.conf");
   for (i=0;i<file_args_cnt;i++)
     {
       char s[1024];
@@ -173,5 +171,7 @@ int main(int argc,char **argv)
 	}
       fclose (gp);
     }
+  /* genidl_save_config_fp (stderr); */
+  genidl_save_config ("./genidl.conf");
   return 0;
 }
