@@ -11,7 +11,9 @@ int is_verbose = 0;
 /* Process files.  */
 size_t file_args_cnt = 0;
 char **file_args = NULL;
-const char *basedumpname = "test_dump";
+const char *basedumpname = "";
+
+static char *get_idl_basename (const char *file);
 
 static void
 show_usage (void)
@@ -132,9 +134,9 @@ int main(int argc,char **argv)
     {
        show_usage ();
     }
-  for (i=0;i<file_args_cnt;i++)
+  for (i = 0; i < file_args_cnt; i++)
     {
-      char s[1024];
+      char s[1024], *idl_basename,*org_basename;
       int start, end;
       gp = fopen (file_args[i], "rb");
       if (!gp)
@@ -151,27 +153,59 @@ int main(int argc,char **argv)
 
       if (is_verbose)
 	fprintf (stderr, "Contains %d typelib resource(s)\n", end);
+      org_basename = get_idl_basename (file_args[i]);
+      idl_basename = strdup (org_basename);
+      if (strrchr (idl_basename, '.') != NULL)
+	*strrchr (idl_basename, '.') = 0;
 
       for (start = 0; start < end; start++)
 	{
-      genidl_pe_typelib_resource_read (gp, start, &dta, &len);
-      sprintf (s, "%s_%d_%d.idl", basedumpname, (int) i, start);
-      fp = fopen (s,"wt");
-      {
-	sTI2TypLib *tl = TI2_typlib_init (dta, (size_t) len);
-	if (tl)
-	  {
-	    TI2_typlib_idl (fp, tl);
-	    TI2_typlib_dest (tl);
-	  }
-	if (show_dump_too)
-	  dumpInfo (fp, dta, len);
-      }
-      fclose (fp);
+	  genidl_pe_typelib_resource_read (gp, start, &dta, &len);
+	  if (end != 1)
+	    sprintf (s, "%s%s_%d.idl", idl_basename, basedumpname, start);
+	  else
+	    sprintf (s, "%s%s.idl", idl_basename, basedumpname);
+	  fp = fopen (s, "wt");
+	  if (fp)
+	    {
+	      sTI2TypLib *tl = TI2_typlib_init (dta, (size_t) len);
+	      if (tl)
+		{
+		  TI2_typlib_idl (fp, tl, org_basename);
+		  TI2_typlib_dest (tl);
+		}
+	      if (show_dump_too)
+		dumpInfo (fp, dta, len);
+	      fclose (fp);
+	    }
 	}
+      free (idl_basename);
+      free (org_basename);
       fclose (gp);
     }
   /* genidl_save_config_fp (stderr); */
   genidl_save_config ("./genidl.conf");
   return 0;
+}
+
+static char *
+get_idl_basename (const char *file)
+{
+  char *h, *p;
+  if (!file || *file == 0)
+    return strdup ("");
+  h = strrchr (file, '\\');
+  p = strrchr (file, '/');
+  if (!h && !p)
+    h = strdup (file);
+  else if (!h)
+    h = strdup (p + 1);
+  else if (!p)
+    h = strdup (h + 1);
+  else if (p < h)
+    h = strdup (h + 1);
+  else
+    h = strdup (p + 1);
+  strlwr (h);
+  return h;
 }

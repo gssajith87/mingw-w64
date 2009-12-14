@@ -122,7 +122,7 @@ typedef struct sTI2TypLib {
 
 sTI2TypLib *TI2_typlib_init (unsigned char *dta, size_t len);
 void TI2_typlib_dest (sTI2TypLib *tl);
-void TI2_typlib_idl (FILE *fp, sTI2TypLib *tl);
+void TI2_typlib_idl (FILE *fp, sTI2TypLib *tl, const char *orgname);
 const char *getCallConvName (int32_t cc);
 void printValue(FILE *fp, sTITyps *typs, uint32_t val);
 char *getTypeBOrImpRef (sTITyps *dptr, uint32_t off, const char *var);
