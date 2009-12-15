@@ -759,22 +759,31 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
   {
     const char *str;
     char s[128];
-    const char *typStr, *altTypStr = NULL;
     p = (MSFT_ImpInfo *) &dta[off];
     iname = TI_get_typ_name (gptr, (uint32_t) p->oImpFile, TITYP_IMP, "");
     
-    if (p->tkind == 6)
-      altTypStr = "Name";
-    if ((p->flags & 1) != 0)
-      typStr = "Guid";
-    else
-      typStr = "TypeB";
-    sprintf (s, "%s_%x", typStr, p->oGuid);
-    str = genidl_find_type (iname, &s[0]);
-    if (!str && altTypStr != NULL)
+    if ((p->flags & 1) == 0)
       {
-	sprintf (s, "%s_%x", altTypStr, p->oGuid);
-	str = genidl_find_type (iname, &s[0]);
+	sprintf (s, "TypeB_%x", p->oGuid);
+      }
+    else
+      {
+	char *ni = TI_get_typ_name (gptr, (uint32_t) p->oGuid, TITYP_GUIDS, "");
+	if (ni)
+	  {
+	    strcpy (s, ni + 1);
+	    if (strrchr (s, '\"') != NULL)
+	      *strrchr (s, '\"')=0;
+	    free (ni);
+	  }
+	else
+	 sprintf (s, "Guid_%x", p->oGuid);
+      }
+    str = genidl_find_type (iname, &s[0]);
+    if (!str && p->tkind == 6)
+      {
+	 sprintf (s, "Name_%x", p->oGuid);
+	 str = genidl_find_type (iname, &s[0]);
       }
     if (str)
     {
@@ -782,8 +791,8 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
     }
     else
       {
-        idstr = (char *) malloc (strlen (s) + strlen (iname) + 2 + 10 + strlen (typStr));
-        sprintf (idstr, "%s_%s_%02x_%s", iname, s, p->flags, typStr);
+        idstr = (char *) malloc (strlen (s) + strlen (iname) + 2 + 10);
+        sprintf (idstr, "%s_%s_%02x_%x", iname, s, p->flags, p->tkind);
 	fprintf (stderr, "Type %s count: 0x%x tkind:0x%x not found\n", idstr, p->count, p->tkind);
         TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", idstr, "");  
         free (idstr);

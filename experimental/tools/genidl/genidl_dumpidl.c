@@ -243,27 +243,20 @@ TI2_update_config (sTI2TypLib *tl, const char *orgfname)
       char *name = tl->ti2_typs.buc[TITYP_TYPINFO_NAMES].arr[i]->name;
       sprintf (tlbname, "TypeB_%x", mem);
       genidl_add_lib_item (tl->name, tlbname, name);
-    }
-  for (i = 0;i < tl->ti2_typs.buc[TITYP_NAME].count; i++)
-    {
-      uint32_t mem = tl->ti2_typs.buc[TITYP_NAME].arr[i]->memid;
-      char *name = tl->ti2_typs.buc[TITYP_NAME].arr[i]->name;
-      sprintf (tlbname, "Name_%x", mem);
-      genidl_add_lib_item (tl->name, tlbname, name);
-    }
-  for (i = 0;i < tl->ti2_typs.buc[TITYP_GUIDS].count; i++)
-    {
-      uint32_t mem = tl->ti2_typs.buc[TITYP_GUIDS].arr[i]->memid;
-      char *name = TI_get_typ_name (&tl->ti2_typs, (uint32_t) mem, TITYP_GUIDS, "");
-      sprintf (tlbname, "Guid_%x", mem);
-      if (name)
-      {
-	name = strdup (name);
-	if (strrchr (name + 1, '\"') != NULL)
-	  *strrchr (name + 1, '\"') = 0;
-	genidl_add_lib_item (tl->name, tlbname, name + 1);
-	free (name);
-      }
+
+      if (tl->typb[i].guid)
+        {
+	  char *hp = strdup (tl->typb[i].guid + 1);
+	  if (strrchr (hp, '\"') != NULL)
+	    * strrchr (hp, '\"') = 0;
+	  genidl_add_lib_item (tl->name, hp, name);
+	  free (hp);
+        }
+      if (tl->typb[i].tib->NameOffset != -1)
+	{
+	  sprintf (tlbname, "Name_%x", tl->typb[i].tib->NameOffset);
+	  genidl_add_lib_item (tl->name, tlbname, name);
+	}
     }
   free (tlbname);
 }
