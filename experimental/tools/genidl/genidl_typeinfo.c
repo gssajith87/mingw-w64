@@ -502,9 +502,9 @@ dumpTypedesc (FILE *fp, unsigned char *d, uint32_t len)
       else
         {
 	  if ((p->oTypeB & 1) != 0)
-	    printPrefix (fp, "ImpI_", p->oTypeB & 0xfffe);
+	    printPrefix (fp, "ImpI_", p->oTypeB & 0xfffffffe);
 	  else
-	    printPrefix (fp, "TypeD_", p->oTypeB & 0xffff);
+	    printPrefix (fp, "TypeD_", p->oTypeB);
 	  if ((p->flag & 0x7fff) != 0x7ffe)
 	    fprintf (fp, " *");
         }
@@ -519,11 +519,9 @@ dumpTypedesc (FILE *fp, unsigned char *d, uint32_t len)
       else
         {
 	  if ((p->oTypeB & 1) != 0)
-	    printPrefix (fp, "ImpI_", p->oTypeB & 0xfffe);
+	    printPrefix (fp, "ImpI_", p->oTypeB & 0xfffffffe);
 	  else
-	  {
-	    printPrefix (fp, "TypeD_", p->oTypeB & 0xffff);
-	  }
+	    printPrefix (fp, "TypeD_", p->oTypeB);
 	  if ((p->flag & 0x7fff) != 0x7ffe)
 	    fprintf (fp, " []");
         }
@@ -539,11 +537,9 @@ dumpTypedesc (FILE *fp, unsigned char *d, uint32_t len)
       else
         {
 	  if ((p->oTypeB & 1) != 0)
-	    printPrefix (fp, "ImpI_", p->oTypeB & 0xfffe);
+	    printPrefix (fp, "ImpI_", p->oTypeB & 0xfffffffe);
 	  else
-	  {
-	    printPrefix (fp, "TypeB_", p->oTypeB & 0xffff);
-	  }
+	    printPrefix (fp, "TypeB_", p->oTypeB);
         }
       break;
     default:

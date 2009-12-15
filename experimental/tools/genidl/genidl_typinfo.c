@@ -375,11 +375,11 @@ TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len)
         {
 	  if ((p->oTypeB & 1) != 0)
 	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	      TITYP_IMPREF, (uint32_t) p->oTypeB & 0xfffe,
+	      TITYP_IMPREF, (uint32_t) p->oTypeB & 0xfffffffe,
 	      ((p->flag & 0x7fff) != 0x7ffe ? "*" : ""), "", "");
 	  else
 	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	      TITYP_DEREF, (uint32_t) p->oTypeB & 0xffff,
+	      TITYP_DEREF, (uint32_t) p->oTypeB,
 	      ((p->flag & 0x7fff) != 0x7ffe ? "*" : ""), "", "");
         }
       break;
@@ -396,11 +396,11 @@ TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len)
         {
 	  if ((p->oTypeB & 1) != 0)
 	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	      TITYP_IMPREF, (uint32_t) p->oTypeB & 0xfffe,
+	      TITYP_IMPREF, (uint32_t) p->oTypeB & 0xfffffffe,
 	      "", "", ((p->flag & 0x7fff) != 0x7ffe ? "[]" : ""));
 	  else
 	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	      TITYP_DEREF, (uint32_t) p->oTypeB & 0xffff,
+	      TITYP_DEREF, (uint32_t) p->oTypeB,
 	      "", "", ((p->flag & 0x7fff) != 0x7ffe ? "[]" : ""));
         }
       break;
@@ -421,10 +421,11 @@ TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len)
         {
 	  if ((p->oTypeB & 1) != 0)
 	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	      TITYP_IMPREF, (uint32_t) p->oTypeB & 0xfffe, "", "", "");
+	      TITYP_IMPREF, (uint32_t) p->oTypeB & 0xfffffffe,
+	      "", "", "");
 	  else
 	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	      TITYP_TYPINFO_NAMES, (uint32_t) p->oTypeB & 0xffff,
+	      TITYP_TYPINFO_NAMES, (uint32_t) p->oTypeB,
 	      "", "", "");
         }
       break;
