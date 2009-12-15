@@ -453,6 +453,28 @@ dumpMem (FILE *fp, unsigned char *dta, unsigned char *umap, uint32_t cVar, uint3
   }
 }
 
+/*
+  default_type = 0x80000000 | (vt << 16) | vt;
+    VT_LPSTR = 30,
+    VT_LPWSTR = 31,
+    case VT_LPSTR:
+    case VT_LPWSTR:
+        *encoded_type = 0xfffe0000 | vt;
+  VT_BYREF VT_PTR
+  VT_USERDEFINED
+  VT_SAFEARRAY
+  kind: 0x1a 26 == VT_PTR
+    base-vt16: vt: if (0x80000000) -> vt + base-vt16
+    base-vt16  if (!0x80000000) -> TypeD(vt&0xffff)
+    0x7fff -> TypeD(vt&0xffff)
+    0x7ffe -> vt&0xffff
+  kind: 0x1b 27 == SAFEARRAY
+  kind: 0x1c 28 == VT_CARRAY
+    0x7ffe -> ArrayD(vt&0xffff)
+  kind: 0x1d 29 == VT_USERDEFINED
+    0x7fff -> (if !(vt&1) TypeB (vt&0xffff)
+              if (vt&1) Imp (vt&0xfffe)
+$$$$ */
 static void
 dumpTypedesc (FILE *fp, unsigned char *d, uint32_t len)
 {
@@ -466,33 +488,70 @@ dumpTypedesc (FILE *fp, unsigned char *d, uint32_t len)
     p = (sMSFT_TypeDesc *) &d[off];
     fprintf (fp, " ");
     printPrefix2 (fp, "TypeD_", (int32_t) off);
-    fprintf (fp, ": 0x%x, 0x%x, ",p->kind, p->flag);
-    if ((p->flag & 0x7f00) == 0x7f00 || (p->flag & 0xf000)==0)
+    fprintf (fp, ": kind:0x%x, flags:0x%x, vt:0x%x, ",p->kind, p->flag, p->vt);
+    
+    switch ((p->kind))
     {
-      switch (p->kind)
-      {
-      case 0x1d:
-	printPrefix (fp, "TypeB_", p->oTypeB); break;
-      case 0x1a:
-	if ((p->oTypeB & 1) != 0)
-	  printPrefix (fp, "ImpI_", p->oTypeB & ~1);
-	else
-	{
-	  printPrefix (fp, "TypeD_", p->oTypeB);
-	  fprintf (fp, " *");
-	}
-	break;
-      case 0x1c:
-	printPrefix (fp, "ArrayD_", p->oArrayD); break;
-      default:
-	printPrefix (fp, "0x", p->oTypeB); break;
-      }
-    }
-    else
-    {
+    case 26: /* VT_PTR */
+      if ((p->vt & 0x80000000) != 0)
+        {
+          printVT (fp, ((uint32_t) p->vt) & 0xffff, NULL);
+          if ((p->flag & 0x7fff) != 0x7ffe)
+            fprintf (fp, " *");
+        }
+      else
+        {
+	  if ((p->oTypeB & 1) != 0)
+	    printPrefix (fp, "ImpI_", p->oTypeB & 0xfffe);
+	  else
+	    printPrefix (fp, "TypeD_", p->oTypeB & 0xffff);
+	  if ((p->flag & 0x7fff) != 0x7ffe)
+	    fprintf (fp, " *");
+        }
+      break;
+    case 27: /* SAFEARRAY */
+      if ((p->vt & 0x80000000) != 0)
+        {
+          printVT (fp, ((uint32_t) p->vt) & 0xffff, NULL);
+          if ((p->flag & 0x7fff) != 0x7ffe)
+            fprintf (fp, " []");
+        }
+      else
+        {
+	  if ((p->oTypeB & 1) != 0)
+	    printPrefix (fp, "ImpI_", p->oTypeB & 0xfffe);
+	  else
+	  {
+	    printPrefix (fp, "TypeD_", p->oTypeB & 0xffff);
+	  }
+	  if ((p->flag & 0x7fff) != 0x7ffe)
+	    fprintf (fp, " []");
+        }
+      break;
+    case 28: /* VT_CARRAY */
+      printPrefix (fp, "ArrayD_", p->oArrayD & 0xffff);
+      break;
+    case 29: /* VT_USERDEFINED */
+      if ((p->vt & 0x80000000) != 0)
+        {
+          printVT (fp, ((uint32_t) p->vt) & 0xffff, NULL);
+        }
+      else
+        {
+	  if ((p->oTypeB & 1) != 0)
+	    printPrefix (fp, "ImpI_", p->oTypeB & 0xfffe);
+	  else
+	  {
+	    printPrefix (fp, "TypeB_", p->oTypeB & 0xffff);
+	  }
+        }
+      break;
+    default:
+      fprintf (fp, " !!!");
       printVT (fp, (((uint32_t) (p->vt)) & 0xffff), NULL);
       if ((p->flag & 0xf000) == 0x4000)
 	fprintf (fp, " *");
+      break;
     }
     off += 8;
     fprintf (fp, "\n");

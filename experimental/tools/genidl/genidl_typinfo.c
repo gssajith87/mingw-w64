@@ -359,49 +359,86 @@ TI2_import_typedesc (sTITyps *dptr, unsigned char *dta, uint32_t len)
   while ((off + 7) < len)
   {
     p = (sMSFT_TypeDesc *) &dta[off];
-    if ((p->flag & 0x7f00) == 0x7f00 || (p->flag & 0xf000)==0)
+    
+    switch ((p->kind))
     {
-      switch (p->kind)
-      {
-      case 0x1d:
-	if ((p->oTypeB & 1) != 0)
-	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	    TITYP_IMPREF, (uint32_t) p->oTypeB & ~1, "", "", "");
-	else
-	{
-	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	    TITYP_TYPINFO_NAMES, (uint32_t) p->oTypeB, "", "", "");
-	}
-	break;
-      case 0x1a:
-	if ((p->oTypeB & 1) != 0)
-	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	    TITYP_IMPREF, (uint32_t) p->oTypeB & ~1, "", "", "");
-	else
-	{
-	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
-	    TITYP_DEREF, (uint32_t) p->oTypeB, "*", "", "");
-	}
-	break;
-      case 0x1c:
+    case 26: /* VT_PTR */
+      if ((p->vt & 0x80000000) != 0)
+        {
+	  const char *name;
+	  name = decode_VT_name_tmp (((uint32_t) (p->vt)) & 0xffff);
+	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF, TITYP_UNKNOWN,
+	      (uint32_t) p->oArrayD & 0xffff,
+	      ((p->flag & 0x7fff) != 0x7ffe ? "*" : ""), &name[0], "");
+        }
+      else
+        {
+	  if ((p->oTypeB & 1) != 0)
+	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	      TITYP_IMPREF, (uint32_t) p->oTypeB & 0xfffe,
+	      ((p->flag & 0x7fff) != 0x7ffe ? "*" : ""), "", "");
+	  else
+	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	      TITYP_DEREF, (uint32_t) p->oTypeB & 0xffff,
+	      ((p->flag & 0x7fff) != 0x7ffe ? "*" : ""), "", "");
+        }
+      break;
+    case 27: /* SAFEARRAY */
+      if ((p->vt & 0x80000000) != 0)
+        {
+	  const char *name;
+	  name = decode_VT_name_tmp (((uint32_t) (p->vt)) & 0xffff);
+	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF, TITYP_UNKNOWN,
+	      (uint32_t) p->oArrayD  & 0xffff,
+	      "", &name[0], ((p->flag & 0x7fff) != 0x7ffe ? "[]" : ""));
+        }
+      else
+        {
+	  if ((p->oTypeB & 1) != 0)
+	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	      TITYP_IMPREF, (uint32_t) p->oTypeB & 0xfffe,
+	      "", "", ((p->flag & 0x7fff) != 0x7ffe ? "[]" : ""));
+	  else
+	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	      TITYP_DEREF, (uint32_t) p->oTypeB & 0xffff,
+	      "", "", ((p->flag & 0x7fff) != 0x7ffe ? "[]" : ""));
+        }
+      break;
+    case 28: /* VT_CARRAY */
 	TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF, TITYP_ARRAY,
-	  (uint32_t) p->oArrayD, "", "", "");
+	  (uint32_t) p->oArrayD & 0xffff, "", "", "");
 	break;
-      default:
+    case 29: /* VT_USERDEFINED */
+      if ((p->vt & 0x80000000) != 0)
+        {
+	  const char *name;
+	  name = decode_VT_name_tmp (((uint32_t) (p->vt)) & 0xffff);
+	  TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF, TITYP_UNKNOWN,
+	      (uint32_t) p->oArrayD  & 0xffff,
+	      "", &name[0], "");
+        }
+      else
+        {
+	  if ((p->oTypeB & 1) != 0)
+	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	      TITYP_IMPREF, (uint32_t) p->oTypeB & 0xfffe, "", "", "");
+	  else
+	    TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF,
+	      TITYP_TYPINFO_NAMES, (uint32_t) p->oTypeB & 0xffff,
+	      "", "", "");
+        }
+      break;
+    default:
+      {
+	const char *name;
+	const char *prefix = "";
+	name = decode_VT_name_tmp (((uint32_t) (p->vt)) & 0xffff);
+	if ((p->flag & 0xf000) == 0x4000)
+	  prefix = "*";
 	TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF, TITYP_UNKNOWN,
-	  (uint32_t) p->oArrayD, "", "", "");
-	break;
+	    (uint32_t) p->oArrayD, prefix, &name[0], "");
       }
-    }
-    else
-    {
-      const char *name;
-      const char *prefix = "";
-      name = decode_VT_name_tmp (((uint32_t) (p->vt)) & 0xffff);
-      if ((p->flag & 0xf000) == 0x4000)
-	prefix = "*";
-      TI_add_typ (dptr, (uint32_t) off, TITYP_DEREF, TITYP_UNKNOWN,
-	  (uint32_t) p->oArrayD, prefix, &name[0], "");
+      break;
     }
     off += 8;
   }
