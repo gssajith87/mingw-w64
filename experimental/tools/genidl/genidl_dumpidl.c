@@ -157,12 +157,13 @@ fill_typb (sTI2TypLib *tl, sTI2TypeBase *tb, size_t off, unsigned char *dsrc, un
 	  TI_get_typ_name (&tl->ti2_typs, (uint32_t) t->datatype1, TITYP_STR, "");
 	break;
       case TKIND_INTERFACE:
+      case TKIND_DISPATCH:
 	tb->dataType =
 	  getTypeBOrImpRef (&tl->ti2_typs, (uint32_t) t->datatype1,"");
 	break;
       default:
 	tb->dataType =
-	  TI_getVTorDref (&tl->ti2_typs, (uint32_t) t->datatype1, "");
+	  TI_getVTorDref (&tl->ti2_typs, (uint32_t) t->datatype1, "", 0);
 	break;
       }
     }
@@ -737,7 +738,7 @@ printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *
       const char *val = "";
       printFuncOption (fp, mi->func->flags, id, defid, mi->func->f.funcKind, &val, prefix,
 	mi->func->f.invokeKind);
-      rtyp = TI_getVTorDref (&tl->ti2_typs, mi->func->datatype, "");
+      rtyp = TI_getVTorDref (&tl->ti2_typs, mi->func->datatype, "", 0);
       fprintf (fp, "%s%s%s %s %s (",
 	prefix, val, rtyp, getCallConvName(mi->func->f.callconv),
 	name);
@@ -755,7 +756,7 @@ printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *
 	      aname = TI_get_typ_name (&tl->ti2_typs, mi->funcParam[a].oName, TITYP_NAME, "");
 	    else
 	      aname = strdup ("");
-	    atyp = TI_getVTorDref (&tl->ti2_typs, mi->funcParam[a].dataType, aname);
+	    atyp = TI_getVTorDref (&tl->ti2_typs, mi->funcParam[a].dataType, aname, 0);
 	    fprintf (fp, "%s  ", prefix);
 	    printArgFlags (fp, mi->funcParam[a].flags);
 	    fprintf (fp, "%s", atyp);
@@ -777,7 +778,7 @@ printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *
     {
       const char *val = "";
       printVarOption (fp, mi->var->flags, id, defid, mi->var->varKind, &val, prefix);
-      rtyp = TI_getVTorDref (&tl->ti2_typs, mi->var->datatype, name);
+      rtyp = TI_getVTorDref (&tl->ti2_typs, mi->var->datatype, name, 0);
       fprintf (fp, "%s%s%s", prefix, val, rtyp, mi->var->varKind);
       if (tb->kind == TKIND_DISPATCH && mi->var->oValue != 0)
       {

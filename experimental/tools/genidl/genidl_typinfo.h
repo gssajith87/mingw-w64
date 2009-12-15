@@ -59,7 +59,7 @@ int32_t TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t len);
 
 const char *decode_VT_name_tmp (unsigned short vt);
 size_t getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret);
-char *TI_getVTorDref (sTITyps *ptyp,uint32_t vt, const char *varName);
+char *TI_getVTorDref (sTITyps *ptyp,uint32_t vt, const char *varName, int beBase);
 size_t getVT_size (uint32_t vt, unsigned char *dta, size_t *basesz);
 size_t getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret);
 

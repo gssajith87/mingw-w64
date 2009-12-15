@@ -344,7 +344,7 @@ dumpMemInfo (FILE *fp, unsigned char *dta, uint32_t cVar, uint32_t cFunc, uint32
 	  func->f.nextIndexWithSameID
 	  );
 	fprintf (fp, ", Offset:0x%x\n", d[max*2]);
-	rettyp = TI_getVTorDref (&ti2_typs, func->datatype, "");
+	rettyp = TI_getVTorDref (&ti2_typs, func->datatype, "", 0);
 	fctname = TI_get_typ_name (&ti2_typs, d[max], TITYP_NAME, "");
 	fprintf (fp, "\t[id(%d)", (int32_t)d[0]);
 	printFuncFlags (fp, func->flags);
@@ -381,7 +381,7 @@ dumpMemInfo (FILE *fp, unsigned char *dta, uint32_t cVar, uint32_t cFunc, uint32
 	    n = strdup ("");
 	  else
 	    n = TI_get_typ_name (&ti2_typs, (uint32_t) params[cc].oName, TITYP_NAME, "");
-	  x = TI_getVTorDref (&ti2_typs,params[cc].dataType, n);
+	  x = TI_getVTorDref (&ti2_typs,params[cc].dataType, n, 0);
 	  free (n);
 	  fprintf(fp,"[%s] %s",getParamFlagName(params[cc].flags), x);
 	  free (x);
@@ -412,7 +412,7 @@ dumpMemInfo (FILE *fp, unsigned char *dta, uint32_t cVar, uint32_t cFunc, uint32
 	fprintf (fp, "\n\tvarKind:0x%x vardescSize:0x%x",var->varKind, var->vardescSize);
 	fprintf (fp, ", Offset:0x%x\n", d[max*2]);
 	varName = TI_get_typ_name (&ti2_typs, d[max], TITYP_NAME, "");
-	varType = TI_getVTorDref (&ti2_typs,var->datatype, varName);
+	varType = TI_getVTorDref (&ti2_typs,var->datatype, varName, 0);
 	free (varName);
 	fprintf (fp, "\t[id(%d)", (int)d[0]);
 	printVarflags (fp, var->flags);

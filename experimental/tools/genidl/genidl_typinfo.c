@@ -644,7 +644,7 @@ decode_VT_name_tmp (uint16_t vt)
 }
 
 char *
-TI_getVTorDref(sTITyps *ptyp,uint32_t vt, const char *varName)
+TI_getVTorDref(sTITyps *ptyp,uint32_t vt, const char *varName, int beBase)
 {
   char *name;
   if ((vt & 0x80000000)!=0)
@@ -661,7 +661,12 @@ TI_getVTorDref(sTITyps *ptyp,uint32_t vt, const char *varName)
   else if ((vt&3)!=0)
     name = TI_get_typ_name (ptyp, vt, TITYP_UNKNOWN, varName);
   else
-    name = TI_get_typ_name (ptyp, vt, TITYP_DEREF, varName);
+  {
+    if (!beBase)
+      name = TI_get_typ_name (ptyp, vt, TITYP_DEREF, varName);
+    else
+      name = TI_get_typ_name (ptyp, vt, TITYP_TYPINFO_NAMES, varName);
+  }
   return name;
 }
 
