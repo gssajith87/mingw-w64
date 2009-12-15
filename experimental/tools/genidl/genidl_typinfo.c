@@ -495,7 +495,9 @@ getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret)
   case 6: /* VT_CY */ sprintf (s,"(CY) %I64d", *((int64_t *) dta)); break;
   case 8: /* VT_BSTR */
     sprintf (s,"L\"");
-    while (sz>0)
+    if (sz >= 4094)
+      fprintf (stderr, "BSTR with size %lu\n", (unsigned long) sz);
+    while (sz>0 && sz < 4094)
     {
       if (*dta >= 0x20 && *dta <= 0x7f)
 	sprintf (&s[strlen(s)], "%c", *dta);
