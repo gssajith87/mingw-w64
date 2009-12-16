@@ -111,7 +111,7 @@ walk_res_entry (sImgResourceDirectoryEntry *resDirEntry, unsigned char *resource
 }
 
 static void
-get_res_name_by_id (uint32_t id, unsigned char *resourceBase, PSTR buffer, uint32_t cBytes)
+get_res_name_by_id (uint32_t id, unsigned char *resourceBase, char *buffer, uint32_t cBytes)
 {
     sImgResourceDirStringWC *prdsu;
 
