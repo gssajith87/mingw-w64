@@ -785,7 +785,7 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
       }
     else
       {
-	char *ni = TI_get_typ_name (gptr, (uint32_t) p->oGuid, TITYP_GUIDS, "");
+	char *ni = TI_get_typ_name (gptr, (uint32_t) p->oGuid & ~1, TITYP_GUIDS, "");
 	if (ni)
 	  {
 	    strcpy (s, ni + 1);
@@ -797,11 +797,11 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
 	 sprintf (s, "Guid_%x", p->oGuid);
       }
     str = genidl_find_type (iname, &s[0]);
-    if (!str)
+    /*if (!str)
       {
 	 sprintf (s, "Name_%x", p->oGuid);
 	 str = genidl_find_type (iname, &s[0]);
-      }
+      }*/
     if (str)
       {
 	TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", str, "");

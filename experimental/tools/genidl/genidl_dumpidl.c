@@ -262,9 +262,10 @@ TI2_update_config (sTI2TypLib *tl, const char *orgfname)
 
   for (i = 0;i < no; i++)
     {
-      uint32_t mem = tl->ti2_typs.buc[TITYP_TYPINFO_NAMES].arr[i]->memid;
+      /* uint32_t mem = tl->ti2_typs.buc[TITYP_TYPINFO_NAMES].arr[i]->memid; */
       char *name = tl->ti2_typs.buc[TITYP_TYPINFO_NAMES].arr[i]->name;
-      sprintf (tlbname, "TypeB_%x", mem);
+      /* sprintf (tlbname, "TypeB_%x", mem); */
+      sprintf (tlbname, "TypeB_%x", i);
       genidl_add_lib_item (tl->name, tlbname, name);
 
       if (tl->typb[i].guid)
@@ -275,11 +276,11 @@ TI2_update_config (sTI2TypLib *tl, const char *orgfname)
 	  genidl_add_lib_item (tl->name, hp, name);
 	  free (hp);
         }
-      if (tl->typb[i].tib->NameOffset != -1)
+      /*if (tl->typb[i].tib->NameOffset != -1)
 	{
 	  sprintf (tlbname, "Name_%x", tl->typb[i].tib->NameOffset);
 	  genidl_add_lib_item (tl->name, tlbname, name);
-	}
+	} */
     }
   free (tlbname);
 }
