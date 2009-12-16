@@ -147,7 +147,7 @@ int main(int argc,char **argv)
       p = genidl_ispe (gp, &be64);
 
       if (is_verbose)
-        fprintf (stderr, "Found PE at %ld (%s bits)\n", p, be64 ? "32" : "64");
+        fprintf (stderr, "Found PE at %ld (%s bits)\n", p, !be64 ? "32" : "64");
 
       end = genidl_pe_typelib_resource_count (gp);
 
