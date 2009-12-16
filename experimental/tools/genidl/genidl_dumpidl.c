@@ -106,7 +106,7 @@ TI2_typlib_init (unsigned char *dta, size_t len)
   if (t->name_offset != -1)
     {
       tl->name = TI_get_typ_name (&tl->ti2_typs, t->name_offset, TITYP_NAME, "");
-      strlwr (tl->name);
+      genidl_strlwr (tl->name);
     }
   tl->dispatch = t->dispatchpos;
   tl->nr_typinfos = t->nr_typeinfos;

@@ -206,6 +206,22 @@ get_idl_basename (const char *file)
     h = strdup (h + 1);
   else
     h = strdup (p + 1);
-  strlwr (h);
+  genidl_strlwr (h);
   return h;
+}
+
+char *
+genidl_strlwr (char *s)
+{
+  char *h = s;
+  if (!h)
+    return NULL;
+  while (*h != 0)
+    {
+      if (h[0] >= 'A' && h[0] <= 'Z')
+        h[0] = (h[0] - 'A') + 'a';
+      ++h;
+    }
+
+  return s;
 }

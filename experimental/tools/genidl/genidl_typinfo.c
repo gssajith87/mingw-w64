@@ -703,7 +703,7 @@ TI2_import_importlibs (sTITyps *iptr, unsigned char *dta, uint32_t len)
     h = (char *) malloc (l + 1);
     memcpy (h, &dta[off + 14], l);
     h[l] = 0;
-    strlwr (h);
+    genidl_strlwr (h);
     TI_add_typ (iptr, (uint32_t) off, TITYP_IMP, 0,0,"",h,"");
     off = (off + 14 + l + 3) & ~3;
   }
