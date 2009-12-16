@@ -165,7 +165,7 @@ int main(int argc,char **argv)
 	    sprintf (s, "%s%s_%d.idl", idl_basename, basedumpname, start);
 	  else
 	    sprintf (s, "%s%s.idl", idl_basename, basedumpname);
-	  fp = fopen (s, "wt");
+	  fp = fopen (s, "wb");
 	  if (fp)
 	    {
 	      sTI2TypLib *tl = TI2_typlib_init (dta, (size_t) len);
