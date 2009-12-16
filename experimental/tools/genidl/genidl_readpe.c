@@ -77,7 +77,7 @@ walk_res_dir (sImgResourceDirectory *resDir, unsigned char *base,uint32_t level,
 
   for (i=0; i < mloop; i++, resDirEntry++)
     {
-      walk_res_entry (resDirEntry, base, level+1, beTypelib, noRes,zOff,zSize);
+      walk_res_entry (resDirEntry, base, level + 1, beTypelib, noRes,zOff,zSize);
       if (zOff[0] != 0)
 	return;
     }
@@ -90,7 +90,6 @@ static void
 walk_res_entry (sImgResourceDirectoryEntry *resDirEntry, unsigned char *resourceBase, uint32_t level, int32_t beTypelib,int32_t *noRes,uint32_t *zOff,uint32_t *zSize)
 {
     sImgResourceDataEntry *pResDataEntry;
-    
     if (resDirEntry->OffsetToData & GENIDL_IMG_RESDATA_IS_DIR) {
         walk_res_dir ((sImgResourceDirectory *) ((resDirEntry->OffsetToData & 0x7FFFFFFF) + resourceBase),
             resourceBase, level, resDirEntry->Name, beTypelib, noRes,zOff,zSize);

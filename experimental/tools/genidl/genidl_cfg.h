@@ -1,7 +1,9 @@
 #ifndef _GENIDL_H
 #define _GENIDL_H
 
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
