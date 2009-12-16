@@ -475,6 +475,18 @@ getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret)
   size_t b, l, sz;
   l = getVT_size (vt, dta,&b);
   dta += b - 2;
+  if (l == 0xffffffff)
+    {
+      if (vt == 8)
+        sprintf (s, "L\"\"");
+      else {
+        fprintf (stderr, "vt: 0x%x with size of -1!!!\n", vt);
+        sprintf (s, "vt:0x%x_zero", vt);
+      }
+      if (ret)
+        *ret = strdup (s);
+      return b;
+    }
   sz = l;
   s[0] = 0;
 
@@ -495,10 +507,13 @@ getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret)
   case 6: /* VT_CY */ sprintf (s,"(CY) %I64d", *((int64_t *) dta)); break;
   case 8: /* VT_BSTR */
     sprintf (s,"L\"");
-    if (sz >= 4094)
-      fprintf (stderr, "BSTR with size %lu\n", (unsigned long) sz);
     while (sz>0 && sz < 4094)
     {
+      if (strlen (s) >= 4080)
+        {
+          fprintf (stderr, "String too big (%lu)\n", (unsigned long) l);
+          break;
+        }
       if (*dta >= 0x20 && *dta <= 0x7f)
 	sprintf (&s[strlen(s)], "%c", *dta);
       else
@@ -688,7 +703,7 @@ TI2_import_importlibs (sTITyps *iptr, unsigned char *dta, uint32_t len)
     h = (char *) malloc (l + 1);
     memcpy (h, &dta[off + 14], l);
     h[l] = 0;
-
+    strlwr (h);
     TI_add_typ (iptr, (uint32_t) off, TITYP_IMP, 0,0,"",h,"");
     off = (off + 14 + l + 3) & ~3;
   }
@@ -782,15 +797,15 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
 	 sprintf (s, "Guid_%x", p->oGuid);
       }
     str = genidl_find_type (iname, &s[0]);
-    if (!str && p->tkind == 6)
+    if (!str)
       {
 	 sprintf (s, "Name_%x", p->oGuid);
 	 str = genidl_find_type (iname, &s[0]);
       }
     if (str)
-    {
-      TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", str, "");
-    }
+      {
+	TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", str, "");
+      }
     else
       {
         idstr = (char *) malloc (strlen (s) + strlen (iname) + 2 + 10);
@@ -799,7 +814,8 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
         TI_add_typ (gptr, (uint32_t) off, TITYP_IMPREF, 0,0, "", idstr, "");  
         free (idstr);
       }
-    free (iname);
+    if (iname)
+      free (iname);
     off += 12;
   }
 }

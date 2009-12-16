@@ -202,6 +202,60 @@ int32_t genidl_pe_typelib_resource_read (FILE *fp, int32_t noRes, unsigned char 
  */
 int32_t genidl_pe_typelib_resource_count (FILE *fp);
 
+typedef struct sImgResourceDataEntry {
+  uint32_t OffsetToData;
+  uint32_t Size;
+  uint32_t CodePage;
+  uint32_t Reserved;
+} sImgResourceDataEntry;
+
+typedef struct sImgResourceDirectoryEntry {
+#ifdef __GNUC__
+  __extension__
+#endif
+  union {
+#ifdef __GNUC__
+    __extension__
+#endif
+    struct {
+      uint32_t NameOffset:31;
+      uint32_t NameIsString:1;
+    };
+    uint32_t Name;
+    uint16_t Id;
+  };
+#ifdef __GNUC__
+  __extension__
+#endif
+  union {
+    uint32_t OffsetToData;
+#ifdef __GNUC__
+    __extension__
+#endif
+    struct {
+      uint32_t OffsetToDirectory:31;
+      uint32_t DataIsDirectory:1;
+    };
+  };
+} sImgResourceDirectoryEntry;
+
+typedef struct sImgResourceDirStringWC {
+  uint16_t Length;
+  uint16_t NameString[1];
+} sImgResourceDirStringWC;
+
+typedef struct sImgResourceDirectory {
+  uint32_t Characteristics;
+  uint32_t TimeDateStamp;
+  uint16_t MajorVersion;
+  uint16_t MinorVersion;
+  uint16_t NumberOfNamedEntries;
+  uint16_t NumberOfIdEntries;
+} sImgResourceDirectory;
+
+#define GENIDL_IMG_RESDATA_IS_DIR 0x80000000
+#define GENIDL_IMG_RESNAME_IS_STR 0x80000000
+
 #pragma pack(pop)
 
 #endif

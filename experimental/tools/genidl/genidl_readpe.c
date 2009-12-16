@@ -5,9 +5,10 @@
 
 static int32_t readResourceDirectory (FILE *fp, unsigned char **dta, size_t *length, size_t *resRVA);
 
-static void walk_res_dir (PIMAGE_RESOURCE_DIRECTORY resDir, unsigned char *base,uint32_t level, uint32_t resourceType, int32_t beTypelib, int32_t *noRes,uint32_t *zOff, uint32_t *zSize);
+static void walk_res_dir (sImgResourceDirectory *resDir, unsigned char *base,uint32_t level, uint32_t resourceType, int32_t beTypelib, int32_t *noRes,uint32_t *zOff, uint32_t *zSize);
 
-int32_t genidl_pe_typelib_resource_count (FILE *fp)
+int32_t
+genidl_pe_typelib_resource_count (FILE *fp)
 {
   int32_t cnt = 0x2000;
   uint32_t zOff = 0,zSize = 0;
@@ -19,12 +20,13 @@ int32_t genidl_pe_typelib_resource_count (FILE *fp)
   if (!length || !dta)
     return 0;
   zOff = zSize = 0;
-  walk_res_dir ((PIMAGE_RESOURCE_DIRECTORY) dta, dta,0, 0, 0, &cnt,&zOff,&zSize);
+  walk_res_dir ((sImgResourceDirectory *) dta, dta,0, 0, 0, &cnt,&zOff,&zSize);
   free (dta);
-  return 0x2000-cnt;
+  return 0x2000 - cnt;
 }
 
-int32_t genidl_pe_typelib_resource_read (FILE *fp, int32_t noRes, unsigned char **pDta, size_t *szDta)
+int32_t
+genidl_pe_typelib_resource_read (FILE *fp, int32_t noRes, unsigned char **pDta, size_t *szDta)
 {
   uint32_t zOff,zSize;
   unsigned char *dta = NULL;
@@ -35,7 +37,7 @@ int32_t genidl_pe_typelib_resource_read (FILE *fp, int32_t noRes, unsigned char 
   if (!length || !dta)
     return 0;
   zOff = zSize = 0;
-  walk_res_dir ((PIMAGE_RESOURCE_DIRECTORY) dta, dta,0, 0, 0, &noRes,&zOff,&zSize);
+  walk_res_dir ((sImgResourceDirectory *) dta, dta,0, 0, 0, &noRes,&zOff,&zSize);
   if (zOff != 0)
     {
       pDta[0] = (unsigned char *) malloc (zSize + 1);
@@ -49,78 +51,104 @@ int32_t genidl_pe_typelib_resource_read (FILE *fp, int32_t noRes, unsigned char 
   return 0;
 }
 
-static void get_res_name_by_id(uint32_t id, unsigned char *resourceBase, char *buffer, uint32_t cBytes);
-static void walk_res_entry(PIMAGE_RESOURCE_DIRECTORY_ENTRY resDirEntry, unsigned char *resourceBase, uint32_t level, int32_t beTypelib, int32_t *noRes,uint32_t *zOff,uint32_t *zSize);
+static void get_res_name_by_id (uint32_t id, unsigned char *resourceBase, char *buffer, uint32_t cBytes);
+static void walk_res_entry (sImgResourceDirectoryEntry *resDirEntry, unsigned char *resourceBase, uint32_t level, int32_t beTypelib, int32_t *noRes,uint32_t *zOff,uint32_t *zSize);
 
 static void
-walk_res_dir (PIMAGE_RESOURCE_DIRECTORY resDir, unsigned char *base,uint32_t level, uint32_t resourceType, int32_t beTypelib, int32_t *noRes,uint32_t *zOff,uint32_t *zSize)
+walk_res_dir (sImgResourceDirectory *resDir, unsigned char *base,uint32_t level, uint32_t resourceType, int32_t beTypelib, int32_t *noRes,uint32_t *zOff,uint32_t *zSize)
 {
-  PIMAGE_RESOURCE_DIRECTORY_ENTRY resDirEntry;
+  sImgResourceDirectoryEntry *resDirEntry;
   char szType[64];
   uint32_t i;
-  if (resourceType & IMAGE_RESOURCE_NAME_IS_STRING)
-    get_res_name_by_id(resourceType, base,szType, sizeof(szType));
+  uint32_t mloop = 0;
+
+  if (resourceType & GENIDL_IMG_RESNAME_IS_STR)
+    {
+      get_res_name_by_id (resourceType, base,szType, sizeof(szType));
+    }
   else
     sprintf(szType, "%X", resourceType);
   if (!strcmp (szType,"TYPELIB"))
     beTypelib = 1;
-  resDirEntry = (PIMAGE_RESOURCE_DIRECTORY_ENTRY)(resDir+1);
-  for ( i=0; i < resDir->NumberOfNamedEntries; i++, resDirEntry++)
+
+  resDirEntry = (sImgResourceDirectoryEntry *) (resDir + 1);
+
+  mloop = resDir->NumberOfNamedEntries + resDir->NumberOfIdEntries;
+
+  for (i=0; i < mloop; i++, resDirEntry++)
     {
-      walk_res_entry(resDirEntry, base, level+1, beTypelib, noRes,zOff,zSize);
+      walk_res_entry (resDirEntry, base, level+1, beTypelib, noRes,zOff,zSize);
       if (zOff[0] != 0)
 	return;
     }
 
-  for (i=0; i < resDir->NumberOfIdEntries; i++, resDirEntry++ )
-    {
-      walk_res_entry(resDirEntry, base, level+1, beTypelib, noRes,zOff,zSize);
-      if (zOff[0] != 0)
-	return;
-    }
+  if (!strcmp (szType,"TYPELIB"))
+    beTypelib = 0;
 }
 
-static void walk_res_entry(PIMAGE_RESOURCE_DIRECTORY_ENTRY resDirEntry, unsigned char *resourceBase, uint32_t level, int32_t beTypelib,int32_t *noRes,uint32_t *zOff,uint32_t *zSize)
+static void
+walk_res_entry (sImgResourceDirectoryEntry *resDirEntry, unsigned char *resourceBase, uint32_t level, int32_t beTypelib,int32_t *noRes,uint32_t *zOff,uint32_t *zSize)
 {
-    PIMAGE_RESOURCE_DATA_ENTRY pResDataEntry;
+    sImgResourceDataEntry *pResDataEntry;
     
-    if (resDirEntry->OffsetToData & IMAGE_RESOURCE_DATA_IS_DIRECTORY) {
-        walk_res_dir ((PIMAGE_RESOURCE_DIRECTORY) ((resDirEntry->OffsetToData & 0x7FFFFFFF) + resourceBase),
+    if (resDirEntry->OffsetToData & GENIDL_IMG_RESDATA_IS_DIR) {
+        walk_res_dir ((sImgResourceDirectory *) ((resDirEntry->OffsetToData & 0x7FFFFFFF) + resourceBase),
             resourceBase, level, resDirEntry->Name, beTypelib, noRes,zOff,zSize);
 	return;
     }
 
     if (!beTypelib)
       return;
-    if(noRes[0] != 0)
+    if (noRes[0] != 0)
     {
-      noRes[0]-=1;
+      noRes[0] -= 1;
       return;
     }
-    pResDataEntry = (PIMAGE_RESOURCE_DATA_ENTRY)
+    pResDataEntry = (sImgResourceDataEntry *)
                     (resourceBase + resDirEntry->OffsetToData);
     zOff[0] = pResDataEntry->OffsetToData; /* RVA!!! */
     zSize[0] = pResDataEntry->Size;
 }
 
-static void get_res_name_by_id(uint32_t id, unsigned char *resourceBase, PSTR buffer, uint32_t cBytes)
+static void
+get_res_name_by_id (uint32_t id, unsigned char *resourceBase, PSTR buffer, uint32_t cBytes)
 {
-    PIMAGE_RESOURCE_DIR_STRING_U prdsu;
+    sImgResourceDirStringWC *prdsu;
 
-    if ( !(id & IMAGE_RESOURCE_NAME_IS_STRING) )
+    if ( !(id & GENIDL_IMG_RESNAME_IS_STR) )
     {
-        sprintf(buffer, "%X", id);
+        sprintf (buffer, "%X", id);
         return;
     }
     
     id &= 0x7FFFFFFF;
-    prdsu = (PIMAGE_RESOURCE_DIR_STRING_U)(resourceBase + id);
+    prdsu = (sImgResourceDirStringWC *) (resourceBase + id);
 
+#ifdef _WIN32
     WideCharToMultiByte(CP_ACP, 0, prdsu->NameString, prdsu->Length, buffer, cBytes, 0, 0);
-    buffer[ min(cBytes-1,prdsu->Length) ] = 0;  // Null terminate it!!!
+    buffer[min(cBytes - 1, prdsu->Length)] = 0;  /* Null terminate it!!! */
+#else
+    {
+      uint32_t mi = cBytes - 1;
+      uint32_t i;
+      if (mi > prdsu->Length)
+        mi = prdsu->Length;
+      for (i = 0; i < mi; i++)
+        {
+          uint16_t ch = prdsu->NameString[i];
+          if (!ch)
+            break;
+          if (ch >= 128)
+            ch = '?';
+          buffer[i] = (char) (ch & 0xff);
+        }
+      buffer[i] = 0;
+    }
+#endif
 }
 
-static int32_t readResourceDirectory (FILE *fp, unsigned char **dta, size_t *length, size_t *resRVA)
+static int32_t
+readResourceDirectory (FILE *fp, unsigned char **dta, size_t *length, size_t *resRVA)
 {
   long pe_header;
   int32_t be64;

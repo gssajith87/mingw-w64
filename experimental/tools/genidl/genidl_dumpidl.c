@@ -104,7 +104,10 @@ TI2_typlib_init (unsigned char *dta, size_t len)
   if (t->helpfile != -1)
     tl->helpfile = TI_get_typ_name (&tl->ti2_typs, t->helpfile, TITYP_STR, "");
   if (t->name_offset != -1)
-    tl->name = TI_get_typ_name (&tl->ti2_typs, t->name_offset, TITYP_NAME, "");
+    {
+      tl->name = TI_get_typ_name (&tl->ti2_typs, t->name_offset, TITYP_NAME, "");
+      strlwr (tl->name);
+    }
   tl->dispatch = t->dispatchpos;
   tl->nr_typinfos = t->nr_typeinfos;
   tl->nr_impinfos = t->nr_impinfos;
@@ -225,12 +228,32 @@ TI2_update_config (sTI2TypLib *tl, const char *orgfname)
   size_t no = tl->nr_typinfos;
   size_t i;
   char *tlbname, *h;
-
+  char *sec = NULL;
+  
   genidl_add_lib (tl->name);
-  /* We remove possibly old items.  */
-  genidl_del_lib_iten (tl->name);
+  sec = (char *) malloc (strlen (tl->name) + 5);
+  /* Check if .tlb is present */
+  strcpy (sec, tl->name);
+  if (strrchr (tl->name, '.') != NULL)
+    {
+      if (! strcmp (strrchr (sec, '.'), ".tlb"))
+        *strrchr (sec, '.') = 0;
+      else
+        strcpy (strrchr (sec, '.'), ".tlb");
+    }
+  else
+    {
+      strcat (sec, ".tlb");
+    }
+  genidl_add_lib_alias (tl->name, sec);
+  free (sec);
+
+  /* Do we have a .tlb input file? If so add alias of name.  */  
   if (orgfname && strstr (orgfname, ".tlb") != NULL)
     genidl_add_lib_alias (tl->name, orgfname);
+
+  /* We remove possibly old items.  */
+  genidl_del_lib_iten (tl->name);
   if (!no && tl->ti2_typs.buc[TITYP_NAME].count != 0
       && tl->ti2_typs.buc[TITYP_GUIDS].count != 0)
     return;
