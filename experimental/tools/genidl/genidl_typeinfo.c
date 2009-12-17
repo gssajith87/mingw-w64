@@ -1174,7 +1174,7 @@ printValue (FILE *fp, sTITyps *typs, uint32_t val)
         case 2: /* VT_I2 */
           fprintf (fp, "(short) %d", u.i2); break;
         case 3: /* VT_I4 */
-          fprintf (fp, "(short) %d", u.i4); break;
+          fprintf (fp, "(int) %d", u.i4); break;
         case 4: /* VT_R4 */
           fprintf (fp, "(float) %g", u.f4); break;
         case 5: /* VT_R8 */

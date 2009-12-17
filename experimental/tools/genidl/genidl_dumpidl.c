@@ -801,7 +801,7 @@ printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *
       printVarOption (fp, mi->var->flags, id, defid, mi->var->varKind, &val, prefix);
       rtyp = TI_getVTorDref (&tl->ti2_typs, mi->var->datatype, name, 0);
       fprintf (fp, "%s%s%s", prefix, val, rtyp, mi->var->varKind);
-      if (tb->kind == TKIND_DISPATCH && mi->var->oValue != 0)
+      if ((tb->kind == TKIND_DISPATCH || tb->kind == TKIND_INTERFACE) && mi->var->oValue != 0)
       {
 	fprintf (fp," = %d", mi->var->oValue);
       }
