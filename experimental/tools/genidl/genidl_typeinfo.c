@@ -1017,6 +1017,8 @@ printVTData (FILE * fp,uint32_t vt, unsigned char *dta, uint32_t sz)
   case 19: /* VT_UI4 */ fprintf (fp," = %uU", *((uint32_t *) dta)); break;
   case 20: /* VT_I8 */ fprintf (fp," = %I64dLL", *((int64_t *) dta)); break;
   case 21: /* VT_UI8 */ fprintf (fp," = %I64uULL", *((uint64_t *) dta)); break;
+  case 10: /* VT_ERROR */
+          fprintf (fp, " = (SCODE) %dL", *((int32_t *) dta)); break;
   case 11: /* VT_BOOL */
   case 2: /* VT_I2 */ fprintf (fp," = %d", *((int16_t *) dta)); break;
   case 22: /* VT_INT */
@@ -1134,29 +1136,106 @@ getParamFlagName (uint32_t pflag)
 void
 printValue (FILE *fp, sTITyps *typs, uint32_t val)
 {
-  if ((val & 0xff000000)==0x8c000000)
-    fprintf(fp, "0x%x", val &0xffffff);
-  else if ((val & 0xff000000)==0x0)
-  {
-    char *h = NULL;
-    if (val == 0x60)
+  if ((val & 0x80000000) != 0)
     {
-      h = TI_get_typ_name (typs, (uint32_t) val, TITYP_CUSTOMDATA,"");
+      union {
+        long long i8;
+        unsigned long long ui8;
+        uint32_t ui4;
+        int32_t i4;
+        int16_t i2;
+        uint16_t ui2;
+        char i1;
+        unsigned char ui1;
+        float f4;
+        double f8;
+      } u;
+      uint32_t vt = (val >> 26) & 0x1f;
+      u.ui4 = val & 0x3fffffff;
+      switch (vt)
+        {
+        case 0: case 1:
+          break;
+        case 2: /* VT_I2 */
+          fprintf (fp, "(short) %d", u.i2); break;
+        case 3: /* VT_I4 */
+          fprintf (fp, "(short) %d", u.i4); break;
+        case 4: /* VT_R4 */
+          fprintf (fp, "(float) %g", u.f4); break;
+        case 5: /* VT_R8 */
+          fprintf (fp, "(double) %g", u.f8); break;
+        case 6: /* VT_CY */
+          fprintf (fp, "(CY) 0x%x", u.ui4); break;
+	case 7: /* VT_DATE */
+          fprintf (fp, "(DATE) 0x%x", u.ui4); break;
+	case 8: /* VT_BSTR */
+          fprintf (fp, "(BSTR) 0x%x", u.ui4); break;
+	case 9: /* VT_DISPATCH */
+          fprintf (fp, "(IDispatch *) 0x%x", u.ui4); break;
+	case 10: /* VT_ERROR */
+          fprintf (fp, "(SCODE) %d", u.i4); break;
+	case 11: /* VT_BOOL */
+          fprintf (fp, "(BOOL) %d", u.i2); break;
+	case 12: /* VT_VARIANT */
+          fprintf (fp, "(VARIANT) 0x%x", u.ui4); break;
+	case 13: /* VT_UNKNOWN */
+          fprintf (fp, "(IUnknown *) 0x%x", u.ui4); break;
+	case 14: /* VT_DECIMAL */
+          fprintf (fp, "(DECIMAL) 0x%x", u.ui4); break;
+	case 16: /* VT_I1 */
+          fprintf (fp, "(CHAR) %d", u.i1); break;
+	case 17: /* VT_UI1 */
+          fprintf (fp, "(UCHAR) %u", u.ui1); break;
+	case 18: /* VT_UI2 */
+          fprintf (fp, "(USHORT) %u", u.ui2); break;
+	case 19: /* VT_UI4 */
+          fprintf (fp, "(UINT) %u", u.ui4); break;
+	case 20: /* VT_I8 */
+#ifdef _WIN32
+          fprintf (fp, "(LONGLONG) %I64dLL", u.i8); break;
+#else
+          fprintf (fp, "(LONGLONG) %lldLL", u.i8); break;
+#endif
+	case 21: /* VT_UI8 */
+#ifdef _WIN32
+          fprintf (fp, "(ULONGLONG) 0x%I64xULL", u.ui8); break;
+#else
+          fprintf (fp, "(LONGLONG) 0x%llxULL", u.ui8); break;
+#endif
+	case 22: /* VT_INT */
+          fprintf (fp, "(int) %d", u.i4); break;
+	case 23: /* VT_UINT */
+          fprintf (fp, "(unsigned int) %u", u.ui4); break;
+	case 24: /* VT_VOID */
+	  break;
+	case 25: /* VT_HRESULT */
+          fprintf (fp, "(HRESULT) %dL", u.i4); break;
+	case 26: /* VT_PTR */
+          fprintf (fp, "(void *) %u", u.ui4); break;
+	case 27: /* VT_SAFEARRAY */
+          fprintf (fp, "(SAFEARRAY) %u", u.ui4); break;
+	case 28: /* VT_CARRAY */
+          fprintf (fp, "(CARRAY) %u", u.ui4); break;
+	case 29: /* VT_USERDEFINED */
+          fprintf (fp, "%u", u.ui4); break;
+	case 30: /* VT_LPSTR */
+          fprintf (fp, "(LPSTR) %u", u.ui4); break;
+	case 31: /* VT_LPWSTR */
+          fprintf (fp, "(LPWSTR) %u", u.ui4); break;
+        }
     }
-    else
-      h = TI_get_typ_name (typs, (uint32_t) val, TITYP_CUSTOMDATA,"");
-    if (h)
-      {
-	fprintf (fp, "%s", h);
-	free (h);
-      }
-    else
-      fprintf (fp, "CD_%x", val);
-  }
-  else if ((val & 0xff000000)==0xff000000)
-    fprintf (fp, "%d", (int) val);
   else
-    fprintf(fp, "!0x%x!", val);
+    {
+      char *h = NULL;
+      h = TI_get_typ_name (typs, (uint32_t) val, TITYP_CUSTOMDATA,"");
+      if (h)
+	{
+	  fprintf (fp, "%s", h);
+	  free (h);
+	}
+      else
+	fprintf (fp, "CD_%x", val);
+    }
 }
 
 const char *
