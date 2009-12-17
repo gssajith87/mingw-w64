@@ -922,18 +922,18 @@ getVTTypeName (uint32_t vt, uint32_t *dataSize)
   {
   case 0: /* VT_EMPTY */ name = "EMPTY"; break;
   case 1: /* VT_NULL */ name = "NULL"; break;
-  case 2: /* VT_I2 */ name = "SHORT"; sz=2; break;
-  case 3: /* VT_I4 */ name = "INT"; sz=4; break;
+  case 2: /* VT_I2 */ name = "short"; sz=2; break;
+  case 3: /* VT_I4 */ name = "long"; sz=4; break;
   case 4: /* VT_R4 */ name = "FLOAT"; sz=4; break;
   case 5: /* VT_R8 */ name = "DOUBLE"; sz=8; break;
   case 6: /* VT_CY */ name = "CY"; sz=8; break;
   case 7: /* VT_DATE */ name = "DATE"; sz = 0xffffffff; break;
   case 8: /* VT_BSTR */ name = "BSTR"; sz = 0xfffffffe; break;
-  case 9: /* VT_DISPATCH */ name = "DISPATCH"; sz = 0xffffffff; break;
-  case 10: /* VT_ERROR */ name = "ERROR"; sz = 0; break;
+  case 9: /* VT_DISPATCH */ name = "IDispatch *"; sz = 0xffffffff; break;
+  case 10: /* VT_ERROR */ name = "SCODE"; sz = 4; break;
   case 11: /* VT_BOOL */ name = "BOOL"; sz = 2; break;
   case 12: /* VT_VARIANT */ name = "VARIANT"; sz = 0xffffffff; break;
-  case 13: /* VT_UNKNOWN */ name = "UNKNOWN"; sz = 0xffffffff; break;
+  case 13: /* VT_UNKNOWN */ name = "IUnknown *"; sz = 0xffffffff; break;
   case 14: /* VT_DECIMAL */ name = "DECIMAL"; sz = 16; break;
   case 16: /* VT_I1 */ name = "CHAR"; sz=1; break;
   case 17: /* VT_UI1 */ name = "UCHAR"; sz=1; break;
@@ -970,6 +970,8 @@ getVTTypeName (uint32_t vt, uint32_t *dataSize)
     name = &str[0]; sz = 0xffffffff;
     break;
   }
+  if ((vt &0xf000) == 0x4000)
+    sprintf (str, " *");
   if (dataSize)
     *dataSize = sz;
   return name;

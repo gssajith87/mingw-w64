@@ -550,11 +550,11 @@ getVT_size (uint32_t vt, unsigned char *dta, size_t *basesz)
   case 6: /* VT_CY */ ret = 16; break;
   case 7: /* VT_DATE */ ret = 16; break;
   case 8: /* VT_BSTR */ ret = 0; bsz += 4; break;
-  case 9: /* VT_DISPATCH */ ret = 0; break;
-  case 10: /* VT_ERROR */ ret = 0; break;
+  case 9: /* VT_DISPATCH */ ret = 4; break;
+  case 10: /* VT_ERROR */ ret = 4; break;
   case 11: /* VT_BOOL */ ret = 2; break;
   case 12: /* VT_VARIANT */ ret = 0; break;
-  case 13: /* VT_UNKNOWN */ ret = 0; break;
+  case 13: /* VT_UNKNOWN */ ret = 4; break;
   case 14: /* VT_DECIMAL */ ret = 16; break;
   case 16: /* VT_I1 */ ret = 1; break;
   case 17: /* VT_UI1 */ ret = 1; break;
@@ -609,18 +609,18 @@ decode_VT_name_tmp (uint16_t vt)
   {
   case 0: /* VT_EMPTY */ name = "EMPTY"; break;
   case 1: /* VT_NULL */ name = "NULL"; break;
-  case 2: /* VT_I2 */ name = "SHORT"; break;
-  case 3: /* VT_I4 */ name = "INT"; break;
+  case 2: /* VT_I2 */ name = "short"; break;
+  case 3: /* VT_I4 */ name = "long"; break;
   case 4: /* VT_R4 */ name = "float"; break;
   case 5: /* VT_R8 */ name = "double"; break;
   case 6: /* VT_CY */ name = "CY"; break;
   case 7: /* VT_DATE */ name = "DATE"; break;
   case 8: /* VT_BSTR */ name = "BSTR"; break;
   case 9: /* VT_DISPATCH */ name = "DISPATCH"; break;
-  case 10: /* VT_ERROR */ name = "ERROR"; break;
+  case 10: /* VT_ERROR */ name = "SCODE"; break;
   case 11: /* VT_BOOL */ name = "WINBOOL"; break;
   case 12: /* VT_VARIANT */ name = "VARIANT"; break;
-  case 13: /* VT_UNKNOWN */ name = "UNKNOWN"; break;
+  case 13: /* VT_UNKNOWN */ name = "IUnknown *"; break;
   case 14: /* VT_DECIMAL */ name = "DECIMAL"; break;
   case 16: /* VT_I1 */ name = "CHAR"; break;
   case 17: /* VT_UI1 */ name = "UCHAR"; break;
@@ -657,11 +657,13 @@ decode_VT_name_tmp (uint16_t vt)
     name = &str[0];
     break;
   }
+  if ((vt & 0xf000) == 0x4000)
+    strcat (str, " *");
   return name;
 }
 
 char *
-TI_getVTorDref(sTITyps *ptyp,uint32_t vt, const char *varName, int beBase)
+TI_getVTorDref (sTITyps *ptyp,uint32_t vt, const char *varName, int beBase)
 {
   char *name;
   if ((vt & 0x80000000)!=0)
