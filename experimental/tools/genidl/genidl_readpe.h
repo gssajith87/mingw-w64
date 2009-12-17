@@ -190,7 +190,7 @@ int32_t genidl_ispe (FILE *fp, int32_t *be64);
  * @param[in] fp Pointer to file
  * @param[in] nores typelib to read in directory
  * @param[out] pDta raw typelib info
- * @param[out] szDta size of raw typelib infor
+ * @param[out] szDta size of raw typelib information
  * @return 1 for success
  */
 int32_t genidl_pe_typelib_resource_read (FILE *fp, int32_t noRes, unsigned char **pDta, size_t *szDta);

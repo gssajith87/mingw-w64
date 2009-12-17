@@ -1,7 +1,7 @@
 #ifndef _GENIDL_TYPEINFO_H
 #define _GENIDL_TYPEINFO_H
 
-#define TYPELIB_MSFT_MAGIC 0x5446534d
+#define TYPELIB_MSFT_MAGIC 0x5446534d /**< MSFT */
 #define TYPELIB_NO_INDEX (-1)
 
 #pragma pack(push,1)
@@ -29,7 +29,7 @@ typedef struct sTypeLibMSFT {
   uint32_t res48;            /* unknown always: 0x80 (name hash size?) */
   int32_t dispatchpos;      /* HREFTYPE to IDispatch, or -1 if no IDispatch */
   int32_t nr_impinfos;        /* number of impinfos */
-  int dta[1];
+  int32_t dta[1];
 } sTypeLibMSFT;
   /* 0x100 set with a helpstringdll defined - in this
   case the offset to the name in the stringtable
@@ -98,38 +98,38 @@ typedef struct sMSFT_TypeInfoBase {
 } sMSFT_TypeInfoBase;
 
 typedef struct sMSFT_TypeDesc {
-  unsigned short kind;
-  unsigned short flag;
+  uint16_t kind;
+  uint16_t flag;
   union {
-    int oTypeB;
-    int oTypeD;
-    int oArrayD;
-    unsigned int vt;
+    int32_t oTypeB;
+    int32_t oTypeD;
+    int32_t oArrayD;
+    uint32_t vt;
   };
 } sMSFT_TypeDesc;
 
 typedef struct sMSFT_RefTab {
-  int oData1;
-  int no;
-  int data2;
-  int oNextRef;
+  int32_t oData1;
+  int32_t no;
+  int32_t data2;
+  int32_t oNextRef;
 } sMSFT_RefTab;
 
 typedef struct sMSFT_CustomData {
-  unsigned short vt;
+  uint16_t vt;
   unsigned char dta[1];
 } sMSFT_CustomData;
 
 typedef struct sMSFT_CDGuid {
-    int oGuid;
-    int oData;
-    int next;     /* next offset in the table, -1 if it's the last */
+    int32_t oGuid;
+    int32_t oData;
+    int32_t next;     /* next offset in the table, -1 if it's the last */
 } sMSFT_CDGuid;
 
 typedef struct sMSFT_FuncParam {
   uint32_t dataType;
-  int oName;
-  int flags;
+  int32_t oName;
+  int32_t flags;
 } sMSFT_FuncParam;
 
 typedef struct sMSFT_var {
@@ -139,7 +139,7 @@ typedef struct sMSFT_var {
   uint32_t flags;
   uint16_t varKind;
   uint16_t vardescSize;
-  int oValue;
+  int32_t oValue;
 } sMSFT_var;
 
 typedef struct sMSFT_func {
@@ -150,7 +150,7 @@ typedef struct sMSFT_func {
   uint16_t vtableOffset;
   uint16_t funcdescSize;
   union {
-    int fkccic;
+    int32_t fkccic;
     struct {
       uint32_t funcKind : 3;
       uint32_t invokeKind : 4;
@@ -170,10 +170,10 @@ typedef struct sMSFT_func {
 } sMSFT_func;
 
 typedef struct sMSFT_ImpFiles {
-  int res1;
-  int res2;
-  int res3;
-  unsigned short flag;
+  int32_t res1;
+  int32_t res2;
+  int32_t res3;
+  uint16_t flag;
   unsigned char dta[1];
 } sMSFT_ImpFiles;
 
@@ -185,18 +185,18 @@ typedef struct sMSFT_memblob {
 } sMSFT_memblob;
 
 typedef struct sMSFT_ArrayDesc {
-  unsigned int vt;
-  unsigned short count;
-  unsigned short size;
-  unsigned int vt_offset[1];
+  uint32_t vt;
+  uint16_t count;
+  uint16_t size;
+  uint32_t vt_offset[1];
 } sMSFT_ArrayDesc;
 
 typedef struct tagMSFT_ImpInfo {
-  unsigned short count;
+  uint16_t count;
   unsigned char flags;
   unsigned char tkind;
-  int oImpFile;       /* offset in the Import File table */
-  int oGuid;          /* offset in Guid table or typeinfo index (see bit 16 of flags) */
+  int32_t oImpFile;       /* offset in the Import File table */
+  int32_t oGuid;          /* offset in Guid table or typeinfo index (see bit 16 of flags) */
 } MSFT_ImpInfo;
 
 #pragma pack(pop)
@@ -239,11 +239,11 @@ typedef struct tagMSFT_ImpInfo {
 #define INVOKIND_PROPERTYPUTREF 8
 
 /* Calling convention */
-#define CALLCONV_FASTCALL 0
-#define CALLCONV_CDECL 1
-#define CALLCONV_PASCAL 2
+#define CALLCONV_FASTCALL 0     /**< fastcall call convention */
+#define CALLCONV_CDECL 1        /**< cdecl call convention */
+#define CALLCONV_PASCAL 2       /**< pascal call convention */
 #define CALLCONV_MACPASCAL 3
-#define CALLCONV_STDCALL 4
+#define CALLCONV_STDCALL 4      /**< stdcall call convention */
 #define CALLCONV_FPFASTCALL 5
 #define CALLCONV_SYSCALL 6
 #define CALLCONV_MPWCDECL 7
@@ -331,6 +331,12 @@ typedef struct tagMSFT_ImpInfo {
 #define VARFLAG_FREPLACEABLE 0x800
 #define VARFLAG_FIMMEDIATEBIND 0x1000
 
+/**
+ * Dumps typelib info to file
+ * @param[in] fp File to print to
+ * @param[in] dta raw typelib info
+ * @param[in] size size of raw typelib information
+ */
 void dumpInfo (FILE *fp, unsigned char *dta, size_t size);
 
 #endif

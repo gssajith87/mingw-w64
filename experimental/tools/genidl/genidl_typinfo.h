@@ -18,33 +18,77 @@
 #define TITYP_MAX 12
 
 typedef struct sTITyp {
-  uint32_t memid;
-  int32_t kind;
+  uint32_t memid;       /**< TYPINFO offset ID */
+  int32_t kind;         /**< TYPINFO kind */
   int32_t refkind;
-  uint32_t refmem;
-  char *refstr;
-  char *poststr;
-  char name[1];
+  uint32_t refmem;      /**< Offset reference */
+  char *refstr;         /**< Helper member to form TYPINFO string */
+  char *poststr;        /**< Helper member to form TYPINFO string */
+  char name[1];         /**< TYPINFO name */
 } sTITyp;
 
 typedef struct sTITypsHash
 {
   size_t count;
   size_t max;
-  sTITyp **arr;
+  sTITyp **arr; /**< Directory of TYPEINFO data found */
 } sTITypsHash;
 
 typedef struct sTITyps {
   sTITypsHash buc[TITYP_MAX];
 } sTITyps;
 
+/**
+ * Initializes sTITyps struct
+ * @param[in] ptyp Address of struct to zero
+ * @return always 0
+ */
 int32_t TI_init_typs (sTITyps *ptyp);
+
+/**
+ * Walks over and frees sTITypsHash entries found in sTITyps structure
+ * @param[in] ptyp sTITyps structure containing sTITypsHash entries to destroy
+ * @return always 0
+ */
 int32_t TI_dest_typs (sTITyps *ptyp);
+
+/**
+ * Inserts a sTITypsHash entry into a sTITyps
+ * @param[in] ptyp Structure to insert entry into
+ * @param[in] memid
+ * @param[in] kind
+ * @param[in] refkind
+ * @param[in] refmem
+ * @param[in[ refstr
+ * @param[in] name typinfo associated name
+ * @param[in] poststr
+ * @return always 0
+ */
 int32_t TI_add_typ (sTITyps *ptyp, uint32_t memid, int32_t kind, int32_t refkind, uint32_t refmem,
 		const char *refstr, const char *name, const char *poststr);
+
+/**
+ * Searches ptyp for element matching memid and kind.
+ * @param[in] ptyp typelib data to search
+ * @param[in] memid TTYPINFO offset to match
+ * @param[in] kind TYPINFO kind to match
+ * @return pointer to matching matching typinfo section
+ */
 sTITyp *TI_get_typ (sTITyps *ptyp, uint32_t memid, int32_t kind);
+
+/**
+ * Returns a string to name the TYPINFO sections
+ * @param[in] memid TTYPINFO offset to match
+ * @param[in] kind TYPINFO kind to match
+ * @param[in] varname
+ * @return string to name of TYPINFO section
+ */
 char *TI_get_typ_name (sTITyps *ptyp, uint32_t memid, int32_t kind, const char *varName);
 
+/**
+ * Decodes name from raw data to insert into new entry in sTITyps
+ * @return always 0
+ */
 int32_t TI2_import_name (sTITyps *nptr, unsigned char *dta, uint32_t len);
 int32_t TI2_import_guid (sTITyps *gptr, unsigned char *dta, uint32_t len);
 int32_t TI2_import_typinfo_names (sTITyps *tptr, unsigned char *dta, uint32_t len);
@@ -123,7 +167,19 @@ typedef struct sTI2TypLib {
 sTI2TypLib *TI2_typlib_init (unsigned char *dta, size_t len);
 void TI2_typlib_dest (sTI2TypLib *tl);
 void TI2_typlib_idl (FILE *fp, sTI2TypLib *tl, const char *orgname);
+
+/**
+ * Returns text string of calling convention type
+ * @param[in] cc calling convention type
+ * @return pointer to convention type string
+ */
 const char *getCallConvName (int32_t cc);
+
+/**
+ * Returns text string of calling convention type
+ * @param[in] fp file to print to
+ * @param[in] typs
+ */
 void printValue(FILE *fp, sTITyps *typs, uint32_t val);
 char *getTypeBOrImpRef (sTITyps *dptr, uint32_t off, const char *var);
 
