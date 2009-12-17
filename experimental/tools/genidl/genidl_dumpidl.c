@@ -772,7 +772,11 @@ printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *
 	    if (mi->funcParam[a].oName != -1)
 	      aname = TI_get_typ_name (&tl->ti2_typs, mi->funcParam[a].oName, TITYP_NAME, "");
 	    else
-	      aname = strdup ("");
+	      {
+	        /* We have to generate an name for this argument. */
+	        aname = (char *) malloc (128);
+	        sprintf (aname, "argNo%u", (uint32_t) a + 1);
+	      }
 	    atyp = TI_getVTorDref (&tl->ti2_typs, mi->funcParam[a].dataType, aname, 0);
 	    fprintf (fp, "%s  ", prefix);
 	    printArgFlags (fp, mi->funcParam[a].flags);

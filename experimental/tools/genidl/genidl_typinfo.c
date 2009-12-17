@@ -616,7 +616,7 @@ decode_VT_name_tmp (uint16_t vt)
   case 6: /* VT_CY */ name = "CY"; break;
   case 7: /* VT_DATE */ name = "DATE"; break;
   case 8: /* VT_BSTR */ name = "BSTR"; break;
-  case 9: /* VT_DISPATCH */ name = "DISPATCH"; break;
+  case 9: /* VT_DISPATCH */ name = "IDispatch *"; break;
   case 10: /* VT_ERROR */ name = "SCODE"; break;
   case 11: /* VT_BOOL */ name = "WINBOOL"; break;
   case 12: /* VT_VARIANT */ name = "VARIANT"; break;
