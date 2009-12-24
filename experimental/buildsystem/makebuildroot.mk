@@ -305,18 +305,30 @@ endif
 	@touch $@
 
 ########################################
+# Configure mingw-w64 headers
+########################################
+headers-configure: \
+    ${BUILD_DIR}/mingw-headers/obj/.config.marker
+
+${BUILD_DIR}/mingw-headers/obj/.config.marker: \
+    ${BUILD_DIR}/root/.root.init.marker \
+    ${BUILD_DIR}/mingw-headers/obj/.mkdir.marker
+	cd $(dir $@) && \
+	  ${CURDIR}/${BUILD_DIR}/mingw/mingw-w64-headers/configure \
+	  --prefix=${CURDIR}/${BUILD_DIR}/root \
+	  --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
+	  --host=${TARGET_ARCH}
+	@touch $@
+
+########################################
 # Install mingw-w64 headers
 ########################################
 headers-install: \
-    ${BUILD_DIR}/root/mingw/.headers.install.marker
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker
 
-${BUILD_DIR}/root/mingw/.headers.install.marker: \
-    ${BUILD_DIR}/root/.root.init.marker \
-    ${BUILD_DIR}/root/${TARGET_ARCH}/include/.mkdir.marker
-	tar cf - --exclude=.svn -C build/mingw/mingw-w64-headers/include . | \
-	  tar xpvf - -C ${BUILD_DIR}/root/${TARGET_ARCH}/include
-	tar cf - --exclude=.svn -C build/mingw/mingw-w64-headers/crt . | \
-	  tar xpvf - -C ${BUILD_DIR}/root/${TARGET_ARCH}/include
+${BUILD_DIR}/mingw-headers/obj/.install.marker: \
+    ${BUILD_DIR}/mingw-headers/obj/.config.marker
+	make -C $(dir $@) install
 	@touch $@
 
 ########################################
@@ -326,7 +338,6 @@ binutils-configure: \
     ${BUILD_DIR}/binutils/obj/.config.marker
 
 ${BUILD_DIR}/binutils/obj/.config.marker: \
-    ${BUILD_DIR}/root/mingw/.headers.install.marker\
     ${BUILD_DIR}/binutils/obj/.mkdir.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
@@ -388,6 +399,7 @@ gmp-configure: \
 
 ${BUILD_DIR}/gmp/obj/.config.marker: \
     ${BUILD_DIR}/gmp/obj/.mkdir.marker \
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
 	../../../build/gmp/src/configure \
@@ -427,6 +439,7 @@ mpfr-configure: \
 ${BUILD_DIR}/mpfr/obj/.config.marker: \
     ${BUILD_DIR}/mpfr/obj/.mkdir.marker \
     ${BUILD_DIR}/root/.root.init.marker \
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
     ${BUILD_DIR}/gmp/install/.install.marker
 	cd $(dir $@) && \
 	../../../build/mpfr/src/configure \
@@ -467,6 +480,7 @@ mpc-configure: \
 ${BUILD_DIR}/mpc/obj/.config.marker: \
     ${BUILD_DIR}/mpc/obj/.mkdir.marker \
     ${BUILD_DIR}/root/.root.init.marker \
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
     ${BUILD_DIR}/gmp/install/.install.marker \
     ${BUILD_DIR}/mpfr/install/.install.marker
 	cd $(dir $@) && \
@@ -540,7 +554,7 @@ gcc-bootstrap-compile: \
 
 build/gcc/obj/.bootstrap.compile.marker: \
     build/gcc/obj/.config.marker \
-    ${BUILD_DIR}/root/mingw/.headers.install.marker
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker
 	found_asm=yes make -C $(dir $@) all-gcc
 	@touch $@
 
@@ -663,14 +677,28 @@ ${NATIVE_DIR}/root/.root.init.marker: \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
+# Configure mingw-w64 headers
+########################################
+native-headers-configure: \
+    ${NATIVE_DIR}/mingw-headers/obj/.config.marker
+
+${NATIVE_DIR}/mingw-headers/obj/.config.marker: \
+    ${NATIVE_DIR}/root/.root.init.marker \
+    ${NATIVE_DIR}/mingw-headers/obj/.mkdir.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
 # Install mingw-w64 headers
 ########################################
 native-headers-install: \
-    ${NATIVE_DIR}/root/mingw/.headers.install.marker
+    ${NATIVE_DIR}/mingw-headers/obj/.install.marker
 
-${NATIVE_DIR}/root/mingw/.headers.install.marker: \
-    ${NATIVE_DIR}/root/.root.init.marker \
-    ${NATIVE_DIR}/root/${TARGET_ARCH}/include/.mkdir.marker
+${NATIVE_DIR}/mingw-headers/obj/.install.marker: \
+    ${NATIVE_DIR}/mingw-headers/obj/.config.marker \
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
@@ -685,7 +713,6 @@ native-binutils-configure: \
 
 ${NATIVE_DIR}/binutils/obj/.config.marker: \
     ${BUILD_DIR}/gcc/obj/.install.marker \
-    ${NATIVE_DIR}/root/mingw/.headers.install.marker\
     ${NATIVE_DIR}/binutils/obj/.mkdir.marker \
     ${NATIVE_DIR}/root/.root.init.marker
 	PATH=$(realpath build/root/bin):$$PATH \
@@ -730,7 +757,7 @@ native-gmp-configure: \
 
 ${NATIVE_DIR}/gmp/obj/.config.marker: \
     ${BUILD_DIR}/gcc/obj/.install.marker \
-    ${NATIVE_DIR}/root/mingw/.headers.install.marker\
+    ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
     ${NATIVE_DIR}/gmp/obj/.mkdir.marker \
     ${NATIVE_DIR}/root/.root.init.marker
 	PATH=$(realpath build/root/bin):$$PATH \
@@ -775,7 +802,7 @@ native-mpfr-configure: \
 
 ${NATIVE_DIR}/mpfr/obj/.config.marker: \
     ${BUILD_DIR}/gcc/obj/.install.marker \
-    ${NATIVE_DIR}/root/mingw/.headers.install.marker\
+    ${NATIVE_DIR}/mingw-headers/obj/.install.marker\
     ${NATIVE_DIR}/mpfr/obj/.mkdir.marker \
     ${NATIVE_DIR}/gmp/install/.install.marker
 	PATH=$(realpath build/root/bin):$$PATH \
@@ -820,7 +847,7 @@ native-mpc-configure: \
 
 ${NATIVE_DIR}/mpc/obj/.config.marker: \
     ${BUILD_DIR}/gcc/obj/.install.marker \
-    ${NATIVE_DIR}/root/mingw/.headers.install.marker\
+    ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
     ${NATIVE_DIR}/mpc/obj/.mkdir.marker \
     ${NATIVE_DIR}/mpfr/install/.install.marker
 	PATH=$(realpath build/root/bin):$$PATH \
@@ -1033,6 +1060,7 @@ TARGETS := \
   gcc-configure \
   gcc-bootstrap-compile \
   gcc-bootstrap-install \
+  headers-configure \
   headers-install \
   crt-configure \
   crt-compile \
@@ -1053,6 +1081,7 @@ TARGETS := \
   native-mpc-compile \
   native-mpc-install \
   native-gcc-configure \
+  native-headers-configure \
   native-headers-install \
   native-crt-configure \
   native-crt-compile \
