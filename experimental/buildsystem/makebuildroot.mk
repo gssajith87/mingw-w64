@@ -698,7 +698,7 @@ native-headers-install: \
     ${NATIVE_DIR}/mingw-headers/obj/.install.marker
 
 ${NATIVE_DIR}/mingw-headers/obj/.install.marker: \
-    ${NATIVE_DIR}/mingw-headers/obj/.config.marker \
+    ${NATIVE_DIR}/mingw-headers/obj/.config.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
