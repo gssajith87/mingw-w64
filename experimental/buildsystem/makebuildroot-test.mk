@@ -339,7 +339,7 @@ else
 	test -d ${BUILD_DIR}/root/${TARGET_ARCH}/lib32 || mkdir ${BUILD_DIR}/root/${TARGET_ARCH}/lib32
 	test -d ${BUILD_DIR}/root/${TARGET_ARCH}/lib64 || mkdir ${BUILD_DIR}/root/${TARGET_ARCH}/lib64
 	test -h ${BUILD_DIR}/root/${TARGET_ARCH}/lib  || \
-	  ln -s "${MINGW_LIBDIR}" "${BUILD_DIR}/${TARGET_ARCH}/lib"
+	  ln -s "${MINGW_LIBDIR}" "${BUILD_DIR}/root/${TARGET_ARCH}/lib"
 	test -h ${BUILD_DIR}/root/mingw
 endif
 	@touch $@
