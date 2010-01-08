@@ -58,18 +58,12 @@ MINGW_CONFIG_EXTRA_ARGS_MULTI_N ?=
 ########################################
 # Configure
 ########################################
-#ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
-#  MINGW_LIBDIR := lib64
-#else ifeq (,$(filter-out i386-% i486-% i586-% i686-%,${TARGET_ARCH}))
-#  MIGNW_LIBDIR := lib32
-#else
-#  $(error Unknown CPU for target arch ${TARGET_ARCH})
-#endif
-
-ifeq (${TARGET_ARCH},x86_64-w64-mingw32)
+ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
   MINGW_LIBDIR := lib64
-else
+else ifeq (,$(filter-out i386-% i486-% i586-% i686-%,${TARGET_ARCH}))
   MIGNW_LIBDIR := lib32
+else
+  $(error Unknown CPU for target arch ${TARGET_ARCH})
 endif
 
 # the type of _host_ to run on (n.b. not build)
@@ -336,7 +330,7 @@ ifneq (,$(filter MINGW%,$(shell uname -s)))
 	test -e ${BUILD_DIR}/root/${TARGET_ARCH}/lib32 || mkdir ${BUILD_DIR}/root/${TARGET_ARCH}/lib32
 	test -e ${BUILD_DIR}/root/${TARGET_ARCH}/lib64 || mkdir ${BUILD_DIR}/root/${TARGET_ARCH}/lib64
 	test -e ${BUILD_DIR}/root/${TARGET_ARCH}/lib || \
-	  junction ${BUILD_DIR}/root/${TARGET_ARCH}/lib "${BUILD_DIR}/root/${TARGET_ARCH}/${MIGNW_LIBDIR}"
+	  junction ${BUILD_DIR}/root/${TARGET_ARCH}/lib "${BUILD_DIR}/root/${TARGET_ARCH}/${MINGW_LIBDIR}"
 	test -e ${BUILD_DIR}/root/${TARGET_ARCH}/lib
 else
 	test -h ${BUILD_DIR}/root/mingw  || \
@@ -345,7 +339,7 @@ else
 	test -h ${BUILD_DIR}/root/${TARGET_ARCH}/lib32 || mkdir ${BUILD_DIR}/root/${TARGET_ARCH}/lib32
 	test -h ${BUILD_DIR}/root/${TARGET_ARCH}/lib64 || mkdir ${BUILD_DIR}/root/${TARGET_ARCH}/lib64
 	test -h ${BUILD_DIR}/root/${TARGET_ARCH}/lib  || \
-	  ln -s "${MIGNW_LIBDIR}" "${BUILD_DIR}/${TARGET_ARCH}/lib"
+	  ln -s "${MINGW_LIBDIR}" "${BUILD_DIR}/${TARGET_ARCH}/lib"
 	test -h ${BUILD_DIR}/root/mingw
 endif
 	@touch $@
