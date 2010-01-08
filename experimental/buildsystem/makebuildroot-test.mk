@@ -714,7 +714,8 @@ ${BUILD_DIR}/pthreads/.pthreads.build.N: \
 
 ${BUILD_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32: \
     ${BUILD_DIR}/pthreads/.pthreads.prep \
-    ${BUILD_DIR}/mingw/obj/.install.marker
+    ${BUILD_DIR}/mingw/obj/.install.marker \
+    ${BUILD_DIR}/gcc/obj/.libgcc.install.marker
 	sed -e 's/dlltool$$/& -m i386:x86-64/' \
 	  -e 's/gcc$$/& -m64/' \
 	  -e 's/g++$$/& -m64/' \
@@ -728,7 +729,8 @@ ${BUILD_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32: \
 
 ${BUILD_DIR}/pthreads/.pthreads.build.i686-w64-mingw32: \
     ${BUILD_DIR}/pthreads/.pthreads.prep \
-    ${BUILD_DIR}/mingw/obj/.install.marker
+    ${BUILD_DIR}/mingw/obj/.install.marker \
+    ${BUILD_DIR}/gcc/obj/.libgcc.install.marker
 	sed -e 's/dlltool$$/& -m i386/' \
 	  -e 's/gcc$$/& -m32/' \
 	  -e 's/g++$$/& -m32/' \
