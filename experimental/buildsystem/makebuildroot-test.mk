@@ -794,9 +794,9 @@ ${BUILD_DIR}/pthreads/.pthreads.install.i686-w64-mingw32: \
 gcc-compile: \
     ${BUILD_DIR}/gcc/obj/.compile.marker \
     ${BUILD_DIR}/mingw/obj/.install.marker \
-    ${BUILD_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB}
 
 ${BUILD_DIR}/gcc/obj/.compile.marker: \
+    ${BUILD_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB} \
     ${BUILD_DIR}/gcc/obj/.config.marker \
     ${BUILD_DIR}/mingw/obj/.install.marker
 	PATH=$(realpath build/root/bin):$$PATH \
