@@ -803,9 +803,9 @@ gcc-compile: \
     ${BUILD_DIR}/mingw/obj/.install.marker \
 
 ${BUILD_DIR}/gcc/obj/.compile.marker: \
-    ${BUILD_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB} \
     ${BUILD_DIR}/gcc/obj/.config.marker \
-    ${BUILD_DIR}/mingw/obj/.install.marker
+    ${BUILD_DIR}/mingw/obj/.install.marker \
+	${BUILD_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB}
 	PATH=$(realpath build/root/bin):$$PATH \
 	make -C $(dir $@)
 	@touch $@
@@ -1156,6 +1156,149 @@ ${NATIVE_DIR}/mingw/obj/.install.marker: \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
+# Compile libgcc
+########################################
+
+native-gcc-libgcc-compile: \
+    ${NATIVE_DIR}/gcc/obj/.libgcc.compile.marker
+
+${NATIVE_DIR}/gcc/obj/.libgcc.compile.marker: \
+    ${NATIVE_DIR}/mingw/obj/.install.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	$(MAKE) -C $(dir $@) all-target-libgcc
+	@touch $@
+
+########################################
+# Install libgcc
+########################################
+native-gcc-libgcc-install: \
+    ${NATIVE_DIR}/gcc/obj/.libgcc.install.marker
+
+${NATIVE_DIR}/gcc/obj/.libgcc.install.marker: \
+    ${NATIVE_DIR}/gcc/obj/.libgcc.compile.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	$(MAKE) -C $(dir $@) install-target-libgcc
+	@touch $@
+
+########################################
+# Prep pthreads-win32 from cvs
+########################################
+native-pthreads-prep: \
+    ${NATIVE_DIR}/pthreads/.pthreads.prep
+
+${NATIVE_DIR}/pthreads/.pthreads.prep: \
+    ${NATIVE_DIR}/root/.root.init.marker \
+    src/patches/.patches.pull.marker \
+    src/pthreads/.pthreads.download.marker
+	cp -prf src/pthreads ${NATIVE_DIR}/
+	cp -p src/patches/pthreads_win32/w64sup.patch $(dir $@)
+	cd $(dir $@) && patch -Np1 -i w64sup.patch
+	cp -p $(dir $@)/config.h $(dir $@)pthreads_win32_config.h
+	cp -p $(dir $@)/GNUmakefile $(dir $@)GNUmakefile.ori
+	sed -e 's/HAVE_CONFIG_H/1/' \
+	  -e 's/config.h/pthreads_win32_config.h/' \
+	  < $(dir $@)/pthread.h >$(dir $@)pthread.h.out
+	mv $(dir $@)/pthread.h.out $(dir $@)pthread.h
+	@touch $@
+
+########################################
+# Build pthreads-win32 from cvs
+########################################
+native-pthreads-build: \
+    ${NATIVE_DIR}/pthreads/.pthreads.build.${ENABLE_MULTILIB}
+
+${NATIVE_DIR}/pthreads/.pthreads.build.Y: \
+    ${NATIVE_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32 \
+    ${NATIVE_DIR}/pthreads/.pthreads.build.i686-w64-mingw32
+	@touch $@
+
+${NATIVE_DIR}/pthreads/.pthreads.build.N: \
+    ${NATIVE_DIR}/pthreads/.pthreads.build.${TARGET_ARCH}
+	@touch $@
+
+${NATIVE_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32: \
+    ${NATIVE_DIR}/pthreads/.pthreads.prep \
+    ${NATIVE_DIR}/mingw/obj/.install.marker \
+    ${NATIVE_DIR}/gcc/obj/.libgcc.install.marker
+	sed -e 's/dlltool$$/& -m i386:x86-64/' \
+	  -e 's/gcc$$/& -m64/' \
+	  -e 's/g++$$/& -m64/' \
+	  -e 's/windres$$/& -F pe-x86-64/' \
+	  -e 's/pthreadGC\$$(DLL_VER)/&-w64/g' \
+	  -e 's/pthreadGCE\$$(DLL_VER)/&-w64/g' \
+	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
+	PATH=$(realpath build/root/bin):$$PATH \
+	$(MAKE) -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
+	@touch $@
+
+${NATIVE_DIR}/pthreads/.pthreads.build.i686-w64-mingw32: \
+    ${NATIVE_DIR}/pthreads/.pthreads.prep \
+    ${NATIVE_DIR}/mingw/obj/.install.marker \
+    ${NATIVE_DIR}/gcc/obj/.libgcc.install.marker
+	sed -e 's/dlltool$$/& -m i386/' \
+	  -e 's/gcc$$/& -m32/' \
+	  -e 's/g++$$/& -m32/' \
+	  -e 's/windres$$/& -F pe-i386/' \
+	  -e 's/pthreadGC\$$(DLL_VER)/&-w32/g' \
+	  -e 's/pthreadGCE\$$(DLL_VER)/&-w32/g' \
+	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
+	PATH=$(realpath build/root/bin):$$PATH \
+	$(MAKE) -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
+	@touch $@
+
+########################################
+# Install pthreads-win32 from cvs
+########################################
+ifeq (${TARGET_ARCH}, x86_64-w64-mingw32)
+  NATIVE_PTHREAD_DLL := pthreadGC2-w64.dll
+else
+  NATIVE_PTHREAD_DLL := pthreadGC2-w32.dll
+endif
+
+native-pthreads-install: \
+    ${NATIVE_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB}
+
+${NATIVE_DIR}/pthreads/.pthreads.install.common: \
+    ${NATIVE_DIR}/pthreads/.pthreads.prep
+	cp -p ${NATIVE_DIR}/pthreads/pthread.h \
+	  ${NATIVE_DIR}/pthreads/sched.h \
+	  ${NATIVE_DIR}/pthreads/semaphore.h \
+	  ${NATIVE_DIR}/pthreads/pthreads_win32_config.h \
+	  ${NATIVE_DIR}/root/${TARGET_ARCH}/include
+	cp -p ${NATIVE_DIR}/pthreads/${NATIVE_PTHREAD_DLL} \
+	  ${NATIVE_DIR}/root/${TARGET_ARCH}/lib/libpthread.a
+	@touch $@
+
+${NATIVE_DIR}/pthreads/.pthreads.install.Y: \
+    ${NATIVE_DIR}/pthreads/.pthreads.build.Y \
+    ${NATIVE_DIR}/pthreads/.pthreads.install.common \
+    ${NATIVE_DIR}/pthreads/.pthreads.install.x86_64-w64-mingw32 \
+    ${NATIVE_DIR}/pthreads/.pthreads.install.i686-w64-mingw32
+	@touch $@
+
+${NATIVE_DIR}/pthreads/.pthreads.install.N: \
+    ${NATIVE_DIR}/pthreads/.pthreads.build.N \
+    ${NATIVE_DIR}/pthreads/.pthreads.install.common \
+    ${NATIVE_DIR}/pthreads/.pthreads.install.${TARGET_ARCH}
+	@touch $@
+
+${NATIVE_DIR}/pthreads/.pthreads.install.x86_64-w64-mingw32: \
+    ${NATIVE_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32
+	cp -p ${NATIVE_DIR}/pthreads/pthreadGC2-w64.dll \
+	  ${NATIVE_DIR}/root/bin
+	cp -fp ${NATIVE_DIR}/pthreads/pthreadGC2-w64.dll \
+	  ${NATIVE_DIR}/root/${TARGET_ARCH}/lib64/libpthread.a
+	@touch $@
+
+${NATIVE_DIR}/pthreads/.pthreads.install.i686-w64-mingw32: \
+    ${NATIVE_DIR}/pthreads/.pthreads.build.i686-w64-mingw32
+	cp -p ${NATIVE_DIR}/pthreads/pthreadGC2-w32.dll \
+	  ${NATIVE_DIR}/root/bin
+	cp -fp ${NATIVE_DIR}/pthreads/pthreadGC2-w32.dll \
+	  ${NATIVE_DIR}/root/${TARGET_ARCH}/lib32/libpthread.a
+	@touch $@
+
+########################################
 # Compile full GCC
 ########################################
 native-gcc-compile: \
@@ -1164,7 +1307,8 @@ native-gcc-compile: \
 
 ${NATIVE_DIR}/gcc/obj/.compile.marker: \
     ${NATIVE_DIR}/gcc/obj/.config.marker \
-    ${NATIVE_DIR}/mingw/obj/.install.marker
+    ${NATIVE_DIR}/mingw/obj/.install.marker \
+	${NATIVE_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB}
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
@@ -1280,6 +1424,11 @@ TARGETS := \
   pthreads-install \
   gcc-libgcc-compile \
   gcc-libgcc-install \
+  native-pthreads-prep \
+  native-pthreads-build \
+  native-pthreads-install \
+  native-gcc-libgcc-compile \
+  native-gcc-libgcc-install \
   ${NULL}
 
 
