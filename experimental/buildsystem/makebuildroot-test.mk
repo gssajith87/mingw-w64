@@ -684,6 +684,7 @@ pthreads-prep: \
     ${BUILD_DIR}/pthreads/.pthreads.prep
 
 ${BUILD_DIR}/pthreads/.pthreads.prep: \
+    src/patches/.patches.pull.marker \
     src/pthreads/.pthreads.download.marker
 	cp -prf src/pthreads ${BUILD_DIR}/
 	cp -p src/patches/pthreads_win32/w64sup.patch $(dir $@)
