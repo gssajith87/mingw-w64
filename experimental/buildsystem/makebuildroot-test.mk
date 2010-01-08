@@ -58,12 +58,18 @@ MINGW_CONFIG_EXTRA_ARGS_MULTI_N ?=
 ########################################
 # Configure
 ########################################
-ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
+#ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
+#  MINGW_LIBDIR := lib64
+#else ifeq (,$(filter-out i386-% i486-% i586-% i686-%,${TARGET_ARCH}))
+#  MIGNW_LIBDIR := lib32
+#else
+#  $(error Unknown CPU for target arch ${TARGET_ARCH})
+#endif
+
+ifeq (${TARGET_ARCH},x86_64-w64-mingw32)
   MINGW_LIBDIR := lib64
-else ifeq (,$(filter-out i386-% i486-% i586-% i686-%,${TARGET_ARCH}))
-  MIGNW_LIBDIR := lib32
 else
-  $(error Unknown CPU for target arch ${TARGET_ARCH})
+  MIGNW_LIBDIR := lib32
 endif
 
 # the type of _host_ to run on (n.b. not build)
