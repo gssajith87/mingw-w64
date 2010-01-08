@@ -1267,6 +1267,12 @@ TARGETS := \
   native-gcc-compile \
   native-gcc-install \
   native-release-archive \
+  pthreads-download \
+  pthreads-prep \
+  pthreads-build \
+  pthreads-install \
+  gcc-libgcc-compile \
+  gcc-libgcc-install \
   ${NULL}
 
 
