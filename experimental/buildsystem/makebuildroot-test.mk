@@ -18,8 +18,10 @@ all:: # default target
 ########################################
 # Configurable variables
 ########################################
-TARGET_ARCH ?= x86_64-w64-mingw32 #Toolchain default target arch
-ENABLE_MULTILIB ?= N # Set to Y to use Multi-lib
+# TARGET_ARCH - Toolchain default target arch
+# ENABLE_MULTILIB - Set to Y to use Multi-lib
+TARGET_ARCH ?= x86_64-w64-mingw32
+ENABLE_MULTILIB ?= N
 HOST_ARCH ?=
 ALL_UPDATE ?= # force update everything
 BINUTILS_UPDATE ?= ${ALL_UPDATE} # force update binutils
