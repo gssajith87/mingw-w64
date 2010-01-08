@@ -722,6 +722,7 @@ ${BUILD_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32: \
 	  -e 's/pthreadGC\$$(DLL_VER)/&-w64/g' \
 	  -e 's/pthreadGCE\$$(DLL_VER)/&-w64/g' \
 	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
+	PATH=$(realpath build/root/bin):$$PATH \
 	$(MAKE) -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
 	@touch $@
 
@@ -735,6 +736,7 @@ ${BUILD_DIR}/pthreads/.pthreads.build.i686-w64-mingw32: \
 	  -e 's/pthreadGC\$$(DLL_VER)/&-w32/g' \
 	  -e 's/pthreadGCE\$$(DLL_VER)/&-w32/g' \
 	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
+	PATH=$(realpath build/root/bin):$$PATH \
 	$(MAKE) -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
 	@touch $@
 
