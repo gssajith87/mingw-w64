@@ -715,12 +715,12 @@ ${BUILD_DIR}/pthreads/.pthreads.build.N: \
 ${BUILD_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32: \
     ${BUILD_DIR}/pthreads/.pthreads.prep \
     ${BUILD_DIR}/mingw/obj/.install.marker
-	sed -e 's/dlltool\$/& -m i386:x86-64/' \
-	  -e 's/gcc\$/& -m64/' \
-	  -e 's/g++\$/& -m64/' \
-	  -e 's/windres\$/& -F pe-x86-64/' \
-	  -e 's/pthreadGC\\\$(DLL_VER)/&-w64/g' \
-	  -e 's/pthreadGCE\\\$(DLL_VER)/&-w64/g' \
+	sed -e 's/dlltool$$/& -m i386:x86-64/' \
+	  -e 's/gcc$$/& -m64/' \
+	  -e 's/g++$$/& -m64/' \
+	  -e 's/windres$$/& -F pe-x86-64/' \
+	  -e 's/pthreadGC\$$(DLL_VER)/&-w64/g' \
+	  -e 's/pthreadGCE\$$(DLL_VER)/&-w64/g' \
 	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
 	$(MAKE) -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
 	@touch $@
@@ -728,7 +728,7 @@ ${BUILD_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32: \
 ${BUILD_DIR}/pthreads/.pthreads.build.i686-w64-mingw32: \
     ${BUILD_DIR}/pthreads/.pthreads.prep \
     ${BUILD_DIR}/mingw/obj/.install.marker
-	sed -e 's/dlltool$$$$/& -m i386/' \
+	sed -e 's/dlltool$$/& -m i386/' \
 	  -e 's/gcc$$/& -m32/' \
 	  -e 's/g++$$/& -m32/' \
 	  -e 's/windres$$/& -F pe-i386/' \
