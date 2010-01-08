@@ -758,6 +758,7 @@ ${BUILD_DIR}/pthreads/.pthreads.install.common: \
     ${BUILD_DIR}/pthreads/.pthreads.prep
 	cp -p ${BUILD_DIR}/pthreads/pthread.h \
 	  ${BUILD_DIR}/pthreads/sched.h \
+	  ${BUILD_DIR}/pthreads/semaphore.h \
 	  ${BUILD_DIR}/pthreads/pthreads_win32_config.h \
 	  ${BUILD_DIR}/root/${TARGET_ARCH}/include
 	cp -p ${BUILD_DIR}/pthreads/${PTHREAD_DLL} \
