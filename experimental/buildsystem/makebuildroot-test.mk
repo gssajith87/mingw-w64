@@ -684,6 +684,7 @@ pthreads-prep: \
     ${BUILD_DIR}/pthreads/.pthreads.prep
 
 ${BUILD_DIR}/pthreads/.pthreads.prep: \
+    ${BUILD_DIR}/root/.root.init.marker \
     src/patches/.patches.pull.marker \
     src/pthreads/.pthreads.download.marker
 	cp -prf src/pthreads ${BUILD_DIR}/
