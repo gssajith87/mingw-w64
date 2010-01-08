@@ -1,6 +1,6 @@
 #!/usr/bin/env make
 
-#
+# 
 # Toolchain bootstrapping build system, ver. N + 1
 #
 # This exists as an attempt to unify building inside and outside of buildbot.
@@ -12,6 +12,11 @@
 # The goal is to be able to replace makebuildroot.sh with all its options
 # available.
 #
+### TODO:
+### Add clean-foo targets.
+### Add GDB buildstep.
+### Add XZ Compressed tarballs.
+### Add Some checks for required installed tools before starting.
 
 all:: # default target
 
