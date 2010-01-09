@@ -17,6 +17,7 @@
 ### Add GDB buildstep.
 ### Add XZ Compressed tarballs.
 ### Add Some checks for required installed tools before starting.
+### PPL and CLooG for GCC.
 
 all:: # default target
 
@@ -35,9 +36,9 @@ GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --enable-libgomp --with-d
 GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
 GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
 GCC_UPDATE ?= ${ALL_UPDATE} # force update gcc
-GMP_VERSION ?= 4.3.1 # GMP release version
+GMP_VERSION ?= 5.0.0 # GMP release version
 MPFR_VERSION ?= 2.4.2 # MPFR release version
-MPC_VERSION ?= 0.8 # MPC release version
+MPC_VERSION ?= 0.8.1 # MPC release version
 MINGW_BRANCH ?= trunk # ... not that we have any!
 MINGW_REVISION ?= HEAD
 MINGW_UPDATE ?= ${ALL_UPDATE} # force update mingw
@@ -200,6 +201,7 @@ gmp-extract: \
     src/gmp/.gmp.extract.marker
 
 src/gmp/.gmp.extract.marker: \
+    src/patches/.patches.pull.marker \
     src/gmp.tar.bz2 \
     src/gmp/src/.mkdir.marker
 	tar -C $(dir $@)/src --strip-components=1 -xjvf $<
@@ -237,7 +239,10 @@ mpfr-extract: \
 
 src/mpfr/.mpfr.extract.marker: \
     src/mpfr.tar.bz2 \
+    src/patches/.patches.pull.marker \
     src/mpfr/src/.mkdir.marker
+    cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/cumulative-2.4.2-p1
+    cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/mpfr_vasprintf.patch
 	tar -C $(dir $@)/src --strip-components=1 -xjvf $<
 	@touch $@
 
@@ -450,6 +455,9 @@ ${BUILD_DIR}/gmp/obj/.config.marker: \
 	cd $(dir $@) && \
 	../../../build/gmp/src/configure \
 	    ${GCC_CONFIG_HOST_ARGS} \
+	    CPPFLAGS=-fexceptions \
+	    --enable-cxx \
+	    --disable-shared \
 	    --prefix=${CURDIR}/${BUILD_DIR}/gmp/install
 	@touch $@
 
@@ -490,6 +498,7 @@ ${BUILD_DIR}/mpfr/obj/.config.marker: \
 	cd $(dir $@) && \
 	../../../build/mpfr/src/configure \
 	    ${GCC_CONFIG_HOST_ARGS} \
+	    --disable-shared \
 	    --prefix=${CURDIR}/${BUILD_DIR}/mpfr/install \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install
 	@touch $@
