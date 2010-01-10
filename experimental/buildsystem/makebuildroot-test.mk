@@ -243,7 +243,6 @@ src/mpfr/.mpfr.extract.marker: \
     src/patches/.patches.pull.marker
 	tar -C $(dir $@)/src --strip-components=1 -xjvf $<
 	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/cumulative-2.4.2-p1
-	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/mpfr_vasprintf.patch
 	@touch $@
 
 ########################################
