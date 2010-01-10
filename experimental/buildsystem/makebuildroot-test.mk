@@ -36,6 +36,7 @@ GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --enable-libgomp --with-d
 GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
 GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
 GCC_UPDATE ?= ${ALL_UPDATE} # force update gcc
+GCC_ADA ?= N
 GMP_VERSION ?= 5.0.0 # GMP release version
 MPFR_VERSION ?= 2.4.2 # MPFR release version
 MPC_VERSION ?= 0.8.1 # MPC release version
@@ -46,20 +47,27 @@ MINGW_CONFIG_EXTRA_ARGS ?=
 SRC_ARCHIVE ?= mingw-w64-src.tar.bz2
 BIN_ARCHIVE ?= mingw-w64-bin_$(shell uname -s).tar.bz2
 PTHREADS_MAKE_ARGS ?= clean GC
+PTHREADS_UPDATE ?= ${ALL_UPDATE}
 PTHREADS_CVS_PULL ?= :pserver:anoncvs@sourceware.org:/cvs/pthreads-win32
+PPL_VERSION ?= 0.10.2
+CLOOG_VERSION ?= 0.15.7
 
 ########################################
 # Multilib helper
 ########################################
-BINUTILS_CONFIG_MULTILIB_HELPER ?= BINUTILS_CONFIG_EXTRA_ARGS_MULTI_
-BINUTILS_CONFIG_EXTRA_ARGS_MULTI_Y ?= --enable-targets=x86_64-w64-mingw32,i686-w64-mingw32
-BINUTILS_CONFIG_EXTRA_ARGS_MULTI_N ?=
-GCC_CONFIG_MULTILIB_HELPER ?= GCC_CONFIG_EXTRA_ARGS_MULTI_
-GCC_CONFIG_EXTRA_ARGS_MULTI_Y ?= --enable-multilib
-GCC_CONFIG_EXTRA_ARGS_MULTI_N ?= --disable-multilib
-MINGW_CONFIG_MULTILIB_HELPER ?= MINGW_CONFIG_EXTRA_ARGS_MULTI_
-MINGW_CONFIG_EXTRA_ARGS_MULTI_Y ?= --enable-lib32 --enable-lib64
-MINGW_CONFIG_EXTRA_ARGS_MULTI_N ?=
+BINUTILS_CONFIG_EXTRA_ARGS_MULTI_Y := --enable-targets=x86_64-w64-mingw32,i686-w64-mingw32
+BINUTILS_CONFIG_EXTRA_ARGS_MULTI_N :=
+GCC_CONFIG_EXTRA_ARGS_MULTI_Y := --enable-multilib
+GCC_CONFIG_EXTRA_ARGS_MULTI_N := --disable-multilib
+MINGW_CONFIG_EXTRA_ARGS_MULTI_Y := --enable-lib32 --enable-lib64
+MINGW_CONFIG_EXTRA_ARGS_MULTI_N :=
+
+########################################
+# MISC helper
+########################################
+
+GCC_ADA_Y := ",ada"
+GCC_ADA_N :=
 
 ########################################
 # Configure
@@ -182,6 +190,9 @@ src/pthreads/.pthreads.download.marker: \
 	cd src && cvs -z9 -d ${PTHREADS_CVS_PULL} checkout pthreads
 	@touch $@
 
+ifneq (,$(strip ${PTHREADS_UPDATE}))
+.PHONY: src/pthreads/.pthreads.download.marker
+endif
 ########################################
 # Download gmp
 ########################################
@@ -395,7 +406,7 @@ ${BUILD_DIR}/binutils/obj/.config.marker: \
 	    ${BINUTILS_CONFIG_HOST_ARGS} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
 	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
-	    ${${BINUTILS_CONFIG_MULTILIB_HELPER}${ENABLE_MULTILIB}} \
+	    ${BINUTILS_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
 	    ${BINUTILS_CONFIG_EXTRA_ARGS}
 	@touch $@
 
@@ -589,16 +600,17 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
 	../../../build/gcc/gcc/configure \
-	    --target=${TARGET_ARCH} \
-	    ${GCC_CONFIG_HOST_ARGS} \
-	    --prefix=${CURDIR}/${BUILD_DIR}/root \
-	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
+        --target=${TARGET_ARCH} \
+        ${GCC_CONFIG_HOST_ARGS} \
+        --prefix=${CURDIR}/${BUILD_DIR}/root \
+        --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
             --with-mpfr=${CURDIR}/${BUILD_DIR}/mpfr/install \
             --with-mpc=${CURDIR}/${BUILD_DIR}/mpc/install \
-	    --enable-languages=all,obj-c++ \
-	    ${${GCC_CONFIG_MULTILIB_HELPER}${ENABLE_MULTILIB}} \
-	    ${GCC_CONFIG_EXTRA_ARGS}
+            --with-host-libstdcxx="-lstdc++ -lsupc++" \
+        --enable-languages=all,obj-c++${GCC_ADA_${GCC_ADA}} \
+        ${GCC_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
+        ${GCC_CONFIG_EXTRA_ARGS}
 	@touch $@
 
 ########################################
@@ -639,7 +651,7 @@ ${BUILD_DIR}/mingw/obj/.config.marker: \
 	    --host=${TARGET_ARCH} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
 	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
-	    ${${MINGW_CONFIG_MULTILIB_HELPER}${ENABLE_MULTILIB}} \
+	    ${MINGW_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
 	    ${MINGW_CONFIG_EXTRA_ARGS}
 	@touch $@
 
