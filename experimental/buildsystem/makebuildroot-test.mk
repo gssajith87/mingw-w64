@@ -241,8 +241,8 @@ src/mpfr/.mpfr.extract.marker: \
     src/mpfr.tar.bz2 \
     src/patches/.patches.pull.marker \
     src/mpfr/src/.mkdir.marker
-    cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/cumulative-2.4.2-p1
-    cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/mpfr_vasprintf.patch
+	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/cumulative-2.4.2-p1
+	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/mpfr_vasprintf.patch
 	tar -C $(dir $@)/src --strip-components=1 -xjvf $<
 	@touch $@
 
