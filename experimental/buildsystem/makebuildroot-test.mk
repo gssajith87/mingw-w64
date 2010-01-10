@@ -377,7 +377,7 @@ headers-install: \
 
 ${BUILD_DIR}/mingw-headers/obj/.install.marker: \
     ${BUILD_DIR}/mingw-headers/obj/.config.marker
-	make -C $(dir $@) install
+	${MAKE} -C $(dir $@) install
 	@touch $@
 
 ########################################
@@ -407,7 +407,7 @@ binutils-compile: \
 
 ${BUILD_DIR}/binutils/obj/.compile.marker: \
     ${BUILD_DIR}/binutils/obj/.config.marker
-	make -C $(dir $@)
+	${MAKE} -C $(dir $@)
 	@touch $@
 
 ########################################
@@ -418,7 +418,7 @@ binutils-install: \
 
 ${BUILD_DIR}/binutils/obj/.install.marker: \
     ${BUILD_DIR}/binutils/obj/.compile.marker
-	make -C $(dir $@) install
+	${MAKE} -C $(dir $@) install
 	@touch $@
 
 ########################################
@@ -610,7 +610,7 @@ gcc-bootstrap-compile: \
 build/gcc/obj/.bootstrap.compile.marker: \
     build/gcc/obj/.config.marker \
     ${BUILD_DIR}/mingw-headers/obj/.install.marker
-	found_asm=yes make -C $(dir $@) all-gcc
+	found_asm=yes ${MAKE} -C $(dir $@) all-gcc
 	@touch $@
 
 ########################################
@@ -621,7 +621,7 @@ gcc-bootstrap-install: \
 
 build/gcc/obj/.bootstrap.install.marker: \
     build/gcc/obj/.bootstrap.compile.marker
-	make -C $(dir $@) install-gcc
+	${MAKE} -C $(dir $@) install-gcc
 	@touch $@
 
 ########################################
@@ -652,7 +652,7 @@ crt-compile: \
 ${BUILD_DIR}/mingw/obj/.compile.marker: \
     ${BUILD_DIR}/mingw/obj/.config.marker
 	PATH=$(realpath build/root/bin):$$PATH \
-	make -C $(dir $@)
+	${MAKE} -C $(dir $@)
 	@touch $@
 
 ########################################
@@ -664,7 +664,7 @@ crt-install: \
 ${BUILD_DIR}/mingw/obj/.install.marker: \
     ${BUILD_DIR}/mingw/obj/.compile.marker
 	PATH=$(realpath build/root/bin):$$PATH \
-	make -C $(dir $@) install
+	${MAKE} -C $(dir $@) install
 	@touch $@
 
 ########################################
@@ -820,7 +820,7 @@ ${BUILD_DIR}/gcc/obj/.compile.marker: \
     ${BUILD_DIR}/mingw/obj/.install.marker \
 	${BUILD_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB}
 	PATH=$(realpath build/root/bin):$$PATH \
-	make -C $(dir $@)
+	${MAKE} -C $(dir $@)
 	@touch $@
 
 ########################################
@@ -832,7 +832,7 @@ gcc-install: \
 ${BUILD_DIR}/gcc/obj/.install.marker: \
     ${BUILD_DIR}/gcc/obj/.compile.marker
 	PATH=$(realpath build/root/bin):$$PATH \
-	make -C $(dir $@) install
+	${MAKE} -C $(dir $@) install
 	@touch $@
 
 ########################################
