@@ -280,6 +280,55 @@ src/mpc/.mpc.extract.marker: \
 	tar -C $(dir $@)/src --strip-components=1 -xzvf $<
 	@touch $@
 
+
+########################################
+# Download PPL
+########################################
+
+ppl-download: \
+    src/ppl.tar.gz
+
+src/ppl.tar.gz: \
+    src/.mkdir.marker
+	$(WGET) $@ ftp://gcc.gnu.org/pub/gcc/infrastructure/ppl-$(strip ${PPL_VERSION}).tar.gz
+
+########################################
+# Extract PPL
+########################################
+
+ppl-extract: \
+    src/ppl/.ppl.extract.marker
+
+src/ppl/.ppl.extract.marker: \
+    src/ppl.tar.gz \
+    src/ppl/src/.mkdir.marker
+	tar -C $(dir $@)/src --strip-components=1 -xzvf $<
+	@touch $@
+
+########################################
+# Download CLooG
+########################################
+
+cloog-download: \
+    src/cloog.tar.gz
+
+src/cloog.tar.gz: \
+    src/.mkdir.marker
+	$(WGET) $@ ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-ppl-$(strip ${CLOOG_VERSION}).tar.gz
+
+########################################
+# Extract CLooG
+########################################
+
+cloog-extract: \
+    src/cloog/.cloog.extract.marker
+
+src/cloog/.cloog.extract.marker: \
+    src/cloog.tar.gz \
+    src/cloog/src/.mkdir.marker
+	tar -C $(dir $@)/src --strip-components=1 -xzvf $<
+	@touch $@
+
 ########################################
 # Pull mingw
 ########################################
@@ -313,6 +362,8 @@ ${SRC_ARCHIVE}: \
     src/gmp/src/configure \
     src/mpfr/.mpfr.extract.marker \
     src/mpc/.mpc.extract.marker \
+    src/ppl/.ppl.extract.marker \
+    src/cloog/.cloog.extract.marker \
     src/mingw/.mingw.pull.marker \
     src/pthreads/.pthreads.download.marker
 endif
@@ -455,6 +506,7 @@ endif
 ########################################
 # Configure GMP
 ########################################
+
 gmp-configure: \
     ${BUILD_DIR}/gmp/obj/.config.marker
 
@@ -464,7 +516,7 @@ ${BUILD_DIR}/gmp/obj/.config.marker: \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
 	../../../build/gmp/src/configure \
-	    ${GCC_CONFIG_HOST_ARGS} \
+	    $(or ${GCC_CONFIG_HOST_ARGS},--host=none-none-none) \
 	    CPPFLAGS=-fexceptions \
 	    --enable-cxx \
 	    --disable-shared \
@@ -581,6 +633,94 @@ ${BUILD_DIR}/mpc/install/.install.marker: \
 	@touch $@
 
 ########################################
+# Configure PPL
+########################################
+ppl-configure: \
+    ${BUILD_DIR}/ppl/obj/.config.marker
+
+${BUILD_DIR}/ppl/obj/.config.marker: \
+    ${BUILD_DIR}/ppl/obj/.mkdir.marker \
+    ${BUILD_DIR}/root/.root.init.marker \
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
+    ${BUILD_DIR}/gmp/install/.install.marker
+	cd $(dir $@) && \
+	../../../build/ppl/src/configure \
+	    ${GCC_CONFIG_HOST_ARGS} \
+            --enable-static --disable-shared \
+	    --prefix=${CURDIR}/${BUILD_DIR}/ppl/install \
+            --with-libgmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
+            --with-libgmpxx-prefix=${CURDIR}/${BUILD_DIR}/gmp/install
+	@touch $@
+
+########################################
+# Compile PPL
+########################################
+ppl-compile: \
+    ${BUILD_DIR}/ppl/obj/.compile.marker
+
+${BUILD_DIR}/ppl/obj/.compile.marker: \
+    ${BUILD_DIR}/ppl/obj/.config.marker
+	$(MAKE) -C $(dir $@)
+	@touch $@
+
+########################################
+# Install PPL
+########################################
+ppl-install: \
+    ${BUILD_DIR}/ppl/install/.install.marker
+
+${BUILD_DIR}/ppl/install/.install.marker: \
+    ${BUILD_DIR}/ppl/obj/.compile.marker \
+    ${BUILD_DIR}/ppl/install/.mkdir.marker
+	$(MAKE) -C ${BUILD_DIR}/mpc/obj install
+	@touch $@
+
+########################################
+# Configure CLooG
+########################################
+cloog-configure: \
+    ${BUILD_DIR}/cloog/obj/.config.marker
+
+${BUILD_DIR}/cloog/obj/.config.marker: \
+    ${BUILD_DIR}/cloog/obj/.mkdir.marker \
+    ${BUILD_DIR}/root/.root.init.marker \
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
+    ${BUILD_DIR}/gmp/install/.install.marker \
+    ${BUILD_DIR}/ppl/install/.install.marker
+	cd $(dir $@) && \
+	../../../build/cloog/src/configure \
+        ${GCC_CONFIG_HOST_ARGS} \
+            --enable-static --disable-shared \
+            --prefix=${CURDIR}/${BUILD_DIR}/cloog/install \
+            --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
+            --with-ppl=${CURDIR}/${BUILD_DIR}/ppl/install \
+            --with-host-libstdcxx="-lstdc++ -lsupc++"
+	@touch $@
+
+########################################
+# Compile CLooG
+########################################
+cloog-compile: \
+    ${BUILD_DIR}/cloog/obj/.compile.marker
+
+${BUILD_DIR}/cloog/obj/.compile.marker: \
+    ${BUILD_DIR}/cloog/obj/.config.marker
+	$(MAKE) -C $(dir $@)
+	@touch $@
+
+########################################
+# Install CLooG
+########################################
+cloog-install: \
+    ${BUILD_DIR}/cloog/install/.install.marker
+
+${BUILD_DIR}/cloog/install/.install.marker: \
+    ${BUILD_DIR}/cloog/obj/.compile.marker \
+    ${BUILD_DIR}/cloog/install/.mkdir.marker
+	$(MAKE) -C ${BUILD_DIR}/mpc/obj install
+	@touch $@
+
+########################################
 # Configure GCC
 ########################################
 gcc-configure: \
@@ -597,6 +737,8 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/gmp/install/.install.marker \
     ${BUILD_DIR}/mpfr/install/.install.marker \
     ${BUILD_DIR}/mpc/install/.install.marker \
+    ${BUILD_DIR}/ppl/install/.install.marker \
+    ${BUILD_DIR}/cloog/install/.install.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
 	../../../build/gcc/gcc/configure \
@@ -1094,6 +1236,98 @@ ${NATIVE_DIR}/mpc/install/.install.marker: \
 	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
+
+########################################
+# Configure ppl
+########################################
+native-ppl-configure: \
+    ${NATIVE_DIR}/ppl/obj/.config.marker
+
+${NATIVE_DIR}/ppl/obj/.config.marker: \
+    ${BUILD_DIR}/gcc/obj/.install.marker \
+    ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
+    ${NATIVE_DIR}/ppl/obj/.mkdir.marker \
+    ${NATIVE_DIR}/gmp/install/.install.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Compile PPL
+########################################
+native-ppl-compile: \
+    ${NATIVE_DIR}/ppl/obj/.compile.marker
+
+${NATIVE_DIR}/ppl/obj/.compile.marker: \
+    ${NATIVE_DIR}/ppl/obj/.config.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Install PPL
+########################################
+native-ppl-install: \
+    ${NATIVE_DIR}/ppl/install/.install.marker
+
+${NATIVE_DIR}/ppl/install/.install.marker: \
+    ${NATIVE_DIR}/ppl/obj/.compile.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Configure CLooG
+########################################
+native-cloog-configure: \
+    ${NATIVE_DIR}/cloog/obj/.config.marker
+
+${NATIVE_DIR}/cloog/obj/.config.marker: \
+    ${BUILD_DIR}/gcc/obj/.install.marker \
+    ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
+    ${NATIVE_DIR}/cloog/obj/.mkdir.marker \
+    ${NATIVE_DIR}/gmp/install/.install.marker \
+    ${NATIVE_DIR}/ppl/install/.install.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Compile CLooG
+########################################
+native-cloog-compile: \
+    ${NATIVE_DIR}/cloog/obj/.compile.marker
+
+${NATIVE_DIR}/cloog/obj/.compile.marker: \
+    ${NATIVE_DIR}/cloog/obj/.config.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Install CLooG
+########################################
+native-cloog-install: \
+    ${NATIVE_DIR}/cloog/install/.install.marker
+
+${NATIVE_DIR}/cloog/install/.install.marker: \
+    ${NATIVE_DIR}/cloog/obj/.compile.marker
+	PATH=$(realpath build/root/bin):$$PATH \
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
 ########################################
 # GCC cross compiling support - winsup
 ########################################
@@ -1130,6 +1364,8 @@ ${NATIVE_DIR}/gcc/obj/.config.marker: \
     ${NATIVE_DIR}/gmp/install/.install.marker \
     ${NATIVE_DIR}/mpfr/install/.install.marker \
     ${NATIVE_DIR}/mpc/install/.install.marker \
+    ${NATIVE_DIR}/ppl/install/.install.marker \
+    ${NATIVE_DIR}/cloog/install/.install.marker \
     ${NATIVE_DIR}/root/.root.init.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
@@ -1396,6 +1632,10 @@ TARGETS := \
   mpfr-extract \
   mpc-download \
   mpc-extract \
+  ppl-download \
+  ppl-extract \
+  cloog-download \
+  cloog-extract \
   mingw-pull \
   src-archive \
   src-extract \
@@ -1411,6 +1651,12 @@ TARGETS := \
   mpc-configure \
   mpc-compile \
   mpc-install \
+  ppl-configure \
+  ppl-compile \
+  ppl-install \
+  cloog-configure \
+  cloog-compile \
+  cloog-install \
   gcc-configure \
   gcc-bootstrap-compile \
   gcc-bootstrap-install \
@@ -1434,6 +1680,12 @@ TARGETS := \
   native-mpc-configure \
   native-mpc-compile \
   native-mpc-install \
+  native-ppl-configure \
+  native-ppl-compile \
+  native-ppl-install \
+  native-cloog-configure \
+  native-cloog-compile \
+  native-cloog-install \
   native-gcc-configure \
   native-headers-configure \
   native-headers-install \
