@@ -645,12 +645,16 @@ ${BUILD_DIR}/ppl/obj/.config.marker: \
     ${BUILD_DIR}/gmp/install/.install.marker
 	cd $(dir $@) && \
 	../../../build/ppl/src/configure \
-	    ${GCC_CONFIG_HOST_ARGS} \
-            --enable-static --disable-shared \
-	    --prefix=${CURDIR}/${BUILD_DIR}/ppl/install \
-            --with-libgmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
-            --with-libgmpxx-prefix=${CURDIR}/${BUILD_DIR}/gmp/install
+        ${GCC_CONFIG_HOST_ARGS} \
+        CPPFLAGS="-D__GMP_BITS_PER_MP_LIMB=GMP_LIMB_BITS" \
+        --enable-static --disable-shared \
+        --prefix=${CURDIR}/${BUILD_DIR}/ppl/install \
+        --with-libgmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
+        --with-libgmpxx-prefix=${CURDIR}/${BUILD_DIR}/gmp/install
 	@touch $@
+
+# CPPFLAGS="-D__GMP_BITS_PER_MP_LIMB=GMP_LIMB_BITS"
+# This is used to work around PPL not detecting gmp-5.0.0 properly
 
 ########################################
 # Compile PPL
@@ -672,7 +676,7 @@ ppl-install: \
 ${BUILD_DIR}/ppl/install/.install.marker: \
     ${BUILD_DIR}/ppl/obj/.compile.marker \
     ${BUILD_DIR}/ppl/install/.mkdir.marker
-	$(MAKE) -C ${BUILD_DIR}/mpc/obj install
+	$(MAKE) -C ${BUILD_DIR}/ppl/obj install
 	@touch $@
 
 ########################################
@@ -717,7 +721,7 @@ cloog-install: \
 ${BUILD_DIR}/cloog/install/.install.marker: \
     ${BUILD_DIR}/cloog/obj/.compile.marker \
     ${BUILD_DIR}/cloog/install/.mkdir.marker
-	$(MAKE) -C ${BUILD_DIR}/mpc/obj install
+	$(MAKE) -C ${BUILD_DIR}/cloog/obj install
 	@touch $@
 
 ########################################
