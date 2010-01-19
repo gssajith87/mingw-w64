@@ -1617,6 +1617,39 @@ endif # native_dir != build_dir
 	-mkdir -p $(dir $@)
 	@touch -t 197001020101 $@
 
+################################################################################
+# Host Tools Check (Check for required tools)
+################################################################################
+host-tools-check::
+	@echo Checking host tools
+	@echo -n "Checking for Concurrent Versions System" \
+	    && (cvs --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for Subversion" \
+	    && (svn --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for GNU Compiler Collection (gcc)" \
+	    && ((gcc --version 2>1 1>/dev/null) \
+	    || (cc --version 2>1 1>/dev/null)   \
+	    || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for GNU Compiler Collection (g++)" \
+	    && ((g++ --version 2>1 1>/dev/null) \
+	    || (c++ --version 2>1 1>/dev/null) \
+	    || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for GNU sed" \
+	    && (sed --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for patch" \
+	    && (patch --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for GNU tar" \
+	    && (tar --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for bzip2" \
+	    && (bzip2 --help 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for gzip" \
+	    && (gzip --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for wget or curl" \
+	    && ((wget --version 2>1 1>/dev/null) \
+	    || (curl --version 2>1 1>/dev/null)  \
+	    || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo All needed host tools seem to work fine!
+
 help::
 	@echo Available targets:
 	@echo -e $(foreach t,all ${TARGETS} $@,\\t${t}\\n)
@@ -1626,6 +1659,7 @@ all:: \
   ${BIN_ARCHIVE}
 
 TARGETS := \
+  host-tools-check \
   patch-pull \
   binutils-pull \
   gcc-pull \
