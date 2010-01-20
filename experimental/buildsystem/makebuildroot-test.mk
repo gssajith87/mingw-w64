@@ -1620,47 +1620,43 @@ endif # native_dir != build_dir
 ################################################################################
 # Host Tools Check (Check for required tools)
 ################################################################################
+host-tools-check-helper = \
+	@echo -n "Checking for${1}" \
+	&& ($(call host-tools-check-helper-alternator,${2},${3}) \
+	(echo -ne "\n[ Error $$? - Checked " && $(call host-tools-check-helper-alternator-error,${2}))) \
+	&& echo -e "[OK]"
+
+host-tools-check-helper-alternator = \
+	$(foreach ex,${1},($(ex) $(or ${2},--version) 2>1 1>/dev/null) ||)
+
+host-tools-check-helper-alternator-error = \
+	$(foreach ex,${1},echo -n "$(ex) " && ) \
+	echo "]" && \
+	false
+
+host-tools-check-helper-gcc-list := gcc cc
+host-tools-check-helper-cpp-list := g++ c++
+host-tools-check-helper-wget-list := wget curl
+
 host-tools-check::
 	@echo Checking host tools
 	@echo Note that the minimum required versions are not checked.
-	@echo -n "Checking for Concurrent Versions System" \
-	    && (cvs --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for Subversion" \
-	    && (svn --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for GNU Compiler Collection (gcc)" \
-	    && ((gcc --version 2>1 1>/dev/null) \
-	    || (cc --version 2>1 1>/dev/null)   \
-	    || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for GNU Compiler Collection (g++)" \
-	    && ((g++ --version 2>1 1>/dev/null) \
-	    || (c++ --version 2>1 1>/dev/null) \
-	    || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for GNU sed" \
-	    && (sed --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for GNU Awk" \
-	    && (gawk --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for patch" \
-	    && (patch --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for GNU tar" \
-	    && (tar --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for bzip2" \
-	    && (bzip2 --help 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for gzip" \
-	    && (gzip --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for wget or curl" \
-	    && ((wget --version 2>1 1>/dev/null) \
-	    || (curl --version 2>1 1>/dev/null)  \
-	    || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for flex" \
-	    && (flex --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for GNU bison" \
-	    && (bison --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for GNU gperf" \
-	    && (gperf --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for Texinfo (makeinfo)" \
-	    && (makeinfo --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
-	@echo -n "Checking for Perl" \
-	    && (perl --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	$(call host-tools-check-helper, Concurrent Versions System, cvs)
+	$(call host-tools-check-helper, Subversion, svn)
+	$(call host-tools-check-helper, GNU Compiler Collection (gcc), $(host-tools-check-helper-gcc-list))
+	$(call host-tools-check-helper, GNU Compiler Collection (g++), $(host-tools-check-helper-cpp-list))
+	$(call host-tools-check-helper, GNU sed, sed)
+	$(call host-tools-check-helper, GNU Awk, gawk)
+	$(call host-tools-check-helper, patch, patch)
+	$(call host-tools-check-helper, GNU tar, tar)
+	$(call host-tools-check-helper, bzip2, bzip2,--help)
+	$(call host-tools-check-helper, gzip, gzip)
+	$(call host-tools-check-helper, wget or curl, $(host-tools-check-helper-wget-list))
+	$(call host-tools-check-helper, flex, flex)
+	$(call host-tools-check-helper, GNU bison, bison)
+	$(call host-tools-check-helper, GNU gperf, gperf)
+	$(call host-tools-check-helper, GNU texinfo (makeinfo), makeinfo)
+	$(call host-tools-check-helper, Perl, perl)
 	@echo All needed host tools seem to work fine!
 
 help::
