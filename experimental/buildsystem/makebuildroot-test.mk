@@ -1622,6 +1622,7 @@ endif # native_dir != build_dir
 ################################################################################
 host-tools-check::
 	@echo Checking host tools
+	@echo Note that the minimum required versions are not checked.
 	@echo -n "Checking for Concurrent Versions System" \
 	    && (cvs --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
 	@echo -n "Checking for Subversion" \
@@ -1636,6 +1637,8 @@ host-tools-check::
 	    || (echo " [ Error $$? ]" && false)) && echo " [OK]"
 	@echo -n "Checking for GNU sed" \
 	    && (sed --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for GNU Awk" \
+	    && (gawk --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
 	@echo -n "Checking for patch" \
 	    && (patch --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
 	@echo -n "Checking for GNU tar" \
@@ -1648,6 +1651,16 @@ host-tools-check::
 	    && ((wget --version 2>1 1>/dev/null) \
 	    || (curl --version 2>1 1>/dev/null)  \
 	    || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for flex" \
+	    && (flex --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for GNU bison" \
+	    && (bison --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for GNU gperf" \
+	    && (gperf --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for Texinfo (makeinfo)" \
+	    && (makeinfo --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
+	@echo -n "Checking for Perl" \
+	    && (perl --version 2>1 1>/dev/null || (echo " [ Error $$? ]" && false)) && echo " [OK]"
 	@echo All needed host tools seem to work fine!
 
 help::
