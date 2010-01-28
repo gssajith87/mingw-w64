@@ -100,6 +100,9 @@ typedef struct sMSFT_TypeInfoBase {
 typedef struct sMSFT_TypeDesc {
   uint16_t kind;
   uint16_t flag;
+#ifdef __GNUC__
+  __extension__
+#endif
   union {
     int32_t oTypeB;
     int32_t oTypeD;
@@ -149,8 +152,14 @@ typedef struct sMSFT_func {
   uint32_t flags;
   uint16_t vtableOffset;
   uint16_t funcdescSize;
+#ifdef __GNUC__
+  __extension__
+#endif
   union {
     int32_t fkccic;
+#ifdef __GNUC__
+    __extension__
+#endif
     struct {
       uint32_t funcKind : 3;
       uint32_t invokeKind : 4;
@@ -179,6 +188,9 @@ typedef struct sMSFT_ImpFiles {
 
 typedef struct sMSFT_memblob {
   uint32_t size;
+#ifdef __GNUC__
+  __extension__
+#endif
   union {
     unsigned char dta[1];
   };
