@@ -142,7 +142,7 @@ void dumpInfo (FILE *fp, unsigned char *dta, size_t size)
       fprintf (fp, "%d", segs[i].offset);
     else
       fprintf (fp, "0x%x length=0x%x", segs[i].offset, segs[i].length);
-    fprintf (fp, ", res08=%d, res0c=%d\n",i,
+    fprintf (fp, ", res08=%d, res0c=%d\n",
       segs[i].res08,segs[i].res0c);
   }
   for (i=0;i<eSegMSFT_MAX;i++)
@@ -150,7 +150,7 @@ void dumpInfo (FILE *fp, unsigned char *dta, size_t size)
     switch (i) {
     case eSegMSFT_TYPEINFO:
       dumpTypeInfo (fp, dta + segs[eSegMSFT_TYPEINFO].offset, segs[eSegMSFT_TYPEINFO].length,
-	t->nr_typeinfos, umap, dta, size, typeinfos);
+	t->nr_typeinfos, umap, dta, size, (uint32_t *) typeinfos);
       break;
     case eSegMSFT_IMPORTINFO:
       dumpImpFile (fp, dta + segs[eSegMSFT_IMPORTINFO].offset, segs[eSegMSFT_IMPORTINFO].length,
@@ -437,6 +437,8 @@ dumpMem (FILE *fp, unsigned char *dta, unsigned char *umap, uint32_t cVar, uint3
   uint32_t off;
   unsigned char *d = dta;
   uint32_t oData1, oData2;
+  if (fp)
+    oData1 = 0;
   if (!cVar && !cFunc)
     return;
   oData1 = ((uint32_t *) d)[0];
@@ -799,7 +801,7 @@ dumpString (FILE *fp, unsigned char *segString, uint32_t length)
     len = v.len[0];
     fprintf (fp," ");
     printPrefix2 (fp, "Str_", (int) off);
-    fprintf (fp,": \"", off);
+    fprintf (fp,": \"");
     off+=2;
     while (len > 0)
     {

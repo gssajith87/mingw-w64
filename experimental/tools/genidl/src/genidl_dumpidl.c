@@ -227,7 +227,7 @@ TI2_update_config (sTI2TypLib *tl, const char *orgfname)
 {
   size_t no = tl->nr_typinfos;
   size_t i;
-  char *tlbname, *h;
+  char *tlbname;
   char *sec = NULL;
   
   genidl_add_lib (tl->name);
@@ -265,7 +265,7 @@ TI2_update_config (sTI2TypLib *tl, const char *orgfname)
       /* uint32_t mem = tl->ti2_typs.buc[TITYP_TYPINFO_NAMES].arr[i]->memid; */
       char *name = tl->ti2_typs.buc[TITYP_TYPINFO_NAMES].arr[i]->name;
       /* sprintf (tlbname, "TypeB_%x", mem); */
-      sprintf (tlbname, "TypeB_%x", i);
+      sprintf (tlbname, "TypeB_%x", (unsigned int) i);
       genidl_add_lib_item (tl->name, tlbname, name);
 
       if (tl->typb[i].guid)
@@ -428,6 +428,8 @@ print_typb_options (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *pref
   int befirst = 1;
   uint32_t flags = tb->flags, idx = 0;
 
+  if (tl)
+    befirst = 1;
   if (!tb)
     return;
   if (tb->flags == 0 && tb->docstr == NULL && tb->guid == NULL
@@ -690,7 +692,6 @@ TI2_typlib_modules (FILE *fp, sTI2TypLib *tl, const char *prefix)
 static void
 printEnum (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *prefix_)
 {
-  uint32_t defid;
   char *prefix;
   size_t i;
   if (!tl || !tb || (tb->cFuncs == 0 && tb->cVars == 0))
@@ -800,13 +801,13 @@ printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *
       const char *val = "";
       printVarOption (fp, mi->var->flags, id, defid, mi->var->varKind, &val, prefix);
       rtyp = TI_getVTorDref (&tl->ti2_typs, mi->var->datatype, name, 0);
-      fprintf (fp, "%s%s%s", prefix, val, rtyp, mi->var->varKind);
+      fprintf (fp, "%s%s%s%s", prefix, val, rtyp, mi->var->varKind);
       if ((tb->kind == TKIND_DISPATCH || tb->kind == TKIND_INTERFACE) && mi->var->oValue != 0)
       {
 	fprintf (fp," = %d", mi->var->oValue);
       }
       else if (tb->kind != TKIND_RECORD && tb->kind != TKIND_UNION
-	&& mi->var->oValue != (uint32_t) -1)
+	&& (uint32_t) mi->var->oValue != (uint32_t) -1)
         {
 	  fprintf (fp," = ");
 	  printValue (fp, &tl->ti2_typs,mi->var->oValue);

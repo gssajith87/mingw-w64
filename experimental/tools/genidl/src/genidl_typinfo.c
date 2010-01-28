@@ -473,6 +473,8 @@ getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret)
 {
   char s[4096];
   size_t b, l, sz;
+  if (dptr)
+    sz = 0;
   l = getVT_size (vt, dta,&b);
   dta += b - 2;
   if (l == 0xffffffff)
@@ -789,7 +791,7 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
   char *idstr;
   char *iname;
   if (!length)
-    return;
+    return 0;
   while ((off + 11) < length)
   {
     const char *str;
@@ -836,10 +838,13 @@ TI2_import_importref (sTITyps *gptr, unsigned char *dta, uint32_t length)
       free (iname);
     off += 12;
   }
+  return 0;
 }
 
 int32_t
 TI2_import_customdataguid (sTITyps *gptr, unsigned char *dta, uint32_t len)
 {
+  if (gptr || dta || len)
+    return 0;
   return 0;
 }

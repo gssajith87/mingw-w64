@@ -178,7 +178,7 @@ readResourceDirectory (FILE *fp, unsigned char **dta, size_t *length, size_t *re
   while (sect_count > 0)
     {
       fread (&sec, 1, sizeof (sImgSectionHdr),fp);
-      if (!strcmp (sec.Name, ".rsrc"))
+      if (!strcmp ((char *) sec.Name, ".rsrc"))
       {
 	fseek (fp, (int32_t) sec.PointerToRawData, SEEK_SET);
 	resRVA[0] = sec.VirtualAddress;

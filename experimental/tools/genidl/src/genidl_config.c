@@ -15,7 +15,9 @@ static int rCh (void);
 static void bCh (int r);
 static int pCh (void);
 static int addCh (int r);
+#if 0
 static void delCh (void);
+#endif
 static void clrCh (void);
 static void printError (const char *fmt, ...);
 static int lex (void);
@@ -255,6 +257,7 @@ clrCh (void)
   l_buffer[0] = 0;
 }
 
+#if 0
 static void
 delCh (void)
 {
@@ -280,6 +283,7 @@ addCh (int r)
   l_buffer[l_cur] = 0;
   return r;
 }
+#endif
 
 static int
 pCh (void)
@@ -626,7 +630,7 @@ genidl_find_type (const char *lib, const char *name)
     return NULL;
   l = has_cfglib (lib, 1);
   if (!l)
-    return;
+    return NULL;
   h = has_cfglib_item (l, name);
   if (!h)
     return NULL;
@@ -652,4 +656,5 @@ genidl_del_lib_iten (const char *lib)
         free (h->type);
       free (h);
     }
+  return 1;
 }
