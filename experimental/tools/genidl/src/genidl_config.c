@@ -370,7 +370,7 @@ parse_export (sCfgLib *cfg, size_t *cnt, int *re, const char *tname)
 }
 
 static char **
-parse_alias (sCfgLib *cfg, size_t *cnt, int *re, const char *tname)
+parse_alias (sCfgLib *cfg, int *re, const char *tname)
 {
   char **ret = NULL;
   int r = lex ();
@@ -403,7 +403,6 @@ parseTableSub (const char *tname)
 {
   char **alias = NULL;
   char **exps;
-  size_t alias_cnt = 0;
   size_t exps_cnt = 0;
   int r = lex ();
   sCfgLib *cfg = gen_cfglib (tname);
@@ -421,7 +420,7 @@ parseTableSub (const char *tname)
       }
       if (strcmp (l_buffer, "alias")  == 0)
         {
-	  alias = parse_alias (cfg, &alias_cnt, &r, tname);
+	  alias = parse_alias (cfg, &r, tname);
 	  if (r == -1)
 	    break;
         }

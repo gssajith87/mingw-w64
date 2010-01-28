@@ -113,14 +113,14 @@ TI2_typlib_init (unsigned char *dta, size_t len)
   tl->nr_impinfos = t->nr_impinfos;
   if (tl->nr_typinfos > 0)
     {
-      size_t i;
+      size_t ii;
       tl->typinfos_hash = (uint32_t *) malloc (sizeof (uint32_t) * tl->nr_typinfos);
       memcpy (tl->typinfos_hash, typeinfos, sizeof (uint32_t) * tl->nr_typinfos);
       tl->typb = (sTI2TypeBase *) malloc (sizeof (sTI2TypeBase) * tl->nr_typinfos);
       memset (tl->typb, 0, sizeof (sTI2TypeBase) * tl->nr_typinfos);
-      for (i=0;i < tl->nr_typinfos;i++)
+      for (ii = 0;ii < tl->nr_typinfos; ii++)
       {
-	fill_typb (tl, &tl->typb[i], i, dta, dta + segs[eSegMSFT_TYPEINFO].offset, segs[eSegMSFT_TYPEINFO].length);
+	fill_typb (tl, &tl->typb[ii], ii, dta, dta + segs[eSegMSFT_TYPEINFO].offset, segs[eSegMSFT_TYPEINFO].length);
       }
     }
   return tl;
@@ -175,7 +175,7 @@ fill_typb (sTI2TypLib *tl, sTI2TypeBase *tb, size_t off, unsigned char *dsrc, un
   {
     sMSFT_memblob *b = (sMSFT_memblob *) &dsrc[t->memoffset];
     uint32_t *doff = (uint32_t *) &b->dta[b->size];
-    uint32_t off = 0;
+    uint32_t offs = 0;
     size_t cf = tb->cFuncs;
     size_t cv = tb->cVars;
     size_t idx = 0;
@@ -183,34 +183,34 @@ fill_typb (sTI2TypLib *tl, sTI2TypeBase *tb, size_t off, unsigned char *dsrc, un
     tb->mem.items = (sTI2TypeBaseMemItem *)
       malloc ( sizeof (sTI2TypeBaseMemItem) * tb->mem.count);
     memset (tb->mem.items, 0, sizeof (sTI2TypeBaseMemItem) * tb->mem.count);
-    while (off < b->size)
+    while (offs < b->size)
     {
-      tb->mem.items[idx].mem = &b->dta[off];
+      tb->mem.items[idx].mem = &b->dta[offs];
       if (cf > 0)
       {
 	sMSFT_FuncParam *params;
 	sMSFT_func *func;
 	uint32_t oVars = 0, *pData, *pCustomData = NULL;
 
-	func = (sMSFT_func *) &b->dta[off];
+	func = (sMSFT_func *) &b->dta[offs];
 	oVars = func->rlen - (func->nrArgs * 12);
-	params = (sMSFT_FuncParam *) &b->dta[off+oVars];
+	params = (sMSFT_FuncParam *) &b->dta[offs + oVars];
 	pData = func->data;
 	pCustomData = NULL;
 	if (func->f.hasParamDefValue)
-	  pCustomData = (uint32_t *) &b->dta[off+oVars-func->nrArgs*4];
+	  pCustomData = (uint32_t *) &b->dta[offs + oVars-func->nrArgs*4];
 	tb->mem.items[idx].customData = pCustomData;
 	tb->mem.items[idx].funcParam = params;
 	tb->mem.items[idx].extData = doff;
 	tb->mem.items[idx].max = tb->mem.count;
 	tb->mem.items[idx].beFunc = 1;
-	off += func->rlen;
+	offs += func->rlen;
 	--cf;
       }
       else if (cv > 0)
       {
-	sMSFT_var *var = (sMSFT_var *) &b->dta[off];
-	off += var->rlen;
+	sMSFT_var *var = (sMSFT_var *) &b->dta[offs];
+	offs += var->rlen;
 	tb->mem.items[idx].extData = doff;
 	tb->mem.items[idx].max = tb->mem.count;
       }
@@ -801,7 +801,7 @@ printInterfaceFuncVars (FILE *fp, sTI2TypLib *tl, sTI2TypeBase *tb, const char *
       const char *val = "";
       printVarOption (fp, mi->var->flags, id, defid, mi->var->varKind, &val, prefix);
       rtyp = TI_getVTorDref (&tl->ti2_typs, mi->var->datatype, name, 0);
-      fprintf (fp, "%s%s%s%s", prefix, val, rtyp, mi->var->varKind);
+      fprintf (fp, "%s%s%s", prefix, val, rtyp);
       if ((tb->kind == TKIND_DISPATCH || tb->kind == TKIND_INTERFACE) && mi->var->oValue != 0)
       {
 	fprintf (fp," = %d", mi->var->oValue);

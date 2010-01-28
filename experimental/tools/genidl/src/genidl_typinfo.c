@@ -205,22 +205,22 @@ TI2_import_name (sTITyps *nptr, unsigned char *dta, uint32_t len)
   while ((off + 12) <= len)
     {
       uint32_t memid = off;
-      unsigned char len;
+      unsigned char l;
       char *name;
       v.dta = &dta[off];
-      len = v.p->v[0];
+      l = v.p->v[0];
 
-      name = (char *) malloc (len + 1);
+      name = (char *) malloc (l + 1);
       if (!name)
 	return -1;
-      if (len != 0)
-	memcpy (name, &dta[off + 12], len);
-      name[len] = 0;
+      if (l != 0)
+	memcpy (name, &dta[off + 12], l);
+      name[l] = 0;
 
       if (TI_add_typ (nptr,memid,TITYP_NAME, 0,0,"", name, "") < 0)
 	return -1;
       free (name);
-      off = (12 + off + len + 3) & ~3;
+      off = (12 + off + (uint32_t) l + 3) & ~3;
     }
   return 0;
 }

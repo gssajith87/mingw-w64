@@ -62,14 +62,14 @@ void dumpInfo (FILE *fp, unsigned char *dta, size_t size)
     return;
   if (t->magic1 != TYPELIB_MSFT_MAGIC)
   {
-    size_t i,j;
+    size_t k,j;
     fprintf (fp, "Unknown magic 0x%x (%Ix)\n", t->magic1, size);
-    for (i = 0; i < size && i < (16*32);)
+    for (k = 0; k < size && k < (16 * 32);)
     {
-      fprintf (fp, "0x%08Ix: ", i);
-      for (j=0;j<16 && i <size && i < (16*32);j++,i++)
+      fprintf (fp, "0x%08Ix: ", k);
+      for (j=0; j < 16 && k < size && k < (16 * 32); j++, k++)
       {
-	fprintf (fp, " %02X", dta[i]);
+	fprintf (fp, " %02X", dta[k]);
       }
       fprintf (fp,"\n");
     }
@@ -150,7 +150,7 @@ void dumpInfo (FILE *fp, unsigned char *dta, size_t size)
     switch (i) {
     case eSegMSFT_TYPEINFO:
       dumpTypeInfo (fp, dta + segs[eSegMSFT_TYPEINFO].offset, segs[eSegMSFT_TYPEINFO].length,
-	t->nr_typeinfos, umap, dta, size, (uint32_t *) typeinfos);
+	t->nr_typeinfos, (unsigned char *) umap, dta, size, (uint32_t *) typeinfos);
       break;
     case eSegMSFT_IMPORTINFO:
       dumpImpFile (fp, dta + segs[eSegMSFT_IMPORTINFO].offset, segs[eSegMSFT_IMPORTINFO].length,
@@ -680,22 +680,22 @@ dumpName (FILE *fp, unsigned char *segName, uint32_t len)
   fprintf (fp,"NameTable\n");
   while ((off + 12) < len)
   {
-    unsigned char len;
+    unsigned char l;
     v.dta=&segName[off];
     fprintf (fp, " Name_%x", (int32_t) off);
     fprintf (fp, ": %d,",v.p->res1);
     printPrefix (fp,"Name_", v.p->res2);
     fprintf (fp, ", 0x%02x,0x%04x, \"", v.p->v[1], v.p->us[1]);
-    len = v.p->v[0];
+    l = v.p->v[0];
     off += 12;
-    while (len > 0)
+    while (l > 0)
     {
       if (segName[off]>=0x20 && segName[off]<=0x7f)
 	fprintf (fp, "%c", segName[off++]);
       else
 	fprintf (fp, "\\%03o", segName[off++]);
 
-      --len;
+      --l;
     }
     off = (off + 3) & ~3;
     fprintf (fp,"\"\n");
