@@ -105,10 +105,12 @@ const char *decode_VT_name_tmp (unsigned short vt);
 size_t getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret);
 char *TI_getVTorDref (sTITyps *ptyp,uint32_t vt, const char *varName, int beBase);
 size_t getVT_size (uint32_t vt, unsigned char *dta, size_t *basesz);
-size_t getVT_data (sTITyps *dptr, uint32_t vt, unsigned char *dta, char **ret);
 
 typedef struct sTI2TypeBaseMemItem {
   int beFunc;
+#ifdef __GNUC__
+  __extension__
+#endif
   union {
     unsigned char *mem;
     sMSFT_func *func;

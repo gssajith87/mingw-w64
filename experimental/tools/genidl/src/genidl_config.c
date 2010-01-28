@@ -328,7 +328,7 @@ rCh (void)
 }
 
 static char **
-parse_export (sCfgLib *cfg, size_t *cnt, int *re, const char *tname)
+parse_export (sCfgLib *cfg, int *re, const char *tname)
 {
   char **ret = NULL;
   int r = lex ();
@@ -403,7 +403,6 @@ parseTableSub (const char *tname)
 {
   char **alias = NULL;
   char **exps;
-  size_t exps_cnt = 0;
   int r = lex ();
   sCfgLib *cfg = gen_cfglib (tname);
   while (r != '}')
@@ -426,7 +425,7 @@ parseTableSub (const char *tname)
         }
       else if (strcmp (l_buffer, "export") == 0)
         {
-	  exps = parse_export (cfg, &exps_cnt, &r, tname);
+	  exps = parse_export (cfg, &r, tname);
 	  if (r == -1)
 	    break;
         }
