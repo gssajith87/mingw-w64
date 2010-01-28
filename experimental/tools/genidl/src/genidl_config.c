@@ -266,6 +266,7 @@ delCh (void)
   --l_cur;
   l_buffer[l_cur] = 0;
 }
+#endif
 
 static int
 addCh (int r)
@@ -283,7 +284,6 @@ addCh (int r)
   l_buffer[l_cur] = 0;
   return r;
 }
-#endif
 
 static int
 pCh (void)
