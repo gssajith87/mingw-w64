@@ -665,11 +665,17 @@ dumpName (FILE *fp, unsigned char *segName, uint32_t len)
   struct sMSFTNamePrologue {
     int32_t res1;
     int32_t res2;
+#ifdef __GNUC__
+    __extension__
+#endif
     union {
       unsigned char v[4];
       uint16_t us[2];
     };
   };
+#ifdef __GNUC__
+  __extension__
+#endif
   union {
     unsigned char *dta;
     struct sMSFTNamePrologue *p;

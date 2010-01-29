@@ -209,6 +209,9 @@ typedef struct sImgResourceDataEntry {
   uint32_t Reserved;
 } sImgResourceDataEntry;
 
+#ifdef __GNUC__
+  __extension__
+#endif
 typedef struct sImgResourceDirectoryEntry {
 #ifdef __GNUC__
   __extension__
