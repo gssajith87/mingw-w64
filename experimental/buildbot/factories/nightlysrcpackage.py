@@ -223,6 +223,15 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                          """#define __MINGW_W64_REV_STAMP "%(mingw_datestamp)s"\n'"""
                                          """ > revstamp.h """)]))
 
+    # Set the gcc version strings if this is a formal release
+    self.addStep(ShellCommandConditional,
+                 name="release-information",
+                 workdir="build/src/gcc/gcc/gcc",
+                 description=["writing", "version", "string"],
+                 descriptionDone=["version", "string", "written"],
+                 condprop="release_build",
+                 command=["bash", "-c", 
+                          WithProperties("""echo %(release_gcc_ver)s > BASE_VER && echo > DEV-PHASE """)])
     # make the tarball
     self.addStep(SetProperty(property="destname",
                              command=["echo", WithPropertiesRecursive(WithProperties("%(srcname_format)s"))]))
