@@ -231,7 +231,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  descriptionDone=["version", "string", "written"],
                  condprop="release_build",
                  command=["bash", "-c", 
-                          WithProperties("""echo %(release_gcc_ver)s > BASE_VER && echo > DEV-PHASE """)])
+                          WithProperties("""echo '%(release_gcc_ver)s' > BASE_VER && echo > DEV-PHASE """)])
     # make the tarball
     self.addStep(SetProperty(property="destname",
                              command=["echo", WithPropertiesRecursive(WithProperties("%(srcname_format)s"))]))
