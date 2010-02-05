@@ -187,7 +187,7 @@ genidl_SOURCES = \
   src/genidl_dumpidl.c \
   src/genidl.c
 
-genidl_CFLAGS = -O3 -g -Wall -Wextra -Wshadow
+genidl_CFLAGS = -O3 -g -std=gnu99 -Wall -Wextra -Wshadow -Wformat -Wpacked -Wredundant-decls -Winline -pedantic -Wno-pedantic-ms-format -Wmissing-declarations -Wredundant-decls -Wimplicit-function-declaration -Wmissing-noreturn -Wmissing-prototypes
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -745,6 +745,8 @@ uninstall-am: uninstall-binPROGRAMS
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-binPROGRAMS
 
+
+#" -Wstrict-aliasing=2 -Wsystem-headers "
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
