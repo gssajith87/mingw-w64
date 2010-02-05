@@ -37,6 +37,10 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                         command=["echo", gConfig.get("libraries", "mpfr")],
                                         condprop="mpfr_version",
                                         condinvert=True))
+    self.addStep(SetPropertyConditional(property="mpc_version",
+                                        command=["echo", gConfig.get("libraries", "mpc")],
+                                        condprop="mpc_version",
+                                        condinvert=True))
     self.addStep(SetProperty(property="binutils_branch",
                              command=["echo", WithProperties("%(binutils_branch:-trunk)s")]))
     self.addStep(SetProperty(property="gcc_branch",
@@ -165,6 +169,19 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          descriptionDone=["extracted", "mpfr"],
                          command=["make", "-f", "mingw-makefile", "mpfr-extract"],
                          env={"MPFR_VERSION": WithProperties("%(mpfr_version)s")}))
+
+    # download mpc
+    self.addStep(Compile(name="mpc-download",
+                         description=["mpc", "download"],
+                         descriptionDone=["downloaded", "mpc"],
+                         command=["make", "-f", "mingw-makefile", "mpc-download"],
+                         env={"MPC_VERSION": WithProperties("%(mpc_version)s")}))
+
+    self.addStep(Compile(name="mpc-extract",
+                         description=["mpc", "extract"],
+                         descriptionDone=["extracted", "mpc"],
+                         command=["make", "-f", "mingw-makefile", "mpc-extract"],
+                         env={"MPC_VERSION": WithProperties("%(mpc_version)s")}))
 
     self.addStep(ShellCommandConditional,
                  name="mpfr-patch",

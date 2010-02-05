@@ -19,6 +19,9 @@ class Mingw64Factory(factory.BuildFactory):
   gccConfigExtraArgs = "--enable-fully-dynamic-string --disable-multilib"
   crtConfigExtraArgs = ""
   binutilsConfigExtraArgs = ""
+  gmpConfigExtraArgs = ""
+  mpfrConfigExtraArgs = ""
+  mpcConfigExtraArgs = ""
   host_cpu = "unknown"
   host_os = "unknown"
   file_extension = "tar.bz2"
@@ -59,6 +62,15 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(SetProperty(property="binutils_config_args",
                              command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
                                       WithProperties("%%(binutils_config_args:-%s)s" % (self.binutilsConfigExtraArgs))]))
+    self.addStep(SetProperty(property="gmp_config_args",
+                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
+                                      WithProperties("%%(gmp_config_args:-%s)s" % (self.gmpConfigExtraArgs))]))
+    self.addStep(SetProperty(property="mpfr_config_args",
+                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
+                                      WithProperties("%%(mpfr_config_args:-%s)s" % (self.mpfrConfigExtraArgs))]))
+    self.addStep(SetProperty(property="mpc_config_args",
+                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
+                                      WithProperties("%%(mpc_config_args:-%s)s" % (self.mpcConfigExtraArgs))]))
 
     self.addStep(SetProperty(property="gcc_branch",
                              command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
@@ -183,7 +195,7 @@ class Mingw64Factory(factory.BuildFactory):
 
     # Make binutils
     self.addStep(Configure(name="binutils-configure",
-                           description=["binuils", "configure"],
+                           description=["binutils", "configure"],
                            descriptionDone=["binutils", "configured"],
                            command=["make", "-f", "mingw-makefile", "binutils-configure"],
                            env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
@@ -201,6 +213,75 @@ class Mingw64Factory(factory.BuildFactory):
                          description=["binutils install"],
                          descriptionDone=["binutils installed"],
                          command=["make", "-f", "mingw-makefile", "binutils-install"],
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
+
+    # Make gmp
+    self.addStep(Configure(name="gmp-configure",
+                           description=["gmp", "configure"],
+                           descriptionDone=["gmp", "configured"],
+                           command=["make", "-f", "mingw-makefile", "gmp-configure"],
+                           env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                                "GMP_CONFIG_EXTRA_ARGS": WithProperties("%(gmp_config_args:-)s"),
+                                "TARGET_ARCH": WithProperties("%(target_arch)s")}))
+
+    self.addStep(Compile(name="gmp-compile",
+                         description=["gmp compile"],
+                         descriptionDone=["gmp compiled"],
+                         command=["make", "-f", "mingw-makefile", "gmp-compile"],
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
+
+    self.addStep(Compile(name="gmp-install",
+                         description=["gmp install"],
+                         descriptionDone=["gmp installed"],
+                         command=["make", "-f", "mingw-makefile", "gmp-install"],
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
+
+    # Make mpfr
+    self.addStep(Configure(name="mpfr-configure",
+                           description=["mpfr", "configure"],
+                           descriptionDone=["mpfr", "configured"],
+                           command=["make", "-f", "mingw-makefile", "mpfr-configure"],
+                           env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                                "MPFR_CONFIG_EXTRA_ARGS": WithProperties("%(mpfr_config_args:-)s"),
+                                "TARGET_ARCH": WithProperties("%(target_arch)s")}))
+
+    self.addStep(Compile(name="mpfr-compile",
+                         description=["mpfr compile"],
+                         descriptionDone=["mpfr compiled"],
+                         command=["make", "-f", "mingw-makefile", "mpfr-compile"],
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
+
+    self.addStep(Compile(name="mpfr-install",
+                         description=["mpfr install"],
+                         descriptionDone=["mpfr installed"],
+                         command=["make", "-f", "mingw-makefile", "mpfr-install"],
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
+
+    # Make mpc
+    self.addStep(Configure(name="mpc-configure",
+                           description=["mpc", "configure"],
+                           descriptionDone=["mpc", "configured"],
+                           command=["make", "-f", "mingw-makefile", "mpc-configure"],
+                           env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                                "MPC_CONFIG_EXTRA_ARGS": WithProperties("%(mpc_config_args:-)s"),
+                                "TARGET_ARCH": WithProperties("%(target_arch)s")}))
+
+    self.addStep(Compile(name="mpc-compile",
+                         description=["mpc compile"],
+                         descriptionDone=["mpc compiled"],
+                         command=["make", "-f", "mingw-makefile", "mpc-compile"],
+                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
+                              "TARGET_ARCH": WithProperties("%(target_arch)s")}))
+
+    self.addStep(Compile(name="mpc-install",
+                         description=["mpc install"],
+                         descriptionDone=["mpc installed"],
+                         command=["make", "-f", "mingw-makefile", "mpc-install"],
                          env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
                               "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
