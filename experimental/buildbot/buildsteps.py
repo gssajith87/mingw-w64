@@ -37,22 +37,14 @@ class M64CVS(ShellCommand):
 
 class ShellCommandConditional(ShellCommand):
     """Runs a remote command if a property (given by "condprop") is set"""
-    def __init__(self, **kwargs):
-        self.condProp = None
-        self.condValue = None
-        self.condInvert = False
-
-        if kwargs.has_key('condprop'):
-            self.condProp = kwargs['condprop']
-            del kwargs['condprop']
-        if kwargs.has_key('condvalue'):
-            self.condValue = kwargs['condvalue']
-            del kwargs['condvalue']
-        if kwargs.has_key('condinvert'):
-            self.condInvert = kwargs['condinvert']
-            del kwargs['condinvert']
-
+    def __init__(self, condprop=None, condinvert=False, condvalue=None, **kwargs):
         ShellCommand.__init__(self, **kwargs)
+        self.addFactoryArguments(condprop=condprop,
+                                 condinvert=condinvert,
+                                 condvalue=condvalue)
+        self.condProp = condprop
+        self.condInvert = condinvert
+        self.condValue = condvalue
 
     def start(self):
         if self.condProp is not None:
@@ -77,7 +69,7 @@ class SetPropertyConditional(SetProperty):
                                  condvalue=condvalue)
         self.condProp = condprop
         self.condInvert = condinvert
-        self.condValue = None
+        self.condValue = condvalue
 
     def start(self):
         if self.condProp is not None:
