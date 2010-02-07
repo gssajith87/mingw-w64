@@ -698,8 +698,10 @@ ${BUILD_DIR}/cloog/obj/.config.marker: \
             --prefix=${CURDIR}/${BUILD_DIR}/cloog/install \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
             --with-ppl=${CURDIR}/${BUILD_DIR}/ppl/install \
-            --with-host-libstdcxx="-lstdc++ -lsupc++"
+            --with-host-libstdcxx="-lstdc++ -lsupc++ -lm"
 	@touch $@
+
+# -lm workarounds some weirdness where -lm was missing when linking backends
 
 ########################################
 # Compile CLooG
