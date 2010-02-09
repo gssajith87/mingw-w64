@@ -757,11 +757,12 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
             --with-mpc=${CURDIR}/${BUILD_DIR}/mpc/install \
             --with-ppl=${CURDIR}/${BUILD_DIR}/ppl/install \
             --with-cloog=${CURDIR}/${BUILD_DIR}/cloog/install \
-            --with-host-libstdcxx="-lstdc++ -lsupc++" \
+            --with-host-libstdcxx="-lstdc++ -lsupc++ -lm" \
         --enable-languages=all,obj-c++${GCC_ADA_${GCC_ADA}} \
         ${GCC_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
         ${GCC_CONFIG_EXTRA_ARGS}
 	@touch $@
+# -lm workarounds some weirdness where -lm was missing when linking backends
 
 ########################################
 # Compile GCC stage 1
