@@ -75,7 +75,7 @@ GCC_ADA_N :=
 ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
   MINGW_LIBDIR := lib64
 else ifeq (,$(filter-out i386-% i486-% i586-% i686-%,${TARGET_ARCH}))
-  MIGNW_LIBDIR := lib32
+  MINGW_LIBDIR := lib32
 else
   $(error Unknown CPU for target arch ${TARGET_ARCH})
 endif
