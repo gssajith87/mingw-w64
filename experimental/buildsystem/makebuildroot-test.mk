@@ -17,7 +17,6 @@
 ### Add GDB buildstep.
 ### Add XZ Compressed tarballs.
 ### Add Some checks for required installed tools before starting.
-### PPL and CLooG for GCC.
 
 all:: # default target
 
