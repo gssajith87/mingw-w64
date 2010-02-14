@@ -51,6 +51,7 @@ PTHREADS_UPDATE ?= ${ALL_UPDATE}
 PTHREADS_CVS_PULL ?= :pserver:anoncvs@sourceware.org:/cvs/pthreads-win32
 PPL_VERSION ?= 0.10.2
 CLOOG_VERSION ?= 0.15.7
+MAKE_OPTS ?=
 
 ########################################
 # Multilib helper
@@ -469,7 +470,7 @@ binutils-compile: \
 
 ${BUILD_DIR}/binutils/obj/.compile.marker: \
     ${BUILD_DIR}/binutils/obj/.config.marker
-	${MAKE} -C $(dir $@)
+	${MAKE} ${MAKE_OPTS} -C $(dir $@)
 	@touch $@
 
 ########################################
@@ -773,7 +774,7 @@ gcc-bootstrap-compile: \
 build/gcc/obj/.bootstrap.compile.marker: \
     build/gcc/obj/.config.marker \
     ${BUILD_DIR}/mingw-headers/obj/.install.marker
-	found_asm=yes ${MAKE} -C $(dir $@) all-gcc
+	found_asm=yes ${MAKE} ${MAKE_OPTS} -C $(dir $@) all-gcc
 	@touch $@
 
 ########################################
@@ -815,7 +816,7 @@ crt-compile: \
 ${BUILD_DIR}/mingw/obj/.compile.marker: \
     ${BUILD_DIR}/mingw/obj/.config.marker
 	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -C $(dir $@)
+	${MAKE} ${MAKE_OPTS} -C $(dir $@)
 	@touch $@
 
 ########################################
@@ -839,7 +840,7 @@ gcc-libgcc-compile: \
 
 ${BUILD_DIR}/gcc/obj/.libgcc.compile.marker: \
     ${BUILD_DIR}/mingw/obj/.install.marker
-	$(MAKE) -C $(dir $@) all-target-libgcc
+	${MAKE} ${MAKE_OPTS} -C $(dir $@) all-target-libgcc
 	@touch $@
 
 ########################################
@@ -850,7 +851,7 @@ gcc-libgcc-install: \
 
 ${BUILD_DIR}/gcc/obj/.libgcc.install.marker: \
     ${BUILD_DIR}/gcc/obj/.libgcc.compile.marker
-	$(MAKE) -C $(dir $@) install-target-libgcc
+	${MAKE} -C $(dir $@) install-target-libgcc
 	@touch $@
 
 ########################################
@@ -901,7 +902,7 @@ ${BUILD_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32: \
 	  -e 's/pthreadGCE\$$(DLL_VER)/&-w64/g' \
 	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
 	PATH=$(realpath build/root/bin):$$PATH \
-	$(MAKE) -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
+	${MAKE} ${MAKE_OPTS} -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
 	@touch $@
 
 ${BUILD_DIR}/pthreads/.pthreads.build.i686-w64-mingw32: \
@@ -916,7 +917,7 @@ ${BUILD_DIR}/pthreads/.pthreads.build.i686-w64-mingw32: \
 	  -e 's/pthreadGCE\$$(DLL_VER)/&-w32/g' \
 	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
 	PATH=$(realpath build/root/bin):$$PATH \
-	$(MAKE) -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
+	${MAKE} ${MAKE_OPTS} -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
 	@touch $@
 
 ########################################
@@ -983,7 +984,7 @@ ${BUILD_DIR}/gcc/obj/.compile.marker: \
     ${BUILD_DIR}/mingw/obj/.install.marker \
 	${BUILD_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB}
 	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -C $(dir $@)
+	${MAKE} ${MAKE_OPTS} -C $(dir $@)
 	@touch $@
 
 ########################################
