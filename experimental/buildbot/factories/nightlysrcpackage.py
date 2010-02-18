@@ -247,6 +247,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  description=["writing", "version", "string"],
                  descriptionDone=["version", "string", "written"],
                  condprop="release_build",
+                 conddefault=False,
                  command=["bash", "-c", 
                           WithProperties("""echo '%(release_gcc_ver)s' > BASE_VER && echo > DEV-PHASE """)])
     # make the tarball
