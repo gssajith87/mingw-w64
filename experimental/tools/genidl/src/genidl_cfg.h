@@ -47,7 +47,7 @@ int genidl_ismodified_config (void);
 int genidl_add_lib (const char *lib);
 int genidl_add_lib_alias (const char *lib, const char *alias);
 int genidl_add_lib_item (const char *lib, const char *name, const char *typ);
-int genidl_del_lib_iten (const char *lib);
+int genidl_del_lib_item (const char *lib);
 const char *genidl_find_type (const char *lib, const char *name);
 
 char *genidl_strlwr (char *s);

@@ -623,9 +623,31 @@ genidl_find_type (const char *lib, const char *name)
 {
   sCfgLib *l;
   sCfgItem *h;
+  char *is_tlb;
 
   if (!lib || *lib == 0)
     return NULL;
+  is_tlb = strstr (lib, ".tlb");
+  if (is_tlb)
+    {
+      sCfgLib *r = cfg_head;
+      while (r != NULL)
+	{
+	  if (!strcmp (r->name, lib))
+	    {
+	      sCfgAlias *a = r->alias;
+	      while (a != NULL)
+		{
+		  const char *rs = genidl_find_type (a->name, name);
+		  if (rs != NULL)
+		    return rs;
+		  a = a->next;
+		}
+	    }
+	  r = r->next;
+	}
+      return NULL;
+    }
   l = has_cfglib (lib, 1);
   if (!l)
     return NULL;
@@ -636,7 +658,7 @@ genidl_find_type (const char *lib, const char *name)
 }
 
 int
-genidl_del_lib_iten (const char *lib)
+genidl_del_lib_item (const char *lib)
 {
   sCfgLib *l;
   sCfgItem *h;

@@ -231,29 +231,23 @@ TI2_update_config (sTI2TypLib *tl, const char *orgfname)
   char *sec = NULL;
   
   genidl_add_lib (tl->name);
-  sec = (char *) malloc (strlen (tl->name) + 5);
-  /* Check if .tlb is present */
-  strcpy (sec, tl->name);
-  if (strrchr (tl->name, '.') != NULL)
+  sec = (char *) malloc (strlen (orgfname) + 5);
+  /* Do we have a .tlb input file? If so add alias of name.  */  
+  strcpy (sec, orgfname);
+  if (strrchr (sec, '.') != NULL)
     {
-      if (! strcmp (strrchr (sec, '.'), ".tlb"))
-        *strrchr (sec, '.') = 0;
-      else
+      if (strcmp (strrchr (sec, '.'), ".tlb") != 0)
         strcpy (strrchr (sec, '.'), ".tlb");
     }
   else
     {
       strcat (sec, ".tlb");
     }
-  genidl_add_lib_alias (tl->name, sec);
+  genidl_add_lib_alias (sec, tl->name);
   free (sec);
 
-  /* Do we have a .tlb input file? If so add alias of name.  */  
-  if (orgfname && strstr (orgfname, ".tlb") != NULL)
-    genidl_add_lib_alias (tl->name, orgfname);
-
   /* We remove possibly old items.  */
-  genidl_del_lib_iten (tl->name);
+  genidl_del_lib_item (tl->name);
   if (!no && tl->ti2_typs.buc[TITYP_NAME].count != 0
       && tl->ti2_typs.buc[TITYP_GUIDS].count != 0)
     return;
