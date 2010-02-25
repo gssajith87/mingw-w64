@@ -404,6 +404,7 @@ ${BUILD_DIR}/gmp/obj/.config.marker: \
 	cd $(dir $@) && \
 	../../../build/gmp/src/configure \
 	    ${GCC_CONFIG_HOST_ARGS} \
+	    --disable-shared \
 	    --prefix=${CURDIR}/${BUILD_DIR}/gmp/install
 	@touch $@
 
@@ -444,6 +445,7 @@ ${BUILD_DIR}/mpfr/obj/.config.marker: \
 	cd $(dir $@) && \
 	../../../build/mpfr/src/configure \
 	    ${GCC_CONFIG_HOST_ARGS} \
+	    --disable-shared \
 	    --prefix=${CURDIR}/${BUILD_DIR}/mpfr/install \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install
 	@touch $@
