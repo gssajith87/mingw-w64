@@ -56,7 +56,6 @@ uint32_t printVT (FILE *fp, uint32_t vt, unsigned char *dta);
 void printVTData (FILE * fp,uint32_t vt,unsigned char *dta, uint32_t sz);
 const char *getFunkKindName (int32_t fkind);
 const char *getInvokeKindName (int32_t ikind);
-const char *getCallConvName (int32_t cc);
 const char *getParamFlagName (uint32_t pflag);
 const char *getTKindName (uint32_t tkind);
 void printVarflags (FILE *fp, uint32_t flags);
@@ -413,8 +412,8 @@ dumpMemInfo (FILE *fp, unsigned char *dta, uint32_t cVar, uint32_t cFunc, uint32
 	fprintf (fp, "]\n");
 	fprintf (fp, "\t%s %s %s %s (",
 	  rettyp,
-	  getFunkKindName(func->f.funcKind),
-	  getCallConvName(func->f.callconv),
+	  getFunkKindName (func->f.funcKind),
+	  getCallConvName (func->f.callconv),
 	  fctname);
 	free (rettyp);
 	free (fctname);
