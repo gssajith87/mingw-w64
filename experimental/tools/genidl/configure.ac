@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.65])
-AC_INIT([mingw-w64-genidl], [1.0], [mingw-w64-public@lists.sourceforge.net])
+AC_INIT([mingw-w64-genidl],[1.0],[mingw-w64-public@lists.sourceforge.net])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/genidl.c])
 AC_CONFIG_HEADERS([config.h])
@@ -35,3 +35,4 @@ AC_CHECK_FUNCS([memset strchr strdup strrchr strstr])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
+
