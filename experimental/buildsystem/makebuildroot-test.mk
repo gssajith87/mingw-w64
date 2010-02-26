@@ -21,36 +21,65 @@
 all:: # default target
 
 ########################################
-# Configurable variables
+# Build configurable variables
 ########################################
 # TARGET_ARCH - Toolchain default target arch
-# ENABLE_MULTILIB - Set to Y to use Multi-lib
 TARGET_ARCH ?= x86_64-w64-mingw32
-ENABLE_MULTILIB ?= N
 HOST_ARCH ?=
-ALL_UPDATE ?= # force update everything
-BINUTILS_UPDATE ?= ${ALL_UPDATE} # force update binutils
-BINUTILS_CONFIG_EXTRA_ARGS ?=
-GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --enable-libgomp --with-dwarf2 --enable-sjlj-exceptions --enable-version-specific-runtime-libs
-GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
-GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
-GCC_UPDATE ?= ${ALL_UPDATE} # force update gcc
-GCC_ADA ?= N
-GMP_VERSION ?= 5.0.0 # GMP release version
-MPFR_VERSION ?= 2.4.2 # MPFR release version
-MPC_VERSION ?= 0.8.1 # MPC release version
-MINGW_BRANCH ?= trunk # ... not that we have any!
-MINGW_REVISION ?= HEAD
-MINGW_UPDATE ?= ${ALL_UPDATE} # force update mingw
-MINGW_CONFIG_EXTRA_ARGS ?=
+MAKE_OPTS ?=
+
+########################################
+# Makefile output options
+########################################
 SRC_ARCHIVE ?= mingw-w64-src.tar.bz2
 BIN_ARCHIVE ?= mingw-w64-bin_$(shell uname -s).tar.bz2
-PTHREADS_MAKE_ARGS ?= clean GC
-PTHREADS_UPDATE ?= ${ALL_UPDATE}
-PTHREADS_CVS_PULL ?= :pserver:anoncvs@sourceware.org:/cvs/pthreads-win32
+
+########################################
+# Y/N options
+########################################
+# ENABLE_MULTILIB - Set to Y to use Multi-lib
+# GCC_ADA - Set to Y to build ADA
+ENABLE_MULTILIB ?= N
+GCC_ADA ?= N
+
+########################################
+# Version number variables
+########################################
+GMP_VERSION ?= 5.0.0
+MPFR_VERSION ?= 2.4.2
+MPC_VERSION ?= 0.8.1
 PPL_VERSION ?= 0.10.2
 CLOOG_VERSION ?= 0.15.8
-MAKE_OPTS ?=
+MINGW_BRANCH ?= trunk
+MINGW_REVISION ?= HEAD
+GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
+GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
+
+########################################
+# Download URLs
+########################################
+PTHREADS_CVS_PULL ?= :pserver:anoncvs@sourceware.org:/cvs/pthreads-win32
+
+########################################
+# Configure options
+########################################
+BINUTILS_CONFIG_EXTRA_ARGS ?=
+GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --enable-libgomp --with-dwarf2 --enable-sjlj-exceptions --enable-version-specific-runtime-libs
+PTHREADS_MAKE_ARGS ?= clean GC
+MINGW_CONFIG_EXTRA_ARGS ?=
+
+########################################
+# Update sources?
+########################################
+ALL_UPDATE ?= # force update everything
+BINUTILS_UPDATE ?= ${ALL_UPDATE} # force update binutils
+GCC_UPDATE ?= ${ALL_UPDATE} # force update gcc
+MINGW_UPDATE ?= ${ALL_UPDATE} # force update mingw
+PTHREADS_UPDATE ?= ${ALL_UPDATE}
+
+#########################################
+# DO NOT EDIT PASS THIS LINE
+#########################################
 
 ########################################
 # Multilib helper
