@@ -49,7 +49,7 @@ PTHREADS_MAKE_ARGS ?= clean GC
 PTHREADS_UPDATE ?= ${ALL_UPDATE}
 PTHREADS_CVS_PULL ?= :pserver:anoncvs@sourceware.org:/cvs/pthreads-win32
 PPL_VERSION ?= 0.10.2
-CLOOG_VERSION ?= 0.15.7
+CLOOG_VERSION ?= 0.15.8
 MAKE_OPTS ?=
 
 ########################################
