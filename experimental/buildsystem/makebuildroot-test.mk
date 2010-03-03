@@ -844,8 +844,7 @@ ${BUILD_DIR}/mingw/obj/.config.marker: \
     build/gcc/obj/.bootstrap.install.marker \
     ${BUILD_DIR}/mingw/obj/.mkdir.marker
 	cd $(dir $@) && \
-	$(ADD_BIN_PATH)
-	../../../build/mingw/mingw-w64-crt/configure \
+	$(ADD_BIN_PATH) ../../../build/mingw/mingw-w64-crt/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
@@ -862,8 +861,7 @@ crt-compile: \
 
 ${BUILD_DIR}/mingw/obj/.compile.marker: \
     ${BUILD_DIR}/mingw/obj/.config.marker
-	$(ADD_BIN_PATH) \
-	${MAKE} ${MAKE_OPTS} -C $(dir $@)
+	$(ADD_BIN_PATH) ${MAKE} ${MAKE_OPTS} -C $(dir $@)
 	@touch $@
 
 ########################################
@@ -874,8 +872,7 @@ crt-install: \
 
 ${BUILD_DIR}/mingw/obj/.install.marker: \
     ${BUILD_DIR}/mingw/obj/.compile.marker
-	$(ADD_BIN_PATH) \
-	${MAKE} -C $(dir $@) install
+	$(ADD_BIN_PATH) ${MAKE} -C $(dir $@) install
 	@touch $@
 
 ########################################
@@ -948,8 +945,7 @@ ${BUILD_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32: \
 	  -e 's/pthreadGC\$$(DLL_VER)/&-w64/g' \
 	  -e 's/pthreadGCE\$$(DLL_VER)/&-w64/g' \
 	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
-	$(ADD_BIN_PATH) \
-	${MAKE} ${MAKE_OPTS} -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
+	$(ADD_BIN_PATH) ${MAKE} ${MAKE_OPTS} -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
 	@touch $@
 
 ${BUILD_DIR}/pthreads/.pthreads.build.i686-w64-mingw32: \
@@ -963,8 +959,7 @@ ${BUILD_DIR}/pthreads/.pthreads.build.i686-w64-mingw32: \
 	  -e 's/pthreadGC\$$(DLL_VER)/&-w32/g' \
 	  -e 's/pthreadGCE\$$(DLL_VER)/&-w32/g' \
 	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
-	$(ADD_BIN_PATH) \
-	${MAKE} ${MAKE_OPTS} -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
+	$(ADD_BIN_PATH) ${MAKE} ${MAKE_OPTS} -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
 	@touch $@
 
 ########################################
@@ -1030,8 +1025,7 @@ ${BUILD_DIR}/gcc/obj/.compile.marker: \
     ${BUILD_DIR}/gcc/obj/.config.marker \
     ${BUILD_DIR}/mingw/obj/.install.marker \
 	${BUILD_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB}
-	$(ADD_BIN_PATH) \
-	${MAKE} ${MAKE_OPTS} -C $(dir $@)
+	$(ADD_BIN_PATH) ${MAKE} ${MAKE_OPTS} -C $(dir $@)
 	@touch $@
 
 ########################################
@@ -1042,8 +1036,7 @@ gcc-install: \
 
 ${BUILD_DIR}/gcc/obj/.install.marker: \
     ${BUILD_DIR}/gcc/obj/.compile.marker
-	$(ADD_BIN_PATH) \
-	${MAKE} -C $(dir $@) install
+	$(ADD_BIN_PATH) ${MAKE} -C $(dir $@) install
 	@touch $@
 
 ########################################
