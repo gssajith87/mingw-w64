@@ -268,7 +268,7 @@ ${SRC_ARCHIVE}: \
 endif
 
 ${SRC_ARCHIVE}:
-	tar cjf $@ --owner 0 --group 0 --checkpoint --exclude=.svn \
+	tar vcjf $@ --exclude=.svn \
 	    --exclude=.*.marker --exclude=CVS --exclude=gmp.tar.bz2 \
 	    --exclude=mpfr.tar.bz2 --exclude=mpc.tar.gz \-C src .
 
@@ -652,7 +652,7 @@ ifeq (windows,${HOST_TYPE})
 	zip -r -9 ../../$(patsubst %.tar.bz2,%.zip,$@) \
 	     . -x .*.marker *.*.marker
 else
-	tar cjf $@ -C ${BUILD_DIR}/root --owner 0 --group 0 --checkpoint \
+	tar vcjf $@ -C ${BUILD_DIR}/root \
 	    --exclude=CVS --exclude=.svn --exclude=.*.marker \
             .
 endif
