@@ -403,7 +403,7 @@ ${BUILD_DIR}/gmp/obj/.config.marker: \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
 	../../../build/gmp/src/configure \
-	    ${GCC_CONFIG_HOST_ARGS} \
+	    $(or ${GCC_CONFIG_HOST_ARGS},--host=none-none-none) \
 	    --disable-shared \
 	    --prefix=${CURDIR}/${BUILD_DIR}/gmp/install
 	@touch $@
