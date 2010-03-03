@@ -842,7 +842,7 @@ ${BUILD_DIR}/mingw/obj/.config.marker: \
     build/gcc/obj/.bootstrap.install.marker \
     ${BUILD_DIR}/mingw/obj/.mkdir.marker
 	cd $(dir $@) && \
-	$(if CANADIAN_CROSS_BUILD, PATH=$(realpath build/root/bin):$$PATH,) \
+	$(if CANADIAN_CROSS_BUILD, ,PATH=$(realpath build/root/bin):$$PATH) \
 	../../../build/mingw/mingw-w64-crt/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
