@@ -26,6 +26,7 @@ all:: # default target
 # TARGET_ARCH - Toolchain default target arch
 TARGET_ARCH ?= x86_64-w64-mingw32
 HOST_ARCH ?=
+BUILD_ARCH ?=
 MAKE_OPTS ?=
 
 ########################################
@@ -119,6 +120,11 @@ ifneq (,${HOST_ARCH})
   BINUTILS_CONFIG_HOST_ARGS = --host=${HOST_ARCH}
   GCC_CONFIG_HOST_ARGS = --host=${HOST_ARCH}
 endif
+
+ifneq (,${BUILD_ARCH})
+  CONFIG_BUILD_ARGS = --build=${BUILD_ARCH}
+endif
+
 ifneq (,$(filter %-mingw32,${HOST_ARCH}))
   HOST_TYPE := windows
 endif
@@ -126,6 +132,10 @@ endif
 WGET=wget -c -t0 -T60 -O
 ifeq (,$(shell which wget))
   WGET=curl -o
+endif
+
+ifeq ($(HOST_ARCH),$(BUILD_ARCH))
+  CANADIAN_CROSS_BUILD := Y
 endif
 
 
@@ -546,6 +556,7 @@ ${BUILD_DIR}/gmp/obj/.config.marker: \
 	cd $(dir $@) && \
 	../../../build/gmp/src/configure \
 	    $(or ${GCC_CONFIG_HOST_ARGS},--host=none-none-none) \
+	    $(CONFIG_BUILD_ARGS) \
 	    CPPFLAGS=-fexceptions \
 	    --enable-cxx \
 	    --disable-shared \
@@ -589,6 +600,7 @@ ${BUILD_DIR}/mpfr/obj/.config.marker: \
 	cd $(dir $@) && \
 	../../../build/mpfr/src/configure \
 	    ${GCC_CONFIG_HOST_ARGS} \
+	    $(CONFIG_BUILD_ARGS) \
 	    --disable-shared \
 	    --prefix=${CURDIR}/${BUILD_DIR}/mpfr/install \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install
@@ -632,6 +644,7 @@ ${BUILD_DIR}/mpc/obj/.config.marker: \
 	cd $(dir $@) && \
 	../../../build/mpc/src/configure \
 	    ${GCC_CONFIG_HOST_ARGS} \
+	    $(CONFIG_BUILD_ARGS) \
             --enable-static --disable-shared \
 	    --prefix=${CURDIR}/${BUILD_DIR}/mpc/install \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
@@ -675,6 +688,7 @@ ${BUILD_DIR}/ppl/obj/.config.marker: \
 	cd $(dir $@) && \
 	../../../build/ppl/src/configure \
         ${GCC_CONFIG_HOST_ARGS} \
+        $(CONFIG_BUILD_ARGS) \
         CPPFLAGS="-D__GMP_BITS_PER_MP_LIMB=GMP_LIMB_BITS" \
         --enable-static --disable-shared \
         --prefix=${CURDIR}/${BUILD_DIR}/ppl/install \
@@ -723,6 +737,7 @@ ${BUILD_DIR}/cloog/obj/.config.marker: \
 	cd $(dir $@) && \
 	../../../build/cloog/src/configure \
         ${GCC_CONFIG_HOST_ARGS} \
+        $(CONFIG_BUILD_ARGS) \
             --enable-static --disable-shared \
             --prefix=${CURDIR}/${BUILD_DIR}/cloog/install \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
@@ -779,6 +794,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
 	../../../build/gcc/gcc/configure \
         --target=${TARGET_ARCH} \
         ${GCC_CONFIG_HOST_ARGS} \
+        $(CONFIG_BUILD_ARGS) \
         --prefix=${CURDIR}/${BUILD_DIR}/root \
         --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
@@ -826,8 +842,9 @@ ${BUILD_DIR}/mingw/obj/.config.marker: \
     build/gcc/obj/.bootstrap.install.marker \
     ${BUILD_DIR}/mingw/obj/.mkdir.marker
 	cd $(dir $@) && \
-	PATH=$(realpath build/root/bin):$$PATH \
+	$(if CANADIAN_CROSS_BUILD, PATH=$(realpath build/root/bin):$$PATH,) \
 	../../../build/mingw/mingw-w64-crt/configure \
+	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
 	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
