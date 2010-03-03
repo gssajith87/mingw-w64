@@ -45,7 +45,7 @@ GCC_ADA ?= N
 ########################################
 # Version number variables
 ########################################
-GMP_VERSION ?= 5.0.0
+GMP_VERSION ?= 5.0.1
 MPFR_VERSION ?= 2.4.2
 MPC_VERSION ?= 0.8.1
 PPL_VERSION ?= 0.10.2
