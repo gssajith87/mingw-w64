@@ -102,6 +102,7 @@ GCC_ADA_N :=
 ########################################
 # Configure
 ########################################
+#Prefer gnutar to tar
 TAR := $(or $(shell type -p gnutar), $(shell type -p gnutar), $(shell type -p tar))
 
 ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
@@ -412,7 +413,7 @@ ${SRC_ARCHIVE}: \
 endif
 
 ${SRC_ARCHIVE}:
-	$(TAR) vcjf $@ --exclude=.svn \
+	$(TAR) vcjf $@ --owner 0 --group 0 --exclude=.svn\
 	    --exclude=.*.marker --exclude=CVS --exclude=gmp.tar.bz2 \
 	    --exclude=mpfr.tar.bz2 --exclude=mpc.tar.gz \-C src .
 
@@ -1054,7 +1055,7 @@ ifeq (windows,${HOST_TYPE})
 	zip -r -9 ../../$(patsubst %.tar.bz2,%.zip,$@) \
 	     . -x .*.marker *.*.marker
 else
-	$(TAR) vcjf $@ -C ${BUILD_DIR}/root \
+	$(TAR) vcjf $@ -C ${BUILD_DIR}/root --owner 0 --group 0 \
 	    --exclude=CVS --exclude=.svn --exclude=.*.marker \
             .
 endif
