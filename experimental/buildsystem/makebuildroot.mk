@@ -41,7 +41,7 @@ BIN_ARCHIVE ?= mingw-w64-bin_$(shell uname -s).tar.bz2
 # Configure
 ########################################
 #Prefer gnutar to tar
-TAR := $(or $(shell type -p gnutar), $(shell type -p gnutar), $(shell type -p tar))
+TAR := $(or $(shell which gnutar 2>/dev/null),$(shell which tar 2>/dev/null),tar)
 
 ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
   MINGW_LIBDIR := lib64

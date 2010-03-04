@@ -103,7 +103,7 @@ GCC_ADA_N :=
 # Configure
 ########################################
 #Prefer gnutar to tar
-TAR := $(or $(shell type -p gnutar), $(shell type -p gnutar), $(shell type -p tar))
+TAR := $(or $(shell which gnutar 2>/dev/null),$(shell which tar 2>/dev/null),tar)
 
 ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
   MINGW_LIBDIR := lib64
