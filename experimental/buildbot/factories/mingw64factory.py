@@ -385,12 +385,18 @@ class Mingw64Factory(factory.BuildFactory):
     pass
 
   def _step_Archive(self):
+    # OSX Snow leapord has tar which is bsdtar
+    # make it use gnutar, this is also availible on leopard
+    if self.host_os = "darwin":
+      tar = "gnutar"
+    else:
+      tar = "tar"
     # make the tarball
     self.addStep(ShellCommand,
                  name="makedist",
                  description=["tarball", "package"],
                  workdir="build/build/root",
-                 command=["tar",
+                 command=[tar,
                           "cjf",
                           WithProperties("../../%(filename)s"),
                           "--owner", "0",
