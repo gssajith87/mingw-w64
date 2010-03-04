@@ -102,6 +102,8 @@ GCC_ADA_N :=
 ########################################
 # Configure
 ########################################
+TAR := $(or $(shell type -p gnutar), $(shell type -p gnutar), $(shell type -p tar))
+
 ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
   MINGW_LIBDIR := lib64
 else ifeq (,$(filter-out i386-% i486-% i586-% i686-%,${TARGET_ARCH}))
@@ -256,7 +258,7 @@ src/gmp/.gmp.extract.marker: \
     src/gmp.tar.bz2 \
     src/gmp/src/.mkdir.marker \
     src/patches/.patches.pull.marker
-	tar -C $(dir $@)/src --strip-components=1 -xjvf $<
+	$(TAR) -C $(dir $@)/src --strip-components=1 -xjvf $<
 	@touch $@
 
 ########################################
@@ -293,7 +295,7 @@ src/mpfr/.mpfr.extract.marker: \
     src/mpfr.tar.bz2 \
     src/mpfr/src/.mkdir.marker \
     src/patches/.patches.pull.marker
-	tar -C $(dir $@)/src --strip-components=1 -xjvf $<
+	$(TAR) -C $(dir $@)/src --strip-components=1 -xjvf $<
 	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/cumulative-2.4.2-p3
 	@touch $@
 
@@ -318,7 +320,7 @@ mpc-extract: \
 src/mpc/.mpc.extract.marker: \
     src/mpc.tar.gz \
     src/mpc/src/.mkdir.marker
-	tar -C $(dir $@)/src --strip-components=1 -xzvf $<
+	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
 	@touch $@
 
 
@@ -343,7 +345,7 @@ ppl-extract: \
 src/ppl/.ppl.extract.marker: \
     src/ppl.tar.gz \
     src/ppl/src/.mkdir.marker
-	tar -C $(dir $@)/src --strip-components=1 -xzvf $<
+	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
 	@touch $@
 
 ########################################
@@ -367,7 +369,7 @@ cloog-extract: \
 src/cloog/.cloog.extract.marker: \
     src/cloog.tar.gz \
     src/cloog/src/.mkdir.marker
-	tar -C $(dir $@)/src --strip-components=1 -xzvf $<
+	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
 	@touch $@
 
 ########################################
@@ -410,7 +412,7 @@ ${SRC_ARCHIVE}: \
 endif
 
 ${SRC_ARCHIVE}:
-	tar vcjf $@ --exclude=.svn \
+	$(TAR) vcjf $@ --exclude=.svn \
 	    --exclude=.*.marker --exclude=CVS --exclude=gmp.tar.bz2 \
 	    --exclude=mpfr.tar.bz2 --exclude=mpc.tar.gz \-C src .
 
@@ -429,7 +431,7 @@ src-extract:: \
 build/.extract.marker: \
     ${SRC_ARCHIVE}
 	-mkdir -p $(dir $@)
-	tar -C $(dir $@) -xvjpf $<
+	$(TAR) -C $(dir $@) -xvjpf $<
 	@touch $@
 
 ${BUILD_DIR}/root/.root.init.marker: \
@@ -1052,7 +1054,7 @@ ifeq (windows,${HOST_TYPE})
 	zip -r -9 ../../$(patsubst %.tar.bz2,%.zip,$@) \
 	     . -x .*.marker *.*.marker
 else
-	tar vcjf $@ -C ${BUILD_DIR}/root \
+	$(TAR) vcjf $@ -C ${BUILD_DIR}/root \
 	    --exclude=CVS --exclude=.svn --exclude=.*.marker \
             .
 endif
