@@ -66,7 +66,7 @@ ifneq (,$(filter %-mingw32,${HOST_ARCH}))
 endif
 
 WGET=wget -c -t0 -T60 -O
-ifeq (,$(shell which wget))
+ifeq (,$(shell which wget 2>/dev/null))
   WGET=curl -o
 endif
 
