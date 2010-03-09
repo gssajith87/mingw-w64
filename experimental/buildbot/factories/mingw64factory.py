@@ -387,7 +387,7 @@ class Mingw64Factory(factory.BuildFactory):
   def _step_Archive(self):
     # OSX Snow leapord has tar which is bsdtar
     # make it use gnutar, this is also availible on leopard
-    if self.host_os = "darwin":
+    if self.host_os == "darwin":
       tar = "gnutar"
     else:
       tar = "tar"
