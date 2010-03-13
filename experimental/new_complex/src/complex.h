@@ -76,3 +76,33 @@ double creal(double complex z);
 float crealf(float complex z);
 long double creall(long double complex z);
 
+//Not yet defined
+
+void cerf();
+void cerff();
+void cerfl();
+void cerfc();
+void cerfcf();
+void cerfcl();
+void cexp2();
+void cexp2f();
+void cexp2l();
+void cexpm1();
+void cexpm1f();
+void cexpm1l();
+void clog10();
+void clog10f();
+void clog10l();
+void clog1p();
+void clog1pf();
+void clog1pl();
+void clog2();
+void clog2f();
+void clog2l();
+void clgamma();
+void clgammaf();
+void clgammal();
+void ctgamma();
+void ctgammaf();
+void ctgammal();
+
