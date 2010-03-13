@@ -56,8 +56,7 @@ float cabsf(float complex z);
 long double cabsl(long double complex z);
 double complex cpow(double complex x, double complex y);
 float complex cpowf(float complex x, float complex y);
-long double complex cpowl(long double complex x,
-long double complex y);
+long double complex cpowl(long double complex x, long double complex y);
 double complex csqrt(double complex z);
 float complex csqrtf(float complex z);
 long double complex csqrtl(long double complex z);
