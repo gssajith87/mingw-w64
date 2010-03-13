@@ -7,7 +7,11 @@
 #else
 #  define I _Imaginary_I
 #endif
-
+/*
+ * __STDC_IEC_559_COMPLEX_ _ The integer constant 1, intended to indicate
+ * adherence to the specifications in informative annex G (IEC 60559
+ * compatible complex arithmetic).
+ * */
 #pragma STDC CX_LIMITED_RANGE on-off-switch
 double complex cacos(double complex z);
 float complex cacosf(float complex z);
