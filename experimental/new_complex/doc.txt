@@ -36,8 +36,6 @@ long double complex casinhl(long double complex z);
 double complex catanh(double complex z);
 float complex catanhf(float complex z);
 long double complex catanhl(long double complex z);
-§B.2 Librarysummary 419
-ISO/IEC 9899:TC3 Committee Draft — Septermber 7, 2007 WG14/N1256
 double complex ccosh(double complex z);
 float complex ccoshf(float complex z);
 long double complex ccoshl(long double complex z);
