@@ -1,6 +1,9 @@
 bin_PROGRAMS = dummy
 dummy_SOURCES = src/dummy.c
 
+AM_CPPFLAGS = -I $(srcdir)/src
+#TEST_EXTENSIONS = .c
+
 TESTS = \
   tests/cabs \
   tests/cabsf \
@@ -69,3 +72,4 @@ TESTS = \
   tests/ctanhl \
   tests/ctanl 
 
+check_PROGRAMS = $(TESTS)
