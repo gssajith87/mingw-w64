@@ -1,20 +1,10 @@
-#include <math.h>
-#include <complex.h>
+#include "complex_internal.h"
 
-double
-cabs (double complex z)
-{
-  return _hypot (__real__ z, __imag__ z);
-}
+#include "complex.def_f.h"
+#include "cabs.def.h"
 
-float
-cabsf (float complex z)
-{
-  return (float) _hypot (__real__ z, __imag__ z);
-}
+#include "complex.def_d.h"
+#include "cabs.def.h"
 
-long double
-cabsl (long double complex z)
-{
-  return hypotl (__real__ z, __imag__ z);
-}
+#include "complex.def_ld.h"
+#include "cabs.def.h"

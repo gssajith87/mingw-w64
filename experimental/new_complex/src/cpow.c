@@ -1,13 +1,10 @@
-#include <complex.c>
+#include "complex_internal.h"
 
-double complex cpow(double complex x, double complex y) {
-  return 0;
-}
+#include "complex.def_f.h"
+#include "cpow.def.h"
 
-float complex cpowf(float complex x, float complex y) {
-  return 0;
-}
+#include "complex.def_d.h"
+#include "cpow.def.h"
 
-long double complex cpowl(long double complex x, long double complex y) {
-  return 0;
-}
+#include "complex.def_ld.h"
+#include "cpow.def.h"

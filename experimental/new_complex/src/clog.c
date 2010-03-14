@@ -1,13 +1,10 @@
-#include <complex.h>
+#include "complex_internal.h"
 
-double complex clog(double complex z) {
-  return 0;
-}
+#include "complex.def_f.h"
+#include "clog.def.h"
 
-float complex clogf(float complex z) {
-  return 0;
-}
+#include "complex.def_d.h"
+#include "clog.def.h"
 
-long double complex clogl(long double complex z) {
-  return 0;
-}
+#include "complex.def_ld.h"
+#include "clog.def.h"

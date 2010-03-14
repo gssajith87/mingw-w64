@@ -1,13 +1,10 @@
-#include <complex.h>
+#include "complex_internal.h"
 
-double complex conj(double complex z) {
-  return 0;
-}
+#include "complex.def_f.h"
+#include "conj.def.h"
 
-float complex conjf(float complex z) {
-  return 0;
-}
+#include "complex.def_d.h"
+#include "conj.def.h"
 
-long double complex conjl(long double complex z) {
-  return 0;
-}
+#include "complex.def_ld.h"
+#include "conj.def.h"

@@ -1,21 +1,10 @@
-#include <math.h>
-#include <complex.h>
+#include "complex_internal.h"
 
-double
-creal (double complex z)
-{
-  return __real__ z;
-}
+#include "complex.def_f.h"
+#include "creal.def.h"
 
-float
-crealf (float complex z)
-{
-  return __real__ z;
-}
+#include "complex.def_d.h"
+#include "creal.def.h"
 
-long double
-creall (long double complex z)
-{
-  return __real__ z;
-}
-
+#include "complex.def_ld.h"
+#include "creal.def.h"

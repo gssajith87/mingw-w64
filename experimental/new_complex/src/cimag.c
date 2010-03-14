@@ -1,20 +1,11 @@
-#include <math.h>
-#include <complex.h>
+#include "complex_internal.h"
 
-double
-cimag (double complex z)
-{
-  return __imag__ z;
-}
+#include "complex.def_f.h"
+#include "cimag.def.h"
 
-float
-cimagf (float complex z)
-{
-  return __imag__ z;
-}
+#include "complex.def_d.h"
+#include "cimag.def.h"
 
-long double
-cimagl (long double complex z)
-{
-  return __imag__ z;
-}
+#include "complex.def_ld.h"
+#include "cimag.def.h"
+

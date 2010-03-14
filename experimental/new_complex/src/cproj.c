@@ -1,13 +1,10 @@
-#include <complex.h>
+#include "complex_internal.h"
 
-double complex cproj(double complex z) {
-  return 0;
-}
+#include "complex.def_f.h"
+#include "cproj.def.h"
 
-float complex cprojf(float complex z) {
-  return 0;
-}
+#include "complex.def_d.h"
+#include "cproj.def.h"
 
-long double complex cprojl(long double complex z) {
-  return 0;
-}
+#include "complex.def_ld.h"
+#include "cproj.def.h"

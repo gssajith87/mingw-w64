@@ -1,50 +1,19 @@
-#include <complex.h>
+#include "complex_internal.h"
 
-double complex csin(double complex z) {
-  return 0;
-}
+#include "complex.def_f.h"
+#include "csin.def.h"
+#include "csinh.def.h"
+#include "casin.def.h"
+#include "casinh.def.h"
 
-float complex csinf(float complex z) {
-  return 0;
-}
+#include "complex.def_d.h"
+#include "csin.def.h"
+#include "csinh.def.h"
+#include "casin.def.h"
+#include "casinh.def.h"
 
-long double complex csinl(long double complex z) {
-  return 0;
-}
-
-double complex csinh(double complex z) {
-  return 0;
-}
-
-float complex csinhf(float complex z) {
-  return 0;
-}
-
-long double complex csinhl(long double complex z) {
-  return 0;
-}
-
-double complex casin(double complex z) {
-  return 0;
-}
-
-float complex casinf(float complex z) {
-  return 0;
-}
-
-long double complex casinl(long double complex z) {
-  return 0;
-}
-
-double complex casinh(double complex z) {
-  return 0;
-}
-
-float complex casinhf(float complex z) {
-  return 0;
-}
-
-long double complex casinhl(long double complex z) {
-  return 0;
-}
-
+#include "complex.def_ld.h"
+#include "csin.def.h"
+#include "csinh.def.h"
+#include "casin.def.h"
+#include "casinh.def.h"

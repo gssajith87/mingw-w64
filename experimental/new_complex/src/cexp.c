@@ -1,14 +1,10 @@
-#include <complex.h>
+#include "complex_internal.h"
 
-double complex cexp(double complex z) {
-  return 0;
-}
+#include "complex.def_f.h"
+#include "cexp.def.h"
 
-float complex cexpf(float complex z) {
-  return 0;
-}
+#include "complex.def_d.h"
+#include "cexp.def.h"
 
-long double complex cexpl(long double complex z) {
-  return 0;
-}
-
+#include "complex.def_ld.h"
+#include "cexp.def.h"

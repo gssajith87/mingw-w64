@@ -1,21 +1,10 @@
-#include <math.h>
-#include <complex.h>
+#include "complex_internal.h"
 
-double
-carg (double complex z)
-{
-  return atan2 (__imag__ z, __real__ z);
-}
+#include "complex.def_f.h"
+#include "carg.def.h"
 
-float
-cargf (float complex z)
-{
-  return atan2f (__imag__ z, __real__ z);
-}
+#include "complex.def_d.h"
+#include "carg.def.h"
 
-long double
-cargl (long double complex z)
-{
-  return atan2l (__imag__ z, __real__ z);
-}
-
+#include "complex.def_ld.h"
+#include "carg.def.h"

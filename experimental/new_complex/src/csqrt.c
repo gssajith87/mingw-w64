@@ -1,13 +1,10 @@
-#include <complex.h>
+#include "complex_internal.h"
 
-double complex csqrt(double complex z) {
-  return 0;
-}
+#include "complex.def_f.h"
+#include "csqrt.def.h"
 
-float complex csqrtf(float complex z) {
-  return 0;
-}
+#include "complex.def_d.h"
+#include "csqrt.def.h"
 
-long double complex csqrtl(long double complex z) {
-  return 0;
-}
+#include "complex.def_ld.h"
+#include "csqrt.def.h"
