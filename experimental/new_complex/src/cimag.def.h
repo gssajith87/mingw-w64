@@ -1,5 +1,5 @@
-__FCT_TYPE __cdecl
-__FCT_ABIEXT(cimag) (__FCT_TYPE __complex z)
+__FLT_TYPE __cdecl
+__FLT_ABI(cimag) (__FLT_TYPE __complex z)
 {
   return __imag__ z;
 }

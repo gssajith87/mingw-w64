@@ -1,43 +1,23 @@
-#ifdef __FCT_TYPE
-#undef __FCT_TYPE
-#endif
-#ifdef __FCT_ABIEXT
-#undef __FCT_ABIEXT
-#endif
-#ifdef __FCT_CSTEXT
-#undef __FCT_CSTEXT
-#endif
-#ifdef __FCT_NAN
-#undef __FCT_NAN
+#ifdef __FLT_TYPE
+#undef __FLT_TYPE
+#undef __FLT_ABI
+#undef __FLT_CST
+#undef __FLT_NAN
+#undef __FLT_PI
+#undef __FLT_PI_2
+#undef __FLT_PI_4
+#undef __FLT_PI_3_4
+#undef __FLT_HUGE_VAL
 #endif
 
-#define __FCT_TYPE long double
-#define	__FCT_ABIEXT(N) N##l
-#define __FCT_CSTEXT(N) N##L
+#define __FLT_TYPE long double
+#define	__FLT_ABI(N) N##l
+#define __FLT_CST(N) N##L
 
-#define __FCT_NAN NANL
+#define __FLT_NAN NANL
+#define __FLT_HUGE_VAL HUGE_VALL
 
-#ifdef __FCT_M_PI
-#undef __FCT_M_PI
-#endif
-#define __FCT_M_PI M_PIl
-
-#ifdef __FCT_M_PI_2
-#undef __FCT_M_PI_2
-#endif
-#define __FCT_M_PI_2 M_PI_2l
-
-#ifdef __FCT_M_PI_4
-#undef __FCT_M_PI_4
-#endif
-#define __FCT_M_PI_4 M_PI_4l
-
-#ifdef __FCT_M_PI_3_4
-#undef __FCT_M_PI_3_4
-#endif
-#define __FCT_M_PI_3_4 M_PI_3_4l
-
-#ifdef __FCT_HUGE_VAL
-#undef __FCT_HUGE_VAL
-#endif
-#define __FCT_HUGE_VAL HUGE_VALL
+#define __FLT_PI M_PIl
+#define __FLT_PI_2 M_PI_2l
+#define __FLT_PI_4 M_PI_4l
+#define __FLT_PI_3_4 M_PI_3_4l

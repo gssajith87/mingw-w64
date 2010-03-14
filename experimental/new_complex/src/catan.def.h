@@ -1,8 +1,8 @@
-__FCT_TYPE __complex__ __cdecl
-__FCT_ABIEXT(catan) (__FCT_TYPE __complex__ z)
+__FLT_TYPE __complex__ __cdecl
+__FLT_ABI(catan) (__FLT_TYPE __complex__ z)
 {
-  __complex__ __FCT_TYPE ret;
-  __FCT_TYPE r2, n, d;
+  __complex__ __FLT_TYPE ret;
+  __FLT_TYPE r2, n, d;
   int r_class = fpclassify (__real__ z);
   int i_class = fpclassify (__imag__ z);
 
@@ -10,26 +10,26 @@ __FCT_ABIEXT(catan) (__FCT_TYPE __complex__ z)
   {
     if (r_class == FP_INFINITE)
     {
-      __real__ ret = __FCT_ABIEXT(copysign) (__FCT_M_PI_2, __real__ z);
-      __imag__ ret = __FCT_ABIEXT(copysign) (__FCT_CSTEXT(0.0), __imag__ z);
+      __real__ ret = __FLT_ABI(copysign) (__FLT_PI_2, __real__ z);
+      __imag__ ret = __FLT_ABI(copysign) (__FLT_CST(0.0), __imag__ z);
     }
     else if (i_class == FP_INFINITE)
     {
       if (!(r_class == FP_NAN || r_class == FP_INFINITE))
-	__real__ ret = __FCT_ABIEXT(copysign) (__FCT_M_PI_2, __real__ z);
+	__real__ ret = __FLT_ABI(copysign) (__FLT_PI_2, __real__ z);
       else
-	__real__ ret = __FCT_NAN;
-      __imag__ ret = __FCT_ABIEXT(copysign) (__FCT_CSTEXT(0.0), __imag__ z);
+	__real__ ret = __FLT_NAN;
+      __imag__ ret = __FLT_ABI(copysign) (__FLT_CST(0.0), __imag__ z);
     }
     else if (i_class == FP_ZERO || i_class == FP_INFINITE)
     {
-      __real__ ret = __FCT_NAN;
-      __imag__ ret = __FCT_ABIEXT(copysign) (__FCT_CSTEXT(0.0), __imag__ z);
+      __real__ ret = __FLT_NAN;
+      __imag__ ret = __FLT_ABI(copysign) (__FLT_CST(0.0), __imag__ z);
     }
     else
     {
-      __real__ ret = __FCT_NAN;
-      __imag__ ret = __FCT_NAN;
+      __real__ ret = __FLT_NAN;
+      __imag__ ret = __FLT_NAN;
     }
     return ret;
   }
@@ -41,15 +41,15 @@ __FCT_ABIEXT(catan) (__FCT_TYPE __complex__ z)
 
   d = 1 - r2 - __imag__ z * __imag__ z;
 
-  __real__ ret = __FCT_CSTEXT(0.5) * __FCT_ABIEXT(atan2) (__FCT_CSTEXT(2.0) * __real__ z, d);
+  __real__ ret = __FLT_CST(0.5) * __FLT_ABI(atan2) (__FLT_CST(2.0) * __real__ z, d);
 
-  n = __imag__ z + __FCT_CSTEXT(1.0);
+  n = __imag__ z + __FLT_CST(1.0);
   n = r2 + n * n;
 
-  d = __imag__ z - __FCT_CSTEXT(1.0);
+  d = __imag__ z - __FLT_CST(1.0);
   d = r2 + d * d;
 
-  __imag__ ret = __FCT_CSTEXT(0.25) * __FCT_ABIEXT(log) (n / d);
+  __imag__ ret = __FLT_CST(0.25) * __FLT_ABI(log) (n / d);
 
   return ret;
 }

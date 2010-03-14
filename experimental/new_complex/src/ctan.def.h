@@ -1,44 +1,38 @@
-__FCT_TYPE __complex__ __cdecl
-__FCT_ABIEXT(ctan) (__FCT_TYPE __complex__ z)
+__FLT_TYPE __complex__ __cdecl
+__FLT_ABI(ctan) (__FLT_TYPE __complex__ z)
 {
-  __complex__ __FCT_TYPE ret;
+  __complex__ __FLT_TYPE ret;
+  __FLT_TYPE s, c, d;
 
   if (!isfinite (__real__ z) || !isfinite (__imag__ z))
   {
     if (isinf (__imag__ z))
     {
-      __real__ ret = __FCT_ABIEXT(copysign) (__FCT_CSTEXT(0.0), __real__ z);
-      __imag__ ret = __FCT_ABIEXT(copysign) (__FCT_CSTEXT(1.0), __imag__ z);
+      __real__ ret = __FLT_ABI(copysign) (__FLT_CST(0.0), __real__ z);
+      __imag__ ret = __FLT_ABI(copysign) (__FLT_CST(1.0), __imag__ z);
+      return ret;
     }
-    else if (__real__ z == __FCT_CSTEXT(0.0))
-      ret = z;
-    else
-    {
-      __real__ ret = __FCT_NAN;
-      __imag__ ret = __FCT_NAN;
-    }
+    if (__real__ z == __FLT_CST(0.0))
+      return z;
+
+    __real__ ret = __FLT_NAN;
+    __imag__ ret = __FLT_NAN;
+    return ret;
   }
-  else
+
+  __FLT_ABI(sincos) (__FLT_CST(2.0) * __real__ z, &s, &c);
+
+  d = c + __FLT_ABI(cosh) (__FLT_CST(2.0) * __imag__ z);
+
+  if (d == __FLT_CST(0.0))
   {
-    __FCT_TYPE s, c, d;
+    __complex__ __FLT_TYPE ez = __FLT_ABI(cexp) (1.0i * z);
+    __complex__ __FLT_TYPE emz = __FLT_ABI(cexp) (-1.0i * z);
 
-    __FCT_ABIEXT(sincos) (__FCT_CSTEXT(2.0) * __real__ z, &s, &c);
-
-    d = c + __FCT_ABIEXT(cosh) (__FCT_CSTEXT(2.0) * __imag__ z);
-
-    if (d == __FCT_CSTEXT(0.0))
-    {
-      __complex__ __FCT_TYPE ez = __FCT_ABIEXT(cexp) (1.0i * z);
-      __complex__ __FCT_TYPE emz = __FCT_ABIEXT(cexp) (-1.0i * z);
-
-      ret = (ez - emz) / (ez + emz) * -1.0i;
-    }
-    else
-    {
-      __real__ ret = s / d;
-      __imag__ ret = __FCT_ABIEXT(sinh) (__FCT_CSTEXT(2.0) * __imag__ z) / d;
-    }
+    return (ez - emz) / (ez + emz) * -1.0i;
   }
+  __real__ ret = s / d;
+  __imag__ ret = __FLT_ABI(sinh) (__FLT_CST(2.0) * __imag__ z) / d;
 
   return ret;
 }

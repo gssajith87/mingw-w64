@@ -1,27 +1,27 @@
-__FCT_TYPE __complex__ __cdecl
-__FCT_ABIEXT(clog) (__FCT_TYPE __complex__ z)
+__FLT_TYPE __complex__ __cdecl
+__FLT_ABI(clog) (__FLT_TYPE __complex__ z)
 {
-  __complex__ __FCT_TYPE result;
+  __complex__ __FLT_TYPE ret;
   int r_class = fpclassify (__real__ z);
   int i_class = fpclassify (__imag__ z);
 
   if (r_class == FP_ZERO && i_class == FP_ZERO)
   {
-    __imag__ result = signbit (__real__ z) ? __FCT_M_PI : __FCT_CSTEXT(0.0);
-    __imag__ result = __FCT_ABIEXT(copysign) (__imag__ result, __imag__ z);
-    __real__ result = -__FCT_CSTEXT(1.0) / __FCT_ABIEXT(fabs) (__real__ z);
+    __imag__ ret = signbit (__real__ z) ? __FLT_PI : __FLT_CST(0.0);
+    __imag__ ret = __FLT_ABI(copysign) (__imag__ ret, __imag__ z);
+    __real__ ret = -__FLT_CST(1.0) / __FLT_ABI(fabs) (__real__ z);
     return ret;
   }
 
   if (r_class != FP_NAN && i_class != FP_NAN)
   {
-    __real__ result = __FCT_ABIEXT(log) (__FCT_ABIEXT(hypot) (__real__ z, __imag__ z));
-    __imag__ result = __FCT_ABIEXT(atan2) (__imag__ z, __real__ z);
+    __real__ ret = __FLT_ABI(log) (__FLT_ABI(hypot) (__real__ z, __imag__ z));
+    __imag__ ret = __FLT_ABI(atan2) (__imag__ z, __real__ z);
     return ret;
   }
 
-  __imag__ result = __FCT_NAN;
-  __real__ result = (r_class == FP_INFINITE || i_class == FP_INFINITE ? __FCT_HUGE_VAL : __FCT_NAN);
+  __imag__ ret = __FLT_NAN;
+  __real__ ret = (r_class == FP_INFINITE || i_class == FP_INFINITE ? __FLT_HUGE_VAL : __FLT_NAN);
 
-  return result;
+  return ret;
 }
