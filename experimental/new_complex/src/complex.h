@@ -1,112 +1,204 @@
-#define complex _Complex
-#define _Complex_I const float _Complex
-#define imaginary _Imaginary
-#define _Imaginary_I const float _Imaginary
-#ifndef _Imaginary_I
-#  define I _Complex_I
-#else
-#  define I _Imaginary_I
-#endif
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 /*
- * __STDC_IEC_559_COMPLEX_ _ The integer constant 1, intended to indicate
- * adherence to the specifications in informative annex G (IEC 60559
- * compatible complex arithmetic).
- * */
-#pragma STDC CX_LIMITED_RANGE on-off-switch
-double complex cacos(double complex z);
-float complex cacosf(float complex z);
-long double complex cacosl(long double complex z);
-double complex casin(double complex z);
-float complex casinf(float complex z);
-long double complex casinl(long double complex z);
-double complex catan(double complex z);
-float complex catanf(float complex z);
-long double complex catanl(long double complex z);
-double complex ccos(double complex z);
-float complex ccosf(float complex z);
-long double complex ccosl(long double complex z);
-double complex csin(double complex z);
-float complex csinf(float complex z);
-long double complex csinl(long double complex z);
-double complex ctan(double complex z);
-float complex ctanf(float complex z);
-long double complex ctanl(long double complex z);
-double complex cacosh(double complex z);
-float complex cacoshf(float complex z);
-long double complex cacoshl(long double complex z);
-double complex casinh(double complex z);
-float complex casinhf(float complex z);
-long double complex casinhl(long double complex z);
-double complex catanh(double complex z);
-float complex catanhf(float complex z);
-long double complex catanhl(long double complex z);
-double complex ccosh(double complex z);
-float complex ccoshf(float complex z);
-long double complex ccoshl(long double complex z);
-double complex csinh(double complex z);
-float complex csinhf(float complex z);
-long double complex csinhl(long double complex z);
-double complex ctanh(double complex z);
-float complex ctanhf(float complex z);
-long double complex ctanhl(long double complex z);
-double complex cexp(double complex z);
-float complex cexpf(float complex z);
-long double complex cexpl(long double complex z);
-double complex clog(double complex z);
-float complex clogf(float complex z);
-long double complex clogl(long double complex z);
-double cabs(double complex z);
-float cabsf(float complex z);
-long double cabsl(long double complex z);
-double complex cpow(double complex x, double complex y);
-float complex cpowf(float complex x, float complex y);
-long double complex cpowl(long double complex x, long double complex y);
-double complex csqrt(double complex z);
-float complex csqrtf(float complex z);
-long double complex csqrtl(long double complex z);
-double carg(double complex z);
-float cargf(float complex z);
-long double cargl(long double complex z);
-double cimag(double complex z);
-float cimagf(float complex z);
-long double cimagl(long double complex z);
-double complex conj(double complex z);
-float complex conjf(float complex z);
-long double complex conjl(long double complex z);
-double complex cproj(double complex z);
-float complex cprojf(float complex z);
-long double complex cprojl(long double complex z);
-double creal(double complex z);
-float crealf(float complex z);
-long double creall(long double complex z);
+ * complex.h
+ *
+ * This file is part of the Mingw32 package.
+ *
+ * Contributors:
+ *  Created by Danny Smith <dannysmith@users.sourceforge.net>
+ *
+ *  THIS SOFTWARE IS NOT COPYRIGHTED
+ *
+ *  This source code is offered for use in the public domain. You may
+ *  use, modify or distribute it freely.
+ *
+ *  This code is distributed in the hope that it will be useful but
+ *  WITHOUT ANY WARRANTY. ALL WARRANTIES, EXPRESS OR IMPLIED ARE HEREBY
+ *  DISCLAIMED. This includes but is not limited to warranties of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ */
 
-//Not yet defined
+#ifndef _COMPLEX_H_
+#define _COMPLEX_H_
 
-void cerf();
-void cerff();
-void cerfl();
-void cerfc();
-void cerfcf();
-void cerfcl();
-void cexp2();
-void cexp2f();
-void cexp2l();
-void cexpm1();
-void cexpm1f();
-void cexpm1l();
-void clog10();
-void clog10f();
-void clog10l();
-void clog1p();
-void clog1pf();
-void clog1pl();
-void clog2();
-void clog2f();
-void clog2l();
-void clgamma();
-void clgammaf();
-void clgammal();
-void ctgamma();
-void ctgammaf();
-void ctgammal();
+/* All the headers include this file. */
+#include <_mingw.h>
 
+/* These macros are specified by C99 standard */
+
+#ifndef __cplusplus
+#define complex _Complex
+#endif
+
+#define _Complex_I  (0.0F +  1.0iF)
+
+/* GCC doesn't support _Imaginary type yet, so we don't
+   define _Imaginary_I */
+
+#define I _Complex_I
+
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
+#ifndef RC_INVOKED
+
+double __MINGW_ATTRIB_CONST creal (double _Complex);
+double __MINGW_ATTRIB_CONST cimag (double _Complex);
+double __MINGW_ATTRIB_CONST carg (double _Complex);
+double __MINGW_ATTRIB_CONST cabs (double _Complex) __MINGW_ATTRIB_DEPRECATED_MSVC2005;
+double _Complex __MINGW_ATTRIB_CONST conj (double _Complex);
+double _Complex  cacos (double _Complex);
+double _Complex  casin (double _Complex);
+double _Complex  catan (double _Complex);
+double _Complex  ccos (double _Complex);
+double _Complex  csin (double _Complex);
+double _Complex  ctan (double _Complex);
+double _Complex  cacosh (double _Complex);
+double _Complex  casinh (double _Complex);
+double _Complex  catanh (double _Complex);
+double _Complex  ccosh (double _Complex);
+double _Complex  csinh (double _Complex);
+double _Complex  ctanh (double _Complex);
+double _Complex  cexp (double _Complex);
+double _Complex  clog (double _Complex);
+double _Complex  cpow (double _Complex, double _Complex);
+double _Complex  csqrt (double _Complex);
+double _Complex __MINGW_ATTRIB_CONST cproj (double _Complex);
+
+float __MINGW_ATTRIB_CONST crealf (float _Complex);
+float __MINGW_ATTRIB_CONST cimagf (float _Complex);
+float __MINGW_ATTRIB_CONST cargf (float _Complex);
+float __MINGW_ATTRIB_CONST cabsf (float _Complex);
+float _Complex __MINGW_ATTRIB_CONST conjf (float _Complex);
+float _Complex  cacosf (float _Complex);
+float _Complex  casinf (float _Complex);
+float _Complex  catanf (float _Complex);
+float _Complex  ccosf (float _Complex);
+float _Complex  csinf (float _Complex);
+float _Complex  ctanf (float _Complex);
+float _Complex  cacoshf (float _Complex);
+float _Complex  casinhf (float _Complex);
+float _Complex  catanhf (float _Complex);
+float _Complex  ccoshf (float _Complex);
+float _Complex  csinhf (float _Complex);
+float _Complex  ctanhf (float _Complex);
+float _Complex  cexpf (float _Complex);
+float _Complex  clogf (float _Complex);
+float _Complex  cpowf (float _Complex, float _Complex);
+float _Complex  csqrtf (float _Complex);
+float _Complex __MINGW_ATTRIB_CONST cprojf (float _Complex);
+
+long double __MINGW_ATTRIB_CONST creall (long double _Complex);
+long double __MINGW_ATTRIB_CONST cimagl (long double _Complex);
+long double __MINGW_ATTRIB_CONST cargl (long double _Complex);
+long double __MINGW_ATTRIB_CONST cabsl (long double _Complex);
+long double _Complex __MINGW_ATTRIB_CONST conjl (long double _Complex);
+long double _Complex  cacosl (long double _Complex);
+long double _Complex  casinl (long double _Complex);
+long double _Complex  catanl (long double _Complex);
+long double _Complex  ccosl (long double _Complex);
+long double _Complex  csinl (long double _Complex);
+long double _Complex  ctanl (long double _Complex);
+long double _Complex  cacoshl (long double _Complex);
+long double _Complex  casinhl (long double _Complex);
+long double _Complex  catanhl (long double _Complex);
+long double _Complex  ccoshl (long double _Complex);
+long double _Complex  csinhl (long double _Complex);
+long double _Complex  ctanhl (long double _Complex);
+long double _Complex  cexpl (long double _Complex);
+long double _Complex  clogl (long double _Complex);
+long double _Complex  cpowl (long double _Complex, long double _Complex);
+long double _Complex  csqrtl (long double _Complex);
+long double _Complex __MINGW_ATTRIB_CONST cprojl (long double _Complex);
+
+#ifdef __GNUC__
+#ifndef __CRT__NO_INLINE
+/* double */
+__CRT_INLINE double __MINGW_ATTRIB_CONST creal (double _Complex _Z)
+{
+  return __real__ _Z;
+}
+
+__CRT_INLINE double __MINGW_ATTRIB_CONST cimag (double _Complex _Z)
+{
+  return __imag__ _Z;
+}
+
+__CRT_INLINE double _Complex __MINGW_ATTRIB_CONST conj (double _Complex _Z)
+{
+  return __extension__ ~_Z;
+}
+
+__CRT_INLINE  double __MINGW_ATTRIB_CONST carg (double _Complex _Z)
+{
+  double res;
+  __asm__ __volatile__ ("fpatan;"
+	   : "=t" (res) : "0" (__real__ _Z), "u" (__imag__ _Z) : "st(1)");
+  return res;
+}
+
+
+/* float */
+__CRT_INLINE float __MINGW_ATTRIB_CONST crealf (float _Complex _Z)
+{
+  return __real__ _Z;
+}
+
+__CRT_INLINE float __MINGW_ATTRIB_CONST cimagf (float _Complex _Z)
+{
+  return __imag__ _Z;
+}
+
+__CRT_INLINE float _Complex __MINGW_ATTRIB_CONST conjf (float _Complex _Z)
+{
+  return __extension__ ~_Z;
+}
+
+__CRT_INLINE  float __MINGW_ATTRIB_CONST cargf (float _Complex _Z)
+{
+  float res;
+  __asm__  __volatile__ ("fpatan;"
+	   : "=t" (res) : "0" (__real__ _Z), "u" (__imag__ _Z) : "st(1)");
+  return res;
+}
+
+/* long double */
+__CRT_INLINE long double __MINGW_ATTRIB_CONST creall (long double _Complex _Z)
+{
+  return __real__ _Z;
+}
+
+__CRT_INLINE long double __MINGW_ATTRIB_CONST cimagl (long double _Complex _Z)
+{
+  return __imag__ _Z;
+}
+
+__CRT_INLINE long double _Complex __MINGW_ATTRIB_CONST conjl (long double _Complex _Z)
+{
+  return __extension__ ~_Z;
+}
+
+__CRT_INLINE  long double __MINGW_ATTRIB_CONST cargl (long double _Complex _Z)
+{
+  long double res;
+  __asm__ __volatile__ ("fpatan;"
+	   : "=t" (res) : "0" (__real__ _Z), "u" (__imag__ _Z) : "st(1)");
+  return res;
+}
+#endif /* !__CRT__NO_INLINE */
+#endif /* __GNUC__ */
+
+
+#endif /* RC_INVOKED */
+
+#ifdef __cplusplus
+}
+#endif 
+
+#endif /* _COMPLEX_H */
