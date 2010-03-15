@@ -34,6 +34,7 @@ __FLT_ABI(csqrt) (__FLT_TYPE __complex__ z)
     __imag__ ret = __FLT_NAN;
     return ret;
   }
+
   if (i_class == FP_ZERO)
   {
     if (__real__ z < __FLT_CST(0.0))
@@ -46,10 +47,12 @@ __FLT_ABI(csqrt) (__FLT_TYPE __complex__ z)
       __real__ ret = __FLT_ABI(fabs) (__FLT_ABI(sqrt) (__real__ z));
       __imag__ ret = __FLT_ABI(copysign) (__FLT_CST(0.0), __imag__ z);
     }
+    return ret;
   }
-  else if (r_class == FP_ZERO)
+
+  if (r_class == FP_ZERO)
   {
-    __FLT_TYPE r = __FLT_ABI(sqrt) (__FLT_CST(0.5) * __FLT_ABI(fabs) (__imag__ z));
+    r = __FLT_ABI(sqrt) (__FLT_CST(0.5) * __FLT_ABI(fabs) (__imag__ z));
 
     __real__ ret = r;
     __imag__ ret = __FLT_ABI(copysign) (r, __imag__ z);
