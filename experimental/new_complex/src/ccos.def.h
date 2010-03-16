@@ -6,6 +6,7 @@ __FLT_ABI(ccos) (__FLT_TYPE __complex__ z)
   if (!isfinite (__real__ z) || __isnan (__imag__ z))
   {
     __complex__ __FLT_TYPE ret;
+
     if (__real__ z == __FLT_CST(0.0) || __imag__ z == __FLT_CST(0.0))
     {
       __real__ ret = __FLT_NAN;

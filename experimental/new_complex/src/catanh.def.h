@@ -12,20 +12,19 @@ __FLT_ABI(catanh) (__FLT_TYPE __complex__ z)
     {
       __real__ ret = __FLT_ABI(copysign) (__FLT_CST(0.0), __real__ z);
       __imag__ ret = __FLT_ABI(copysign) (__FLT_PI_2, __imag__ z);
+      return ret;
     }
-    else if (r_class == FP_INFINITE || r_class == FP_ZERO)
+
+    if (r_class == FP_INFINITE || r_class == FP_ZERO)
     {
       __real__ ret = __FLT_ABI(copysign) (__FLT_CST(0.0), __real__ z);
-      if (!(i_class == FP_NAN || i_class == FP_INFINITE))
-	__imag__ ret = __FLT_ABI(copysign) (__FLT_PI_2, __imag__ z);
-      else
-	__imag__ ret = __FLT_NAN;
+      __imag__ ret = ((i_class != FP_NAN && i_class != FP_INFINITE)
+        ? __FLT_ABI(copysign) (__FLT_PI_2, __imag__ z) : __FLT_NAN);
+      return ret;
     }
-    else
-    {
-      __real__ ret = __FLT_NAN;
-      __imag__ ret = __FLT_NAN;
-    }
+
+    __real__ ret = __FLT_NAN;
+    __imag__ ret = __FLT_NAN;
     return ret;
   }
 

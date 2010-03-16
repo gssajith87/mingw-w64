@@ -6,25 +6,26 @@ __FLT_ABI(cacosh) (__FLT_TYPE __complex__ z)
   int r_class = fpclassify (__real__ z);
   int i_class = fpclassify (__imag__ z);
 
-  if (r_class == FP_INFINITE || r_class == FP_NAN || i_class == FP_INFINITE || i_class == FP_NAN)
+  if (i_class == FP_INFINITE)
   {
-    if (i_class == FP_INFINITE)
-    {
-      __real__ ret = __FLT_HUGE_VAL;
-      __imag__ ret = (r_class == FP_NAN ? __FLT_NAN : __FLT_ABI(copysign) (
-	(r_class == FP_INFINITE ? (__real__ z < __FLT_CST(0.0) ? __FLT_PI_3_4 : __FLT_PI_4) : __FLT_PI_2), __imag__ z));
-    }
-    else if (r_class == FP_INFINITE)
-    {
-      __real__ ret = __FLT_HUGE_VAL;
-      __imag__ ret = ((i_class != FP_NAN && i_class != FP_INFINITE)
-	? __FLT_ABI(copysign) (signbit (__real__ z) ? __FLT_PI : __FLT_CST(0.0), __imag__ z) : __FLT_NAN);
-    }
-    else
-    {
-      __real__ ret = __FLT_NAN;
-      __imag__ ret = __FLT_NAN;
-    }
+    __real__ ret = __FLT_HUGE_VAL;
+    __imag__ ret = (r_class == FP_NAN ? __FLT_NAN : __FLT_ABI(copysign) (
+      (r_class == FP_INFINITE ? (__real__ z < __FLT_CST(0.0) ? __FLT_PI_3_4 : __FLT_PI_4) : __FLT_PI_2), __imag__ z));
+    return ret;
+  }
+
+  if (r_class == FP_INFINITE)
+  {
+    __real__ ret = __FLT_HUGE_VAL;
+    __imag__ ret = ((i_class != FP_NAN && i_class != FP_INFINITE)
+      ? __FLT_ABI(copysign) (signbit (__real__ z) ? __FLT_PI : __FLT_CST(0.0), __imag__ z) : __FLT_NAN);
+    return ret;
+  }
+
+  if (r_class == FP_NAN || i_class == FP_NAN)
+  {
+    __real__ ret = __FLT_NAN;
+    __imag__ ret = __FLT_NAN;
     return ret;
   }
 
