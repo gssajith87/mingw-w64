@@ -1044,7 +1044,8 @@ release-archive: \
     ${BIN_ARCHIVE}
 
 ${BIN_ARCHIVE}: \
-    ${BUILD_DIR}/gcc/obj/.install.marker
+    ${BUILD_DIR}/gcc/obj/.install.marker \
+    ${BUILD_DIR}/pre.pack
 ifeq (windows,${HOST_TYPE})
 	cd ${BUILD_DIR}/root && \
 	zip -r -9 ../../$(patsubst %.tar.bz2,%.zip,$@) \
@@ -1054,6 +1055,17 @@ else
 	    --exclude=CVS --exclude=.svn --exclude=.*.marker \
             .
 endif
+
+########################################
+# Pre-pack cleanups
+########################################
+# Nothing yet
+pre-pack: \
+    ${BUILD_DIR}/pre.pack
+
+${BUILD_DIR}/pre.pack: \
+    ${BUILD_DIR}/gcc/obj/.install.marker
+	@touch $@
 
 ################################################################################
 # Native (only active when native_dir != build_dir)
@@ -1646,6 +1658,10 @@ native-release-archive: \
 
 native-${BIN_ARCHIVE}: \
     ${NATIVE_DIR}/gcc/obj/.install.marker
+	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} pre-pack
 	cd ${NATIVE_DIR}/root && \
 	zip -r -9 ${CURDIR}/$(patsubst %.tar.bz2,%.zip,$@) \
 	     . -x .*.marker *.*.marker
@@ -1797,6 +1813,7 @@ TARGETS := \
   native-pthreads-install \
   native-gcc-libgcc-compile \
   native-gcc-libgcc-install \
+  pre-pack \
   ${NULL}
 
 
