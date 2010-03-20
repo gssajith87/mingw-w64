@@ -25,8 +25,8 @@ all:: # default target
 ########################################
 # TARGET_ARCH - Toolchain default target arch
 TARGET_ARCH ?= x86_64-w64-mingw32
-HOST_ARCH ?=
 BUILD_ARCH ?=
+HOST_ARCH ?= ${BUILD_ARCH}
 MAKE_OPTS ?=
 BUILD_DIR ?= build
 
