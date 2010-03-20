@@ -28,6 +28,7 @@ TARGET_ARCH ?= x86_64-w64-mingw32
 HOST_ARCH ?=
 BUILD_ARCH ?=
 MAKE_OPTS ?=
+BUILD_DIR ?= build
 
 ########################################
 # Makefile output options
@@ -140,7 +141,7 @@ endif
 ifneq ($(HOST_ARCH),$(BUILD_ARCH))
   CANADIAN_CROSS_BUILD := Y
 else
-  ADD_BIN_PATH := PATH=$(realpath build/root/bin):$$PATH
+  ADD_BIN_PATH := PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH
 endif
 
 
@@ -417,19 +418,13 @@ ${SRC_ARCHIVE}:
 	    --exclude=.*.marker --exclude=CVS --exclude=gmp.tar.bz2 \
 	    --exclude=mpfr.tar.bz2 --exclude=mpc.tar.gz \-C src .
 
-################################################################################
-# Build
-################################################################################
-
-BUILD_DIR := build
-
 ########################################
 # Extract source tarball
 ########################################
 src-extract:: \
-    build/.extract.marker
+    ${BUILD_DIR}/.extract.marker
 
-build/.extract.marker: \
+${BUILD_DIR}/.extract.marker: \
     ${SRC_ARCHIVE}
 	-mkdir -p $(dir $@)
 	$(TAR) -C $(dir $@) -xvjpf $<
@@ -437,7 +432,7 @@ build/.extract.marker: \
 
 ${BUILD_DIR}/root/.root.init.marker: \
     ${BUILD_DIR}/root/${TARGET_ARCH}/.mkdir.marker \
-    build/.extract.marker
+    ${BUILD_DIR}/.extract.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
 	test -e ${BUILD_DIR}/root/mingw  || \
 	  junction ${BUILD_DIR}/root/mingw "${BUILD_DIR}/root/${TARGET_ARCH}"
@@ -496,7 +491,7 @@ ${BUILD_DIR}/binutils/obj/.config.marker: \
     ${BUILD_DIR}/binutils/obj/.mkdir.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
-	../../../build/binutils/src/configure \
+	../../../${BUILD_DIR}/binutils/src/configure \
 	    --target=${TARGET_ARCH} \
 	    ${BINUTILS_CONFIG_HOST_ARGS} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
@@ -531,19 +526,19 @@ ${BUILD_DIR}/binutils/obj/.install.marker: \
 # GCC cross compiling support - winsup
 ########################################
 gcc-winsup: \
-    build/gcc/gcc/.winsup.marker
+    ${BUILD_DIR}/gcc/gcc/.winsup.marker
 
-build/gcc/gcc/.winsup.marker: \
+${BUILD_DIR}/gcc/gcc/.winsup.marker: \
     ${BUILD_DIR}/.extract.marker \
     ${BUILD_DIR}/root/.root.init.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
-	test -e build/gcc/gcc/winsup  || \
-	  junction build/gcc/gcc/winsup "${BUILD_DIR}/root"
-	test -e build/gcc/gcc/winsup
+	test -e ${BUILD_DIR}/gcc/gcc/winsup  || \
+	  junction ${BUILD_DIR}/gcc/gcc/winsup "${BUILD_DIR}/root"
+	test -e ${BUILD_DIR}/gcc/gcc/winsup
 else
-	test -h build/gcc/gcc/winsup  || \
-	  ln -s "../../../${BUILD_DIR}/root" build/gcc/gcc/winsup
-	test -h build/gcc/gcc/winsup
+	test -h ${BUILD_DIR}/gcc/gcc/winsup  || \
+	  ln -s "../../../${BUILD_DIR}/root" ${BUILD_DIR}/gcc/gcc/winsup
+	test -h ${BUILD_DIR}/gcc/gcc/winsup
 endif
 	@touch $@
 
@@ -559,7 +554,7 @@ ${BUILD_DIR}/gmp/obj/.config.marker: \
     ${BUILD_DIR}/mingw-headers/obj/.install.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
-	../../../build/gmp/src/configure \
+	../../../${BUILD_DIR}/gmp/src/configure \
 	    $(or ${GCC_CONFIG_HOST_ARGS},--host=none-none-none) \
 	    $(CONFIG_BUILD_ARGS) \
 	    CPPFLAGS=-fexceptions \
@@ -603,7 +598,7 @@ ${BUILD_DIR}/mpfr/obj/.config.marker: \
     ${BUILD_DIR}/mingw-headers/obj/.install.marker \
     ${BUILD_DIR}/gmp/install/.install.marker
 	cd $(dir $@) && \
-	../../../build/mpfr/src/configure \
+	../../../${BUILD_DIR}/mpfr/src/configure \
 	    ${GCC_CONFIG_HOST_ARGS} \
 	    $(CONFIG_BUILD_ARGS) \
 	    --disable-shared \
@@ -647,7 +642,7 @@ ${BUILD_DIR}/mpc/obj/.config.marker: \
     ${BUILD_DIR}/gmp/install/.install.marker \
     ${BUILD_DIR}/mpfr/install/.install.marker
 	cd $(dir $@) && \
-	../../../build/mpc/src/configure \
+	../../../${BUILD_DIR}/mpc/src/configure \
 	    ${GCC_CONFIG_HOST_ARGS} \
 	    $(CONFIG_BUILD_ARGS) \
             --enable-static --disable-shared \
@@ -691,7 +686,7 @@ ${BUILD_DIR}/ppl/obj/.config.marker: \
     ${BUILD_DIR}/mingw-headers/obj/.install.marker \
     ${BUILD_DIR}/gmp/install/.install.marker
 	cd $(dir $@) && \
-	../../../build/ppl/src/configure \
+	../../../${BUILD_DIR}/ppl/src/configure \
         ${GCC_CONFIG_HOST_ARGS} \
         $(CONFIG_BUILD_ARGS) \
         CPPFLAGS="-D__GMP_BITS_PER_MP_LIMB=GMP_LIMB_BITS" \
@@ -740,7 +735,7 @@ ${BUILD_DIR}/cloog/obj/.config.marker: \
     ${BUILD_DIR}/gmp/install/.install.marker \
     ${BUILD_DIR}/ppl/install/.install.marker
 	cd $(dir $@) && \
-	../../../build/cloog/src/configure \
+	../../../${BUILD_DIR}/cloog/src/configure \
         ${GCC_CONFIG_HOST_ARGS} \
         $(CONFIG_BUILD_ARGS) \
             --enable-static --disable-shared \
@@ -796,7 +791,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/cloog/install/.install.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
-	../../../build/gcc/gcc/configure \
+	../../../${BUILD_DIR}/gcc/gcc/configure \
         --target=${TARGET_ARCH} \
         ${GCC_CONFIG_HOST_ARGS} \
         $(CONFIG_BUILD_ARGS) \
@@ -818,10 +813,10 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
 # Compile GCC stage 1
 ########################################
 gcc-bootstrap-compile: \
-    build/gcc/obj/.bootstrap.compile.marker
+    ${BUILD_DIR}/gcc/obj/.bootstrap.compile.marker
 
-build/gcc/obj/.bootstrap.compile.marker: \
-    build/gcc/obj/.config.marker \
+${BUILD_DIR}/gcc/obj/.bootstrap.compile.marker: \
+    ${BUILD_DIR}/gcc/obj/.config.marker \
     ${BUILD_DIR}/mingw-headers/obj/.install.marker
 	found_asm=yes ${MAKE} ${MAKE_OPTS} -C $(dir $@) all-gcc
 	@touch $@
@@ -830,10 +825,10 @@ build/gcc/obj/.bootstrap.compile.marker: \
 # Install GCC stage 1
 ########################################
 gcc-bootstrap-install: \
-    build/gcc/obj/.bootstrap.install.marker
+    ${BUILD_DIR}/gcc/obj/.bootstrap.install.marker
 
-build/gcc/obj/.bootstrap.install.marker: \
-    build/gcc/obj/.bootstrap.compile.marker
+${BUILD_DIR}/gcc/obj/.bootstrap.install.marker: \
+    ${BUILD_DIR}/gcc/obj/.bootstrap.compile.marker
 	${MAKE} -C $(dir $@) install-gcc
 	@touch $@
 
@@ -844,10 +839,10 @@ crt-configure: \
     ${BUILD_DIR}/mingw/obj/.config.marker
 
 ${BUILD_DIR}/mingw/obj/.config.marker: \
-    build/gcc/obj/.bootstrap.install.marker \
+    ${BUILD_DIR}/gcc/obj/.bootstrap.install.marker \
     ${BUILD_DIR}/mingw/obj/.mkdir.marker
 	cd $(dir $@) && \
-	$(ADD_BIN_PATH) ../../../build/mingw/mingw-w64-crt/configure \
+	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/mingw/mingw-w64-crt/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
@@ -1075,7 +1070,7 @@ ifneq (${NATIVE_DIR},${BUILD_DIR})
 ${NATIVE_DIR}/root/.root.init.marker: \
     ${NATIVE_DIR}/root/${TARGET_ARCH}/.mkdir.marker \
     ${BUILD_DIR}/.extract.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1090,7 +1085,7 @@ native-headers-configure: \
 ${NATIVE_DIR}/mingw-headers/obj/.config.marker: \
     ${NATIVE_DIR}/root/.root.init.marker \
     ${NATIVE_DIR}/mingw-headers/obj/.mkdir.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1104,7 +1099,7 @@ native-headers-install: \
 
 ${NATIVE_DIR}/mingw-headers/obj/.install.marker: \
     ${NATIVE_DIR}/mingw-headers/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1120,7 +1115,7 @@ ${NATIVE_DIR}/binutils/obj/.config.marker: \
     ${BUILD_DIR}/gcc/obj/.install.marker \
     ${NATIVE_DIR}/binutils/obj/.mkdir.marker \
     ${NATIVE_DIR}/root/.root.init.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1134,7 +1129,7 @@ native-binutils-compile: \
 
 ${NATIVE_DIR}/binutils/obj/.compile.marker: \
     ${NATIVE_DIR}/binutils/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1148,7 +1143,7 @@ native-binutils-install: \
 
 ${NATIVE_DIR}/binutils/obj/.install.marker: \
     ${NATIVE_DIR}/binutils/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1165,7 +1160,7 @@ ${NATIVE_DIR}/gmp/obj/.config.marker: \
     ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
     ${NATIVE_DIR}/gmp/obj/.mkdir.marker \
     ${NATIVE_DIR}/root/.root.init.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1179,7 +1174,7 @@ native-gmp-compile: \
 
 ${NATIVE_DIR}/gmp/obj/.compile.marker: \
     ${NATIVE_DIR}/gmp/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1193,7 +1188,7 @@ native-gmp-install: \
 
 ${NATIVE_DIR}/gmp/install/.install.marker: \
     ${NATIVE_DIR}/gmp/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1210,7 +1205,7 @@ ${NATIVE_DIR}/mpfr/obj/.config.marker: \
     ${NATIVE_DIR}/mingw-headers/obj/.install.marker\
     ${NATIVE_DIR}/mpfr/obj/.mkdir.marker \
     ${NATIVE_DIR}/gmp/install/.install.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1224,7 +1219,7 @@ native-mpfr-compile: \
 
 ${NATIVE_DIR}/mpfr/obj/.compile.marker: \
     ${NATIVE_DIR}/mpfr/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1238,7 +1233,7 @@ native-mpfr-install: \
 
 ${NATIVE_DIR}/mpfr/install/.install.marker: \
     ${NATIVE_DIR}/mpfr/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1255,7 +1250,7 @@ ${NATIVE_DIR}/mpc/obj/.config.marker: \
     ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
     ${NATIVE_DIR}/mpc/obj/.mkdir.marker \
     ${NATIVE_DIR}/mpfr/install/.install.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1269,7 +1264,7 @@ native-mpc-compile: \
 
 ${NATIVE_DIR}/mpc/obj/.compile.marker: \
     ${NATIVE_DIR}/mpc/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1283,7 +1278,7 @@ native-mpc-install: \
 
 ${NATIVE_DIR}/mpc/install/.install.marker: \
     ${NATIVE_DIR}/mpc/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1301,7 +1296,7 @@ ${NATIVE_DIR}/ppl/obj/.config.marker: \
     ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
     ${NATIVE_DIR}/ppl/obj/.mkdir.marker \
     ${NATIVE_DIR}/gmp/install/.install.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1315,7 +1310,7 @@ native-ppl-compile: \
 
 ${NATIVE_DIR}/ppl/obj/.compile.marker: \
     ${NATIVE_DIR}/ppl/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1329,7 +1324,7 @@ native-ppl-install: \
 
 ${NATIVE_DIR}/ppl/install/.install.marker: \
     ${NATIVE_DIR}/ppl/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1347,7 +1342,7 @@ ${NATIVE_DIR}/cloog/obj/.config.marker: \
     ${NATIVE_DIR}/cloog/obj/.mkdir.marker \
     ${NATIVE_DIR}/gmp/install/.install.marker \
     ${NATIVE_DIR}/ppl/install/.install.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1361,7 +1356,7 @@ native-cloog-compile: \
 
 ${NATIVE_DIR}/cloog/obj/.compile.marker: \
     ${NATIVE_DIR}/cloog/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1375,7 +1370,7 @@ native-cloog-install: \
 
 ${NATIVE_DIR}/cloog/install/.install.marker: \
     ${NATIVE_DIR}/cloog/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1388,19 +1383,19 @@ native-gcc-winsup: \
     ${NATIVE_DIR}/gcc/gcc/.winsup.marker
 
 ${NATIVE_DIR}/gcc/gcc/.winsup.marker: \
-    build/.extract.marker \
+    ${BUILD_DIR}/.extract.marker \
     ${NATIVE_DIR}/gcc/gcc/.mkdir.marker \
     ${NATIVE_DIR}/root/.root.init.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
-	-test -e build/gcc/gcc/winsup  && \
-	  junction -d build/gcc/gcc/winsup
-	junction build/gcc/gcc/winsup "${NATIVE_DIR}/root"
-	test -e build/gcc/gcc/winsup
+	-test -e ${BUILD_DIR}/gcc/gcc/winsup  && \
+	  junction -d ${BUILD_DIR}/gcc/gcc/winsup
+	junction ${BUILD_DIR}/gcc/gcc/winsup "${NATIVE_DIR}/root"
+	test -e ${BUILD_DIR}/gcc/gcc/winsup
 else
-	-test -h build/gcc/gcc/winsup && \
-	  rm build/gcc/gcc/winsup
-	ln -s "../../../${NATIVE_DIR}/root" build/gcc/gcc/winsup
-	test -h build/gcc/gcc/winsup
+	-test -h ${BUILD_DIR}/gcc/gcc/winsup && \
+	  rm ${BUILD_DIR}/gcc/gcc/winsup
+	ln -s "../../../${NATIVE_DIR}/root" ${BUILD_DIR}/gcc/gcc/winsup
+	test -h ${BUILD_DIR}/gcc/gcc/winsup
 endif
 	@touch $@
 
@@ -1420,7 +1415,7 @@ ${NATIVE_DIR}/gcc/obj/.config.marker: \
     ${NATIVE_DIR}/ppl/install/.install.marker \
     ${NATIVE_DIR}/cloog/install/.install.marker \
     ${NATIVE_DIR}/root/.root.init.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1433,9 +1428,9 @@ native-crt-configure: \
     ${NATIVE_DIR}/mingw/obj/.config.marker
 
 ${NATIVE_DIR}/mingw/obj/.config.marker: \
-    build/gcc/obj/.bootstrap.install.marker \
+    ${BUILD_DIR}/gcc/obj/.bootstrap.install.marker \
     ${NATIVE_DIR}/mingw/obj/.mkdir.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1449,7 +1444,7 @@ native-crt-compile: \
 
 ${NATIVE_DIR}/mingw/obj/.compile.marker: \
     ${NATIVE_DIR}/mingw/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1463,7 +1458,7 @@ native-crt-install: \
 
 ${NATIVE_DIR}/mingw/obj/.install.marker: \
     ${NATIVE_DIR}/mingw/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1478,7 +1473,7 @@ native-gcc-libgcc-compile: \
 
 ${NATIVE_DIR}/gcc/obj/.libgcc.compile.marker: \
     ${NATIVE_DIR}/mingw/obj/.install.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -C $(dir $@) all-target-libgcc
 	@touch $@
 
@@ -1490,7 +1485,7 @@ native-gcc-libgcc-install: \
 
 ${NATIVE_DIR}/gcc/obj/.libgcc.install.marker: \
     ${NATIVE_DIR}/gcc/obj/.libgcc.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -C $(dir $@) install-target-libgcc
 	@touch $@
 
@@ -1541,7 +1536,7 @@ ${NATIVE_DIR}/pthreads/.pthreads.build.x86_64-w64-mingw32: \
 	  -e 's/pthreadGC\$$(DLL_VER)/&-w64/g' \
 	  -e 's/pthreadGCE\$$(DLL_VER)/&-w64/g' \
 	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
 	@touch $@
 
@@ -1556,7 +1551,7 @@ ${NATIVE_DIR}/pthreads/.pthreads.build.i686-w64-mingw32: \
 	  -e 's/pthreadGC\$$(DLL_VER)/&-w32/g' \
 	  -e 's/pthreadGCE\$$(DLL_VER)/&-w32/g' \
 	  < $(dir $@)GNUmakefile.ori > $(dir $@)GNUmakefile
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -C $(dir $@) CROSS=${TARGET_ARCH}- $(PTHREADS_MAKE_ARGS)
 	@touch $@
 
@@ -1623,7 +1618,7 @@ ${NATIVE_DIR}/gcc/obj/.compile.marker: \
     ${NATIVE_DIR}/gcc/obj/.config.marker \
     ${NATIVE_DIR}/mingw/obj/.install.marker \
 	${NATIVE_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB}
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
@@ -1637,7 +1632,7 @@ native-gcc-install: \
 
 ${NATIVE_DIR}/gcc/obj/.install.marker: \
     ${NATIVE_DIR}/gcc/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
 	     TARGET_ARCH=${TARGET_ARCH} \
