@@ -138,10 +138,10 @@ ifeq (,$(shell which wget 2>/dev/null))
   WGET=curl -o
 endif
 
-ifneq ($(HOST_ARCH),$(BUILD_ARCH))
+ifneq ($(strip $(HOST_ARCH)),$(strip $(BUILD_ARCH)))
   CANADIAN_CROSS_BUILD := Y
 else
-  ADD_BIN_PATH := PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH
+  ADD_BIN_PATH ?= PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH
 endif
 
 
