@@ -88,7 +88,7 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(SetProperty(command=["echo", self.file_extension],
                              property="file_extension"))
 
-    self._step_AddtionalProperties()
+    self._step_AdditionalProperties()
 
     self.addStep(SetPropertyConditional,
                  condprop="filename_format",
@@ -161,22 +161,28 @@ class Mingw64Factory(factory.BuildFactory):
                               mode=0600,
                               haltOnFailure=True))
 
+    self.addStep(FileDownload(name="src-download-script",
+                              mastersrc="scripts/download-src.py",
+                              slavedest="download-src.py",
+                              maxsize=102400,
+                              mode=0755,
+                              haltOnFailure=True))
+
+    self.addStep(ShellCommand(name="src-download-web",
+                              description=["source", "download", "web"],
+                              #doStepIf=lambda step: ("src_url" in step.build.getProperties()) and
+                              #                      (step.getProperty("src_url") != ""),
+                              #command=["python", "download-src.py", WithProperties("%(src_url)s"), WithProperties("%(src_archive)s")],
+                              command=["python", "download-src.py", "http://mingw-w64.ath.cx:8010/404me", WithProperties("%(src_archive)s")],
+                              haltOnFailure=False))
+
     self.addStep(FileDownload(name="src-download",
+                              #doStepIf=lambda step: (not ("src_url" in step.build.getProperties())) or
+                              #                      (step.getProperty("src_url") == ""),
                               mastersrc=WithProperties("%(src_archive)s"),
                               slavedest=WithProperties("%(src_archive)s"),
                               mode=0644,
                               haltOnFailure=True))
-
-    # Normally, this ends up being a no-op; it's used for custom forced builds to pull gcc
-    self.addStep(Compile(name="src-archive",
-                         description=["source archive", "create"],
-                         descriptionDone=["source archive", "created"],
-                         command=["make", "-f", "mingw-makefile", "src-archive"],
-                         env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
-                              "GCC_BRANCH" : WithProperties("%(gcc_branch)s"),
-                              "GCC_REVISION": WithProperties("%(gcc_revision)s"),
-                              "MINGW_REVISION": WithProperties("%(mingw_revision)s"),
-                              "BINUTILS_REVISION": WithProperties("%(binutils_revision)s")}))
 
     self.addStep(Compile(name="src-extract",
                          description=["source", "extract"],
@@ -381,12 +387,12 @@ class Mingw64Factory(factory.BuildFactory):
                                  "path":       WithProperties("%(path:-)s"),
                                  "is_nightly": WithProperties("%(is_nightly:-)s")})
 
-  def _step_AddtionalProperties(self):
+  def _step_AdditionalProperties(self):
     pass
 
   def _step_Archive(self):
-    # OSX Snow leapord has tar which is bsdtar
-    # make it use gnutar, this is also availible on leopard
+    # OSX Snow Leopard (10.6) has tar which is bsdtar
+    # make it use gnutar, this is also availible on Leopard (10.5)
     if self.host_os == "darwin":
       tar = "gnutar"
     else:
@@ -426,7 +432,7 @@ class Mingw64CygwinFactory(Mingw64Factory):
   def __init__(self, **kwargs):
     Mingw64Factory.__init__(self, **kwargs)
 
-  def _step_AddtionalProperties(self):
+  def _step_AdditionalProperties(self):
     self.addStep(SetProperty(property="host-extra",
                              command=["bash", "-c",
                                       """cygcheck -c -d cygwin | perl -ne 'm/^cygwin\s+(\S+)/ and print "-$1"'"""]))

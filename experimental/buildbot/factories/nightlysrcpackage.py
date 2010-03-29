@@ -264,6 +264,28 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                             slavesrc=WithProperties("%(filename)s"),
                             masterdest=WithProperties("%(filename)s")))
 
+    # trigger upload
+    self.addStep(Trigger(name="src-publish",
+                         doStepIf=lambda step: ("is_nightly" in step.build.getProperties()) and
+                                               step.build.getProperty("is_nightly"),
+                         schedulerNames=["sourceforge-upload"],
+                         waitForFinish=True, # needed for the builders
+                         set_properties={"masterdir":  WithProperties("%(masterdir)s"),
+                                         "filename":   WithProperties("%(filename)s"),
+                                         "destname":   WithProperties("%(destname)s"),
+                                         "datestamp":  WithProperties("%(datestamp:-)s"),
+                                         "target-os":  "src",
+                                         "path":       WithProperties("%(path:-)s"),
+                                         "is_nightly": WithProperties("%(is_nightly:-)s")}))
+
+    self.addStep(SetProperty(property="src_url",
+                             doStepIf=lambda step: ("is_nightly" in step.build.getProperties()) and
+                                                   step.build.getProperty("is_nightly"),
+                             command=["echo",
+                                      WithProperties("http://downloads.sourceforge.net/project/%s/%s/%%(destname)s" %
+                                                      (gConfig.get("sourceforge", "group_id"),
+                                                       gConfig.get("sourceforge", "path-src")))]))
+
     # trigger building
     self.addStep(TriggerBuilders
                   (name="start-build",
@@ -287,15 +309,4 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                     'destname_format',
                                     'masterdir', 'path'],
                    set_properties={"src_archive":          WithProperties("%(filename)s")}))
-    # trigger upload
-    self.addStep(Trigger(name="src-publish",
-                         schedulerNames=["sourceforge-upload"],
-                         waitForFinish=False, # don't hang :D
-                         set_properties={"masterdir":  WithProperties("%(masterdir)s"),
-                                         "filename":   WithProperties("%(filename)s"),
-                                         "destname":   WithProperties("%(destname)s"),
-                                         "datestamp":  WithProperties("%(datestamp:-)s"),
-                                         "target-os":  "src",
-                                         "path":       WithProperties("%(path:-)s"),
-                                         "is_nightly": WithProperties("%(is_nightly:-)s")}))
 
