@@ -121,7 +121,7 @@ def main(argv):
         print "...Done"
         return 0
         break
-      except IOError as error:
+      except IOError, error:
         if error.args[0] == 'http error' and error.args[1] == 404:
           # the fact that we got 404 means we shouldn't continue
           break
