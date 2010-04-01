@@ -46,7 +46,7 @@ class ProgressReporter(threading.Thread):
      anything from timing out on the buildbot."""
   def __init__(self, interval=15, *args, **kwargs):
     threading.Thread.__init__(self, *args, **kwargs)
-    #self.daemon = True
+    self.daemon = True
     self.interval = interval
     self.stop = False
 
@@ -104,7 +104,7 @@ def main(argv):
     print __doc__ % (argv[0])
     return -1
 
-  url = sys.argv[1]
+  url = sys.argv[1].replace(" ", "%20")
   dest = sys.argv[2]
   if not re.match("(?:https?|ftp)://", url):
     msg = "URL %s does not use a whitelisted protocol" % (url)

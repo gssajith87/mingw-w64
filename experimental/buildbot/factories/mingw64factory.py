@@ -173,7 +173,7 @@ class Mingw64Factory(factory.BuildFactory):
                               doStepIf=lambda step: ("src_url" in step.build.getProperties()) and
                                                     (step.getProperty("src_url") != ""),
                               command=["python", "download-src.py", WithProperties("%(src_url)s"), WithProperties("%(src_archive)s")],
-                              haltOnFailure=False))
+                              haltOnFailure=True))
 
     self.addStep(FileDownload(name="src-download",
                               doStepIf=lambda step: (not ("src_url" in step.build.getProperties())) or
