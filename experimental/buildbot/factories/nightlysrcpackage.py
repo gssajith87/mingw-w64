@@ -308,5 +308,6 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                     'gcc_revision', 'mingw_revision',
                                     'destname_format',
                                     'masterdir', 'path'],
-                   set_properties={"src_archive":          WithProperties("%(filename)s")}))
+                   set_properties={"src_archive":          WithProperties("%(filename)s"),
+                                   "src_url":              WithProperties("%(src_url:-)s")}))
 

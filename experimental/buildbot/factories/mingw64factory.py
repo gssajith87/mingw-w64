@@ -170,15 +170,14 @@ class Mingw64Factory(factory.BuildFactory):
 
     self.addStep(ShellCommand(name="src-download-web",
                               description=["source", "download", "web"],
-                              #doStepIf=lambda step: ("src_url" in step.build.getProperties()) and
-                              #                      (step.getProperty("src_url") != ""),
-                              #command=["python", "download-src.py", WithProperties("%(src_url)s"), WithProperties("%(src_archive)s")],
-                              command=["python", "download-src.py", "http://mingw-w64.ath.cx:8010/404me", WithProperties("%(src_archive)s")],
+                              doStepIf=lambda step: ("src_url" in step.build.getProperties()) and
+                                                    (step.getProperty("src_url") != ""),
+                              command=["python", "download-src.py", WithProperties("%(src_url)s"), WithProperties("%(src_archive)s")],
                               haltOnFailure=False))
 
     self.addStep(FileDownload(name="src-download",
-                              #doStepIf=lambda step: (not ("src_url" in step.build.getProperties())) or
-                              #                      (step.getProperty("src_url") == ""),
+                              doStepIf=lambda step: (not ("src_url" in step.build.getProperties())) or
+                                                    (step.getProperty("src_url") == ""),
                               mastersrc=WithProperties("%(src_archive)s"),
                               slavedest=WithProperties("%(src_archive)s"),
                               mode=0644,
