@@ -1,0 +1,77 @@
+diff --git a/libltdl/config/ltmain.m4sh b/libltdl/config/ltmain.m4sh
+index 80a1ff3..45798fc 100644
+--- a/libltdl/config/ltmain.m4sh
++++ b/libltdl/config/ltmain.m4sh
+@@ -4215,6 +4215,28 @@ func_mode_link ()
+ 	continue
+ 	;;
+ 
++      -m32)
++	archive_cmds="$archive_cmds -m32"
++	case $host in
++	*-w64-mingw*)
++	MULTILIB_PREFIX=l32
++	;;
++	*) ;;
++	esac
++	continue
++	;;
++
++      -m64)
++	archive_cmds="$archive_cmds -m64"
++	case $host in
++	*-w64-mingw*)
++	MULTILIB_PREFIX=l64
++	;;
++	*) ;;
++	esac
++	continue
++	;;
++
+       -no-undefined)
+ 	allow_undefined=no
+ 	continue
+diff --git a/libltdl/m4/libtool.m4 b/libltdl/m4/libtool.m4
+index 29f1222..f6bb69a 100644
+--- a/libltdl/m4/libtool.m4
++++ b/libltdl/m4/libtool.m4
+@@ -2084,6 +2084,7 @@ BEGIN {RS=" "; FS="/|\n";} {
+ else
+   sys_lib_search_path_spec="/lib /usr/lib /usr/local/lib"
+ fi])
++MULTILIB_PREFIX=
+ library_names_spec=
+ libname_spec='lib$name'
+ soname_spec=
+@@ -2227,6 +2228,22 @@ m4_if([$1], [],[
+     mingw* | cegcc*)
+       # MinGW DLLs use traditional 'lib' prefix
+       soname_spec='${libname}`echo ${release} | $SED -e 's/[[.]]/-/g'`${versuffix}${shared_ext}'
++      case $host_vendor in
++        w64)
++        soname_spec='`echo ${libname} | sed -e 's/^lib/\${MULTILIB_PREFIX}/'``echo ${release} | $SED -e 's/[[.]]/-/g'`${versuffix}${shared_ext}'
++        case $host in
++        x86_64-*)
++          MULTILIB_PREFIX=l64
++        ;;
++        i?86-*)
++          MULTILIB_PREFIX=l32
++        ;;
++        esac
++        ;;
++      *)
++        soname_spec='${libname}`echo ${release} | $SED -e 's/[[.]]/-/g'`${versuffix}${shared_ext}'
++      ;;
++      esac
+       ;;
+     pw32*)
+       # pw32 DLLs use 'pw' prefix rather than 'lib'
+@@ -2705,6 +2722,8 @@ _LT_DECL([], [libname_spec], [1], [Format of library name prefix])
+ _LT_DECL([], [library_names_spec], [1],
+     [[List of archive names.  First name is the real one, the rest are links.
+     The last name is the one that the linker finds with -lNAME]])
++_LT_DECL([], [MULTILIB_PREFIX], [0],
++    [MULTILIB PREFIX STRING])
+ _LT_DECL([], [soname_spec], [1],
+     [[The coded name of the library, if different from the real name]])
+ _LT_DECL([], [install_override_mode], [1],

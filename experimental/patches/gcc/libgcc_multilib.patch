@@ -1,0 +1,46 @@
+Index: gcc/config/i386/t-mingw-w64
+===================================================================
+--- gcc/config/i386/t-mingw-w64	(revision 156923)
++++ gcc/config/i386/t-mingw-w64	(working copy)
+@@ -10,3 +10,9 @@
+ 
+ LIBGCC = stmp-multilib
+ INSTALL_LIBGCC = install-multilib
++
++SHLIB_IMPLIB = @shlib_base_name@$(SHLIB_EXT).a
++MULTILIB_SONAME := gcc_s_$(EH_MODEL)-$(SHLIB_SOVERSION)$(SHLIB_EXT)
++
++SHLIB_SONAME = $$(if $$(shell $$(gcc_compile_bare) -xc -dD -E /dev/null |grep -c __WIN64__ |sed -e 's/0//'),w64,w32)$(MULTILIB_SONAME)
++SHLIB_MKMAP_OPTS = -v pe_dll=$$(if $$(shell $$(gcc_compile_bare) -xc -dD -E /dev/null |grep -c __WIN64__ |sed -e 's/0//'),w64,w32)$(MULTILIB_SONAME)
+Index: gcc/config/i386/mingw-w64.h
+===================================================================
+--- gcc/config/i386/mingw-w64.h	(revision 156923)
++++ gcc/config/i386/mingw-w64.h	(working copy)
+@@ -34,7 +34,20 @@
+   crtbegin.o%s"
+ 
+ /* Enable multilib.  */
++#ifndef LIBGCC_EH_EXTN
++#error Include mingw32.h first.
++#endif
+ 
++#undef LIBGCC_SONAME
++#undef LIBGCJ_SONAME
++#ifdef WIN64
++#define LIBGCC_SONAME "w64gcc_s" LIBGCC_EH_EXTN "-1.dll"
++#define LIBGCJ_SONAME "w64ggcj" LIBGCC_EH_EXTN "-11.dll"
++#else
++#define LIBGCC_SONAME "w32gcc_s" LIBGCC_EH_EXTN "-1.dll"
++#define LIBGCJ_SONAME "w32ggcj" LIBGCC_EH_EXTN "-11.dll"
++#endif
++
+ #undef ASM_SPEC
+ #define ASM_SPEC "%{v:-v} %{n} %{T} %{Ym,*} %{Yd,*} \
+  %{Wa,*:%*} %{m32:--32} %{m64:--64}"
+@@ -62,4 +75,5 @@
+   %{shared: --shared} %{mdll:--dll} \
+   %{static:-Bstatic} %{!static:-Bdynamic} \
+   %{shared|mdll: -e _DllMainCRTStartup@12 --enable-auto-image-base} \
+-  %(shared_libgcc_undefs)"
++  %(shared_libgcc_undefs) \
++  %{"SPEC_32": --dll-search-prefix=w32} %{"SPEC_64": --dll-search-prefix=w64}"
