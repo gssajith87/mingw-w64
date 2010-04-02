@@ -7,8 +7,7 @@
 # in question is using a customized libtool version.  This script
 # modifies only one necessary line in a given file, instead.
 #
-# Requires sed and touch for the modifications, diff and diffstat for
-# final report.
+# Requires common shell tools.
 
 libtool_patch()
 {
