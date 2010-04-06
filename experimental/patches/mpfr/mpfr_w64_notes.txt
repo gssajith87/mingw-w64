@@ -1,9 +1,0 @@
-Configuring MPFR for x86_64-*-mingw* and CFLAGS:
-
-If you apply gmp-4.3.1-w64.patch to gmp and configure it for
-x86_64-pc-mingw32 or x86_64-w64-mingw32, it will add -std=gnu99
-to its CFLAGS.  But when you configure mpfr against that gmp,
-it would not pick that flag if you are cross-compiling.  Just
-edit your the Makefile after configure and add -std=gnu99 to
-the CFLAGS, that will silence about 100 lines of warnings.
-
