@@ -40,8 +40,23 @@ BIN_ARCHIVE ?= mingw-w64-bin_$(shell uname -s).tar.bz2
 ########################################
 # Configure
 ########################################
-#Prefer gnutar to tar
+
+#Tools
+#  CVS     Compression defaulted to 9
+#  SVN     Default options for all svn commands
+#  SVN_CO  Override this checkout command to "export" if desired
+#  TAR     Prefer gnutar to tar (useful for darwin/bsdtar issues)
+#  WGET    Try wget, fall back to curl
+######
+
 TAR := $(or $(shell which gnutar 2>/dev/null),$(shell which tar 2>/dev/null),tar)
+CVS=cvs -z9
+SVN=svn --non-interactive --no-auth-cache
+SVN_CO=co
+WGET=wget -c -t0 -T60 -O
+ifeq (,$(shell which wget 2>/dev/null))
+  WGET=curl -o
+endif
 
 ifeq (,$(filter-out x86_64-%,${TARGET_ARCH}))
   MINGW_LIBDIR := lib64
@@ -65,10 +80,6 @@ ifneq (,$(filter %-mingw32,${HOST_ARCH}))
   HOST_TYPE := windows
 endif
 
-WGET=wget -c -t0 -T60 -O
-ifeq (,$(shell which wget 2>/dev/null))
-  WGET=curl -o
-endif
 
 
 ########################################
@@ -81,7 +92,7 @@ patch-pull: \
 src/patches/.patches.pull.marker: \
     src/patches/.mkdir.marker
 	cd $(dir $@) && \
-	svn co --non-interactive --no-auth-cache \
+	$(SVN) $(SVN_CO) \
 	       https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/experimental/patches/ .
 	@touch $@
 
@@ -98,12 +109,12 @@ src/binutils/.binutils.pull.marker: \
 	### XXX Mook: todo: specify revision
 ifeq (,$(strip ${BINUTILS_UPDATE}))
 	cd $(dir $@) && \
-	cvs -d ":pserver:anoncvs@sourceware.org:/cvs/src" -z3 \
+	$(CVS) -d ":pserver:anoncvs@sourceware.org:/cvs/src" \
 	    checkout -d . -N binutils
 	@touch $@
 else
 	cd $(dir $@) && \
-	cvs -d ":pserver:anoncvs@sourceware.org:/cvs/src" -z3 \
+	$(CVS) -d ":pserver:anoncvs@sourceware.org:/cvs/src" \
 	    update
 	@touch $@
 .PHONY: src/binutils/.binutils.pull.marker
@@ -116,7 +127,7 @@ endif
 ifneq (,$(findstring -,${GCC_REVISION}))
   # GCC_REVISION is a date
   GCC_REV_STAMP := d$(subst -,,${GCC_REVISION})
-  GCC_REVISION := $(shell TZ=Z svn log --non-interactive --no-auth-cache \
+  GCC_REVISION := $(shell TZ=Z $(SVN) log \
                                        -r "{$(subst -,,${GCC_REVISION})T0000Z}:{$(subst -,,${GCC_REVISION})T0030Z}" \
                                        svn://gcc.gnu.org/svn/gcc/trunk | \
                           grep gccadmin | \
@@ -142,7 +153,7 @@ gcc-pull: \
 src/gcc/gcc/.gcc.pull.marker: \
     src/gcc/gcc/.mkdir.marker
 	cd $(dir $@) && \
-	svn co --non-interactive --no-auth-cache --revision ${GCC_REVISION} \
+	$(SVN) $(SVN_CO) --revision ${GCC_REVISION} \
 	       svn://gcc.gnu.org/svn/gcc/$(strip ${GCC_BRANCH})/ .
 	@touch $@
 
@@ -243,7 +254,7 @@ mingw-pull: \
 
 src/mingw/.mingw.pull.marker: \
     src/mingw/.mkdir.marker
-	svn checkout --non-interactive --no-auth-cache --revision ${MINGW_REVISION} \
+	$(SVN) $(SVN_CO) --revision ${MINGW_REVISION} \
 	    https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/$(strip ${MINGW_BRANCH})/ \
 	    $(dir $@)
 	@touch $@
