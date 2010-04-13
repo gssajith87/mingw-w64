@@ -17,6 +17,8 @@ gmpver=gmp-4.2.4
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
 mpfrver=mpfr-2.4.1
 mpfr=http://www.mpfr.org/mpfr-current/${mpfrver}.tar.bz2
+mpcver=mpc-0.8.1
+mpc=http://www.multiprecision.org/mpc/download/${mpcver}.tar.gz
 
 while opt=$1 && shift; do
   case "$opt" in
@@ -146,7 +148,7 @@ if [[ $update == "true" ]]; then
   svn -q checkout svn://gcc.gnu.org/svn/gcc/trunk gcc -r $gccrev
 
   echo "Downloading additional required libraries for gcc.." && cd gcc
-  for i in gmp mpfr; do
+  for i in gmp mpfr mpc; do
     ver=${i}ver
     [ -d $i ] && echo "Warning: $i preexisting, skipping download" || ( wget -qO- ${!i} | tar xjf - && mv ${!ver} $i )
   done
