@@ -278,11 +278,15 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                          "path":       WithProperties("%(path:-)s"),
                                          "is_nightly": WithProperties("%(is_nightly:-)s")}))
 
+    # set the path that the build will be uploaded to (so the other slaves can
+    # go ahead and download the source tarballs from sourceforge rather than
+    # over the buildbot connection).  Note that if the "path" property is set,
+    # we use that as an override instead.
     self.addStep(SetProperty(property="src_url",
                              doStepIf=lambda step: ("is_nightly" in step.build.getProperties()) and
                                                    step.build.getProperty("is_nightly"),
                              command=["echo",
-                                      WithProperties("http://downloads.sourceforge.net/project/%s/%s/%%(destname)s" %
+                                      WithProperties("http://downloads.sourceforge.net/project/%s/%%(path:-%s)s/%%(destname)s" %
                                                       (gConfig.get("sourceforge", "group_id"),
                                                        gConfig.get("sourceforge", "path-src")))]))
 
