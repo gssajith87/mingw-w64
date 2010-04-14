@@ -229,7 +229,9 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                        prop_prefix="mingw_",
                                        config_dir=WithProperties("%(basedir:-.)s")))
     self.addStep(SetProperty(property="datestamp",
-                             command=["date", "-u", "+_%Y%m%d"]))
+                             command=["date", "-u", "+_%Y%m%d"],
+                             doStepIf=lambda step: ("datestamp" not in step.build.getProperties()) or
+                                                   (step.getProperty("datestamp") == "")))
     self.addStep(ShellCommand(name="mingw-datestamp",
                               workdir="build/src/mingw/mingw-w64-crt",
                               description=["writing", "buildstamp"],
@@ -241,15 +243,15 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                          """ > revstamp.h """)]))
 
     # Set the gcc version strings if this is a formal release
-    self.addStep(ShellCommandConditional,
+    self.addStep(ShellCommand,
                  name="release-information",
                  workdir="build/src/gcc/gcc/gcc",
                  description=["writing", "version", "string"],
                  descriptionDone=["version", "string", "written"],
-                 condprop="release_build",
-                 conddefault=False,
+                 doStepIf=lambda step: ("release_build" in step.build.getProperties()) and
+                                       step.getProperty("release_build"),
                  command=["bash", "-c", 
-                          WithProperties("""echo '%(release_gcc_ver)s' > BASE_VER && echo > DEV-PHASE """)])
+                          WithProperties("""echo '%(release_gcc_ver)s' > BASE-VER && echo > DEV-PHASE """)])
     # make the tarball
     self.addStep(SetProperty(property="destname",
                              command=["echo", WithPropertiesRecursive(WithProperties("%(srcname_format)s"))]))
