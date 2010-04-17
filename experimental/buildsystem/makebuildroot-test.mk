@@ -1687,7 +1687,7 @@ host-tools-check-helper = \
 	&& echo -e "[OK]"
 
 host-tools-check-helper-alternator = \
-	$(foreach ex,${1},($(ex) $(or ${2},--version) 2>1 1>/dev/null) ||)
+	$(foreach ex,${1},($(ex) $(or ${2},--version) &> /dev/null) ||)
 
 host-tools-check-helper-alternator-error = \
 	$(foreach ex,${1},echo -n "$(ex) " && ) \
