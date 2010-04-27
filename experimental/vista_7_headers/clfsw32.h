@@ -1,0 +1,24 @@
+#ifndef _INC_CLFSW32
+#define _INC_CLFSW32
+
+#if (_WIN32_WINNT >= 0x0600)
+
+typedef PVOID (* CLFS_BLOCK_ALLOCATION) (ULONG cbBufferSize, PVOID pvUserContext);
+typedef void  (* CLFS_BLOCK_DEALLOCATION) (PVOID pvBuffer, PVOID pvUserContext);
+
+WINBOOL WINAPI AlignReservedLog(PVOID pvMarshal,ULONG cReservedRecords,LONGLONG rgcbReservation,PLONGLONG pcbAlignReservation);
+WINBOOL WINAPI AllocReservedLog(PVOID pvMarshal,ULONG cReservedRecords,PLONGLONG pcbAdjustment);
+
+WINBOOL WINAPI CreateLogMarshallingArea(HANDLE hLog,CLFS_BLOCK_ALLOCATION pfnAllocBuffer,CLFS_BLOCK_DEALLOCATION pfnFreeBuffer,PVOID   pvBlockAllocContext,ULONG cbMarshallingBuffer,ULONG  cMaxWriteBuffers,ULONG cMaxReadBuffers,PVOID *ppvMarshal);
+
+BOOL WINAPI DeleteLogMarshallingArea(PVOID pvMarshal);
+
+WINBOOL WINAPI AddLogContainer(HANDLE hLog,PULONGLONG pcbContainer,LPWSTR pwszContainerPath,LPVOID pReserved);
+WINBOOL WINAPI AddLogContainerSet(HANDLE hLog,USHORT cContainers,PULONGLONG pcbContainer,LPWSTR *rgwszContainerPath,PVOID Reserved);
+
+HANDLE WINAPI CreateLogFile(LPCWSTR pszLogFileName,ACCESS_MASK fDesiredAccess,DWORD dwShareMode,LPSECURITY_ATTRIBUTES psaLogFile,ULONG fCreateDisposition,ULONG fFlagsAndAttributes);
+
+
+#endif /* (_WIN32_WINNT >= 0x0600) */
+
+#endif /*_INC_CLFSW32*/

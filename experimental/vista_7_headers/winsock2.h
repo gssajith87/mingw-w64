@@ -147,6 +147,10 @@ extern "C" {
 #define IPPROTO_ND 77
 #define IPPROTO_ICLFXBM 78
 
+#if (_WIN32_WINNT >= 0x0600)
+#define IPPROTO_RM 113
+#endif
+
 #define IPPROTO_RAW 255
 #define IPPROTO_MAX 256
 
@@ -343,8 +347,13 @@ extern "C" {
 #define AF_TCNPROCESS 29
 #define AF_TCNMESSAGE 30
 #define AF_ICLFXBM 31
+#define AF_BTH 32
 
+#if (_WIN32_WINNT >= 0x0600)
+#define AF_MAX 33
+#else
 #define AF_MAX 32
+#endif
 
   struct sockaddr {
     u_short sa_family;
