@@ -1,0 +1,277 @@
+2010-04-19  Patrick von Reth  <patrick.vonreth@gmail.com>
+
+	* dbghelp.h (PSYM_ENUMMODULES_CALLBACK64,
+	PSYM_ENUMSYMBOLS_CALLBACK64, PSYM_ENUMSYMBOLS_CALLBACK64W,
+	PENUMLOADED_MODULES_CALLBACK64,
+	PSYM_ENUMMODULES_CALLBACK64): Make string
+	argument const.
+
+2010-04-16  Jonathan Yong  <jon_y@sourceforge.net>
+
+	* vfw.h: Add comment about unguarded duplication in avifmt.h
+	(VIDCF_QUALITYTIME): Define.
+	(VIDCF_FASTTEMPORAL): Ditto.
+	(streamtypeANY): Ditto.
+	(AVIF_TRUSTCKTYPE): Ditto.
+	(streamtypeANY): Ditto.
+	(AVIFILEINFO_TRUSTCKTYPE): Ditto.
+	(AVStreamNextKeyFrame): Ditto.
+	(AVStreamPrevKeyFrame): Ditto.
+
+	* avifmt.h: Add comment about unguarded duplication in vfw.h
+
+2010-04-15  Timo Kreuzer  <timo.kreuzer@reactos.org>
+
+	* commctrl.h: Add missing const modifier to InitCommonControlsEx parameter,
+	DrawStatusTextA/W, GetEffectiveClientRect.
+	Guard CDN_FIRST and CDN_LAST from redefinition. Update LVCOLUMNW (add Vista+ members)
+	Add HDS_CHECKBOXES, HDS_NOSIZING, HDS_OVERFLOW, HDF_CHECKBOX, HDF_CHECKED,
+	HDF_FIXEDWIDTH, HDF_SPLITBUTTON, TB_SETHOTITEM2, TB_SETLISTGAP,
+	TB_GETIMAGELISTCOUNT, TB_GETIDEALSIZE, TB_TRANSLATEACCELERATOR,
+	TBN_WRAPHOTITEM, TBN_DUPACCELERATOR, TBN_WRAPACCELERATOR, TBN_DRAGOVER,
+	TBN_MAPACCELERATOR, REBARBANDINFOA_V6_SIZE, REBARBANDINFOW_V6_SIZE,
+	PBS_SMOOTHREVERSE, PBM_GETSTEP, PBM_GETBKCOLOR, PBM_GETBARCOLOR,
+	PBM_SETSTATE, PBM_GETSTATE, PBST_NORMAL, PBST_ERROR, PBST_PAUSED, LVCF_MINWIDTH,
+	LVCF_DEFAULTWIDTH, LVCF_IDEALWIDTH, LVCFMT_FIXED_WIDTH, LVCFMT_NO_DPI_SCALE,
+	LVCFMT_FIXED_RATIO, LVCFMT_LINE_BREAK, LVCFMT_FILL, LVCFMT_WRAP,
+	LVCFMT_NO_TITLE, LVCFMT_TILE_PLACEMENTMASK,
+	LVCFMT_SPLITBUTTON, LVS_EX_JUSTIFYCOLUMNS, LVS_EX_TRANSPARENTBKGND,
+	LVS_EX_TRANSPARENTSHADOWTEXT, LVS_EX_AUTOAUTOARRANGE, LVS_EX_HEADERINALLVIEWS,
+	LVS_EX_AUTOCHECKSELECT, LVS_EX_AUTOSIZECOLUMNS, LVS_EX_COLUMNSNAPPOINTS,
+	LVS_EX_COLUMNOVERFLOW, LVM_ISITEMVISIBLE, ListView_IsItemVisible, TV_DISPINFOEXA,
+	NMIVDISPINFOEXW, LPNMTVDISPINFOEXW, NMTVDISPINFOEX, LPNMTVDISPINFOEX, DPASTREAMINFO,
+	struct IStream, PFNDPASTREAM, DPA_LoadStream, DPA_SaveStream, DPA_Grow,
+	DPA_InsertPtr, DPA_SetPtr, DPA_GetPtr, DPA_GetPtrIndex, DPA_GetPtrCount,
+	DPA_SetPtrCount, DPA_FastDeleteLastPtr, DPA_GetPtrPtr, DPA_FastGetPtr,
+	DPA_AppendPtr, PFNDPAMERGE, PFNDPAMERGECONST, DPAM_SORTED, DPAM_NORMAL,
+	DPAM_UNION, DPAM_INTERSECT, DPAMM_MERGE, DPAMM_DELETE, DPAMM_INSERT: New.
+
+2010-04-14  Doug Semler <dougsemler@gmail.com>
+
+	* winnt.h (inline InterlockedDecrement16, InterlockedIncrement64):
+	Remove parentheses from destination regsiter
+
+2010-04-13  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* winnt.h: Fix several SUBLANG ID errors introduced by r2177 and 2178
+	(ref: http://msdn.microsoft.com/en-us/library/dd318693(VS.85).aspx).
+	(SUBLANG_UI_CUSTOM_DEFAULT): 0x05, not 0x03.
+	(SUBLANG_HAUSA_NIGERIA): Bad ID name, correct one is ...
+	(SUBLANG_HAUSA_NIGERIA_LATIN): ... this.
+	(SUBLANG_INUKTITUT_CANADA_LATIN): 0x02, not 0x01.
+	(SUBLANG_IRISH_IRELAND): 0x02, not 0x01.
+	(SUBLANG_LAO_LAO_PDR): Bad ID name, correct one is ...
+	(SUBLANG_LAO_LAO): ... this.
+	(SUBLANG_LOWER_SORBIAN_GERMANY): 0x02, not 0x01.
+	(SUBLANG_SAMI_SKOLT_FINLAND): 0x08, not 0x03.
+	(SUBLANG_SAMI_INARI_FINLAND): 0x09, not 0x03.
+	(SUBLANG_SYRIAC_SYRIA): define as SUBLANG_SYRIAC (what MSDN mentions).
+	(SUBLANG_TIGRIGNA_ERITREA): 0x02, not 0x01.
+
+2010-04-12  Jonathan Yong  <jon_y@sourceforge.net>
+
+	* winbase.h: (InitializeConditionVariable): New.
+	(SleepConditionVariableCS): Ditto.
+	(SleepConditionVariableSRW): Ditto.
+	(WakeAllConditionVariable): Ditto.
+	(WakeConditionVariable): Ditto.
+	(AcquireSRWLockExclusive): Ditto.
+	(AcquireSRWLockShared): Ditto.
+	(InitializeSRWLock): Ditto.
+	(ReleaseSRWLockExclusive): Ditto.
+	(ReleaseSRWLockShared): Ditto.
+	(TryAcquireSRWLockExclusive): Ditto.
+	(TryAcquireSRWLockShared): Ditto.
+	(INIT_ONCE_ASYNC): Define.
+	(INIT_ONCE_INIT_FAILED): Ditto.
+	(PINIT_ONCE): Ditto.
+	(LPINIT_ONCE): Ditto.
+	(PINIT_ONCE_FN): Ditto.
+	(InitOnceBeginInitialize): New.
+	(InitOnceComplete): Ditto.
+	(InitOnceExecuteOnce): Ditto.
+
+	* winnt.h: (RTL_CONDITION_VARIABLE): Define.
+	(RTL_SRWLOCK): Ditto.
+	(RTL_RUN_ONCE): Ditto.
+	(PRTL_RUN_ONCE): Ditto.
+	(PRTL_RUN_ONCE_INIT_FN): Ditto.
+	(RTL_RUN_ONCE_INIT): Ditto.
+	(RTL_RUN_ONCE_CHECK_ONLY): Ditto.
+	(RTL_RUN_ONCE_ASYNC): Ditto.
+	(RTL_RUN_ONCE_INIT_FAILED): Ditto.
+	(RTL_RUN_ONCE_CTX_RESERVED_BITS): Ditto.
+	(RTL_SRWLOCK_INIT): Ditto.
+	(RTL_CONDITION_VARIABLE_INIT): Ditto.
+	(RTL_CONDITION_VARIABLE_LOCKMODE_SHARED): Ditto.
+	(CONDITION_VARIABLE_INIT): Ditto.
+	(CONDITION_VARIABLE_LOCKMODE_SHARED): Ditto.
+	(SRWLOCK_INIT): Ditto.
+
+2010-04-07  Kai Tietz  <kai.tietz@onevision.com>
+
+	PR/2983397
+	* wctype.h (iswblank): Correct declaration.
+
+2010-04-06  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* omp.h: Deleted (moved under /experimental/include_old .)
+
+2010-03-30  Ozkan Sezer  <sezeroz@gmail.com>
+	    Kai Tietz  <kai.tietz@onevision.com>
+
+	* windef.h: Preserve possible BOOL definitions, or lack thereof,
+	from the users by a pairr of push_macro and pop_macro pragmas.
+	Do not define BOOL as a macro, typedef it as WINBOOL and only in
+	non-__OBJC__ cases.
+
+2010-03-25  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ddrawgdi.h: Fixed MINGW_DDRAW_VERSION check.
+
+2010-03-18  Kai Tietz  <kai.tietz@onevision.com>
+
+	* iprtrmib.h (TCP_TABLE_CLASS): New.
+
+2010-03-18  Ozkan Sezer  <sezeroz@gmail.com>
+
+	Do not silently include winsock2.h instead of winsock.h:
+	* winsock.h: Removed the if 0 comment out and the winsock2.h
+	include. Restored the recently removed definitions.
+	* ws2ipdef.h: Deleted.
+	* winsock2.h: Define _WINSOCKAPI_ to avoid winsock.h inclusions.
+	Removed the _WINSOCK_SOCKET_DEFINED ifdef guards around SOCKET
+	definitions. Removed mswsock.h inclusion.
+	* mswsock.h: Removed the SOCKET definitions.
+	* ws2tcpip.h: Added back ip_mreq and ip_mreq_source structures.
+	Do not try to preserve possible socklen_t macros from the user.
+
+2010-03-18  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* winsock.h (INVALID_SOCKET): Fix obvious typo.
+
+2010-03-03  Roland Schwingel  <roland.schwingel@onevision.com>
+
+	* include/winnt.h: Add a lot of missing definitions from MSDN.
+	(VER_SUITE_WH_SERVER): Define
+	(PRODUCT_*): Likewise.
+	(DBG_PRINTEXCEPTION_C): Likewise.
+	(DBG_RIPEXCEPTION): Likewise.
+	(STATUS_LONGJUMP): Likewise.
+	(STATUS_UNWIND_CONSOLIDATE): Likewise.
+	(STATUS_INVALID_PARAMETER): Likewise.
+	(STATUS_DLL_NOT_FOUND): Likewise.
+	(STATUS_ORDINAL_NOT_FOUND): Likewise.
+	(STATUS_ENTRYPOINT_NOT_FOUND): Likewise.
+	(STATUS_DLL_INIT_FAILED): Likewise.
+	(STATUS_STACK_BUFFER_OVERRUN): Likewise.
+	(STATUS_INVALID_CRUNTIME_PARAMETER): Likewise.
+	(STATUS_ASSERTION_FAILURE): Likewise.
+	(STATUS_INVALID_CRUNTIME_PARAMETER): Likewise.
+	(STATUS_INVALID_CRUNTIME_PARAMETER): Likewise.
+	(STATUS_INVALID_CRUNTIME_PARAMETER): Likewise.
+	(SYSTEM_MANDATORY_LABEL_ACE): Typedef struct.
+	(SYSTEM_MANDATORY_LABEL_NO_WRITE_UP): Define.
+	(SYSTEM_MANDATORY_LABEL_NO_READ_UP): Likewise.
+	(SYSTEM_MANDATORY_LABEL_NO_EXECUTE_UP): Likewise.
+	(SYSTEM_MANDATORY_LABEL_VALID_MASK): Likewise.
+	(SE_PRIVILEGE_VALID_ATTRIBUTES): Likewise.
+	(SE_TRUSTED_CREDMAN_ACCESS_NAME): Likewise.
+	(SE_RELABEL_NAME): Likewise.
+	(SE_INC_WORKING_SET_NAME): Likewise.
+	(SE_TIME_ZONE_NAME): Likewise.
+	(SE_CREATE_SYMBOLIC_LINK_NAME): Likewise.
+	(TOKEN_INFORMATION_CLASS): Add missing enum values.
+	(LUA_TOKEN): Define.
+	(WRITE_RESTRICTED): Likewise.
+	(LABEL_SECURITY_INFORMATION): Likewise.
+	(PROCESS_QUERY_LIMITED_INFORMATION): Likewise.
+	(THREAD_SET_LIMITED_INFORMATION): Likewise.
+	(THREAD_QUERY_LIMITED_INFORMATION): Likewise.
+	(QUOTA_LIMITS_USE_DEFAULT_LIMITS): Likewise.
+	(RATE_QUOTA_LIMIT): Typedef struct.
+	(QUOTA_LIMITS_EX): Update definition.
+	(MAX_HW_COUNTERS): Define.
+	(THREAD_PROFILING_FLAG_DISPATCH): Likewise.
+	(HARDWARE_COUNTER_TYPE): Typedef struct.
+	(JOB_OBJECT_LIMIT_RESERVED2): Remove.
+	(JOB_OBJECT_LIMIT_SUBSET_AFFINITY): Define.
+	(JOB_OBJECT_EXTENDED_LIMIT_VALID_FLAGS): Correct.
+	(JOBOBJECTINFOCLASS): Add missing enum value.
+	(PF_SSE3_INSTRUCTIONS_AVAILABLE): Define.
+	(PF_COMPARE_EXCHANGE128): Likewise.
+	(PF_COMPARE64_EXCHANGE128): Likewise.
+	(PF_CHANNELS_ENABLED): Likewise.
+	(PF_XSAVE_ENABLED): Likewise.
+	(SESSION_QUERY_ACCESS): Likewise.
+	(SESSION_MODIFY_ACCESS): Likewise.
+	(SESSION_ALL_ACCESS): Likewise.
+	(MEM_ROTATE): Likewise.
+	(SEC_PROTECTED_IMAGE): Likewise.
+	(SEC_WRITECOMBINE): Likewise.
+	(FILE_ATTRIBUTE_VIRTUAL): Likewise.
+	(FILE_SEQUENTIAL_WRITE_ONCE): Likewise.
+	(FILE_SUPPORTS_TRANSACTIONS): Likewise.
+	(FILE_SUPPORTS_HARD_LINKS): Likewise.
+	(FILE_SUPPORTS_EXTENDED_ATTRIBUTES): Likewise.
+	(FILE_SUPPORTS_OPEN_BY_FILE_ID): Likewise.
+	(FILE_SUPPORTS_USN_JOURNAL): Likewise.
+	(IO_REPARSE_TAG_HSM2): Likewise.
+	(IO_REPARSE_TAG_WIM): Likewise.
+	(IO_REPARSE_TAG_CSV): Likewise.
+	(IO_REPARSE_TAG_DFSR): Likewise.
+	(IO_REPARSE_TAG_SYMLINK): Likewise.
+	(MONITOR_DISPLAY_STATE): Typedef struct.
+	(ES_AWAYMODE_REQUIRED): Define.
+	(POWER_ACTION_PSEUDO_TRANSITION): Likewise.
+	(POWER_USER_NOTIFY_FORCED_SHUTDOWN): Likewise.
+	(SYSTEM_POWER_CAPABILITIES): Update.
+	(IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION): Define.
+	(IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE): Likewise.
+	(IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY): Likewise.
+	(IMAGE_DLLCHARACTERISTICS_NX_COMPAT): Likewise.
+	(IMAGE_SYM_SECTION_MAX_EX): Likewise.
+	(IMAGE_REL_EBC_ABSOLUTE): Likewise.
+	(IMAGE_REL_EBC_ADDR32NB): Likewise.
+	(IMAGE_REL_EBC_REL32): Likewise.
+	(IMAGE_REL_EBC_SECTION): Likewise.
+	(IMAGE_REL_EBC_SECREL): Likewise.
+	(RTL_CRITICAL_SECTION_DEBUG): Update.
+	(RTL_CRITICAL_SECTION_FLAG_NO_DEBUG_INFO): Define.
+	(RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN): Likewise.
+	(RTL_CRITICAL_SECTION_FLAG_STATIC_INIT): Likewise.
+	(RTL_CRITICAL_SECTION_ALL_FLAG_BITS): Likewise.
+	(RTL_CRITICAL_SECTION_FLAG_RESERVED): Likewise.
+	(RTL_CRITICAL_SECTION_DEBUG_FLAG_STATIC_INIT): Likewise.
+
+2010-02-19  Jonathan Yong  <jon_y@sourceforge.net>
+
+	* include/shlguid.h (IID_IFolderView): Define.
+
+2010-02-15  Kai Tietz  <kai.tietz@onevision.com>
+
+	* winnt.h (UNREFERENCED_PARAMETER): Silence warning.
+	(UNREFERENCED_LOCAL_VARIABLE): Likewise.
+
+2010-01-20  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* wincrypt.h (CERT_ALT_NAME_ENTRY): Commented out pEdiPartyName
+	member from the union (not implemented, see:
+	http://msdn.microsoft.com/en-us/library/aa924681.aspx or
+	http://msdn.microsoft.com/en-us/library/aa377173.aspx .)
+
+2010-02-01  Kai Tietz  <kai.tietz@onevision.com>
+
+	Donated by S. Koehler
+	* winusbio.h: New API.
+	* winusb.h: New API.
+
+2010-01-20  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* commctrl.h: Relaxed _WIN32_IE version requirement to 0x0500
+	for now. Added a big FIXME note that it should really be 0x0501.
+
+2010-01-01  Jonathan Yong  <jon_y@sourceforge.net>
+
+        * include/profile.h (_MCOUNT_DECL): Add gnu_inline attribute
+        and remove static qualifier.
