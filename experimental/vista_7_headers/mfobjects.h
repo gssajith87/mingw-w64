@@ -164,6 +164,82 @@ typedef enum _MFVideoTransferMatrix {
   MFVideoTransferMatrix_ForceDWORD   = 0x7FFFFFFF 
 } MFVideoTransferMatrix;
 
+typedef struct _MFRatio {
+  DWORD Numerator;
+  DWORD Denominator;
+} MFRatio;
+
+typedef struct _MFOffset {
+  WORD  fract;
+  short value;
+} MFOffset;
+
+typedef struct _MFVideoArea {
+  MFOffset OffsetX;
+  MFOffset OffsetY;
+  SIZE     Area;
+} MFVideoArea;
+
+typedef enum _MFVideoFlags {
+  MFVideoFlag_PAD_TO_Mask             = 0x0001 | 0x0002,
+  MFVideoFlag_PAD_TO_None             = 0 * 0x0001,
+  MFVideoFlag_PAD_TO_4x3              = 1 * 0x0001,
+  MFVideoFlag_PAD_TO_16x9             = 2 * 0x0001,
+  MFVideoFlag_SrcContentHintMask      = 0x0004 | 0x0008 | 0x0010,
+  MFVideoFlag_SrcContentHintNone      = 0 * 0x0004,
+  MFVideoFlag_SrcContentHint16x9      = 1 * 0x0004,
+  MFVideoFlag_SrcContentHint235_1     = 2 * 0x0004,
+  MFVideoFlag_AnalogProtected         = 0x0020,
+  MFVideoFlag_DigitallyProtected      = 0x0040,
+  MFVideoFlag_ProgressiveContent      = 0x0080,
+  MFVideoFlag_FieldRepeatCountMask    = 0x0100 | 0x0200 | 0x0400,
+  MFVideoFlag_FieldRepeatCountShift   = 8,
+  MFVideoFlag_ProgressiveSeqReset     = 0x0800,
+  MFVideoFlag_PanScanEnabled          = 0x20000,
+  MFVideoFlag_LowerFieldFirst         = 0x40000,
+  MFVideoFlag_BottomUpLinearRep       = 0x80000,
+  MFVideoFlags_DXVASurface            = 0x100000,
+  MFVideoFlags_RenderTargetSurface    = 0x400000,
+  MFVideoFlags_ForceQWORD             = 0x7FFFFFFF 
+} MFVideoFlags;
+
+typedef struct _MFVideoCompressedInfo {
+  LONGLONG AvgBitrate;
+  LONGLONG AvgBitErrorRate;
+  DWORD    MaxKeyFrameSpacing;
+} MFVideoCompressedInfo;
+
+typedef struct _MFVideoInfo {
+  DWORD                    dwWidth;
+  DWORD                    dwHeight;
+  MFRatio                  PixelAspectRatio;
+  MFVideoChromaSubsampling SourceChromaSubsampling;
+  MFVideoInterlaceMode     InterlaceMode;
+  MFVideoTransferFunction  TransferFunction;
+  MFVideoPrimaries         ColorPrimaries;
+  MFVideoTransferMatrix    TransferMatrix;
+  MFVideoLighting          SourceLighting;
+  MFRatio                  FramesPerSecond;
+  MFNominalRange           NominalRange;
+  MFVideoArea              GeometricAperture;
+  MFVideoArea              MinimumDisplayAperture;
+  MFVideoArea              PanScanAperture;
+  unsigned __int64         VideoFlags;
+} MFVideoInfo;
+
+typedef struct _MFVideoSurfaceInfo {
+  DWORD          Format;
+  DWORD          PaletteEntries;
+  MFPaletteEntry Palette[];
+} MFVideoSurfaceInfo;
+
+typedef struct _MFVIDEOFORMAT {
+  DWORD                 dwSize;
+  MFVideoInfo           videoInfo;
+  GUID                  guidFormat;
+  MFVideoCompressedInfo compressedInfo;
+  MFVideoSurfaceInfo    surfaceInfo;
+} MFVIDEOFORMAT;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_EVR*/

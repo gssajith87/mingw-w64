@@ -120,6 +120,17 @@ typedef struct _DXVA2_ConfigPictureDecode {
   USHORT ConfigDecoderSpecific;
 } DXVA2_ConfigPictureDecode;
 
+/* CompressedBufferType
+DXVA2_PictureParametersBufferType
+DXVA2_MacroBlockControlBufferType
+DXVA2_ResidualDifferenceBufferType
+DXVA2_DeblockingControlBufferType
+DXVA2_InverseQuantizationMatrixBufferType
+DXVA2_SliceControlBufferType
+DXVA2_BitStreamDateBufferType
+DXVA2_MotionVectorBuffer
+DXVA2_FilmGrainBuffer
+*/
 typedef struct _DXVA2_DecodeBufferDesc {
   DWORD CompressedBufferType;
   UINT  BufferIndex;
@@ -209,6 +220,97 @@ typedef struct _DXVA2_VideoDesc {
   UINT                 Reserved;
 } DXVA2_VideoDesc;
 
+/* DeviceCaps
+DXVA2_VPDev_EmulatedDXVA1
+DXVA2_VPDev_HardwareDevice
+DXVA2_VPDev_SoftwareDevice
+*/
+/* DeinterlaceTechnology
+DXVA2_DeinterlaceTech_Unknown
+DXVA2_DeinterlaceTech_BOBLineReplicate
+DXVA2_DeinterlaceTech_BOBVerticalStretch
+DXVA2_DeinterlaceTech_BOBVerticalStretch4Tap
+DXVA2_DeinterlaceTech_MedianFiltering
+DXVA2_DeinterlaceTech_EdgeFiltering
+DXVA2_DeinterlaceTech_FieldAdaptive
+DXVA2_DeinterlaceTech_PixelAdaptive
+DXVA2_DeinterlaceTech_MotionVectorSteered
+DXVA2_DeinterlaceTech_InverseTelecine
+*/
+
+/* VideoProcessorOperations
+DXVA2_VideoProcess_YUV2RGB
+DXVA2_VideoProcess_StretchX
+DXVA2_VideoProcess_StretchY
+DXVA2_VideoProcess_AlphaBlend
+DXVA2_VideoProcess_SubRects
+DXVA2_VideoProcess_SubStreams
+DXVA2_VideoProcess_SubStreamsExtended
+DXVA2_VideoProcess_YUV2RGBExtended
+DXVA2_VideoProcess_AlphaBlendExtended
+DXVA2_VideoProcess_Constriction
+DXVA2_VideoProcess_NoiseFilter
+DXVA2_VideoProcess_DetailFilter
+DXVA2_VideoProcess_PlanarAlpha
+DXVA2_VideoProcess_LinearScaling
+DXVA2_VideoProcess_GammaCompensated
+DXVA2_VideoProcess_MaintainsOriginalFieldData
+*/
+
+/*NoiseFilterTechnology
+DXVA2_NoiseFilterTech_Unsupported
+DXVA2_NoiseFilterTech_Unknown
+DXVA2_NoiseFilterTech_Median
+DXVA2_NoiseFilterTech_Temporal
+DXVA2_NoiseFilterTech_BlockNoise
+DXVA2_NoiseFilterTech_MosquitoNoise
+*/
+
+/* DetailFilterTechnology
+DXVA2_DetailFilterTech_Unsupported
+DXVA2_DetailFilterTech_Unknown
+DXVA2_DetailFilterTech_Edge
+DXVA2_DetailFilterTech_Sharpening
+*/
+typedef struct _DXVA2_VideoProcessorCaps {
+  UINT    DeviceCaps;
+  D3DPOOL InputPool;
+  UINT    NumForwardRefSamples;
+  UINT    NumBackwardRefSamples;
+  UINT    Reserved;
+  UINT    DeinterlaceTechnology;
+  UINT    ProcAmpControlCaps;
+  UINT    VideoProcessorOperations;
+  UINT    NoiseFilterTechnology;
+  UINT    DetailFilterTechnology;
+} DXVA2_VideoProcessorCaps;
+
+/* SampleData
+DXVA2_SampleData_RFF
+DXVA2_SampleData_TFF
+DXVA2_SampleData_RFF_TFF_Present
+*/
+
+typedef struct _DXVA2_VideoSample {
+  REFERENCE_TIME       Start;
+  REFERENCE_TIME       End;
+  DXVA2_ExtendedFormat SampleFormat;
+  IDirect3DSurface9*   SrcSurface;
+  RECT                 SrcRect;
+  RECT                 DstRect;
+  DXVA2_AYUVSample8    Pal[16];
+  DXVA2_Fixed32        PlanarAlpha;
+  DWORD                SampleData;
+} DXVA2_VideoSample;
+
+/*inlines?*/
+const DXVA2_Fixed32 DXVA2_Fixed32OpaqueAlpha(void);
+const DXVA2_Fixed32 DXVA2_Fixed32TransparentAlpha(void);
+float DXVA2FixedToFloat(const DXVA2_Fixed32 _fixed_);
+DXVA2_Fixed32 DXVA2FloatToFixed(const float _float_);
+
+HRESULT WINAPI DXVA2CreateDirect3DDeviceManager9(UINT *pResetToken,IDirect3DDeviceManager9 **ppDXVAManager);
+HRESULT WINAPI DXVA2CreateVideoService(IDirect3DDevice9 *pDD,REFIID riid,void **ppService);
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_DXVA2API*/

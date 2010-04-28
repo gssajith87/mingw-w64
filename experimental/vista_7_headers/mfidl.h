@@ -294,6 +294,43 @@ typedef enum SAMPLE_PROTECTION_VERSION {
   SAMPLE_PROTECTION_VERSION_RC4          = 3 
 } SAMPLE_PROTECTION_VERSION;
 
+typedef struct _ASFFlatSynchronisedLyrics {
+  BYTE  bTimeStampFormat;
+  BYTE  bContentType;
+  DWORD dwLyricsLen;
+} ASF_FLAT_SYNCHRONISED_LYRICS;
+
+HRESULT WINAPI CreateNamedPropertyStore(INamedPropertyStore **ppStore);
+HRESULT WINAPI CreatePropertyStore(IPropertyStore **ppStore);
+
+#if (_WIN32_WINNT >= 0x0601)
+HRESULT MFCreate3GPMediaSink(IMFByteStream *pIByteStream,IMFMediaType *pVideoMediaType,IMFMediaType *pAudioMediaType,IMFMediaSink **ppIMediaSink);
+HRESULT MFCreateAggregateSource(IMFCollection *pSourceCollection,IMFMediaSource **ppAggSource);
+#endif /*(_WIN32_WINNT >= 0x0601)*/
+
+#define MF_1_BYTE_ALIGNMENT     0x00000000
+#define MF_2_BYTE_ALIGNMENT     0x00000001
+#define MF_4_BYTE_ALIGNMENT     0x00000003
+#define MF_8_BYTE_ALIGNMENT     0x00000007
+#define MF_16_BYTE_ALIGNMENT    0x0000000F
+#define MF_32_BYTE_ALIGNMENT    0x0000001F
+#define MF_64_BYTE_ALIGNMENT    0x0000003F
+#define MF_128_BYTE_ALIGNMENT   0x0000007F
+#define MF_256_BYTE_ALIGNMENT   0x000000FF
+#define MF_512_BYTE_ALIGNMENT   0x000001FF
+
+HRESULT WINAPI MFCreateAlignedMemoryBuffer(DWORD cbMaxLength,DWORD fAlignmentFlags,IMFMediaBuffer **ppBuffer);
+HRESULT WINAPI MFCreateASFContentInfo(IMFASFContentInfo **ppIContentInfo);
+HRESULT WINAPI MFCreateASFIndexer(IMFASFIndexer **ppIIndexer);
+HRESULT WINAPI MFCreateASFIndexerByteStream(IMFByteStream *pIContentByteStream,QWORD cbIndexStartOffset,IMFByteStream **pIIndexByteStream);
+HRESULT WINAPI MFCreateASFMediaSink(IMFByteStream *pIByteStream,IMFMediaSink **ppIMediaSink);
+HRESULT WINAPI MFCreateASFMediaSinkActivate(LPCWSTR pwszFileName,IMFASFContentInfo *pContentInfo,IMFActivate **ppIActivate);
+HRESULT WINAPI MFCreateASFMultiplexer(IMFASFMultiplexer **ppIMultiplexer);
+HRESULT WINAPI MFCreateASFProfile(IMFASFProfile **ppIProfile);
+HRESULT WINAPI MFCreateASFProfileFromPresentationDescriptor(IMFPresentationDescriptor *pIPD,IMFASFProfile **ppIProfile);
+HRESULT WINAPI MFCreateASFSplitter(IMFASFSplitter **ppISplitter);
+
+
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_MFIDL*/

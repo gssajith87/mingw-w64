@@ -159,6 +159,215 @@ typedef enum _DXVAHD_SURFACE_TYPE {
   DXVAHD_SURFACE_TYPE_VIDEO_OUTPUT          = 2 
 } DXVAHD_SURFACE_TYPE;
 
+typedef struct _DXVAHD_VPDEVCAPS {
+  DXVAHD_DEVICE_TYPE DeviceType;
+  UINT               DeviceCaps;
+  UINT               FeatureCaps;
+  UINT               FilterCaps;
+  UINT               InputFormatCaps;
+  D3DPOOL            InputPool;
+  UINT               OutputFormatCount;
+  UINT               InputFormatCount;
+  UINT               VideoProcessorCount;
+  UINT               MaxInputStreams;
+  UINT               MaxStreamStates;
+} DXVAHD_VPDEVCAPS;
+
+typedef struct _DXVAHD_BLT_STATE_ALPHA_FILL_DATA {
+  DXVAHD_ALPHA_FILL_MODE Mode;
+  UINT                   StreamNumber;
+} DXVAHD_BLT_STATE_ALPHA_FILL_DATA;
+
+typedef struct _DXVAHD_BLT_STATE_CONSTRICTION_DATA {
+  WINBOOL Enable;
+  SIZE Size;
+} DXVAHD_BLT_STATE_CONSTRICTION_DATA;
+
+typedef struct _DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA {
+  UINT Usage  :1;
+  UINT RGB_Range  :1;
+  UINT YCbCr_Matrix  :1;
+  UINT YCbCr_xvYCC  :1;
+} DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA;
+
+typedef struct _DXVAHD_BLT_STATE_PRIVATE_DATA {
+  GUID Guid;
+  UINT DataSize;
+  void *pData;
+} DXVAHD_BLT_STATE_PRIVATE_DATA;
+
+typedef struct _DXVAHD_BLT_STATE_TARGET_RECT_DATA {
+  WINBOOL Enable;
+  RECT TargetRect;
+} DXVAHD_BLT_STATE_TARGET_RECT_DATA;
+
+typedef struct _DXVAHD_CONTENT_DESC {
+  DXVAHD_FRAME_FORMAT InputFrameFormat;
+  DXVAHD_RATIONAL     InputFrameRate;
+  UINT                InputWidth;
+  UINT                InputHeight;
+  DXVAHD_RATIONAL     OutputFrameRate;
+  UINT                OutputWidth;
+  UINT                OutputHeight;
+} DXVAHD_CONTENT_DESC;
+typedef struct _DXVAHD_RATIONAL {
+  UINT Numerator;
+  UINT Denominator;
+} DXVAHD_RATIONAL;
+
+typedef struct _DXVAHD_CUSTOM_RATE_DATA {
+  DXVAHD_RATIONAL CustomRate;
+  UINT            OutputFrames;
+  WINBOOL         InputInterlaced;
+  UINT            InputFramesOrFields;
+} DXVAHD_CUSTOM_RATE_DATA;
+
+typedef struct _DXVAHD_FILTER_RANGE_DATA {
+  INT   Minimum;
+  INT   Maximum;
+  INT   Default;
+  FLOAT Multiplier;
+} DXVAHD_FILTER_RANGE_DATA;
+
+typedef struct _DXVAHD_STREAM_DATA {
+  WINBOOL           Enable;
+  UINT              OutputIndex;
+  UINT              InputFrameOrField;
+  UINT              PastFrames;
+  UINT              FutureFrames;
+  IDirect3DSurface9 **ppPastSurfaces;
+  IDirect3DSurface9 *pInputSurface;
+  IDirect3DSurface9 **ppFutureSurfaces;
+} DXVAHD_STREAM_DATA;
+
+typedef struct _DXVAHD_VPCAPS {
+  GUID VPGuid;
+  UINT PastFrames;
+  UINT FutureFrames;
+  UINT ProcessorCaps;
+  UINT ITelecineCaps;
+  UINT CustomRateCount;
+} DXVAHD_VPCAPS;
+
+typedef struct _DXVAHD_VPCAPS {
+  GUID VPGuid;
+  UINT PastFrames;
+  UINT FutureFrames;
+  UINT ProcessorCaps;
+  UINT ITelecineCaps;
+  UINT CustomRateCount;
+} DXVAHD_VPCAPS;
+
+typedef struct _DXVAHD_STREAM_STATE_ALPHA_DATA {
+  WINBOOL Enable;
+  FLOAT   Alpha;
+} DXVAHD_STREAM_STATE_ALPHA_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_ASPECT_RATIO_DATA {
+  WINBOOL         Enable;
+  DXVAHD_RATIONAL SourceAspectRatio;
+  DXVAHD_RATIONAL DestinationAspectRatio;
+} DXVAHD_STREAM_STATE_ASPECT_RATIO_DATA, *PDXVAHD_STREAM_STATE_ASPECT_RATIO_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_D3DFORMAT_DATA {
+  D3DFORMAT Format;
+} DXVAHD_STREAM_STATE_D3DFORMAT_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_DESTINATION_RECT_DATA {
+  WINBOOL Enable;
+  RECT    DestinationRect;
+} DXVAHD_STREAM_STATE_DESTINATION_RECT_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_FILTER_DATA {
+  WINBOOL Enable;
+  INT     Level;
+} DXVAHD_STREAM_STATE_FILTER_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_FRAME_FORMAT_DATA {
+  DXVAHD_FRAME_FORMAT FrameFormat;
+} DXVAHD_STREAM_STATE_FRAME_FORMAT_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA {
+  UINT Type  :1;
+  UINT RGB_Range  :1;
+  UINT YCbCr_Matrix  :1;
+  UINT YCbCr_xvYCC  :1;
+} DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_LUMA_KEY_DATA {
+  WINBOOL Enable;
+  FLOAT   Lower;
+  FLOAT   Upper;
+} DXVAHD_STREAM_STATE_LUMA_KEY_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_OUTPUT_RATE_DATA {
+  WINBOOL            RepeatFrame;
+  DXVAHD_OUTPUT_RATE OutputRate;
+  DXVAHD_RATIONAL    CustomRate;
+} DXVAHD_STREAM_STATE_OUTPUT_RATE_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_SOURCE_RECT_DATA {
+  WINBOOL Enable;
+  RECT    SourceRect;
+} DXVAHD_STREAM_STATE_SOURCE_RECT_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_PRIVATE_IVTC_DATA {
+  WINBOOL Enable;
+  UINT    ITelecineFlags;
+  UINT    Frames;
+  UINT    InputField;
+} DXVAHD_STREAM_STATE_PRIVATE_IVTC_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_PRIVATE_DATA {
+  GUID Guid;
+  UINT DataSize;
+  void *pData;
+} DXVAHD_STREAM_STATE_PRIVATE_DATA;
+
+typedef struct _DXVAHD_STREAM_STATE_PALETTE_DATA {
+  UINT     Count;
+  D3DCOLOR *pEntries;
+} DXVAHD_STREAM_STATE_PALETTE_DATA;
+
+typedef HRESULT ( CALLBACK *PDXVAHDSW_CreateDevice )(IDirect3DDevice9Ex *pD3DDevice,HANDLE *phDevice);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_ProposeVideoPrivateFormat )(HANDLE hDevice,D3DFORMAT *pFormat);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessorDeviceCaps )(HANDLE hDevice,const DXVAHD_CONTENT_DESC *pContentDesc,DXVAHD_DEVICE_USAGE Usage,DXVAHD_VPDEVCAPS *pCaps);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessorOutputFormats )(HANDLE hDevice,const DXVAHD_CONTENT_DESC *pContentDesc,DXVAHD_DEVICE_USAGE Usage,UINT Count,D3DFORMAT *pFormats);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessorInputFormats )(HANDLE hDevice,const DXVAHD_CONTENT_DESC *pContentDesc,DXVAHD_DEVICE_USAGE Usage,UINT Count,D3DFORMAT *pFormats);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessorCaps )(HANDLE hDevice,const DXVAHD_CONTENT_DESC *pContentDesc,DXVAHD_DEVICE_USAGE Usage,UINT Count,DXVAHD_VPCAPS *pCaps);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessorCustomRates )(HANDLE hDevice,const GUID *pVPGuid,UINT Count,DXVAHD_CUSTOM_RATE_DATA *pRates);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_SetVideoProcessBltState )(HANDLE hVideoProcessor,DXVAHD_BLT_STATE State,UINT DataSize,const void *pData);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_CreateVideoProcessor )(HANDLE hDevice,const GUID *pVPGuid,HANDLE *phVideoProcessor);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_DestroyDevice )(HANDLE hDevice);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessorFilterRange )(HANDLE hDevice,DXVAHD_FILTER Filter,DXVAHD_FILTER_RANGE_DATA *pRange);typedef HRESULT ( CALLBACK *PDXVAHDSW_DestroyVideoProcessor )(HANDLE hVideoProcessor);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_VideoProcessBltHD )(HANDLE hVideoProcessor,IDirect3DSurface9 *pOutputSurface,UINT OutputFrame,UINT StreamCount,const DXVAHD_STREAM_DATA *pStreams);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessStreamStatePrivate )(HANDLE hVideoProcessor,UINT StreamNumber,DXVAHD_STREAM_STATE_PRIVATE_DATA *pData);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_SetVideoProcessStreamState )(HANDLE hVideoProcessor,UINT StreamNumber,DXVAHD_STREAM_STATE State,UINT DataSize,const void *pData);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessBltStatePrivate )(HANDLE hVideoProcessor,DXVAHD_BLT_STATE_PRIVATE_DATA *pData);
+
+typedef HRESULT ( CALLBACK *PDXVAHDSW_Plugin )(UINT Size,void *pCallbacks);
+
+
+typedef struct _DXVAHDSW_CALLBACKS {
+  PDXVAHDSW_CreateDevice                      CreateDevice;
+  PDXVAHDSW_ProposeVideoPrivateFormat         ProposeVideoPrivateFormat;
+  PDXVAHDSW_GetVideoProcessorDeviceCaps       GetVideoProcessorDeviceCaps;
+  PDXVAHDSW_GetVideoProcessorOutputFormats    GetVideoProcessorOutputFormats;
+  PDXVAHDSW_GetVideoProcessorInputFormats     GetVideoProcessorInputFormats;
+  PDXVAHDSW_GetVideoProcessorCaps             GetVideoProcessorCaps;
+  PDXVAHDSW_GetVideoProcessorCustomRates      GetVideoProcessorCustomRates;
+  PDXVAHDSW_GetVideoProcessorFilterRange      GetVideoProcessorFilterRange;
+  PDXVAHDSW_DestroyDevice                     DestroyDevice;
+  PDXVAHDSW_CreateVideoProcessor              CreateVideoProcessor;
+  PDXVAHDSW_SetVideoProcessBltState           SetVideoProcessBltState;
+  PDXVAHDSW_GetVideoProcessBltStatePrivate    GetVideoProcessBltStatePrivate;
+  PDXVAHDSW_SetVideoProcessStreamState        SetVideoProcessStreamState;
+  PDXVAHDSW_GetVideoProcessStreamStatePrivate GetVideoProcessStreamStatePrivate;
+  PDXVAHDSW_VideoProcessBltHD                 VideoProcessBltHD;
+  PDXVAHDSW_DestroyVideoProcessor             DestroyVideoProcessor;
+} DXVAHDSW_CALLBACKS;
+
+HRESULT DXVAHD_CreateDevice(IDirect3DDevice9Ex *pD3DDevice,const DXVAHD_CONTENT_DESC *pContentDesc,DXVAHD_DEVICE_USAGE Usage,PDXVAHDSW_Plugin pPlugin,IDXVAHD_Device **ppDevice);
 
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 #endif /*_INC_DXAVHD*/

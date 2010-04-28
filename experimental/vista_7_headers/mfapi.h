@@ -43,6 +43,28 @@ typedef enum _MFWaveFormatExConvertFlags {
   MFWaveFormatExConvertFlag_ForceExtensible   = 1 
 } MFWaveFormatExConvertFlags;
 
+typedef void (*MFPERIODICCALLBACK )(IUnknown *pContext);
+HRESULT WINAPI MFAddPeriodicCallback(MFPERIODICCALLBACK Callback,IUnknown *pContext,DWORD *pdwKey);
+HRESULT WINAPI MFRemovePeriodicCallback(DWORD dwKey);
+HRESULT WINAPI MFAllocateWorkQueue(DWORD *pdwWorkQueue);
+HRESULT WINAPI MFAllocateWorkQueueEx(MFASYNC_WORKQUEUE_TYPE WorkQueueType,DWORD *pdwWorkQueue);
+HRESULT WINAPI MFAverageTimePerFrameToFrameRate(UINT64 unAverageTimePerFrame,UINT32 *punNumerator,UINT32 *punDenominator);
+HRESULT WINAPI MFBeginCreateFile(MF_FILE_ACCESSMODE AccessMode,MF_FILE_OPENMODE OpenMode,MF_FILE_FLAGS fFlags,LPCWSTR pwszFilePath,IMFAsyncCallback *pCallback,IUnknown *pState,IUnknown **ppCancelCookie);
+HRESULT WINAPI MFBeginUnregisterWorkQueueWithMMCSS(DWORD dwWorkQueueId,IMFAsyncCallback *pDoneCallback,IUnknown *pDoneState);
+HRESULT WINAPI MFBeginRegisterWorkQueueWithMMCSS(DWORD dwWorkQueueId,LPCWSTR wszClass,DWORD dwTaskId,IMFAsyncCallback *pDoneCallback,IUnknown *pDoneState);
+HRESULT WINAPI MFBeginCreateFile(MF_FILE_ACCESSMODE AccessMode,MF_FILE_OPENMODE OpenMode,MF_FILE_FLAGS fFlags,LPCWSTR pwszFilePath,IMFAsyncCallback *pCallback,IUnknown *pState,IUnknown **ppCancelCookie);
+HRESULT WINAPI MFCalculateBitmapImageSize(const BITMAPINFOHEADER *pBMIH,UINT32 cbBufSize,UINT32 *pcbImageSize,WINBOOL *pbKnown);
+HRESULT WINAPI MFCalculateImageSize(REFGUID guidSubtype,UINT32 unWidth,UINT32 unHeight,UINT32 *pcbImageSize);
+HRESULT WINAPI MFCancelCreateFile(IUnknown *pCancelCookie);
+HRESULT WINAPI MFCancelWorkItem(MFWORKITEM_KEY Key);
+WINBOOL WINAPI MFCompareFullToPartialMediaType(IMFMediaType *pMFTypeFull,IMFMediaType *pMFTypePartial);
+HRESULT WINAPI MFConvertColorInfoFromDXVA(MFVIDEOFORMAT *pToFormat,DWORD dwFromDXVA);
+HRESULT WINAPI MFConvertColorInfoToDXVA(DWORD *pdwToDXVA,const MFVIDEOFORMAT *pFromFormat);
+HRESULT WINAPI MFConvertFromFP16Array(float *pDest,const WORD *pSrc,DWORD dwCount);
+HRESULT WINAPI MFConvertToFP16Array(WORD *pDest,const float *pSrc,DWORD dwCount);
+HRESULT WINAPI MFCopyImage(BYTE *pDest,LONG lDestStride,const BYTE *pSrc,LONG lSrcStride,DWORD dwWidthInBytes,DWORD dwLines);
+
+
 
 #endif  /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_MFAPI*/
