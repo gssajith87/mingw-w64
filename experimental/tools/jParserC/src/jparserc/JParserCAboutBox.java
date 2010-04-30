@@ -137,7 +137,7 @@ public class JParserCAboutBox extends javax.swing.JDialog {
                     .addComponent(appHomepageLabel))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                         .addComponent(closeButton)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()

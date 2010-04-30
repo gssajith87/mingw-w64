@@ -15,21 +15,17 @@ import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import java.util.*;
 import Proc.*;
 
 /**
  * The application's main frame.
  */
 public class JParserCView extends FrameView {
-    private List<funct> funts = new ArrayList<funct>();
-    private List<String> strs = new ArrayList<String>();
-    private String iName;
+    private Process proc = new Process();
+
     public JParserCView(SingleFrameApplication app) {
         super(app);
-
         initComponents();
-
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
@@ -103,7 +99,6 @@ public class JParserCView extends FrameView {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         mainPanel = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -126,6 +121,7 @@ public class JParserCView extends FrameView {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
+        jButton5 = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -222,16 +218,16 @@ public class JParserCView extends FrameView {
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(4, 4, 4)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox1, 0, 144, Short.MAX_VALUE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))))
+                            .addComponent(jComboBox1, 0, 195, Short.MAX_VALUE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -274,7 +270,7 @@ public class JParserCView extends FrameView {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -283,7 +279,7 @@ public class JParserCView extends FrameView {
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -300,20 +296,31 @@ public class JParserCView extends FrameView {
         jTextArea2.setName("jTextArea2"); // NOI18N
         jScrollPane2.setViewportView(jTextArea2);
 
+        jButton5.setText(resourceMap.getString("jButton5.text")); // NOI18N
+        jButton5.setName("jButton5"); // NOI18N
+        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton5MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                    .addComponent(jButton5))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addComponent(jButton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -323,11 +330,11 @@ public class JParserCView extends FrameView {
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -366,11 +373,11 @@ public class JParserCView extends FrameView {
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 201, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -394,12 +401,12 @@ public class JParserCView extends FrameView {
     }// </editor-fold>//GEN-END:initComponents
 
     private void updateComboBox() {
-        if (!strs.isEmpty()) {
+        if (!proc.strs.isEmpty()) {
             jComboBox1.setEnabled(true);
             jComboBox1.removeAllItems();
             //jComboBox1.addItem("Method " + strs.size());
-            for (int i = 0; i < strs.size(); i++) {
-                funct f = new funct(strs.get(i));
+            for (int i = 0; i < proc.strs.size(); i++) {
+                funct f = new funct(proc.strs.get(i));
                 jComboBox1.addItem(f.getName());
             }
         } else {
@@ -407,45 +414,24 @@ public class JParserCView extends FrameView {
         }
     }
 
-    private boolean comparestrs(final String in) {
-        for (int i = 0; i < strs.size(); i++) {
-            funct f = new funct(strs.get(i));
-            if (in.compareTo(f.getName()) == 0)
-                return false;
-        }
-        return true;
-    }
+
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         // TODO add your handling code here:
         evt.consume();
-        int index = 0;
-        boolean parsed = false;
-        funct f = null;
-        String in = jTextArea1.getText().trim();
-        while (!parsed || in.indexOf("\n\n", index) != -1) {
-            parsed = true;
-            int next = in.indexOf("\n\n", index + 1);
-            if (index == -1) break;
-            String str = in.substring(index, (next == -1? in.length() - 1: next));
-            index = next;
-            if (str.length() == 0) {
-                return;
-            }
-            try {
-                f = new funct(str);
-            } catch (Exception e) {
-                e.printStackTrace();
+        int i = proc.ProcStr(jTextArea1.getText());
+        switch (i) {
+            case 1:
                 javax.swing.JOptionPane.showMessageDialog(null, "Invalid input.");
-            }
-            if (comparestrs(f.getName())) {
-                strs.add(str);
-                jTextArea1.setText("");
-                updateComboBox();
-            } else {
+                break;
+            case 2:
                 javax.swing.JOptionPane.showMessageDialog(null, "Already added.");
-            }
+                break;
+            default:
+                jTextArea1.setText("");
+                break;
         }
+        updateComboBox();
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MousePressed
@@ -455,7 +441,7 @@ public class JParserCView extends FrameView {
         {
             int i = jComboBox1.getSelectedIndex();
             jComboBox1.remove(i);
-            strs.remove(i);
+            proc.strs.remove(i);
             updateComboBox();
         }
     }//GEN-LAST:event_jButton2MousePressed
@@ -463,144 +449,34 @@ public class JParserCView extends FrameView {
     private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
         // TODO add your handling code here:
         evt.consume();
-        for (int i = 0; i < strs.size(); i++) {
-            funts.add(new funct(strs.get(i)));
-        }
-        iName = jTextField1.getText().trim();
+        proc.iName = jTextField1.getText().trim();
+        proc.inh = jTextField2.getText().trim();
         //jTextArea2.setText("");
         jTabbedPane1.setSelectedIndex(1);
-        jTextArea2.setText(fwd());
-        jTextArea2.append("\n\n\n\n\n");
-        jTextArea2.append(Prefix());
-        jTextArea2.append(cppVtbl());
-        jTextArea2.append(midfix());
-        jTextArea2.append(cVtbl());
-        jTextArea2.append(cMac());
-        jTextArea2.append(Suffix());
-        jTextArea2.append("\n");
+        proc.proc();
+        String str = proc.getDecl();
+        jTextArea2.setText(str);
     }//GEN-LAST:event_jButton1MousePressed
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         // TODO add your handling code here:
-        strs.clear();
-        funts.clear();
+        proc.strs.clear();
+        proc.funts.clear();
         updateComboBox();
     }//GEN-LAST:event_jButton4MouseClicked
 
-     private String fwd() {
-         String ret;
-         String mac = "__" + iName + "_FWD_DEFINED__";
-         ret = "#infdef " + mac + "\n";
-         ret += "#define " + mac + "\n";
-         ret += "typedef struct " + iName + iName + ";\n";
-         ret += "#endif";
-         return ret;
-     }
-     private String Suffix() {
-         String ret;
-         ret = "#endif /*defined(__cplusplus) && !defined(CINTERFACE)*/\n";
-         ret += "#endif /*__" + jTextField1.getText().trim() + "_INTERFACE_DEFINED__*/\n";
-         return ret;
-     }
-     private String cMac() {
-         String ret;
-         //String iName = jTextField1.getText().trim();
-         ret = "#ifdef COBJMACROS\n";
-         for (int i = 0; i < funts.size(); i++) {
-             String args = "This";
-             funct f = funts.get(i);
-             ret += "#define " + iName + "_" + f.getName() + "(";
-             params p = new params(f.getArgs());
-             System.out.println("p: " + p.getLstr().toString());
-             if (!p.getLstr().isEmpty()) {
-                 args += ",";
-                 for (int j = 0; j < p.getLstr().size(); j++) {
-                     iTokens t = new iTokens(p.getLstr(j));
-                     args += t.getName();
-                     if (j + 1 != p.getLstr().size())
-                         args += ",";
-                 }
-                 ret += args;
-             }
-             ret += ") ";
-             ret += "(This)->lpVtbl->" + f.getName() + "(" + args + ")\n";
-         }
-         ret += "#endif /*COBJMACROS*/\n";
-         return ret;
-     }
-     private String cVtbl() {
-         String ret;
-         //String iName = jTextField1.getText().trim();
-         String structname = iName + "Vtbl";
-         ret = "typedef struct " + structname + " {\n";
-         ret += "  BEGIN_INTERFACE\n";
-         for (int i = 0; i < funts.size(); i++) {
-             funct f = funts.get(i);
-             ret += "    " + f.getRet();
-             ret += " (WINAPI *" + f.getName() + ")(";
-             ret += iName + " *This";
-             params p = new params(f.getArgs().trim());
-             if (!p.getLstr().isEmpty()) {
-                 ret += ",";
-                 for (int j = 0; j < p.getLstr().size(); j++) {
-                     ret += p.getLstr(j);
-                     if (j + 1 != p.getLstr().size())
-                         ret += ",";
-                 }
-             }
-             ret += ");\n";
-         }
-         ret += "  END_INTERFACE\n";
-         ret += "} " + structname + ";\n";
-         ret += "struct " + iName + " {\n";
-         ret += "  CONST_VTBL struct " + structname + " *lpVtbl;\n};\n";
-         return ret;
-     }
-     private String midfix() {
-         String ret;
-         ret = "#else /*defined(__cplusplus) && !defined(CINTERFACE)*/\n";
-         return ret;
-     }
-    private String Prefix() {
-        //String iName = jTextField1.getText().trim();
-        String inh = jTextField2.getText().trim();
-        String defs = "__" + jTextField1.getText() + "_INTERFACE_DEFINED__";
-        String ret = "#ifndef " + defs + "\n";
-        ret += "#define " + defs + "\n";
-        ret += "typedef " + iName + " *LP" + iName.toUpperCase() + "\n";
-        ret += "#if defined(__cplusplus) && !defined(CINTERFACE)\n";
-        ret += "DECLARE_INTERFACE_(" + iName;
-        if (!inh.isEmpty()) {
-            ret += "," + inh;
-        }
-        ret += ") {\n";
-        return ret;
-    }
-
-    private String cppVtbl() {
-        String ret = "";
-        for (int i = 0; i < funts.size(); i++) {
-            funct f = funts.get(i);
-            ret += "  virtual " + f.getRet() + " WINAPI ";
-            ret += f.getName();
-            params p = new params(f.getArgs());
-            ret += "(";
-            for (int j = 0; j < p.getLstr().size(); j++) {
-                ret += p.getLstr(j);
-                if (j + 1 != p.getLstr().size())
-                    ret += ",";
-            }
-            ret +=") PURE;\n";
-        }
-        ret += "};\n";
-        return ret;
-    }
+    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
+        // TODO add your handling code here:
+        Clipper clwn = new Clipper();
+        clwn.setClipboardContents(jTextArea2.getText());
+    }//GEN-LAST:event_jButton5MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
