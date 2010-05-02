@@ -15,6 +15,10 @@ typedef struct fd_set
 	SOCKET	fd_array[FD_SETSIZE];
 } fd_set;
 
+typedef struct fd_set	FD_SET;
+typedef struct fd_set	*PFD_SET;
+typedef struct fd_set	*LPFD_SET;
+
 #undef  FD_CLR
 #define FD_CLR(fd,set)							\
   do {									\

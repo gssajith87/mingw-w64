@@ -1346,10 +1346,6 @@ extern "C" {
   typedef struct linger *PLINGER;
   typedef struct linger *LPLINGER;
 
-  typedef struct fd_set FD_SET;
-  typedef struct fd_set *PFD_SET;
-  typedef struct fd_set *LPFD_SET;
-
   typedef struct hostent HOSTENT;
   typedef struct hostent *PHOSTENT;
   typedef struct hostent *LPHOSTENT;
