@@ -3,7 +3,7 @@
 #include <_bsd_types.h>
 
 typedef struct in6_addr {
-  __MINGW_EXTENSION union {
+  union {
     u_char Byte[16];
     u_short Word[8];
   } u;
