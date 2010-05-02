@@ -23,11 +23,11 @@ typedef struct fd_set	*LPFD_SET;
 #define FD_CLR(fd,set)							\
   do {									\
 	u_int __i;							\
-	for(__i = 0;__i < ((fd_set *)(set))->fd_count;__i++) {		\
-		if (((fd_set *)(set))->fd_array[__i]==fd) {		\
-			while (__i < ((fd_set *)(set))->fd_count-1) {	\
+	for(__i = 0; __i < ((fd_set *)(set))->fd_count; __i++) {	\
+		if (((fd_set *)(set))->fd_array[__i] == fd) {		\
+			while (__i < ((fd_set *)(set))->fd_count - 1) {	\
 				((fd_set *)(set))->fd_array[__i] =	\
-				 ((fd_set *)(set))->fd_array[__i+1];	\
+				 ((fd_set *)(set))->fd_array[__i + 1];	\
 				__i++;					\
 			}						\
 			((fd_set *)(set))->fd_count--;			\
@@ -48,7 +48,7 @@ typedef struct fd_set	*LPFD_SET;
 #define FD_SET(fd,set)							\
   do {									\
 	u_int __i;							\
-	for(__i = 0;__i < ((fd_set *)(set))->fd_count;__i++) {		\
+	for(__i = 0; __i < ((fd_set *)(set))->fd_count; __i++) {	\
 		if (((fd_set *)(set))->fd_array[__i] == (fd)) {		\
 			break;						\
 		}							\

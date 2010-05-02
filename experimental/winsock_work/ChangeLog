@@ -3,6 +3,7 @@
 	* in6addr.h: Fix typo. Remove unnecessary __MINGW_EXTENSION
 	from the in6_addr u union.
 	* winsock.h: Remove forgotten timeval stuff.
+	* _socket_types.h: Whitespace tidy up.
 
 2010-05-02  Ozkan Sezer  <sezeroz@gmail.com>
 
