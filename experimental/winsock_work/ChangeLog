@@ -1,5 +1,9 @@
 2010-05-02  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* in6addr.h: Fix typo.
+
+2010-05-02  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* winsock.h (FD_SET, PFD_SET, LPFD_SET): Move from here ...
 	* winsock2.h (FD_SET, PFD_SET, LPFD_SET): ... and from here ...
 	* _bsd_types.h: ... to here.

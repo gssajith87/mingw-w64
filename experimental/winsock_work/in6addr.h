@@ -2,7 +2,7 @@
 
 #include <_bsd_types.h>
 
-tyepedef struct in6_addr {
+typedef struct in6_addr {
   __MINGW_EXTENSION union {
     u_char Byte[16];
     u_short Word[8];
