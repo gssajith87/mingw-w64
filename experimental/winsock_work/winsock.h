@@ -24,11 +24,6 @@ extern "C" {
 }
 #endif
 
-#define timerisset(tvp) ((tvp)->tv_sec || (tvp)->tv_usec)
-#define timercmp(tvp,uvp,cmp) ((tvp)->tv_sec cmp (uvp)->tv_sec || (tvp)->tv_sec==(uvp)->tv_sec && (tvp)->tv_usec cmp (uvp)->tv_usec)
-#define timerclear(tvp) (tvp)->tv_sec = (tvp)->tv_usec = 0
-#endif /* _TIMEVAL_DEFINED */
-
 #define IOCPARM_MASK 0x7f
 #define IOC_VOID 0x20000000
 #define IOC_OUT 0x40000000
