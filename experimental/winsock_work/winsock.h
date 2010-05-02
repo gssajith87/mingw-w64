@@ -10,21 +10,9 @@
 #include <windows.h>
 #endif
 
-typedef unsigned char u_char;
-typedef unsigned short u_short;
-typedef unsigned int u_int;
-typedef unsigned long u_long;
-
-typedef INT_PTR SOCKET;
-
-#ifndef FD_SETSIZE
-#define FD_SETSIZE 64
-#endif
-
-typedef struct fd_set {
-  u_int fd_count;
-  SOCKET fd_array[FD_SETSIZE];
-} fd_set;
+#include <_bsd_types.h>
+#include <_socket_types.h>
+#include <_timeval.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,18 +23,6 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-#define FD_CLR(fd,set) do { u_int __i; for(__i = 0;__i < ((fd_set *)(set))->fd_count;__i++) { if (((fd_set *)(set))->fd_array[__i]==fd) { while (__i < ((fd_set *)(set))->fd_count-1) { ((fd_set *)(set))->fd_array[__i] = ((fd_set *)(set))->fd_array[__i+1]; __i++; } ((fd_set *)(set))->fd_count--; break; } } } while(0)
-#define FD_SET(fd,set) do { if (((fd_set *)(set))->fd_count < FD_SETSIZE) ((fd_set *)(set))->fd_array[((fd_set *)(set))->fd_count++]=(fd);} while(0)
-#define FD_ZERO(set) (((fd_set *)(set))->fd_count=0)
-#define FD_ISSET(fd,set) __WSAFDIsSet((SOCKET)(fd),(fd_set *)(set))
-
-#ifndef _TIMEVAL_DEFINED /* also in winsock[2].h */
-#define _TIMEVAL_DEFINED
-struct timeval {
-  long tv_sec;
-  long tv_usec;
-};
 
 #define timerisset(tvp) ((tvp)->tv_sec || (tvp)->tv_usec)
 #define timercmp(tvp,uvp,cmp) ((tvp)->tv_sec cmp (uvp)->tv_sec || (tvp)->tv_sec==(uvp)->tv_sec && (tvp)->tv_usec cmp (uvp)->tv_usec)
@@ -155,24 +131,7 @@ struct protoent {
 #define IMPLINK_LOWEXPER 156
 #define IMPLINK_HIGHEXPER 158
 
-#ifndef s_addr
-
-struct in_addr {
-  union {
-    struct { u_char s_b1,s_b2,s_b3,s_b4; } S_un_b;
-    struct { u_short s_w1,s_w2; } S_un_w;
-    u_long S_addr;
-  } S_un;
-};
-
-#define s_addr S_un.S_addr
-#define s_host S_un.S_un_b.s_b2
-#define s_net S_un.S_un_b.s_b1
-#define s_imp S_un.S_un_w.s_w2
-#define s_impno S_un.S_un_b.s_b4
-#define s_lh S_un.S_un_b.s_b3
-
-#endif
+#include <inaddr.h>
 
 #define IN_CLASSA(i) (((long)(i) & 0x80000000)==0)
 #define IN_CLASSA_NET 0xff000000
@@ -244,9 +203,6 @@ struct ip_mreq {
   struct in_addr imr_multiaddr;
   struct in_addr imr_interface;
 };
-
-#define INVALID_SOCKET (SOCKET)(~0)
-#define SOCKET_ERROR (-1)
 
 #define SOCK_STREAM 1
 #define SOCK_DGRAM 2

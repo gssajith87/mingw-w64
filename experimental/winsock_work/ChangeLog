@@ -1,0 +1,21 @@
+2010-05-02  Ozkan Sezer  <sezeroz@gmail.com>
+
+	First shot at using helpers for winsock headers.
+	* _bsd_types.h: New.
+	* _socket_types.h: New.
+	* _timeval.h: New.
+	* in6addr.h: New.
+	* inaddr.h: New.
+	* time.h: Include _timeval.h. Move struct timeval, timerisset,
+	timercmp and timerclear to _timeval.h.
+	* sys/time.h: Likewise.
+	* ipexport.h: Include inaddr.h and in6addr.h. Move struct in6_addr
+	and its related macros to in6addr.h. Move struct in_addr and its
+	related macros to inaddr.h.
+	* winsock2.h: Same changes as in ipexport.h and time.h. Include
+	_timeval.h, _bsd_types.h, _socket_types.h, in6addr.h and inaddr.h.
+	Moved u_char, u_short, u_long, u_int and u_int64 to _bsd_types.h.
+	Moved struct fd_set and SOCKET types and INVALID_SOCKET, SOCKET_ERROR,
+	FD_CLR, FD_SET, FD_ZERO and FD_ISSET macros to _socket_types.h.
+	* winsock.h: Same changes as in winsock2.h except for ipv6 stuff.
+	* ws2tcpip.h: Same changes as in ipexport.h except for ipv4 stuff.
