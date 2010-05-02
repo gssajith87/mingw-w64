@@ -2,12 +2,12 @@
 
 #include <_bsd_types.h>
 
-struct in6_addr {
+tyepedef struct in6_addr {
   __MINGW_EXTENSION union {
     u_char Byte[16];
     u_short Word[8];
   } u;
-};
+} IN6_ADDR, *PIN6_ADDR, *LPIN6_ADDR;
 
 #define in_addr6	in6_addr
 

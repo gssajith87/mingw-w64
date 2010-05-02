@@ -1,5 +1,13 @@
 2010-05-02  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* ws2tcpip.h (IN6_ADDR, PIN6_ADDR, LPIN6_ADDR): Move from here ...
+	* in6addr.h: ... to here.
+	* winsock.h (IN_ADDR, PIN_ADDR, LPIN_ADDR): Move from here ...
+	* winsock2.h (IN_ADDR, PIN_ADDR, LPIN_ADDR): ... and from here ...
+	* inaddr.h: ... to here.
+
+2010-05-02  Ozkan Sezer  <sezeroz@gmail.com>
+
 	First shot at using helpers for winsock headers.
 	* _bsd_types.h: New.
 	* _socket_types.h: New.

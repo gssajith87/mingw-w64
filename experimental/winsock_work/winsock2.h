@@ -1346,10 +1346,6 @@ extern "C" {
   typedef struct linger *PLINGER;
   typedef struct linger *LPLINGER;
 
-  typedef struct in_addr IN_ADDR;
-  typedef struct in_addr *PIN_ADDR;
-  typedef struct in_addr *LPIN_ADDR;
-
   typedef struct fd_set FD_SET;
   typedef struct fd_set *PFD_SET;
   typedef struct fd_set *LPFD_SET;

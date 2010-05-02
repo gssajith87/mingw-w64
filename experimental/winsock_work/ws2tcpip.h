@@ -103,10 +103,6 @@ struct sockaddr_in6 {
   u_long sin6_scope_id;
 };
 
-typedef struct in6_addr IN6_ADDR;
-typedef struct in6_addr *PIN6_ADDR;
-typedef struct in6_addr *LPIN6_ADDR;
-
 typedef struct sockaddr_in6 SOCKADDR_IN6;
 typedef struct sockaddr_in6 *PSOCKADDR_IN6;
 typedef struct sockaddr_in6 *LPSOCKADDR_IN6;
