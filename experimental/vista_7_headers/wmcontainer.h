@@ -34,39 +34,8 @@ typedef enum MFASF_STREAMSELECTORFLAGS {
   MFASF_STREAMSELECTOR_USE_AVERAGE_BITRATE   = 0x00000002 
 } ;
 
-#ifndef __IMFASFSplitter_INTERFACE_DEFINED__
-#define __IMFASFSplitter_INTERFACE_DEFINED__
-typedef IMFASFSplitter *LPIMFASFSPLITTER;
-#if defined(__cplusplus) && !defined(CINTERFACE)
-DECLARE_INTERFACE_(IMFASFSplitter,IUnknown) {
-public:
-  virtual HRESULT WINAPI Flush() PURE;
-  virtual HRESULT WINAPI GetFlags(DWORD *pdwFlags) PURE;
-  virtual HRESULT WINAPI GetLastSendTime(DWORD *pdwLastSendTime) PURE;
-  virtual HRESULT WINAPI GetNextSample(DWORD *pdwStatusFlags,WORD *pwStreamNumber,IMFSample **ppISample) PURE;
-  virtual HRESULT WINAPI GetSelectedStreams(WORD *pwStreamNumbers,WORD *pwNumStreams) PURE;
-  virtual HRESULT WINAPI Initialize(IMFASFContentInfo *pIContentInfo) PURE;
-  virtual HRESULT WINAPI ParseData(IMFMediaBuffer *pIBuffer,DWORD cbBufferOffset,DWORD cbLength) PURE;
-  virtual HRESULT WINAPI SelectStreams(WORD *pwStreamNumbers,WORD wNumStreams) PURE;
-  virtual HRESULT WINAPI SetFlags(DWORD dwFlags) PURE;
-};
-#else
-typedef struct IMFASFSplitterVtbl {
-  BEGIN_INTERFACE
-    HRESULT (WINAPI *Flush)(IMFASFSplitter* This);
-    HRESULT (WINAPI *GetLastSendTime)(IMFASFSplitter* This,DWORD *pdwLastSendTime);
-    HRESULT (WINAPI *GetNextSample)(IMFASFSplitter* This,DWORD *pdwStatusFlags,WORD *pwStreamNumber,IMFSample **ppISample);
-    HRESULT (WINAPI *GetSelectedStreams)(IMFASFSplitter* This,WORD *pwStreamNumbers,WORD *pwNumStreams);
-    HRESULT (WINAPI *Initialize)(IMFASFSplitter* This,IMFASFContentInfo *pIContentInfo);
-    HRESULT (WINAPI *ParseData)(IMFASFSplitter* This,MFMediaBuffer *pIBuffer,DWORD cbBufferOffset,DWORD cbLength);
-    HRESULT (WINAPI *SelectStreams)(IMFASFSplitter* This,WORD *pwStreamNumbers,WORD wNumStreams);
-    HRESULT (WINAPI *SetFlags)(IMFASFSplitter* This,DWORD dwFlags);
-  END_INTERFACE
-} IMFASFSplitterVtbl;
-struct IMFASFSplitter {
-  CONST_VTBL struct IMFASFSplitterVtbl *lpVtbl;
-};
-#ifdef COBJMACROS
+/* IMFASFSplitter interface 
+
 #define IMFASFSplitter_Flush(This) (This)->lpVtbl->Flush(This)
 #define IMFASFSplitter_GetLastSendTime(This,pdwLastSendTime) (This)->lpVtbl->GetLastSendTime(This,pdwLastSendTime)
 #define IMFASFSplitter_GetNextSample(This,pdwStatusFlags,pwStreamNumber,ppISample) (This)->lpVtbl->GetNextSample(This,pdwStatusFlags,pwStreamNumber,ppISample)
@@ -75,9 +44,8 @@ struct IMFASFSplitter {
 #define IMFASFSplitter_ParseData(This,pIBuffer,cbBufferOffset,cbLength) (This)->lpVtbl->ParseData(This,pIBuffer,cbBufferOffset,cbLength)
 #define IMFASFSplitter_SelectStreams(This,pwStreamNumbers,wNumStreams) (This)->lpVtbl->SelectStreams(This,pwStreamNumbers,wNumStreams)
 #define IMFASFSplitter_SetFlags(This,dwFlags) (This)->lpVtbl->SetFlags(This,dwFlags)
-#endif /*COBJMACROS*/
-#endif /*defined(__cplusplus) && !defined(CINTERFACE)*/
-#endif /*__IMFASFSplitter_INTERFACE_DEFINED__*/
+
+*/
 
 HRESULT WINAPI MFCreateASFSplitter(IMFASFSplitter **ppISplitter);
 HRESULT WINAPI MFCreateAttributes(IMFAttributes **ppMFAttributes,UINT32 cInitialSize);
