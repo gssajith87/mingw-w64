@@ -36,6 +36,7 @@
 #include <inaddr.h>
 #include <_ws_helpers/_bsd_types.h>
 #include <_ws_helpers/_socket_types.h>
+#include <_ws_helpers/_fd_types.h>
 #include <_ws_helpers/_ip_types.h>
 #include <_ws_helpers/_wsadata.h>
 

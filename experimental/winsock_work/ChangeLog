@@ -1,5 +1,10 @@
 2010-05-19  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* _ws_helpers/_fd_types.h: New.
+	* _ws_helpers/_socket_types.h: Moved all fd stuff to _ws_helpers/_fd_types.h.
+
+2010-05-19  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* _ws_helpers/_mswsock_1.h: New.
 	* winsock.h, mswsock.h: Moved all shared winsock1 MS extensions
 	(SO_CONNDATA, SO_CONNOPT, SO_DISCDATA, SO_DISCOPT, SO_CONNDATALEN,
