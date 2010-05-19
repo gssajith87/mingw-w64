@@ -1,5 +1,11 @@
 2010-05-19  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* _ws_helpers/_wsa_errnos.h: New.
+	* winsock.h, winsock2.h: Moved all error code stuff to
+	_ws_helpers/_wsa_errnos.h.
+
+2010-05-19  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* _bsd_types.h  _ip_mreq1.h  _ip_types.h  _socket_types.h  _wsadata.h:
 	Moved to _ws_helpers directory.
 	* in6addr.h, inaddr.h, winsock.h, winsock2.h, ws2tcpip.h: Adjusted.
