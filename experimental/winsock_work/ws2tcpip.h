@@ -11,11 +11,7 @@
 #endif
 
 #include <winsock2.h>
-
-struct ip_mreq {
-  struct in_addr imr_multiaddr;
-  struct in_addr imr_interface;
-};
+#include <_ip_mreq1.h>
 
 struct ip_mreq_source {
   struct in_addr imr_multiaddr;

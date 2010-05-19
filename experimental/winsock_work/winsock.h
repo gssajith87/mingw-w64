@@ -14,6 +14,7 @@
 #include <_timeval.h>
 #include <_socket_types.h>
 #include <_ip_types.h>
+#include <_ip_mreq1.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -152,11 +153,6 @@ typedef WSADATA *LPWSADATA;
 #define IP_DEFAULT_MULTICAST_TTL 1
 #define IP_DEFAULT_MULTICAST_LOOP 1
 #define IP_MAX_MEMBERSHIPS 20
-
-struct ip_mreq {
-  struct in_addr imr_multiaddr;
-  struct in_addr imr_interface;
-};
 
 #define SOCK_STREAM 1
 #define SOCK_DGRAM 2
