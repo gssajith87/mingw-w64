@@ -1,5 +1,17 @@
 2010-05-19  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* _ws_helpers/_mswsock_1.h: New.
+	* winsock.h, mswsock.h: Moved all shared winsock1 MS extensions
+	(SO_CONNDATA, SO_CONNOPT, SO_DISCDATA, SO_DISCOPT, SO_CONNDATALEN,
+	SO_CONNOPTLEN, SO_DISCDATALEN, SO_DISCOPTLEN, SO_OPENTYPE,
+	SO_SYNCHRONOUS_ALERT, SO_SYNCHRONOUS_NONALERT, SO_MAXDG, SO_MAXPATHDG,
+	SO_UPDATE_ACCEPT_CONTEXT, SO_CONNECT_TIME, TCP_BSDURGENT, TF_DISCONNECT,
+	TF_REUSE_SOCKET, TF_REUSE_SOCKET, TF_WRITE_BEHIND, TRANSMIT_FILE_BUFFERS,
+	WSARecvEx, TransmitFile, AcceptEx, GetAcceptExSockaddrs) to
+	_ws_helpers/_mswsock_1.h.
+
+2010-05-19  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* _ws_helpers/_wsa_errnos.h: New.
 	* winsock.h, winsock2.h: Moved all error code stuff to
 	_ws_helpers/_wsa_errnos.h.
