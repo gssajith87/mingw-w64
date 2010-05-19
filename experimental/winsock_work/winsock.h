@@ -13,8 +13,10 @@
 #include <_bsd_types.h>
 #include <_timeval.h>
 #include <_socket_types.h>
+#include <inaddr.h>
 #include <_ip_types.h>
 #include <_ip_mreq1.h>
+#include <_wsadata.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -93,7 +95,6 @@ extern "C" {
 #define IMPLINK_LOWEXPER 156
 #define IMPLINK_HIGHEXPER 158
 
-#include <inaddr.h>
 
 #define IN_CLASSA(i) (((long)(i) & 0x80000000)==0)
 #define IN_CLASSA_NET 0xff000000
@@ -117,28 +118,6 @@ extern "C" {
 #define INADDR_BROADCAST (u_long)0xffffffff
 #define INADDR_NONE 0xffffffff
 
-#define WSADESCRIPTION_LEN 256
-#define WSASYS_STATUS_LEN 128
-
-typedef struct WSAData {
-  WORD wVersion;
-  WORD wHighVersion;
-#ifdef _WIN64
-  unsigned short iMaxSockets;
-  unsigned short iMaxUdpDg;
-  char *lpVendorInfo;
-  char szDescription[WSADESCRIPTION_LEN+1];
-  char szSystemStatus[WSASYS_STATUS_LEN+1];
-#else
-  char szDescription[WSADESCRIPTION_LEN+1];
-  char szSystemStatus[WSASYS_STATUS_LEN+1];
-  unsigned short iMaxSockets;
-  unsigned short iMaxUdpDg;
-  char *lpVendorInfo;
-#endif
-} WSADATA;
-
-typedef WSADATA *LPWSADATA;
 
 #define IP_OPTIONS 1
 #define IP_MULTICAST_IF 2
