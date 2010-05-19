@@ -1,7 +1,7 @@
 #ifndef _MINGW_IP_TYPES_H
 #define _MINGW_IP_TYPES_H
 
-#include <_bsd_types.h>
+#include <_ws_helpers/_bsd_types.h>
 
 #define h_addr h_addr_list[0]
 

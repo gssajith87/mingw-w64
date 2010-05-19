@@ -1,6 +1,6 @@
 #ifndef s6_addr
 
-#include <_bsd_types.h>
+#include <_ws_helpers/_bsd_types.h>
 
 typedef struct in6_addr {
   union {
