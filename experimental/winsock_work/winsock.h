@@ -11,8 +11,9 @@
 #endif
 
 #include <_bsd_types.h>
-#include <_socket_types.h>
 #include <_timeval.h>
+#include <_socket_types.h>
+#include <_ip_types.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,41 +44,6 @@ extern "C" {
 #define SIOCSLOWAT _IOW('s',2,u_long)
 #define SIOCGLOWAT _IOR('s',3,u_long)
 #define SIOCATMARK _IOR('s',7,u_long)
-
-#define h_addr h_addr_list[0]
-
-struct hostent {
-  char *h_name;
-  char **h_aliases;
-  short h_addrtype;
-  short h_length;
-  char **h_addr_list;
-};
-
-struct netent {
-  char *n_name;
-  char **n_aliases;
-  short n_addrtype;
-  u_long n_net;
-};
-
-struct servent {
-  char *s_name;
-  char **s_aliases;
-#ifdef _WIN64
-  char *s_proto;
-  short s_port;
-#else
-  short s_port;
-  char *s_proto;
-#endif
-};
-
-struct protoent {
-  char *p_name;
-  char **p_aliases;
-  short p_proto;
-};
 
 #define IPPROTO_IP 0
 #define IPPROTO_ICMP 1
@@ -149,13 +115,6 @@ struct protoent {
 #define INADDR_LOOPBACK 0x7f000001
 #define INADDR_BROADCAST (u_long)0xffffffff
 #define INADDR_NONE 0xffffffff
-
-struct sockaddr_in {
-  short sin_family;
-  u_short sin_port;
-  struct in_addr sin_addr;
-  char sin_zero[8];
-};
 
 #define WSADESCRIPTION_LEN 256
 #define WSASYS_STATUS_LEN 128
@@ -275,16 +234,6 @@ struct ip_mreq {
 
 #define AF_MAX 22
 
-struct sockaddr {
-  u_short sa_family;
-  char sa_data[14];
-};
-
-struct sockproto {
-  u_short sp_family;
-  u_short sp_protocol;
-};
-
 #define PF_UNSPEC AF_UNSPEC
 #define PF_UNIX AF_UNIX
 #define PF_INET AF_INET
@@ -310,11 +259,6 @@ struct sockproto {
 #define PF_BAN AF_BAN
 
 #define PF_MAX AF_MAX
-
-struct linger {
-  u_short l_onoff;
-  u_short l_linger;
-};
 
 #define SOL_SOCKET 0xffff
 
@@ -517,28 +461,6 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-typedef struct sockaddr SOCKADDR;
-typedef struct sockaddr *PSOCKADDR;
-typedef struct sockaddr *LPSOCKADDR;
-typedef struct sockaddr_in SOCKADDR_IN;
-typedef struct sockaddr_in *PSOCKADDR_IN;
-typedef struct sockaddr_in *LPSOCKADDR_IN;
-typedef struct linger LINGER;
-typedef struct linger *PLINGER;
-typedef struct linger *LPLINGER;
-typedef struct hostent HOSTENT;
-typedef struct hostent *PHOSTENT;
-typedef struct hostent *LPHOSTENT;
-typedef struct servent SERVENT;
-typedef struct servent *PSERVENT;
-typedef struct servent *LPSERVENT;
-typedef struct protoent PROTOENT;
-typedef struct protoent *PPROTOENT;
-typedef struct protoent *LPPROTOENT;
-typedef struct timeval TIMEVAL;
-typedef struct timeval *PTIMEVAL;
-typedef struct timeval *LPTIMEVAL;
 
 #define WSAMAKEASYNCREPLY(buflen,error) MAKELONG(buflen,error)
 #define WSAMAKESELECTREPLY(event,error) MAKELONG(event,error)

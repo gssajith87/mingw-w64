@@ -1,3 +1,11 @@
+2010-05-19  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* winsock.h: Include _ip_types.h.
+	(hostent, netent, servent, protoent, sockaddr_in, sockaddr, sockproto,
+	linger, *TIMEVAL): Move from here ...
+	* winsock2.h: ... Same as winsock.h  ...
+	* _ip_types.h: ... to this new helper.
+
 2010-05-02  Ozkan Sezer  <sezeroz@gmail.com>
 
 	* in6addr.h: Fix typo. Remove unnecessary __MINGW_EXTENSION
