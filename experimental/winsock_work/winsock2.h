@@ -32,6 +32,9 @@
 #endif
 #endif
 
+/* undefine macros from winsock.h */
+#include <_ws_helpers/_ws1_undef.h>
+
 #include <_timeval.h>
 #include <inaddr.h>
 #include <_ws_helpers/_bsd_types.h>
@@ -39,13 +42,68 @@
 #include <_ws_helpers/_fd_types.h>
 #include <_ws_helpers/_ip_types.h>
 #include <_ws_helpers/_wsadata.h>
-#include <_ws_helpers/_ws_ioctl.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
   extern int WINAPI __WSAFDIsSet(SOCKET,fd_set *);
+
+#define FD_CLR(fd,set)							\
+  do {									\
+	u_int __i;							\
+	for(__i = 0; __i < ((fd_set *)(set))->fd_count; __i++) {	\
+		if (((fd_set *)(set))->fd_array[__i] == fd) {		\
+			while (__i < ((fd_set *)(set))->fd_count - 1) {	\
+				((fd_set *)(set))->fd_array[__i] =	\
+				 ((fd_set *)(set))->fd_array[__i + 1];	\
+				__i++;					\
+			}						\
+			((fd_set *)(set))->fd_count--;			\
+			break;						\
+		}							\
+	}								\
+} while(0)
+
+#define FD_ZERO(set)		(((fd_set *)(set))->fd_count = 0)
+
+#define FD_ISSET(fd,set)	__WSAFDIsSet((SOCKET)(fd),(fd_set *)(set))
+
+#define FD_SET(fd,set)							\
+  do {									\
+	u_int __i;							\
+	for(__i = 0; __i < ((fd_set *)(set))->fd_count; __i++) {	\
+		if (((fd_set *)(set))->fd_array[__i] == (fd)) {		\
+			break;						\
+		}							\
+	}								\
+	if (__i == ((fd_set *)(set))->fd_count) {			\
+		if (((fd_set *)(set))->fd_count < FD_SETSIZE) {		\
+			((fd_set *)(set))->fd_array[__i] = (fd);	\
+			((fd_set *)(set))->fd_count++;			\
+		}							\
+	}								\
+} while(0)
+
+#define IOCPARM_MASK 0x7f
+#define IOC_VOID 0x20000000
+#define IOC_OUT 0x40000000
+#define IOC_IN 0x80000000
+#define IOC_INOUT (IOC_IN|IOC_OUT)
+
+#define _IO(x,y) (IOC_VOID|((x)<<8)|(y))
+#define _IOR(x,y,t) (IOC_OUT|(((long)sizeof(t)&IOCPARM_MASK)<<16)|((x)<<8)|(y))
+#define _IOW(x,y,t) (IOC_IN|(((long)sizeof(t)&IOCPARM_MASK)<<16)|((x)<<8)|(y))
+
+#define FIONREAD _IOR('f',127,u_long)
+#define FIONBIO _IOW('f',126,u_long)
+#define FIOASYNC _IOW('f',125,u_long)
+
+#define SIOCSHIWAT _IOW('s',0,u_long)
+#define SIOCGHIWAT _IOR('s',1,u_long)
+#define SIOCSLOWAT _IOW('s',2,u_long)
+#define SIOCGLOWAT _IOR('s',3,u_long)
+#define SIOCATMARK _IOR('s',7,u_long)
 
 #define IPPROTO_IP 0
 #define IPPROTO_HOPOPTS 0
@@ -135,21 +193,6 @@ extern "C" {
 #define INADDR_NONE 0xffffffff
 
 #define ADDR_ANY INADDR_ANY
-
-/* these are different than their winsock 1.x
- * equivalents and are defined in ws2tcpip.h: */
-#undef  IP_OPTIONS
-#undef  IP_MULTICAST_IF
-#undef  IP_MULTICAST_TTL
-#undef  IP_MULTICAST_LOOP
-#undef  IP_ADD_MEMBERSHIP
-#undef  IP_DROP_MEMBERSHIP
-#undef  IP_TTL
-#undef  IP_TOS
-#undef  IP_DONTFRAGMENT
-#undef  IP_DEFAULT_MULTICAST_TTL
-#undef  IP_DEFAULT_MULTICAST_LOOP
-#undef  IP_MAX_MEMBERSHIPS
 
 #define FROM_PROTOCOL_INFO (-1)
 
@@ -293,6 +336,38 @@ extern "C" {
 
 #define MAXGETHOSTSTRUCT 1024
 
+#define FD_READ_BIT 0
+#define FD_READ (1 << FD_READ_BIT)
+
+#define FD_WRITE_BIT 1
+#define FD_WRITE (1 << FD_WRITE_BIT)
+
+#define FD_OOB_BIT 2
+#define FD_OOB (1 << FD_OOB_BIT)
+
+#define FD_ACCEPT_BIT 3
+#define FD_ACCEPT (1 << FD_ACCEPT_BIT)
+
+#define FD_CONNECT_BIT 4
+#define FD_CONNECT (1 << FD_CONNECT_BIT)
+
+#define FD_CLOSE_BIT 5
+#define FD_CLOSE (1 << FD_CLOSE_BIT)
+
+#define FD_QOS_BIT 6
+#define FD_QOS (1 << FD_QOS_BIT)
+
+#define FD_GROUP_QOS_BIT 7
+#define FD_GROUP_QOS (1 << FD_GROUP_QOS_BIT)
+
+#define FD_ROUTING_INTERFACE_CHANGE_BIT 8
+#define FD_ROUTING_INTERFACE_CHANGE (1 << FD_ROUTING_INTERFACE_CHANGE_BIT)
+
+#define FD_ADDRESS_LIST_CHANGE_BIT 9
+#define FD_ADDRESS_LIST_CHANGE (1 << FD_ADDRESS_LIST_CHANGE_BIT)
+
+#define FD_MAX_EVENTS 10
+#define FD_ALL_EVENTS ((1 << FD_MAX_EVENTS) - 1)
 
 #include <_ws_helpers/_wsa_errnos.h>
 

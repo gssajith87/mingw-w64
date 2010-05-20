@@ -1,5 +1,16 @@
 2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* _ws_helpers/_ws1_undef.h: New.
+	* _ws_helpers/_xmitfile.h: New.
+	* _ws_helpers/_ws_ioctl.h: Delete.
+	* _ws_helpers/_mswsock_1.h: Delete.
+	* winsock2.h: Put back most of the previously moved macros. Include
+	_ws_helpers/_ws1_undef.h to undefine all macros from winsock.h.
+	* mswsock.h: Similar to winsock2.h, include _ws_helpers/_xmitfile.h.
+	* winsock.h: Similar to winsock2.h, include _ws_helpers/_xmitfile.h.
+
+2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* winsock2.h: Undefine IP_OPTIONS, IP_MULTICAST_IF, IP_MULTICAST_TTL,
 	IP_MULTICAST_LOOP, IP_ADD_MEMBERSHIP, IP_DROP_MEMBERSHIP, IP_TTL, IP_TOS,
 	IP_DONTFRAGMENT, IP_DEFAULT_MULTICAST_TTL, IP_DEFAULT_MULTICAST_LOOP and
