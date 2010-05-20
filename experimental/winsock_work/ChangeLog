@@ -1,5 +1,11 @@
 2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* _ws_helpers/_ws_ioctl.h: New.
+	* winsock.h, winsock2.h: Moved shared ioctl macros to _ws_ioctl.h. Include
+	_ws_helpers/_ws_ioctl.h.
+
+2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* winsock.h, winsock2.h: Moved FD_READ, FD_WRITE and friends to ...
 	* _ws_helpers/_fd_types.h: ... here.
 
