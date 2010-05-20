@@ -1,5 +1,14 @@
 2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* winsock2.h: Undefine IP_OPTIONS, IP_MULTICAST_IF, IP_MULTICAST_TTL,
+	IP_MULTICAST_LOOP, IP_ADD_MEMBERSHIP, IP_DROP_MEMBERSHIP, IP_TTL, IP_TOS,
+	IP_DONTFRAGMENT, IP_DEFAULT_MULTICAST_TTL, IP_DEFAULT_MULTICAST_LOOP and
+	IP_MAX_MEMBERSHIPS: they have different values in winsock2, except for
+	IP_OPTIONS, they are defined in ws2tcpip.h, and the last three are not
+	defined in winsock2 at all.
+
+2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* _ws_helpers/_ws_ioctl.h: New.
 	* winsock.h, winsock2.h: Moved shared ioctl macros to _ws_ioctl.h. Include
 	_ws_helpers/_ws_ioctl.h.

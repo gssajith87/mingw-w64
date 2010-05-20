@@ -136,6 +136,20 @@ extern "C" {
 
 #define ADDR_ANY INADDR_ANY
 
+/* these are different than their winsock 1.x
+ * equivalents and are defined in ws2tcpip.h: */
+#undef  IP_OPTIONS
+#undef  IP_MULTICAST_IF
+#undef  IP_MULTICAST_TTL
+#undef  IP_MULTICAST_LOOP
+#undef  IP_ADD_MEMBERSHIP
+#undef  IP_DROP_MEMBERSHIP
+#undef  IP_TTL
+#undef  IP_TOS
+#undef  IP_DONTFRAGMENT
+#undef  IP_DEFAULT_MULTICAST_TTL
+#undef  IP_DEFAULT_MULTICAST_LOOP
+#undef  IP_MAX_MEMBERSHIPS
 
 #define FROM_PROTOCOL_INFO (-1)
 
