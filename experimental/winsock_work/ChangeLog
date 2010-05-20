@@ -1,5 +1,6 @@
 2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* winsock.h: Minor formatting. added comment regarding mswsock.h.
 	* _ws_helpers/_wsadata.h: Tidy, formatting.
 
 2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>

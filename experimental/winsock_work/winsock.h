@@ -337,6 +337,8 @@ extern "C" {
   HANDLE WINAPI WSAAsyncGetHostByAddr(HWND hWnd,u_int wMsg,const char *addr,int len,int type,char *buf,int buflen);
   int WINAPI WSACancelAsyncRequest(HANDLE hAsyncTaskHandle);
   int WINAPI WSAAsyncSelect(SOCKET s,HWND hWnd,u_int wMsg,long lEvent);
+
+/* these four functions are in mswsock.h in the new api */
   int WINAPI WSARecvEx(SOCKET s,char *buf,int len,int *flags);
 
 #define TF_DISCONNECT 0x01
@@ -345,7 +347,7 @@ extern "C" {
 
   WINBOOL WINAPI TransmitFile(SOCKET hSocket,HANDLE hFile,DWORD nNumberOfBytesToWrite,DWORD nNumberOfBytesPerSend,LPOVERLAPPED lpOverlapped,LPTRANSMIT_FILE_BUFFERS lpTransmitBuffers,DWORD dwReserved);
   WINBOOL WINAPI AcceptEx(SOCKET sListenSocket,SOCKET sAcceptSocket,PVOID lpOutputBuffer,DWORD dwReceiveDataLength,DWORD dwLocalAddressLength,DWORD dwRemoteAddressLength,LPDWORD lpdwBytesReceived,LPOVERLAPPED lpOverlapped);
-  VOID WINAPI GetAcceptExSockaddrs (PVOID lpOutputBuffer,DWORD dwReceiveDataLength,DWORD dwLocalAddressLength,DWORD dwRemoteAddressLength,struct sockaddr **LocalSockaddr,LPINT LocalSockaddrLength,struct sockaddr **RemoteSockaddr,LPINT RemoteSockaddrLength);
+  VOID WINAPI GetAcceptExSockaddrs(PVOID lpOutputBuffer,DWORD dwReceiveDataLength,DWORD dwLocalAddressLength,DWORD dwRemoteAddressLength,struct sockaddr **LocalSockaddr,LPINT LocalSockaddrLength,struct sockaddr **RemoteSockaddr,LPINT RemoteSockaddrLength);
 #define __MSWSOCK_WS1_SHARED	/* avoid redefinitions in mswsock.h */
 
 #ifdef __cplusplus
