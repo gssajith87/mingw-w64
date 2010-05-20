@@ -4,6 +4,9 @@
  */
 
 package Proc;
+
+import java.util.StringTokenizer;
+
 /**
  *
  * @author kecy7joy
@@ -14,10 +17,15 @@ public class funct {
     private String Args;
 
     public funct(final String in) {
+        Args = "";
         String tmp = in.replaceAll("\n", "");
         int open = tmp.lastIndexOf('(') + 1;
         int close = tmp.lastIndexOf(')');
-        Args = tmp.substring(open,close).replaceAll("\\[[a-z].*[a-z]\\]", "").trim();
+        StringTokenizer a = new StringTokenizer(tmp.substring(open,close),",");
+        while (a.hasMoreTokens()) {
+            Args += a.nextToken().replaceAll("\\[[a-z].*[a-z]\\]", "").trim();
+            if (a.hasMoreTokens()) Args += ",";
+        }
         iTokens i = new iTokens(tmp.substring(0, open - 1));
         Name = i.getName();
         Ret = i.getType();
@@ -36,7 +44,10 @@ public class funct {
     }
 
     public static void main(String args[]) {
-        funct a = new funct("HRESULT GetObjectParam();");
+        funct a = new funct("HRESULT GetNames( \n" +
+        "[out]  LPWSTR *pwszInterface, \n" +
+        "[out]  LPWSTR *pwszMethod \n" +
+        ");");
         System.out.println(a.Ret);
         System.out.println(a.Name);
         System.out.println(a.Args);
