@@ -1,5 +1,9 @@
 2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* tests/*c: Added some tests.
+
+2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* winsock.h: Undefine UNDEF_WINSOCK_API_LINKAGE at the end of file.
 	Some formatting and tidy-up.
 	* winsock2.h: Do not re-define _WINSOCKAPI_. If defined already,
