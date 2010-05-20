@@ -25,12 +25,13 @@
 #endif
 
 #ifndef WINSOCK_API_LINKAGE
-#ifdef DECLSPEC_IMPORT
-#define WINSOCK_API_LINKAGE DECLSPEC_IMPORT
+#ifdef  DECLSPEC_IMPORT
+#define WINSOCK_API_LINKAGE	DECLSPEC_IMPORT
 #else
 #define WINSOCK_API_LINKAGE
 #endif
-#endif
+#endif /* WINSOCK_API_LINKAGE */
+#define WSAAPI			WINAPI
 
 /* undefine macros from winsock.h */
 #include <_ws_helpers/_ws1_undef.h>
@@ -47,7 +48,7 @@
 extern "C" {
 #endif
 
-  extern int WINAPI __WSAFDIsSet(SOCKET,fd_set *);
+extern int WINAPI __WSAFDIsSet(SOCKET,fd_set *);
 
 #define FD_CLR(fd,set)							\
   do {									\
@@ -288,7 +289,6 @@ extern "C" {
 
     __MINGW_EXTENSION __int64 __ss_align;
     char __ss_pad2[_SS_PAD2SIZE];
-
   };
 
 #define PF_UNSPEC AF_UNSPEC
@@ -371,10 +371,10 @@ extern "C" {
 
 #include <_ws_helpers/_wsa_errnos.h>
 
-#define WSAAPI WINAPI
 #define WSAEVENT HANDLE
 #define LPWSAEVENT LPHANDLE
 #define WSAOVERLAPPED OVERLAPPED
+
   typedef struct _OVERLAPPED *LPWSAOVERLAPPED;
 
 #define WSA_IO_PENDING (ERROR_IO_PENDING)
@@ -413,7 +413,7 @@ extern "C" {
 #define SD_SEND 0x01
 #define SD_BOTH 0x02
 
-  typedef unsigned int GROUP;
+typedef unsigned int GROUP;
 
 #define SG_UNCONSTRAINED_GROUP 0x01
 #define SG_CONSTRAINED_GROUP 0x02
@@ -462,6 +462,7 @@ extern "C" {
     DWORD dwProviderReserved;
     CHAR szProtocol[WSAPROTOCOL_LEN+1];
   } WSAPROTOCOL_INFOA,*LPWSAPROTOCOL_INFOA;
+
   typedef struct _WSAPROTOCOL_INFOW {
     DWORD dwServiceFlags1;
     DWORD dwServiceFlags2;
@@ -484,6 +485,7 @@ extern "C" {
     DWORD dwProviderReserved;
     WCHAR szProtocol[WSAPROTOCOL_LEN+1];
   } WSAPROTOCOL_INFOW,*LPWSAPROTOCOL_INFOW;
+
 #ifdef UNICODE
   typedef WSAPROTOCOL_INFOW WSAPROTOCOL_INFO;
   typedef LPWSAPROTOCOL_INFOW LPWSAPROTOCOL_INFO;
@@ -568,7 +570,11 @@ extern "C" {
 #define SIO_NSP_NOTIFY_CHANGE _WSAIOW(IOC_WS2,25)
 
   typedef enum _WSACOMPLETIONTYPE {
-    NSP_NOTIFY_IMMEDIATELY = 0,NSP_NOTIFY_HWND,NSP_NOTIFY_EVENT,NSP_NOTIFY_PORT,NSP_NOTIFY_APC
+    NSP_NOTIFY_IMMEDIATELY = 0,
+    NSP_NOTIFY_HWND,
+    NSP_NOTIFY_EVENT,
+    NSP_NOTIFY_PORT,
+    NSP_NOTIFY_APC
   } WSACOMPLETIONTYPE,*PWSACOMPLETIONTYPE,*LPWSACOMPLETIONTYPE;
 
   typedef struct _WSACOMPLETION {
@@ -609,7 +615,7 @@ extern "C" {
     ULONG cbSize;
     BYTE *pBlobData;
   } BLOB,*LPBLOB;
-#endif
+#endif /* _tagBLOB_DEFINED */
 
 #define SERVICE_MULTIPLE (0x00000001)
 
@@ -690,7 +696,7 @@ extern "C" {
     INT iSocketType;
     INT iProtocol;
   } CSADDR_INFO,*PCSADDR_INFO,*LPCSADDR_INFO;
-#endif
+#endif /* __CSADDR_DEFINED__ */
 
   typedef struct _SOCKET_ADDRESS_LIST {
     INT iAddressCount;
@@ -703,7 +709,8 @@ extern "C" {
   } AFPROTOCOLS,*PAFPROTOCOLS,*LPAFPROTOCOLS;
 
   typedef enum _WSAEcomparator {
-    COMP_EQUAL = 0,COMP_NOTLESS
+    COMP_EQUAL = 0,
+    COMP_NOTLESS
   } WSAECOMPARATOR,*PWSAECOMPARATOR,*LPWSAECOMPARATOR;
 
   typedef struct _WSAVersion {
@@ -781,7 +788,9 @@ extern "C" {
 #define RESULT_IS_DELETED 0x0040
 
   typedef enum _WSAESETSERVICEOP {
-    RNRSERVICE_REGISTER=0,RNRSERVICE_DEREGISTER,RNRSERVICE_DELETE
+    RNRSERVICE_REGISTER = 0,
+    RNRSERVICE_DEREGISTER,
+    RNRSERVICE_DELETE
   } WSAESETSERVICEOP,*PWSAESETSERVICEOP,*LPWSAESETSERVICEOP;
 
   typedef struct _WSANSClassInfoA {
@@ -1016,6 +1025,8 @@ extern "C" {
 #define WSASetService WSASetServiceA
 #endif
 
+#ifndef __WINSOCK_WS1_SHARED
+/* these 46 functions have the same prototypes as in winsock2 */
   WINSOCK_API_LINKAGE SOCKET WSAAPI accept(SOCKET s,struct sockaddr *addr,int *addrlen);
   WINSOCK_API_LINKAGE int WSAAPI bind(SOCKET s,const struct sockaddr *name,int namelen);
   WINSOCK_API_LINKAGE int WSAAPI closesocket(SOCKET s);
@@ -1062,6 +1073,7 @@ extern "C" {
   WINSOCK_API_LINKAGE HANDLE WSAAPI WSAAsyncGetHostByAddr(HWND hWnd,u_int wMsg,const char *addr,int len,int type,char *buf,int buflen);
   WINSOCK_API_LINKAGE int WSAAPI WSACancelAsyncRequest(HANDLE hAsyncTaskHandle);
   WINSOCK_API_LINKAGE int WSAAPI WSAAsyncSelect(SOCKET s,HWND hWnd,u_int wMsg,long lEvent);
+#endif /* __WINSOCK_WS1_SHARED */
   WINSOCK_API_LINKAGE SOCKET WSAAPI WSAAccept(SOCKET s,struct sockaddr *addr,LPINT addrlen,LPCONDITIONPROC lpfnCondition,DWORD_PTR dwCallbackData);
   WINSOCK_API_LINKAGE WINBOOL WSAAPI WSACloseEvent(WSAEVENT hEvent);
   WINSOCK_API_LINKAGE int WSAAPI WSAConnect(SOCKET s,const struct sockaddr *name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS);
@@ -1133,4 +1145,4 @@ extern "C" {
 #include <wsipv6ok.h>
 #endif
 
-#endif
+#endif /* _WINSOCK2API_ */

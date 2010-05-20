@@ -1,5 +1,15 @@
 2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* winsock.h: Define WINSOCK_API_LINKAGE and WSAAPI as in winsock2.h
+	and undefine them at the end of the file. Replace WINAPI in 46 of the
+	functions with WSAAPI as in winsock2.h. Add WINSOCK_API_LINKAGE to
+	the same 46 functions as in winsock2.h. Define __WINSOCK_WS1_SHARED
+	to mark that those 46 functions are protoyped in winsock.h. Adjust
+	the extern "C" endif to resemble winsock2.h.
+	* winsock2.h: Adjust against the winsock.h changes. Some formatting.
+
+2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* winsock.h: Minor formatting. added comment regarding mswsock.h.
 	* _ws_helpers/_wsadata.h: Tidy, formatting.
 
