@@ -1,5 +1,12 @@
 2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* winsock.h: Undefine UNDEF_WINSOCK_API_LINKAGE at the end of file.
+	Some formatting and tidy-up.
+	* winsock2.h: Do not re-define _WINSOCKAPI_. If defined already,
+	well, all your base are belong to us (commented out for now.)
+
+2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* winsock.h: Define WINSOCK_API_LINKAGE and WSAAPI as in winsock2.h
 	and undefine them at the end of the file. Replace WINAPI in 46 of the
 	functions with WSAAPI as in winsock2.h. Add WINSOCK_API_LINKAGE to

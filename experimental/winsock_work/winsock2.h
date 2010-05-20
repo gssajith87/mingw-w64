@@ -6,7 +6,12 @@
 
 #ifndef _WINSOCK2API_
 #define _WINSOCK2API_
+
+#ifndef _WINSOCKAPI_
 #define _WINSOCKAPI_
+#else
+/*#warning AYBABTU */
+#endif
 
 #ifndef INCL_WINSOCK_API_TYPEDEFS
 #define INCL_WINSOCK_API_TYPEDEFS 0

@@ -343,7 +343,7 @@ extern int WINAPI __WSAFDIsSet(SOCKET,fd_set *);
   WINSOCK_API_LINKAGE HANDLE WSAAPI WSAAsyncGetHostByAddr(HWND hWnd,u_int wMsg,const char *addr,int len,int type,char *buf,int buflen);
   WINSOCK_API_LINKAGE int WSAAPI WSACancelAsyncRequest(HANDLE hAsyncTaskHandle);
   WINSOCK_API_LINKAGE int WSAAPI WSAAsyncSelect(SOCKET s,HWND hWnd,u_int wMsg,long lEvent);
-#define __WINSOCK_WS1_SHARED	/* avoid redefinition in winsock2.h */
+#define __WINSOCK_WS1_SHARED	/* avoid redefinitions in winsock2.h */
 
 /* these four functions are in mswsock.h in the new api */
   int WINAPI WSARecvEx(SOCKET s,char *buf,int len,int *flags);
@@ -368,13 +368,15 @@ extern int WINAPI __WSAFDIsSet(SOCKET,fd_set *);
 }
 #endif
 
-#ifdef IPV6STRICT
-#error WINSOCK2 required.
+#ifdef UNDEF_WINSOCK_API_LINKAGE
+#undef WINSOCK_API_LINKAGE
+#undef UNDEF_WINSOCK_API_LINKAGE
 #endif
 
 #undef WSAAPI
-#ifdef UNDEF_WINSOCK_API_LINKAGE
-#undef WINSOCK_API_LINKAGE
+
+#ifdef IPV6STRICT
+#error WINSOCK2 required.
 #endif
 
 #endif /* _WINSOCKAPI_ */
