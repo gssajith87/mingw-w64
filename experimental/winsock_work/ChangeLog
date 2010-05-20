@@ -1,5 +1,9 @@
 2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
 
+	* _ws_helpers/_wsadata.h: Tidy, formatting.
+
+2010-05-20  Ozkan Sezer  <sezeroz@gmail.com>
+
 	* _ws_helpers/_ws1_undef.h: New.
 	* _ws_helpers/_xmitfile.h: New.
 	* _ws_helpers/_ws_ioctl.h: Delete.

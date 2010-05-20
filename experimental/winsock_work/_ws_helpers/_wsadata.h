@@ -11,18 +11,16 @@ typedef struct WSAData {
 	unsigned short	iMaxSockets;
 	unsigned short	iMaxUdpDg;
 	char		*lpVendorInfo;
-	char	szDescription[WSADESCRIPTION_LEN+1];
-	char	szSystemStatus[WSASYS_STATUS_LEN+1];
+	char		szDescription[WSADESCRIPTION_LEN+1];
+	char		szSystemStatus[WSASYS_STATUS_LEN+1];
 #else
-	char	szDescription[WSADESCRIPTION_LEN+1];
-	char	szSystemStatus[WSASYS_STATUS_LEN+1];
+	char		szDescription[WSADESCRIPTION_LEN+1];
+	char		szSystemStatus[WSASYS_STATUS_LEN+1];
 	unsigned short	iMaxSockets;
 	unsigned short	iMaxUdpDg;
 	char		*lpVendorInfo;
 #endif
-} WSADATA;
-
-typedef WSADATA *LPWSADATA;
+} WSADATA, *LPWSADATA;
 
 #endif	/* __MINGW_WSADATA_H */
 
