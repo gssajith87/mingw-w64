@@ -22,7 +22,6 @@ public class Process {
         for (int i = 0; i < strs.size(); i++) {
             funts.add(new funct(strs.get(i)));
         }
-
     }
 
     private boolean comparestrs(final String in) {
@@ -161,6 +160,58 @@ public class Process {
         return ret;
     }
 
+    String sHeader() {
+        String ret = "#undef  INTERFACE\n";
+        ret += "#define INTERFACE " + iName + "\n";
+        ret += "DECLARE_INTERFACE_(" + iName;
+        if (inh != null && !inh.isEmpty()) {
+            ret += "," + inh;
+        } else {
+            ret += ",IUnknown";
+        }
+        ret += ")\n{\n    BEGIN_INTERFACE\n";
+        return ret;
+    }
+
+    String sUnknown() {
+        String ret = "\n    /* IUnknown methods */\n";
+        ret += "    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;\n";
+        ret += "    STDMETHOD_(ULONG, AddRef)(THIS) PURE;\n";
+        ret += "    STDMETHOD_(ULONG, Release)(THIS) PURE;\n";
+        return ret;
+    }
+
+    String scppVtabl() {
+        String ret = "";
+        ret += "\n    /* " + iName + " methods */\n";
+        for (int i = 0; i < funts.size(); i++) {
+            funct f = funts.get(i);
+            ret += "    STDMETHOD";
+            if (!f.getRet().equals("void")) {
+                ret += "_(" + f.getRet() + ",";
+            } else {
+                ret += "(";
+            }
+            ret += f.getName() + ")(THIS";
+            if (!f.getArgs().isEmpty()) {
+                ret += "_ ";
+                params p = new params(f.getArgs());
+                for (int j = 0; j < p.getLstr().size(); j++) {
+                    ret += p.getLstr(j);
+                    if (j + 1 != p.getLstr().size()) {
+                        ret += ",";
+                    }
+                }
+            }
+            ret += ") PURE;\n";
+        }
+        return ret;
+    }
+
+    String sfooter() {
+        return "\n    END_INTERFACE\n};";
+    }
+
     String cppVtbl() {
         String ret = "";
         for (int i = 0; i < funts.size(); i++) {
@@ -194,5 +245,13 @@ public class Process {
         str += "\n";
         return str;
     }
-}
 
+    String simple() {
+        String ret = sHeader();
+        ret += sUnknown();
+        if (!iName.equals("IUnknown"))
+        ret += scppVtabl();
+        ret += sfooter();
+        return ret;
+    }
+}
