@@ -85,6 +85,12 @@ public class Process {
         String ret;
         //String iName = jTextField1.getText().trim();
         ret = "#ifdef COBJMACROS\n";
+        ret += "#define " + iName + "_QueryInterface(This,riid,ppvObject) " +
+                "(This)->pVtbl->QueryInterface(This,riid,ppvObject)\n";
+        ret += "#define " + iName + "_AddRef(This) " +
+                "(This)->pVtbl->AddRef(This)\n";
+        ret += "#define " + iName + "_Release(This) " +
+                "(This)->pVtbl->Release(This)\n";
         for (int i = 0; i < funts.size(); i++) {
             String args = "This";
             funct f = funts.get(i);
@@ -209,7 +215,7 @@ public class Process {
     }
 
     String sfooter() {
-        return "\n    END_INTERFACE\n};";
+        return "\n    END_INTERFACE\n};\n";
     }
 
     String cppVtbl() {
@@ -252,6 +258,7 @@ public class Process {
         if (!iName.equals("IUnknown"))
         ret += scppVtabl();
         ret += sfooter();
+        ret += cMac();
         return ret;
     }
 }

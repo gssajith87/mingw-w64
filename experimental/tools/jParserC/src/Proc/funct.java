@@ -28,7 +28,7 @@ public class funct {
         }
         iTokens i = new iTokens(tmp.substring(0, open - 1));
         Name = i.getName();
-        Ret = i.getType();
+        Ret = i.getType().replace("__stdcall", "").trim();
     }
 
     public String getName() {

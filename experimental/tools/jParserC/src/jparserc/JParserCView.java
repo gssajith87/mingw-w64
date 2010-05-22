@@ -454,7 +454,8 @@ public class JParserCView extends FrameView {
         //jTextArea2.setText("");
         jTabbedPane1.setSelectedIndex(1);
         proc.proc();
-        String str = proc.getDecl();
+        //String str = proc.getDecl();
+        String str = proc.simple();
         jTextArea2.setText(str);
     }//GEN-LAST:event_jButton1MousePressed
 
