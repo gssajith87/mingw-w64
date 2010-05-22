@@ -10,7 +10,7 @@
 #ifndef _WINSOCKAPI_
 #define _WINSOCKAPI_
 #else
-/*#warning AYBABTU */
+#warning Please include winsock2.h before windows.h
 #endif
 
 #ifndef INCL_WINSOCK_API_TYPEDEFS
