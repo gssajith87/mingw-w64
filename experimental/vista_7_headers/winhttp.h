@@ -1,6 +1,8 @@
 #ifndef _WINHTTP_
 #define _WINHTTP_
 
+#include <oaidl.h>
+
 #pragma push_macro("CALLBACK")
 #pragma push_macro("WINAPI")
 #define CALLBACK __stdcall
@@ -451,10 +453,12 @@ typedef enum WinHttpRequestAutoLogonPolicy {
 typedef LPVOID HINTERNET;
 typedef HINTERNET *LPHINTERNET;
 typedef WORD INTERNET_PORT;
+typedef long HTTPREQUEST_PROXY_SETTING;
+typedef long HTTPREQUEST_SETCREDENTIALS_FLAGS;
 
 typedef void ( CALLBACK *WINHTTP_STATUS_CALLBACK )(HINTERNET hInternet,DWORD_PTR dwContext,DWORD dwInternetStatus,LPVOID lpvStatusInformation,DWORD dwStatusInformationLength);
 
-typdef struct {
+typedef struct {
   DWORD dwMajorVersion;
   DWORD dwMinorVersion;
 } HTTP_VERSION_INFO;
@@ -477,7 +481,7 @@ typedef struct {
   DWORD         dwExtraInfoLength;
 }URL_COMPONENTS, *LPURL_COMPONENTS;
 
-typdef struct {
+typedef struct {
   DWORD_PTR dwResult;
   DWORD     dwError;
 }WINHTTP_ASYNC_RESULT;
@@ -567,6 +571,93 @@ WINBOOL WINAPI WinHttpSetTimeouts(HINTERNET hInternet,int dwResolveTimeout,int d
 WINBOOL WINAPI WinHttpTimeFromSystemTime(const SYSTEMTIME *pst,LPWSTR pwszTime);
 WINBOOL WINAPI WinHttpTimeToSystemTime(LPCWSTR pwszTime,SYSTEMTIME *pst);
 WINBOOL WINAPI WinHttpWriteData(HINTERNET hRequest,LPCVOID lpBuffer,DWORD dwNumberOfBytesToWrite,LPDWORD lpdwNumberOfBytesWritten);
+
+#undef  INTERFACE
+#define INTERFACE IWinHttpRequest
+DECLARE_INTERFACE_(IWinHttpRequest,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IWinHttpRequest methods */
+    STDMETHOD_(HRESULT,SetProxy)(THIS_ HTTPREQUEST_PROXY_SETTING ProxySetting,VARIANT BypassList) PURE;
+    STDMETHOD_(HRESULT,SetCredentials)(THIS_ BSTR UserName,BSTR Password,HTTPREQUEST_SETCREDENTIALS_FLAGS Flags) PURE;
+    STDMETHOD_(HRESULT,Open)(THIS_ BSTR Method,BSTR Url,VARIANT Async) PURE;
+    STDMETHOD_(HRESULT,SetRequestHeader)(THIS_ BSTR Header,BSTR Value) PURE;
+    STDMETHOD_(HRESULT,GetResponseHeader)(THIS_ BSTR Header,BSTR *Value) PURE;
+    STDMETHOD_(HRESULT,Send)(THIS_ VARIANT Body) PURE;
+    STDMETHOD_(HRESULT,get_Status)(THIS_ long *Status) PURE;
+    STDMETHOD_(HRESULT,get_StatusText)(THIS_ BSTR *Status) PURE;
+    STDMETHOD_(HRESULT,get_ResponseText)(THIS_ BSTR *Body) PURE;
+    STDMETHOD_(HRESULT,get_ResponseBody)(THIS_ VARIANT *Body) PURE;
+    STDMETHOD_(HRESULT,get_ResponseStream)(THIS_ VARIANT *Body) PURE;
+    STDMETHOD_(HRESULT,get_Option)(THIS_ WinHttpRequestOption Option,VARIANT *Value) PURE;
+    STDMETHOD_(HRESULT,put_Option)(THIS_ WinHttpRequestOption Option,VARIANT Value) PURE;
+    STDMETHOD_(HRESULT,WaitForResponse)(THIS_ VARIANT_BOOL *Succeeded) PURE;
+    STDMETHOD_(HRESULT,Abort)(THIS) PURE;
+    STDMETHOD_(HRESULT,SetTimeouts)(THIS_ long ResolveTimeout,long ConnectTimeout,long SendTimeout,long ReceiveTimeout) PURE;
+    STDMETHOD_(HRESULT,SetClientCertificate)(THIS_ BSTR ClientCertificate) PURE;
+    STDMETHOD_(HRESULT,SetAutoLogonPolicy)(THIS_ WinHttpRequestAutoLogonPolicy AutoLogonPolicy) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IWinHttpRequest_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IWinHttpRequest_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IWinHttpRequest_Release(This) (This)->pVtbl->Release(This)
+#define IWinHttpRequest_SetProxy(This,ProxySetting,BypassList) (This)->lpVtbl->SetProxy(This,ProxySetting,BypassList)
+#define IWinHttpRequest_SetCredentials(This,UserName,Password,Flags) (This)->lpVtbl->SetCredentials(This,UserName,Password,Flags)
+#define IWinHttpRequest_Open(This,Method,Url,Async) (This)->lpVtbl->Open(This,Method,Url,Async)
+#define IWinHttpRequest_SetRequestHeader(This,Header,Value) (This)->lpVtbl->SetRequestHeader(This,Header,Value)
+#define IWinHttpRequest_GetResponseHeader(This,Header,Value) (This)->lpVtbl->GetResponseHeader(This,Header,Value)
+#define IWinHttpRequest_Send(This,Body) (This)->lpVtbl->Send(This,Body)
+#define IWinHttpRequest_get_Status(This,Status) (This)->lpVtbl->get_Status(This,Status)
+#define IWinHttpRequest_get_StatusText(This,Status) (This)->lpVtbl->get_StatusText(This,Status)
+#define IWinHttpRequest_get_ResponseText(This,Body) (This)->lpVtbl->get_ResponseText(This,Body)
+#define IWinHttpRequest_get_ResponseBody(This,Body) (This)->lpVtbl->get_ResponseBody(This,Body)
+#define IWinHttpRequest_get_ResponseStream(This,Body) (This)->lpVtbl->get_ResponseStream(This,Body)
+#define IWinHttpRequest_get_Option(This,Option,Value) (This)->lpVtbl->get_Option(This,Option,Value)
+#define IWinHttpRequest_put_Option(This,Option,Value) (This)->lpVtbl->put_Option(This,Option,Value)
+#define IWinHttpRequest_WaitForResponse(This,Succeeded) (This)->lpVtbl->WaitForResponse(This,Succeeded)
+#define IWinHttpRequest_Abort() (This)->lpVtbl->Abort(This)
+#define IWinHttpRequest_SetTimeouts(This,ResolveTimeout,ConnectTimeout,SendTimeout,ReceiveTimeout) (This)->lpVtbl->SetTimeouts(This,ResolveTimeout,ConnectTimeout,SendTimeout,ReceiveTimeout)
+#define IWinHttpRequest_SetClientCertificate(This,ClientCertificate) (This)->lpVtbl->SetClientCertificate(This,ClientCertificate)
+#define IWinHttpRequest_SetAutoLogonPolicy(This,AutoLogonPolicy) (This)->lpVtbl->SetAutoLogonPolicy(This,AutoLogonPolicy)
+#endif /*COBJMACROS*/
+
+#undef  INTERFACE
+#define INTERFACE IWinHttpRequestEvents
+DECLARE_INTERFACE_(IWinHttpRequestEvents,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IWinHttpRequestEvents methods */
+    STDMETHOD(OnError)(THIS_ long ErrorNumber,BSTR ErrorDescription) PURE;
+    STDMETHOD_(void OnResponseDataAvailable(,SAFEARRAY)(THIS_ unsigned char) *Data) PURE;
+    STDMETHOD(OnResponseFinished)(THIS) PURE;
+    STDMETHOD(OnResponseStart)(THIS_ long Status,BSTR ContentType) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IWinHttpRequestEvents_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IWinHttpRequestEvents_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IWinHttpRequestEvents_Release(This) (This)->pVtbl->Release(This)
+#define IWinHttpRequestEvents_OnError(This,ErrorNumber,ErrorDescription) (This)->lpVtbl->OnError(This,ErrorNumber,ErrorDescription)
+#define IWinHttpRequestEvents_SAFEARRAY(This,Data) (This)->lpVtbl->SAFEARRAY(This,Data)
+#define IWinHttpRequestEvents_OnResponseFinished() (This)->lpVtbl->OnResponseFinished(This)
+#define IWinHttpRequestEvents_OnResponseStart(This,Status,ContentType) (This)->lpVtbl->OnResponseStart(This,Status,ContentType)
+#endif /*COBJMACROS*/
+
 
 #pragma pop_macro("CALLBACK")
 #pragma pop_macro("WINAPI")
