@@ -9,6 +9,10 @@
 #define __gl_h_
 #define __GL_H__
 
+#if !(defined(WINGDIAPI) && defined(WINAPI))
+#include <windows.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -1033,5 +1037,6 @@ typedef void (WINAPI *PFNGLGETCOLORTABLEPARAMETERFVEXTPROC)(GLenum target,GLenum
 #ifdef __cplusplus
 }
 #endif
-#endif
-#endif
+
+#endif /* __GL_H__ */
+#endif /* __gl_h_  */
