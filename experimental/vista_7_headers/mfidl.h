@@ -323,6 +323,50 @@ typedef struct _MFBYTESTREAM_BUFFERING_PARAMS {
   float                dRate;
 } MFBYTESTREAM_BUFFERING_PARAMS;
 
+typedef struct _MFCLOCK_PROPERTIES {
+  unsigned __int64 qwCorrelationRate;
+  GUID             guidClockId;
+  DWORD            dwClockFlags;
+  unsigned __int64 qwClockFrequency;
+  DWORD            dwClockTolerance;
+  DWORD            dwClockJitter;
+} MFCLOCK_PROPERTIES;
+
+typedef struct _MFINPUTTRUSTAUTHORITY_ACTION {
+  MFPOLICYMANAGER_ACTION Action;
+  BYTE                   *pbTicket;
+  DWORD                  cbTicket;
+} MFINPUTTRUSTAUTHORITY_ACCESS_ACTION;
+
+typedef struct _MFINPUTTRUSTAUTHORITY_ACCESS_PARAMS {
+  DWORD                               dwSize;
+  DWORD                               dwVer;
+  DWORD                               cbSignatureOffset;
+  DWORD                               cbSignatureSize;
+  DWORD                               cbExtensionOffset;
+  DWORD                               cbExtensionSize;
+  DWORD                               cActions;
+  MFINPUTTRUSTAUTHORITY_ACCESS_ACTION rgOutputActions[1];
+} MFINPUTTRUSTAUTHORITY_ACCESS_PARAMS;
+
+typedef struct _MFRR_COMPONENT_HASH_INFO {
+  DWORD ulReason;
+  WCHAR rgHeaderHash[MAX_HASH_LEN];
+  WCHAR rgPublicKeyHash[MAX_HASH_LEN];
+  WCHAR wszName[MAX_PATH];
+} MFRR_COMPONENT_HASH_INFO, *PMFRR_COMPONENT_HASH_INFO;
+
+typedef struct _MFNetCredentialManagerGetParam {
+  HRESULT hrOp;
+  WINBOOL    fAllowLoggedOnUser;
+  WINBOOL    fClearTextPackage;
+  LPCWSTR pszUrl;
+  LPCWSTR pszSite;
+  LPCWSTR pszRealm;
+  LPCWSTR pszPackage;
+  LONG    nRetries;
+} MFNetCredentialManagerGetParam;
+
 #undef  INTERFACE
 #define INTERFACE IMFByteStreamBuffering
 DECLARE_INTERFACE_(IMFByteStreamBuffering,IUnknown)

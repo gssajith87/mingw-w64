@@ -69,6 +69,24 @@ DECLARE_INTERFACE_(IMFAsyncCallback,IUnknown)
 #define IMFAsyncCallback_MFInvokeCallback(This,pAsyncResult) (This)->lpVtbl->MFInvokeCallback(This,pAsyncResult)
 #endif /*COBJMACROS*/
 
+#ifdef __cplusplus
+typedef struct tagMFASYNCRESULT : public IMFAsyncResult {
+  OVERLAPPED       overlapped;
+  IMFAsyncCallback *pCallback;
+  HRESULT          hrStatusResult;
+  DWORD            dwBytesTransferred;
+  HANDLE           hEvent;
+} MFASYNCRESULT;
+#endif
+
+typedef struct _MFFOLDDOWN_MATRIX {
+  UINT32 cbSize;
+  UINT32 cSrcChannels;
+  UINT32 cDstChannels;
+  UINT32 dwChannelMask;
+  LONG   Coeff[64];
+} MFFOLDDOWN_MATRIX;
+
 typedef void (*MFPERIODICCALLBACK )(IUnknown *pContext);
 HRESULT WINAPI MFAddPeriodicCallback(MFPERIODICCALLBACK Callback,IUnknown *pContext,DWORD *pdwKey);
 HRESULT WINAPI MFRemovePeriodicCallback(DWORD dwKey);

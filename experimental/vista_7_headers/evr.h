@@ -57,7 +57,12 @@ typedef enum  {
   MFVP_MESSAGE_CANCELSTEP            = 0x00000007 
 } MFVP_MESSAGE_TYPE;
 
-
+typedef struct MFVideoNormalizedRect {
+  float left;
+  float top;
+  float right;
+  float bottom;
+} MFVideoNormalizedRect;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 

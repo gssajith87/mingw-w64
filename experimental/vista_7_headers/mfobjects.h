@@ -1,5 +1,5 @@
-#ifndef _INC_EVR
-#define _INC_EVR
+#ifndef _INC_MFOBJECTS
+#define _INC_MFOBJECTS
 #include <oaidl.h>
 
 #if (_WIN32_WINNT >= 0x0600)
@@ -249,6 +249,13 @@ typedef struct _MFARGB {
   BYTE rgbAlpha;
 } MFARGB;
 
+typedef struct __MFAYUVSample {
+  BYTE bCrValue;
+  BYTE bCbValue;
+  BYTE bYValue;
+  BYTE bSampleAlpha8;
+} MFAYUVSample;
+
 #define MF_MEDIATYPE_EQUAL_MAJOR_TYPES          0x00000001
 #define MF_MEDIATYPE_EQUAL_FORMAT_TYPES         0x00000002
 #define MF_MEDIATYPE_EQUAL_FORMAT_DATA          0x00000004
@@ -480,36 +487,6 @@ DECLARE_INTERFACE_(IMFMediaType,IMFAttributes)
     STDMETHOD_(HRESULT,SetUINT64)(THIS_ REFGUID guidKey,UINT64 unValue) PURE;
     STDMETHOD_(HRESULT,SetUnknown)(THIS_ REFGUID guidKey,IUnknown *pUnknown) PURE;
     STDMETHOD_(HRESULT,UnlockStore)(THIS) PURE;
-    STDMETHOD_(HRESULT,Compare)(THIS_ IMFAttributes *pTheirs,MF_ATTRIBUTES_MATCH_TYPE MatchType,WINBOOL *pbResult) PURE;
-    STDMETHOD_(HRESULT,CompareItem)(THIS_ REFGUID guidKey,REFPROPVARIANT Value,WINBOOL *pbResult) PURE;
-    STDMETHOD_(HRESULT,CopyAllItems)(THIS_ IMFAttributes *pDest) PURE;
-    STDMETHOD_(HRESULT,DeleteAllItems)(THIS) PURE;
-    STDMETHOD_(HRESULT,DeleteItem)(THIS_ REFGUID guidKey) PURE;
-    STDMETHOD_(HRESULT,GetAllocatedBlob)(THIS_ REFGUID guidKey,UINT8 **ppBuf,UINT32 *pcbSize) PURE;
-    STDMETHOD_(HRESULT,GetAllocatedString)(THIS_ REFGUID guidKey,LPWSTR *ppwszValue,UINT32 *pcchLength) PURE;
-    STDMETHOD_(HRESULT,GetBlob)(THIS_ REFGUID guidKey,UINT8 *pBuf,UINT32 cbBufSize,UINT32 *pcbBlobSize) PURE;
-    STDMETHOD_(HRESULT,GetBlobSize)(THIS_ REFGUID guidKey,UINT32 *pcbBlobSize) PURE;
-    STDMETHOD_(HRESULT,GetCount)(THIS_ UINT32 *pcItems) PURE;
-    STDMETHOD_(HRESULT,GetDouble)(THIS_ REFGUID guidKey,double *pfValue) PURE;
-    STDMETHOD_(HRESULT,GetGUID)(THIS_ REFGUID guidKey,GUID *pguidValue) PURE;
-    STDMETHOD_(HRESULT,GetItem)(THIS_ REFGUID guidKey,PROPVARIANT *pValue) PURE;
-    STDMETHOD_(HRESULT,GetItemByIndex)(THIS_ UINT32 unIndex,GUID *pguidKey,PROPVARIANT *pValue) PURE;
-    STDMETHOD_(HRESULT,GetItemType)(THIS_ REFGUID guidKey,MF_ATTRIBUTE_TYPE *pType) PURE;
-    STDMETHOD_(HRESULT,GetString)(THIS_ REFGUID guidKey,LPWSTR pwszValue,UINT32 cchBufSize,UINT32 *pcchLength) PURE;
-    STDMETHOD_(HRESULT,GetStringLength)(THIS_ REFGUID guidKey,UINT32 *pcchLength) PURE;
-    STDMETHOD_(HRESULT,GetUINT32)(THIS_ REFGUID guidKey,UINT32 *punValue) PURE;
-    STDMETHOD_(HRESULT,GetUINT64)(THIS_ REFGUID guidKey,UINT64 *punValue) PURE;
-    STDMETHOD_(HRESULT,GetUnknown)(THIS_ REFGUID guidKey,REFIID riid,LPVOID *ppv) PURE;
-    STDMETHOD_(HRESULT,LockStore)(THIS) PURE;
-    STDMETHOD_(HRESULT,SetBlob)(THIS_ REFGUID guidKey,const UINT8 *pBuf,UINT32 cbBufSize) PURE;
-    STDMETHOD_(HRESULT,SetDouble)(THIS_ REFGUID guidKey,double fValue) PURE;
-    STDMETHOD_(HRESULT,SetGUID)(THIS_ REFGUID guidKey,REFGUID guidValue) PURE;
-    STDMETHOD_(HRESULT,SetItem)(THIS_ REFGUID guidKey,REFPROPVARIANT Value) PURE;
-    STDMETHOD_(HRESULT,SetString)(THIS_ REFGUID guidKey,LPCWSTR wszValue) PURE;
-    STDMETHOD_(HRESULT,SetUINT32)(THIS_ REFGUID guidKey,UINT32 unValue) PURE;
-    STDMETHOD_(HRESULT,SetUINT64)(THIS_ REFGUID guidKey,UINT64 unValue) PURE;
-    STDMETHOD_(HRESULT,SetUnknown)(THIS_ REFGUID guidKey,IUnknown *pUnknown) PURE;
-    STDMETHOD_(HRESULT,UnlockStore)(THIS) PURE;
 
     /* IMFMediaType methods */
     STDMETHOD_(HRESULT,FreeRepresentation)(THIS_ GUID guidRepresentation,void *pvRepresentation) PURE;
@@ -524,36 +501,6 @@ DECLARE_INTERFACE_(IMFMediaType,IMFAttributes)
 #define IMFMediaType_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
 #define IMFMediaType_AddRef(This) (This)->pVtbl->AddRef(This)
 #define IMFMediaType_Release(This) (This)->pVtbl->Release(This)
-#define IMFMediaType_Compare(This,pTheirs,MatchType,pbResult) (This)->lpVtbl->Compare(This,pTheirs,MatchType,pbResult)
-#define IMFMediaType_CompareItem(This,guidKey,Value,pbResult) (This)->lpVtbl->CompareItem(This,guidKey,Value,pbResult)
-#define IMFMediaType_CopyAllItems(This,pDest) (This)->lpVtbl->CopyAllItems(This,pDest)
-#define IMFMediaType_DeleteAllItems() (This)->lpVtbl->DeleteAllItems(This)
-#define IMFMediaType_DeleteItem(This,guidKey) (This)->lpVtbl->DeleteItem(This,guidKey)
-#define IMFMediaType_GetAllocatedBlob(This,guidKey,ppBuf,pcbSize) (This)->lpVtbl->GetAllocatedBlob(This,guidKey,ppBuf,pcbSize)
-#define IMFMediaType_GetAllocatedString(This,guidKey,ppwszValue,pcchLength) (This)->lpVtbl->GetAllocatedString(This,guidKey,ppwszValue,pcchLength)
-#define IMFMediaType_GetBlob(This,guidKey,pBuf,cbBufSize,pcbBlobSize) (This)->lpVtbl->GetBlob(This,guidKey,pBuf,cbBufSize,pcbBlobSize)
-#define IMFMediaType_GetBlobSize(This,guidKey,pcbBlobSize) (This)->lpVtbl->GetBlobSize(This,guidKey,pcbBlobSize)
-#define IMFMediaType_GetCount(This,pcItems) (This)->lpVtbl->GetCount(This,pcItems)
-#define IMFMediaType_GetDouble(This,guidKey,pfValue) (This)->lpVtbl->GetDouble(This,guidKey,pfValue)
-#define IMFMediaType_GetGUID(This,guidKey,pguidValue) (This)->lpVtbl->GetGUID(This,guidKey,pguidValue)
-#define IMFMediaType_GetItem(This,guidKey,pValue) (This)->lpVtbl->GetItem(This,guidKey,pValue)
-#define IMFMediaType_GetItemByIndex(This,unIndex,pguidKey,pValue) (This)->lpVtbl->GetItemByIndex(This,unIndex,pguidKey,pValue)
-#define IMFMediaType_GetItemType(This,guidKey,pType) (This)->lpVtbl->GetItemType(This,guidKey,pType)
-#define IMFMediaType_GetString(This,guidKey,pwszValue,cchBufSize,pcchLength) (This)->lpVtbl->GetString(This,guidKey,pwszValue,cchBufSize,pcchLength)
-#define IMFMediaType_GetStringLength(This,guidKey,pcchLength) (This)->lpVtbl->GetStringLength(This,guidKey,pcchLength)
-#define IMFMediaType_GetUINT32(This,guidKey,punValue) (This)->lpVtbl->GetUINT32(This,guidKey,punValue)
-#define IMFMediaType_GetUINT64(This,guidKey,punValue) (This)->lpVtbl->GetUINT64(This,guidKey,punValue)
-#define IMFMediaType_GetUnknown(This,guidKey,riid,ppv) (This)->lpVtbl->GetUnknown(This,guidKey,riid,ppv)
-#define IMFMediaType_LockStore() (This)->lpVtbl->LockStore(This)
-#define IMFMediaType_SetBlob(This,guidKey,pBuf,cbBufSize) (This)->lpVtbl->SetBlob(This,guidKey,pBuf,cbBufSize)
-#define IMFMediaType_SetDouble(This,guidKey,fValue) (This)->lpVtbl->SetDouble(This,guidKey,fValue)
-#define IMFMediaType_SetGUID(This,guidKey,guidValue) (This)->lpVtbl->SetGUID(This,guidKey,guidValue)
-#define IMFMediaType_SetItem(This,guidKey,Value) (This)->lpVtbl->SetItem(This,guidKey,Value)
-#define IMFMediaType_SetString(This,guidKey,wszValue) (This)->lpVtbl->SetString(This,guidKey,wszValue)
-#define IMFMediaType_SetUINT32(This,guidKey,unValue) (This)->lpVtbl->SetUINT32(This,guidKey,unValue)
-#define IMFMediaType_SetUINT64(This,guidKey,unValue) (This)->lpVtbl->SetUINT64(This,guidKey,unValue)
-#define IMFMediaType_SetUnknown(This,guidKey,pUnknown) (This)->lpVtbl->SetUnknown(This,guidKey,pUnknown)
-#define IMFMediaType_UnlockStore() (This)->lpVtbl->UnlockStore(This)
 #define IMFMediaType_Compare(This,pTheirs,MatchType,pbResult) (This)->lpVtbl->Compare(This,pTheirs,MatchType,pbResult)
 #define IMFMediaType_CompareItem(This,guidKey,Value,pbResult) (This)->lpVtbl->CompareItem(This,guidKey,Value,pbResult)
 #define IMFMediaType_CopyAllItems(This,pDest) (This)->lpVtbl->CopyAllItems(This,pDest)
@@ -763,8 +710,6 @@ DECLARE_INTERFACE_(IMFByteStream,IUnknown)
     /* IMFByteStream methods */
     STDMETHOD_(HRESULT,GetParameters)(THIS_ DWORD *pdwFlags,DWORD *pdwQueue) PURE;
     STDMETHOD_(HRESULT,MFInvokeCallback)(THIS_ IMFAsyncResult *pAsyncResult) PURE;
-    STDMETHOD_(HRESULT,GetParameters)(THIS_ DWORD *pdwFlags,DWORD *pdwQueue) PURE;
-    STDMETHOD_(HRESULT,MFInvokeCallback)(THIS_ IMFAsyncResult *pAsyncResult) PURE;
     STDMETHOD_(HRESULT,BeginRead)(THIS_ BYTE *pb,ULONG cb,IMFAsyncCallback *pCallback,IUnknown *punkState) PURE;
     STDMETHOD_(HRESULT,BeginWrite)(THIS_ const BYTE *pb,ULONG cb,IMFAsyncCallback *pCallback,IUnknown *punkState) PURE;
     STDMETHOD_(HRESULT,Close)(THIS) PURE;
@@ -787,8 +732,6 @@ DECLARE_INTERFACE_(IMFByteStream,IUnknown)
 #define IMFByteStream_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
 #define IMFByteStream_AddRef(This) (This)->pVtbl->AddRef(This)
 #define IMFByteStream_Release(This) (This)->pVtbl->Release(This)
-#define IMFByteStream_GetParameters(This,pdwFlags,pdwQueue) (This)->lpVtbl->GetParameters(This,pdwFlags,pdwQueue)
-#define IMFByteStream_MFInvokeCallback(This,pAsyncResult) (This)->lpVtbl->MFInvokeCallback(This,pAsyncResult)
 #define IMFByteStream_GetParameters(This,pdwFlags,pdwQueue) (This)->lpVtbl->GetParameters(This,pdwFlags,pdwQueue)
 #define IMFByteStream_MFInvokeCallback(This,pAsyncResult) (This)->lpVtbl->MFInvokeCallback(This,pAsyncResult)
 #define IMFByteStream_BeginRead(This,pb,cb,pCallback,punkState) (This)->lpVtbl->BeginRead(This,pb,cb,pCallback,punkState)
