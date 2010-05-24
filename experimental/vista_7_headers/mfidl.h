@@ -300,6 +300,172 @@ typedef struct _ASFFlatSynchronisedLyrics {
   DWORD dwLyricsLen;
 } ASF_FLAT_SYNCHRONISED_LYRICS;
 
+typedef struct _MF_TRANSCODE_SINK_INFO {
+  DWORD        dwVideoStreamID;
+  IMFMediaType *pVideoMediaType;
+  DWORD        dwAudioStreamID;
+  IMFMediaType *pAudioMediaType;
+} MF_TRANSCODE_SINK_INFO;
+
+typedef struct _MF_LEAKY_BUCKET_PAIR {
+  DWORD dwBitrate;
+  DWORD msBufferWindow;
+} MF_LEAKY_BUCKET_PAIR;
+
+typedef struct _MFBYTESTREAM_BUFFERING_PARAMS {
+  QWORD                cbTotalFileSize;
+  QWORD                cbPlayableDataSize;
+  MF_LEAKY_BUCKET_PAIR *prgBuckets;
+  DWORD                cBuckets;
+  QWORD                qwNetBufferingTime;
+  QWORD                qwExtraBufferingTimeDuringSeek;
+  QWORD                qwPlayDuration;
+  float                dRate;
+} MFBYTESTREAM_BUFFERING_PARAMS;
+
+#undef  INTERFACE
+#define INTERFACE IMFByteStreamBuffering
+DECLARE_INTERFACE_(IMFByteStreamBuffering,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFByteStreamBuffering methods */
+    STDMETHOD_(HRESULT,EnableBuffering)(THIS_ WINBOOL fEnable) PURE;
+    STDMETHOD_(HRESULT,SetBufferingParams)(THIS_ MFBYTESTREAM_BUFFERING_PARAMS *pParams) PURE;
+    STDMETHOD_(HRESULT,StopBuffering)(THIS) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFByteStreamBuffering_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFByteStreamBuffering_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFByteStreamBuffering_Release(This) (This)->pVtbl->Release(This)
+#define IMFByteStreamBuffering_EnableBuffering(This,fEnable) (This)->lpVtbl->EnableBuffering(This,fEnable)
+#define IMFByteStreamBuffering_SetBufferingParams(This,pParams) (This)->lpVtbl->SetBufferingParams(This,pParams)
+#define IMFByteStreamBuffering_StopBuffering() (This)->lpVtbl->StopBuffering(This)
+#endif /*COBJMACROS*/
+
+#undef  INTERFACE
+#define INTERFACE IMFPresentationDescriptor
+DECLARE_INTERFACE_(IMFPresentationDescriptor,IMFAttributes)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFPresentationDescriptor methods */
+    STDMETHOD_(HRESULT,Compare)(THIS_ IMFAttributes *pTheirs,MF_ATTRIBUTES_MATCH_TYPE MatchType,BOOL *pbResult) PURE;
+    STDMETHOD_(HRESULT,CompareItem)(THIS_ REFGUID guidKey,REFPROPVARIANT Value,BOOL *pbResult) PURE;
+    STDMETHOD_(HRESULT,CopyAllItems)(THIS_ IMFAttributes *pDest) PURE;
+    STDMETHOD_(HRESULT,DeleteAllItems)(THIS) PURE;
+    STDMETHOD_(HRESULT,DeleteItem)(THIS_ REFGUID guidKey) PURE;
+    STDMETHOD_(HRESULT,GetAllocatedBlob)(THIS_ REFGUID guidKey,UINT8 **ppBuf,UINT32 *pcbSize) PURE;
+    STDMETHOD_(HRESULT,GetAllocatedString)(THIS_ REFGUID guidKey,LPWSTR *ppwszValue,UINT32 *pcchLength) PURE;
+    STDMETHOD_(HRESULT,GetBlob)(THIS_ REFGUID guidKey,UINT8 *pBuf,UINT32 cbBufSize,UINT32 *pcbBlobSize) PURE;
+    STDMETHOD_(HRESULT,GetBlobSize)(THIS_ REFGUID guidKey,UINT32 *pcbBlobSize) PURE;
+    STDMETHOD_(HRESULT,GetCount)(THIS_ UINT32 *pcItems) PURE;
+    STDMETHOD_(HRESULT,GetDouble)(THIS_ REFGUID guidKey,double *pfValue) PURE;
+    STDMETHOD_(HRESULT,GetGUID)(THIS_ REFGUID guidKey,GUID *pguidValue) PURE;
+    STDMETHOD_(HRESULT,GetItem)(THIS_ REFGUID guidKey,PROPVARIANT *pValue) PURE;
+    STDMETHOD_(HRESULT,GetItemByIndex)(THIS_ UINT32 unIndex,GUID *pguidKey,PROPVARIANT *pValue) PURE;
+    STDMETHOD_(HRESULT,GetItemType)(THIS_ REFGUID guidKey,MF_ATTRIBUTE_TYPE *pType) PURE;
+    STDMETHOD_(HRESULT,GetString)(THIS_ REFGUID guidKey,LPWSTR pwszValue,UINT32 cchBufSize,UINT32 *pcchLength) PURE;
+    STDMETHOD_(HRESULT,GetStringLength)(THIS_ REFGUID guidKey,UINT32 *pcchLength) PURE;
+    STDMETHOD_(HRESULT,GetUINT32)(THIS_ REFGUID guidKey,UINT32 *punValue) PURE;
+    STDMETHOD_(HRESULT,GetUINT64)(THIS_ REFGUID guidKey,UINT64 *punValue) PURE;
+    STDMETHOD_(HRESULT,GetUnknown)(THIS_ REFGUID guidKey,REFIID riid,LPVOID *ppv) PURE;
+    STDMETHOD_(HRESULT,LockStore)(THIS) PURE;
+    STDMETHOD_(HRESULT,SetBlob)(THIS_ REFGUID guidKey,const UINT8 *pBuf,UINT32 cbBufSize) PURE;
+    STDMETHOD_(HRESULT,SetDouble)(THIS_ REFGUID guidKey,double fValue) PURE;
+    STDMETHOD_(HRESULT,SetGUID)(THIS_ REFGUID guidKey,REFGUID guidValue) PURE;
+    STDMETHOD_(HRESULT,SetItem)(THIS_ REFGUID guidKey,REFPROPVARIANT Value) PURE;
+    STDMETHOD_(HRESULT,SetString)(THIS_ REFGUID guidKey,LPCWSTR wszValue) PURE;
+    STDMETHOD_(HRESULT,SetUINT32)(THIS_ REFGUID guidKey,UINT32 unValue) PURE;
+    STDMETHOD_(HRESULT,SetUINT64)(THIS_ REFGUID guidKey,UINT64 unValue) PURE;
+    STDMETHOD_(HRESULT,SetUnknown)(THIS_ REFGUID guidKey,IUnknown *pUnknown) PURE;
+    STDMETHOD_(HRESULT,UnlockStore)(THIS) PURE;
+    STDMETHOD_(HRESULT,Clone)(THIS_ IMFPresentationDescriptor **ppPresentationDescriptor) PURE;
+    STDMETHOD_(HRESULT,DeselectStream)(THIS_ DWORD dwDescriptorIndex) PURE;
+    STDMETHOD_(HRESULT,GetStreamDescriptorByIndex)(THIS_ DWORD dwIndex,BOOL *pfSelected,IMFStreamDescriptor **ppDescriptor) PURE;
+    STDMETHOD_(HRESULT,GetStreamDescriptorCount)(THIS_ DWORD *pdwDescriptorCount) PURE;
+    STDMETHOD_(HRESULT,SelectStream)(THIS_ DWORD dwDescriptorIndex) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFPresentationDescriptor_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFPresentationDescriptor_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFPresentationDescriptor_Release(This) (This)->pVtbl->Release(This)
+#define IMFPresentationDescriptor_Compare(This,pTheirs,MatchType,pbResult) (This)->lpVtbl->Compare(This,pTheirs,MatchType,pbResult)
+#define IMFPresentationDescriptor_CompareItem(This,guidKey,Value,pbResult) (This)->lpVtbl->CompareItem(This,guidKey,Value,pbResult)
+#define IMFPresentationDescriptor_CopyAllItems(This,pDest) (This)->lpVtbl->CopyAllItems(This,pDest)
+#define IMFPresentationDescriptor_DeleteAllItems() (This)->lpVtbl->DeleteAllItems(This)
+#define IMFPresentationDescriptor_DeleteItem(This,guidKey) (This)->lpVtbl->DeleteItem(This,guidKey)
+#define IMFPresentationDescriptor_GetAllocatedBlob(This,guidKey,ppBuf,pcbSize) (This)->lpVtbl->GetAllocatedBlob(This,guidKey,ppBuf,pcbSize)
+#define IMFPresentationDescriptor_GetAllocatedString(This,guidKey,ppwszValue,pcchLength) (This)->lpVtbl->GetAllocatedString(This,guidKey,ppwszValue,pcchLength)
+#define IMFPresentationDescriptor_GetBlob(This,guidKey,pBuf,cbBufSize,pcbBlobSize) (This)->lpVtbl->GetBlob(This,guidKey,pBuf,cbBufSize,pcbBlobSize)
+#define IMFPresentationDescriptor_GetBlobSize(This,guidKey,pcbBlobSize) (This)->lpVtbl->GetBlobSize(This,guidKey,pcbBlobSize)
+#define IMFPresentationDescriptor_GetCount(This,pcItems) (This)->lpVtbl->GetCount(This,pcItems)
+#define IMFPresentationDescriptor_GetDouble(This,guidKey,pfValue) (This)->lpVtbl->GetDouble(This,guidKey,pfValue)
+#define IMFPresentationDescriptor_GetGUID(This,guidKey,pguidValue) (This)->lpVtbl->GetGUID(This,guidKey,pguidValue)
+#define IMFPresentationDescriptor_GetItem(This,guidKey,pValue) (This)->lpVtbl->GetItem(This,guidKey,pValue)
+#define IMFPresentationDescriptor_GetItemByIndex(This,unIndex,pguidKey,pValue) (This)->lpVtbl->GetItemByIndex(This,unIndex,pguidKey,pValue)
+#define IMFPresentationDescriptor_GetItemType(This,guidKey,pType) (This)->lpVtbl->GetItemType(This,guidKey,pType)
+#define IMFPresentationDescriptor_GetString(This,guidKey,pwszValue,cchBufSize,pcchLength) (This)->lpVtbl->GetString(This,guidKey,pwszValue,cchBufSize,pcchLength)
+#define IMFPresentationDescriptor_GetStringLength(This,guidKey,pcchLength) (This)->lpVtbl->GetStringLength(This,guidKey,pcchLength)
+#define IMFPresentationDescriptor_GetUINT32(This,guidKey,punValue) (This)->lpVtbl->GetUINT32(This,guidKey,punValue)
+#define IMFPresentationDescriptor_GetUINT64(This,guidKey,punValue) (This)->lpVtbl->GetUINT64(This,guidKey,punValue)
+#define IMFPresentationDescriptor_GetUnknown(This,guidKey,riid,ppv) (This)->lpVtbl->GetUnknown(This,guidKey,riid,ppv)
+#define IMFPresentationDescriptor_LockStore() (This)->lpVtbl->LockStore(This)
+#define IMFPresentationDescriptor_SetBlob(This,guidKey,pBuf,cbBufSize) (This)->lpVtbl->SetBlob(This,guidKey,pBuf,cbBufSize)
+#define IMFPresentationDescriptor_SetDouble(This,guidKey,fValue) (This)->lpVtbl->SetDouble(This,guidKey,fValue)
+#define IMFPresentationDescriptor_SetGUID(This,guidKey,guidValue) (This)->lpVtbl->SetGUID(This,guidKey,guidValue)
+#define IMFPresentationDescriptor_SetItem(This,guidKey,Value) (This)->lpVtbl->SetItem(This,guidKey,Value)
+#define IMFPresentationDescriptor_SetString(This,guidKey,wszValue) (This)->lpVtbl->SetString(This,guidKey,wszValue)
+#define IMFPresentationDescriptor_SetUINT32(This,guidKey,unValue) (This)->lpVtbl->SetUINT32(This,guidKey,unValue)
+#define IMFPresentationDescriptor_SetUINT64(This,guidKey,unValue) (This)->lpVtbl->SetUINT64(This,guidKey,unValue)
+#define IMFPresentationDescriptor_SetUnknown(This,guidKey,pUnknown) (This)->lpVtbl->SetUnknown(This,guidKey,pUnknown)
+#define IMFPresentationDescriptor_UnlockStore() (This)->lpVtbl->UnlockStore(This)
+#define IMFPresentationDescriptor_Clone(This,ppPresentationDescriptor) (This)->lpVtbl->Clone(This,ppPresentationDescriptor)
+#define IMFPresentationDescriptor_DeselectStream(This,dwDescriptorIndex) (This)->lpVtbl->DeselectStream(This,dwDescriptorIndex)
+#define IMFPresentationDescriptor_GetStreamDescriptorByIndex(This,dwIndex,pfSelected,ppDescriptor) (This)->lpVtbl->GetStreamDescriptorByIndex(This,dwIndex,pfSelected,ppDescriptor)
+#define IMFPresentationDescriptor_GetStreamDescriptorCount(This,pdwDescriptorCount) (This)->lpVtbl->GetStreamDescriptorCount(This,pdwDescriptorCount)
+#define IMFPresentationDescriptor_SelectStream(This,dwDescriptorIndex) (This)->lpVtbl->SelectStream(This,dwDescriptorIndex)
+#endif /*COBJMACROS*/
+
+#if (_WIN32_WINNT >= 0x0601)
+#undef  INTERFACE
+#define INTERFACE IMFByteStreamCacheControl
+DECLARE_INTERFACE_(IMFByteStreamCacheControl,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFByteStreamCacheControl methods */
+    STDMETHOD_(HRESULT,StopBackgroundTransfer)(THIS) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFByteStreamCacheControl_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFByteStreamCacheControl_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFByteStreamCacheControl_Release(This) (This)->pVtbl->Release(This)
+#define IMFByteStreamCacheControl_StopBackgroundTransfer() (This)->lpVtbl->StopBackgroundTransfer(This)
+#endif /*COBJMACROS*/
+#endif /*(_WIN32_WINNT >= 0x0601)*/
+
 HRESULT WINAPI CreateNamedPropertyStore(INamedPropertyStore **ppStore);
 HRESULT WINAPI CreatePropertyStore(IPropertyStore **ppStore);
 
@@ -329,8 +495,6 @@ HRESULT WINAPI MFCreateASFMultiplexer(IMFASFMultiplexer **ppIMultiplexer);
 HRESULT WINAPI MFCreateASFProfile(IMFASFProfile **ppIProfile);
 HRESULT WINAPI MFCreateASFProfileFromPresentationDescriptor(IMFPresentationDescriptor *pIPD,IMFASFProfile **ppIProfile);
 HRESULT WINAPI MFCreateASFSplitter(IMFASFSplitter **ppISplitter);
-
-
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_MFIDL*/

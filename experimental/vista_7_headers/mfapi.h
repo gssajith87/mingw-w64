@@ -1,5 +1,6 @@
 #ifndef _INC_MFAPI
 #define _INC_MFAPI
+#include <mfidl.h>
 
 #if (_WIN32_WINNT >= 0x0600)
 
@@ -43,6 +44,31 @@ typedef enum _MFWaveFormatExConvertFlags {
   MFWaveFormatExConvertFlag_ForceExtensible   = 1 
 } MFWaveFormatExConvertFlags;
 
+#undef  INTERFACE
+#define INTERFACE IMFAsyncCallback
+DECLARE_INTERFACE_(IMFAsyncCallback,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFAsyncCallback methods */
+    STDMETHOD_(HRESULT,GetParameters)(THIS_ DWORD *pdwFlags,DWORD *pdwQueue) PURE;
+    STDMETHOD_(HRESULT,MFInvokeCallback)(THIS_ IMFAsyncResult *pAsyncResult) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFAsyncCallback_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFAsyncCallback_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFAsyncCallback_Release(This) (This)->pVtbl->Release(This)
+#define IMFAsyncCallback_GetParameters(This,pdwFlags,pdwQueue) (This)->lpVtbl->GetParameters(This,pdwFlags,pdwQueue)
+#define IMFAsyncCallback_MFInvokeCallback(This,pAsyncResult) (This)->lpVtbl->MFInvokeCallback(This,pAsyncResult)
+#endif /*COBJMACROS*/
+
 typedef void (*MFPERIODICCALLBACK )(IUnknown *pContext);
 HRESULT WINAPI MFAddPeriodicCallback(MFPERIODICCALLBACK Callback,IUnknown *pContext,DWORD *pdwKey);
 HRESULT WINAPI MFRemovePeriodicCallback(DWORD dwKey);
@@ -63,8 +89,20 @@ HRESULT WINAPI MFConvertColorInfoToDXVA(DWORD *pdwToDXVA,const MFVIDEOFORMAT *pF
 HRESULT WINAPI MFConvertFromFP16Array(float *pDest,const WORD *pSrc,DWORD dwCount);
 HRESULT WINAPI MFConvertToFP16Array(WORD *pDest,const float *pSrc,DWORD dwCount);
 HRESULT WINAPI MFCopyImage(BYTE *pDest,LONG lDestStride,const BYTE *pSrc,LONG lSrcStride,DWORD dwWidthInBytes,DWORD dwLines);
+HRESULT WINAPI MFCreateSample(IMFSample **ppIMFSample);
+HRESULT WINAPI MFCreateMemoryBuffer(DWORD cbMaxLength,IMFMediaBuffer **ppBuffer);
+HRESULT WINAPI MFCreateMediaBufferWrapper(IMFMediaBuffer *pBuffer,DWORD cbOffset,DWORD dwLength,IMFMediaBuffer **ppBuffer);
+HRESULT WINAPI MFCreateDXSurfaceBuffer(REFIID riid,IUnknown *punkSurface,BOOL fBottomUpWhenLinear,IMFMediaBuffer **ppBuffer);
+HRESULT WINAPI MFCreateAsyncResult(IUnknown *punkObject,IMFAsyncCallback *pCallback,IUnknown *punkState,IMFAsyncResult **ppAsyncResult);
+HRESULT WINAPI MFCreateFile(MF_FILE_ACCESSMODE AccessMode,MF_FILE_OPENMODE OpenMode,MF_FILE_FLAGS fFlags,LPCWSTR pwszFileURL,IMFByteStream **ppIByteStream);
+HRESULT WINAPI MFCreateTempFile(MF_FILE_ACCESSMODE AccessMode,MF_FILE_OPENMODE OpenMode,MF_FILE_FLAGS fFlags,IMFByteStream **ppIByteStream);
 
-
+HRESULT WINAPI MFShutdown(void);
+#ifndef __cplusplus
+HRESULT WINAPI MFStartup(ULONG Version,DWORD dwFlags);
+#else
+extern "C" HRESULT WINAPI MFStartup(ULONG Version,DWORD dwFlags = MFSTARTUP_FULL);
+#endif
 
 #endif  /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_MFAPI*/

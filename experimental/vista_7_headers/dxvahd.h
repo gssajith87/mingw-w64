@@ -3,6 +3,10 @@
 
 #if (_WIN32_WINNT >= 0x0601)
 
+#ifndef CALLBACK
+#define CALLBACK __stdcall
+#endif
+
   typedef enum _DXVAHD_ALPHA_FILL_MODE {
     DXVAHD_ALPHA_FILL_MODE_OPAQUE          = 0,
     DXVAHD_ALPHA_FILL_MODE_BACKGROUND      = 1,
