@@ -291,6 +291,7 @@ extern int WINAPI __WSAFDIsSet(SOCKET,fd_set *);
 #define AF_MAX 32
 #endif
 
+#define _SS_MAXSIZE 128
 #define _SS_ALIGNSIZE (8)
 
 #define _SS_PAD1SIZE (_SS_ALIGNSIZE - sizeof (short))
