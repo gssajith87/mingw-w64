@@ -49,7 +49,7 @@ GCC_ADA ?= N
 ########################################
 GMP_VERSION ?= 5.0.1
 MPFR_VERSION ?= 2.4.2
-MPC_VERSION ?= 0.8.1
+MPC_VERSION ?= 0.8.2
 PPL_VERSION ?= 0.10.2
 CLOOG_VERSION ?= 0.15.9
 MINGW_BRANCH ?= trunk
