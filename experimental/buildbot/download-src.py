@@ -15,8 +15,8 @@ minute if the download attempt results in a HTTP 404 (because the SourceForge
 mirrors may not have updated yet).  This script does not have useful progress
 reporting.  Instead, it prints a character once every fifteen seconds to make
 sure buildbot will not kill it while waiting.  The download will be attempted
-ten times starting with the first response which was not a HTTP 404, at forty
-second intervals.
+five times starting with the first response which was not a HTTP 404, at five
+minute intervals.
 
 Usage:
   %s <url> <destination>
@@ -32,8 +32,8 @@ will be overwritten.
 PROGRESS_INTERVAL = 15 # number of seconds between progress indicator display
 RETRIES_404 = 30       # number of attempts for 404 errors
 DELAY_404 = 60         # number of seconds to wait between retries due to 404
-RETRIES_OTHER = 10     # number of attempts for other errors
-DELAY_OTHER = 40       # number of seconds between retries of non-404 reasons
+RETRIES_OTHER = 5      # number of attempts for other errors
+DELAY_OTHER = 5 * 60   # number of seconds between retries of non-404 reasons
 
 import os
 import re
@@ -126,8 +126,7 @@ def main(argv):
           else:
             local_size = 0
           if remote_size != local_size:
-            raise IOError,
-                  "download incomplete (%s/%s bytes)" % (local_size, remote_size)
+            raise IOError, "download incomplete (%s/%s bytes)" % (local_size, remote_size)
         print "...Done"
         return 0
         break
