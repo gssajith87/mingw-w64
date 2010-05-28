@@ -15,7 +15,7 @@ minute if the download attempt results in a HTTP 404 (because the SourceForge
 mirrors may not have updated yet).  This script does not have useful progress
 reporting.  Instead, it prints a character once every fifteen seconds to make
 sure buildbot will not kill it while waiting.  The download will be attempted
-three times starting with the first response which was not a HTTP 404, at ten
+ten times starting with the first response which was not a HTTP 404, at forty
 second intervals.
 
 Usage:
@@ -32,9 +32,10 @@ will be overwritten.
 PROGRESS_INTERVAL = 15 # number of seconds between progress indicator display
 RETRIES_404 = 30       # number of attempts for 404 errors
 DELAY_404 = 60         # number of seconds to wait between retries due to 404
-RETRIES_OTHER = 3      # number of attempts for other errors
-DELAY_OTHER = 10       # number of seconds between retries of non-404 reasons
+RETRIES_OTHER = 10     # number of attempts for other errors
+DELAY_OTHER = 40       # number of seconds between retries of non-404 reasons
 
+import os
 import re
 import sys
 import threading
@@ -118,6 +119,15 @@ def main(argv):
       try:
         opener = CustomURLopener(not_found_tries=RETRIES_404, not_found_delay=DELAY_404)
         (filename, headers) = opener.retrieve(url, dest)
+        if 'Content-Length' in headers:
+          remote_size = int(headers['Content-Length'])
+          if os.path.exists(filename):
+            local_size = os.path.getsize(filename)
+          else:
+            local_size = 0
+          if remote_size != local_size:
+            raise IOError,
+                  "download incomplete (%s/%s bytes)" % (local_size, remote_size)
         print "...Done"
         return 0
         break
@@ -126,7 +136,9 @@ def main(argv):
           # the fact that we got 404 means we shouldn't continue
           break
         else:
-          retry = "[try %d of %d%s]" % (attempt, retry_count, attempt < retry_count and " - retrying" or "")
+          retry = "[try %d of %d%s]" % (attempt,
+                                        retry_count,
+                                        attempt < retry_count and " - retrying" or "")
           if error.args[0] == 'http error':
             print "HTTP Error %d: %s %s" % (error.args[1], error.args[2], retry)
           else: 
