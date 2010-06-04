@@ -539,6 +539,103 @@ DECLARE_INTERFACE_(IMFMediaType,IMFAttributes)
 #endif /*COBJMACROS*/
 
 #undef  INTERFACE
+#define INTERFACE IMFAudioMediaType
+DECLARE_INTERFACE_(IMFAudioMediaType,IMFAudioMediaType)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+	/* IMFAttributes methods */
+    STDMETHOD_(HRESULT,Compare)(THIS_ IMFAttributes *pTheirs,MF_ATTRIBUTES_MATCH_TYPE MatchType,WINBOOL *pbResult) PURE;
+    STDMETHOD_(HRESULT,CompareItem)(THIS_ REFGUID guidKey,REFPROPVARIANT Value,WINBOOL *pbResult) PURE;
+    STDMETHOD_(HRESULT,CopyAllItems)(THIS_ IMFAttributes *pDest) PURE;
+    STDMETHOD_(HRESULT,DeleteAllItems)(THIS) PURE;
+    STDMETHOD_(HRESULT,DeleteItem)(THIS_ REFGUID guidKey) PURE;
+    STDMETHOD_(HRESULT,GetAllocatedBlob)(THIS_ REFGUID guidKey,UINT8 **ppBuf,UINT32 *pcbSize) PURE;
+    STDMETHOD_(HRESULT,GetAllocatedString)(THIS_ REFGUID guidKey,LPWSTR *ppwszValue,UINT32 *pcchLength) PURE;
+    STDMETHOD_(HRESULT,GetBlob)(THIS_ REFGUID guidKey,UINT8 *pBuf,UINT32 cbBufSize,UINT32 *pcbBlobSize) PURE;
+    STDMETHOD_(HRESULT,GetBlobSize)(THIS_ REFGUID guidKey,UINT32 *pcbBlobSize) PURE;
+    STDMETHOD_(HRESULT,GetCount)(THIS_ UINT32 *pcItems) PURE;
+    STDMETHOD_(HRESULT,GetDouble)(THIS_ REFGUID guidKey,double *pfValue) PURE;
+    STDMETHOD_(HRESULT,GetGUID)(THIS_ REFGUID guidKey,GUID *pguidValue) PURE;
+    STDMETHOD_(HRESULT,GetItem)(THIS_ REFGUID guidKey,PROPVARIANT *pValue) PURE;
+    STDMETHOD_(HRESULT,GetItemByIndex)(THIS_ UINT32 unIndex,GUID *pguidKey,PROPVARIANT *pValue) PURE;
+    STDMETHOD_(HRESULT,GetItemType)(THIS_ REFGUID guidKey,MF_ATTRIBUTE_TYPE *pType) PURE;
+    STDMETHOD_(HRESULT,GetString)(THIS_ REFGUID guidKey,LPWSTR pwszValue,UINT32 cchBufSize,UINT32 *pcchLength) PURE;
+    STDMETHOD_(HRESULT,GetStringLength)(THIS_ REFGUID guidKey,UINT32 *pcchLength) PURE;
+    STDMETHOD_(HRESULT,GetUINT32)(THIS_ REFGUID guidKey,UINT32 *punValue) PURE;
+    STDMETHOD_(HRESULT,GetUINT64)(THIS_ REFGUID guidKey,UINT64 *punValue) PURE;
+    STDMETHOD_(HRESULT,GetUnknown)(THIS_ REFGUID guidKey,REFIID riid,LPVOID *ppv) PURE;
+    STDMETHOD_(HRESULT,LockStore)(THIS) PURE;
+    STDMETHOD_(HRESULT,SetBlob)(THIS_ REFGUID guidKey,const UINT8 *pBuf,UINT32 cbBufSize) PURE;
+    STDMETHOD_(HRESULT,SetDouble)(THIS_ REFGUID guidKey,double fValue) PURE;
+    STDMETHOD_(HRESULT,SetGUID)(THIS_ REFGUID guidKey,REFGUID guidValue) PURE;
+    STDMETHOD_(HRESULT,SetItem)(THIS_ REFGUID guidKey,REFPROPVARIANT Value) PURE;
+    STDMETHOD_(HRESULT,SetString)(THIS_ REFGUID guidKey,LPCWSTR wszValue) PURE;
+    STDMETHOD_(HRESULT,SetUINT32)(THIS_ REFGUID guidKey,UINT32 unValue) PURE;
+    STDMETHOD_(HRESULT,SetUINT64)(THIS_ REFGUID guidKey,UINT64 unValue) PURE;
+    STDMETHOD_(HRESULT,SetUnknown)(THIS_ REFGUID guidKey,IUnknown *pUnknown) PURE;
+    STDMETHOD_(HRESULT,UnlockStore)(THIS) PURE;
+
+    /* IMFMediaType methods */
+    STDMETHOD_(HRESULT,FreeRepresentation)(THIS_ GUID guidRepresentation,void *pvRepresentation) PURE;
+    STDMETHOD_(HRESULT,GetMajorType)(THIS_ GUID *pguidMajorType) PURE;
+    STDMETHOD_(HRESULT,GetRepresentation)(THIS_ GUID guidRepresentation,void **ppvRepresentation) PURE;
+    STDMETHOD_(HRESULT,IsCompressedFormat)(THIS_ WINBOOL *pfCompressed) PURE;
+    STDMETHOD_(HRESULT,IsEqual)(THIS_ IMFMediaType *pIMediaType,DWORD *pdwFlags) PURE;
+
+    /* IMFAudioMediaType methods */
+    STDMETHOD_(const WAVEFORMATEX *,GetAudioFormat)(THIS) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFAudioMediaType_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFAudioMediaType_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFAudioMediaType_Release(This) (This)->pVtbl->Release(This)
+#define IMFAudioMediaType_Compare(This,pTheirs,MatchType,pbResult) (This)->lpVtbl->Compare(This,pTheirs,MatchType,pbResult)
+#define IMFAudioMediaType_CompareItem(This,guidKey,Value,pbResult) (This)->lpVtbl->CompareItem(This,guidKey,Value,pbResult)
+#define IMFAudioMediaType_CopyAllItems(This,pDest) (This)->lpVtbl->CopyAllItems(This,pDest)
+#define IMFAudioMediaType_DeleteAllItems() (This)->lpVtbl->DeleteAllItems(This)
+#define IMFAudioMediaType_DeleteItem(This,guidKey) (This)->lpVtbl->DeleteItem(This,guidKey)
+#define IMFAudioMediaType_GetAllocatedBlob(This,guidKey,ppBuf,pcbSize) (This)->lpVtbl->GetAllocatedBlob(This,guidKey,ppBuf,pcbSize)
+#define IMFAudioMediaType_GetAllocatedString(This,guidKey,ppwszValue,pcchLength) (This)->lpVtbl->GetAllocatedString(This,guidKey,ppwszValue,pcchLength)
+#define IMFAudioMediaType_GetBlob(This,guidKey,pBuf,cbBufSize,pcbBlobSize) (This)->lpVtbl->GetBlob(This,guidKey,pBuf,cbBufSize,pcbBlobSize)
+#define IMFAudioMediaType_GetBlobSize(This,guidKey,pcbBlobSize) (This)->lpVtbl->GetBlobSize(This,guidKey,pcbBlobSize)
+#define IMFAudioMediaType_GetCount(This,pcItems) (This)->lpVtbl->GetCount(This,pcItems)
+#define IMFAudioMediaType_GetDouble(This,guidKey,pfValue) (This)->lpVtbl->GetDouble(This,guidKey,pfValue)
+#define IMFAudioMediaType_GetGUID(This,guidKey,pguidValue) (This)->lpVtbl->GetGUID(This,guidKey,pguidValue)
+#define IMFAudioMediaType_GetItem(This,guidKey,pValue) (This)->lpVtbl->GetItem(This,guidKey,pValue)
+#define IMFAudioMediaType_GetItemByIndex(This,unIndex,pguidKey,pValue) (This)->lpVtbl->GetItemByIndex(This,unIndex,pguidKey,pValue)
+#define IMFAudioMediaType_GetItemType(This,guidKey,pType) (This)->lpVtbl->GetItemType(This,guidKey,pType)
+#define IMFAudioMediaType_GetString(This,guidKey,pwszValue,cchBufSize,pcchLength) (This)->lpVtbl->GetString(This,guidKey,pwszValue,cchBufSize,pcchLength)
+#define IMFAudioMediaType_GetStringLength(This,guidKey,pcchLength) (This)->lpVtbl->GetStringLength(This,guidKey,pcchLength)
+#define IMFAudioMediaType_GetUINT32(This,guidKey,punValue) (This)->lpVtbl->GetUINT32(This,guidKey,punValue)
+#define IMFAudioMediaType_GetUINT64(This,guidKey,punValue) (This)->lpVtbl->GetUINT64(This,guidKey,punValue)
+#define IMFAudioMediaType_GetUnknown(This,guidKey,riid,ppv) (This)->lpVtbl->GetUnknown(This,guidKey,riid,ppv)
+#define IMFAudioMediaType_LockStore() (This)->lpVtbl->LockStore(This)
+#define IMFAudioMediaType_SetBlob(This,guidKey,pBuf,cbBufSize) (This)->lpVtbl->SetBlob(This,guidKey,pBuf,cbBufSize)
+#define IMFAudioMediaType_SetDouble(This,guidKey,fValue) (This)->lpVtbl->SetDouble(This,guidKey,fValue)
+#define IMFAudioMediaType_SetGUID(This,guidKey,guidValue) (This)->lpVtbl->SetGUID(This,guidKey,guidValue)
+#define IMFAudioMediaType_SetItem(This,guidKey,Value) (This)->lpVtbl->SetItem(This,guidKey,Value)
+#define IMFAudioMediaType_SetString(This,guidKey,wszValue) (This)->lpVtbl->SetString(This,guidKey,wszValue)
+#define IMFAudioMediaType_SetUINT32(This,guidKey,unValue) (This)->lpVtbl->SetUINT32(This,guidKey,unValue)
+#define IMFAudioMediaType_SetUINT64(This,guidKey,unValue) (This)->lpVtbl->SetUINT64(This,guidKey,unValue)
+#define IMFAudioMediaType_SetUnknown(This,guidKey,pUnknown) (This)->lpVtbl->SetUnknown(This,guidKey,pUnknown)
+#define IMFAudioMediaType_UnlockStore() (This)->lpVtbl->UnlockStore(This)
+#define IMFAudioMediaType_FreeRepresentation(This,guidRepresentation,pvRepresentation) (This)->lpVtbl->FreeRepresentation(This,guidRepresentation,pvRepresentation)
+#define IMFAudioMediaType_GetMajorType(This,pguidMajorType) (This)->lpVtbl->GetMajorType(This,pguidMajorType)
+#define IMFAudioMediaType_GetRepresentation(This,guidRepresentation,ppvRepresentation) (This)->lpVtbl->GetRepresentation(This,guidRepresentation,ppvRepresentation)
+#define IMFAudioMediaType_IsCompressedFormat(This,pfCompressed) (This)->lpVtbl->IsCompressedFormat(This,pfCompressed)
+#define IMFAudioMediaType_IsEqual(This,pIMediaType,pdwFlags) (This)->lpVtbl->IsEqual(This,pIMediaType,pdwFlags)
+#define IMFAudioMediaType_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#endif /*COBJMACROS*/
+
+#undef  INTERFACE
 #define INTERFACE IMFSample
 DECLARE_INTERFACE_(IMFSample,IMFAttributes)
 {
@@ -697,6 +794,31 @@ DECLARE_INTERFACE_(IMF2DBuffer,IUnknown)
 #endif /*COBJMACROS*/
 
 #undef  INTERFACE
+#define INTERFACE IMFAsyncCallback
+DECLARE_INTERFACE_(IMFAsyncCallback,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFAsyncCallback methods */
+    STDMETHOD_(HRESULT,GetParameters)(THIS_ DWORD *pdwFlags,DWORD *pdwQueue) PURE;
+    STDMETHOD_(HRESULT,Invoke)(THIS_ IMFAsyncResult *pAsyncResult) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFAsyncCallback_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFAsyncCallback_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFAsyncCallback_Release(This) (This)->pVtbl->Release(This)
+#define IMFAsyncCallback_GetParameters(This,pdwFlags,pdwQueue) (This)->lpVtbl->GetParameters(This,pdwFlags,pdwQueue)
+#define IMFAsyncCallback_Invoke(This,pAsyncResult) (This)->lpVtbl->Invoke(This,pAsyncResult)
+#endif /*COBJMACROS*/
+
+#undef  INTERFACE
 #define INTERFACE IMFByteStream
 DECLARE_INTERFACE_(IMFByteStream,IUnknown)
 {
@@ -842,7 +964,147 @@ DECLARE_INTERFACE_(IMFMediaEvent,IMFAttributes)
 #define IMFMediaEvent_GetValue(This,pvValue) (This)->lpVtbl->GetValue(This,pvValue)
 #endif /*COBJMACROS*/
 
-HRESULT Invoke(IMFAsyncResult *pAsyncResult);
+#undef  INTERFACE
+#define INTERFACE IMFVideoMediaType
+DECLARE_INTERFACE_(IMFVideoMediaType,IMFMediaType)
+{
+    BEGIN_INTERFACE
 
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFAttributes methods */
+    STDMETHOD_(HRESULT,Compare)(THIS_ IMFAttributes *pTheirs,MF_ATTRIBUTES_MATCH_TYPE MatchType,WINBOOL *pbResult) PURE;
+    STDMETHOD_(HRESULT,CompareItem)(THIS_ REFGUID guidKey,REFPROPVARIANT Value,WINBOOL *pbResult) PURE;
+    STDMETHOD_(HRESULT,CopyAllItems)(THIS_ IMFAttributes *pDest) PURE;
+    STDMETHOD_(HRESULT,DeleteAllItems)(THIS) PURE;
+    STDMETHOD_(HRESULT,DeleteItem)(THIS_ REFGUID guidKey) PURE;
+    STDMETHOD_(HRESULT,GetAllocatedBlob)(THIS_ REFGUID guidKey,UINT8 **ppBuf,UINT32 *pcbSize) PURE;
+    STDMETHOD_(HRESULT,GetAllocatedString)(THIS_ REFGUID guidKey,LPWSTR *ppwszValue,UINT32 *pcchLength) PURE;
+    STDMETHOD_(HRESULT,GetBlob)(THIS_ REFGUID guidKey,UINT8 *pBuf,UINT32 cbBufSize,UINT32 *pcbBlobSize) PURE;
+    STDMETHOD_(HRESULT,GetBlobSize)(THIS_ REFGUID guidKey,UINT32 *pcbBlobSize) PURE;
+    STDMETHOD_(HRESULT,GetCount)(THIS_ UINT32 *pcItems) PURE;
+    STDMETHOD_(HRESULT,GetDouble)(THIS_ REFGUID guidKey,double *pfValue) PURE;
+    STDMETHOD_(HRESULT,GetGUID)(THIS_ REFGUID guidKey,GUID *pguidValue) PURE;
+    STDMETHOD_(HRESULT,GetItem)(THIS_ REFGUID guidKey,PROPVARIANT *pValue) PURE;
+    STDMETHOD_(HRESULT,GetItemByIndex)(THIS_ UINT32 unIndex,GUID *pguidKey,PROPVARIANT *pValue) PURE;
+    STDMETHOD_(HRESULT,GetItemType)(THIS_ REFGUID guidKey,MF_ATTRIBUTE_TYPE *pType) PURE;
+    STDMETHOD_(HRESULT,GetString)(THIS_ REFGUID guidKey,LPWSTR pwszValue,UINT32 cchBufSize,UINT32 *pcchLength) PURE;
+    STDMETHOD_(HRESULT,GetStringLength)(THIS_ REFGUID guidKey,UINT32 *pcchLength) PURE;
+    STDMETHOD_(HRESULT,GetUINT32)(THIS_ REFGUID guidKey,UINT32 *punValue) PURE;
+    STDMETHOD_(HRESULT,GetUINT64)(THIS_ REFGUID guidKey,UINT64 *punValue) PURE;
+    STDMETHOD_(HRESULT,GetUnknown)(THIS_ REFGUID guidKey,REFIID riid,LPVOID *ppv) PURE;
+    STDMETHOD_(HRESULT,LockStore)(THIS) PURE;
+    STDMETHOD_(HRESULT,SetBlob)(THIS_ REFGUID guidKey,const UINT8 *pBuf,UINT32 cbBufSize) PURE;
+    STDMETHOD_(HRESULT,SetDouble)(THIS_ REFGUID guidKey,double fValue) PURE;
+    STDMETHOD_(HRESULT,SetGUID)(THIS_ REFGUID guidKey,REFGUID guidValue) PURE;
+    STDMETHOD_(HRESULT,SetItem)(THIS_ REFGUID guidKey,REFPROPVARIANT Value) PURE;
+    STDMETHOD_(HRESULT,SetString)(THIS_ REFGUID guidKey,LPCWSTR wszValue) PURE;
+    STDMETHOD_(HRESULT,SetUINT32)(THIS_ REFGUID guidKey,UINT32 unValue) PURE;
+    STDMETHOD_(HRESULT,SetUINT64)(THIS_ REFGUID guidKey,UINT64 unValue) PURE;
+    STDMETHOD_(HRESULT,SetUnknown)(THIS_ REFGUID guidKey,IUnknown *pUnknown) PURE;
+    STDMETHOD_(HRESULT,UnlockStore)(THIS) PURE;
+
+    /* IMFMediaType methods */
+    STDMETHOD_(HRESULT,FreeRepresentation)(THIS_ GUID guidRepresentation,void *pvRepresentation) PURE;
+    STDMETHOD_(HRESULT,GetMajorType)(THIS_ GUID *pguidMajorType) PURE;
+    STDMETHOD_(HRESULT,GetRepresentation)(THIS_ GUID guidRepresentation,void **ppvRepresentation) PURE;
+    STDMETHOD_(HRESULT,IsCompressedFormat)(THIS_ WINBOOL *pfCompressed) PURE;
+    STDMETHOD_(HRESULT,IsEqual)(THIS_ IMFMediaType *pIMediaType,DWORD *pdwFlags) PURE;
+
+    /* IMFVideoMediaType methods */
+    STDMETHOD_(const MFVIDEOFORMAT *,GetVideoFormat)(THIS) PURE;
+    STDMETHOD_(HRESULT,GetVideoRepresentation)(THIS_ GUID guidRepresentation,LPVOID *ppvRepresentation,LONG lStride) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFVideoMediaType_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFVideoMediaType_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFVideoMediaType_Release(This) (This)->pVtbl->Release(This)
+#define IMFVideoMediaType_Compare(This,pTheirs,MatchType,pbResult) (This)->lpVtbl->Compare(This,pTheirs,MatchType,pbResult)
+#define IMFVideoMediaType_CompareItem(This,guidKey,Value,pbResult) (This)->lpVtbl->CompareItem(This,guidKey,Value,pbResult)
+#define IMFVideoMediaType_CopyAllItems(This,pDest) (This)->lpVtbl->CopyAllItems(This,pDest)
+#define IMFVideoMediaType_DeleteAllItems() (This)->lpVtbl->DeleteAllItems(This)
+#define IMFVideoMediaType_DeleteItem(This,guidKey) (This)->lpVtbl->DeleteItem(This,guidKey)
+#define IMFVideoMediaType_GetAllocatedBlob(This,guidKey,ppBuf,pcbSize) (This)->lpVtbl->GetAllocatedBlob(This,guidKey,ppBuf,pcbSize)
+#define IMFVideoMediaType_GetAllocatedString(This,guidKey,ppwszValue,pcchLength) (This)->lpVtbl->GetAllocatedString(This,guidKey,ppwszValue,pcchLength)
+#define IMFVideoMediaType_GetBlob(This,guidKey,pBuf,cbBufSize,pcbBlobSize) (This)->lpVtbl->GetBlob(This,guidKey,pBuf,cbBufSize,pcbBlobSize)
+#define IMFVideoMediaType_GetBlobSize(This,guidKey,pcbBlobSize) (This)->lpVtbl->GetBlobSize(This,guidKey,pcbBlobSize)
+#define IMFVideoMediaType_GetCount(This,pcItems) (This)->lpVtbl->GetCount(This,pcItems)
+#define IMFVideoMediaType_GetDouble(This,guidKey,pfValue) (This)->lpVtbl->GetDouble(This,guidKey,pfValue)
+#define IMFVideoMediaType_GetGUID(This,guidKey,pguidValue) (This)->lpVtbl->GetGUID(This,guidKey,pguidValue)
+#define IMFVideoMediaType_GetItem(This,guidKey,pValue) (This)->lpVtbl->GetItem(This,guidKey,pValue)
+#define IMFVideoMediaType_GetItemByIndex(This,unIndex,pguidKey,pValue) (This)->lpVtbl->GetItemByIndex(This,unIndex,pguidKey,pValue)
+#define IMFVideoMediaType_GetItemType(This,guidKey,pType) (This)->lpVtbl->GetItemType(This,guidKey,pType)
+#define IMFVideoMediaType_GetString(This,guidKey,pwszValue,cchBufSize,pcchLength) (This)->lpVtbl->GetString(This,guidKey,pwszValue,cchBufSize,pcchLength)
+#define IMFVideoMediaType_GetStringLength(This,guidKey,pcchLength) (This)->lpVtbl->GetStringLength(This,guidKey,pcchLength)
+#define IMFVideoMediaType_GetUINT32(This,guidKey,punValue) (This)->lpVtbl->GetUINT32(This,guidKey,punValue)
+#define IMFVideoMediaType_GetUINT64(This,guidKey,punValue) (This)->lpVtbl->GetUINT64(This,guidKey,punValue)
+#define IMFVideoMediaType_GetUnknown(This,guidKey,riid,ppv) (This)->lpVtbl->GetUnknown(This,guidKey,riid,ppv)
+#define IMFVideoMediaType_LockStore() (This)->lpVtbl->LockStore(This)
+#define IMFVideoMediaType_SetBlob(This,guidKey,pBuf,cbBufSize) (This)->lpVtbl->SetBlob(This,guidKey,pBuf,cbBufSize)
+#define IMFVideoMediaType_SetDouble(This,guidKey,fValue) (This)->lpVtbl->SetDouble(This,guidKey,fValue)
+#define IMFVideoMediaType_SetGUID(This,guidKey,guidValue) (This)->lpVtbl->SetGUID(This,guidKey,guidValue)
+#define IMFVideoMediaType_SetItem(This,guidKey,Value) (This)->lpVtbl->SetItem(This,guidKey,Value)
+#define IMFVideoMediaType_SetString(This,guidKey,wszValue) (This)->lpVtbl->SetString(This,guidKey,wszValue)
+#define IMFVideoMediaType_SetUINT32(This,guidKey,unValue) (This)->lpVtbl->SetUINT32(This,guidKey,unValue)
+#define IMFVideoMediaType_SetUINT64(This,guidKey,unValue) (This)->lpVtbl->SetUINT64(This,guidKey,unValue)
+#define IMFVideoMediaType_SetUnknown(This,guidKey,pUnknown) (This)->lpVtbl->SetUnknown(This,guidKey,pUnknown)
+#define IMFVideoMediaType_UnlockStore() (This)->lpVtbl->UnlockStore(This)
+#define IMFVideoMediaType_FreeRepresentation(This,guidRepresentation,pvRepresentation) (This)->lpVtbl->FreeRepresentation(This,guidRepresentation,pvRepresentation)
+#define IMFVideoMediaType_GetMajorType(This,pguidMajorType) (This)->lpVtbl->GetMajorType(This,pguidMajorType)
+#define IMFVideoMediaType_GetRepresentation(This,guidRepresentation,ppvRepresentation) (This)->lpVtbl->GetRepresentation(This,guidRepresentation,ppvRepresentation)
+#define IMFVideoMediaType_IsCompressedFormat(This,pfCompressed) (This)->lpVtbl->IsCompressedFormat(This,pfCompressed)
+#define IMFVideoMediaType_IsEqual(This,pIMediaType,pdwFlags) (This)->lpVtbl->IsEqual(This,pIMediaType,pdwFlags)
+#define IMFVideoMediaType_GetVideoFormat() (This)->lpVtbl->GetVideoFormat(This)
+#define IMFVideoMediaType_GetVideoRepresentation(This,guidRepresentation,ppvRepresentation,lStride) (This)->lpVtbl->GetVideoRepresentation(This,guidRepresentation,ppvRepresentation,lStride)
+#endif /*COBJMACROS*/
+
+#if (_WIN32_WINNT >= 0x0601)
+#undef  INTERFACE
+#define INTERFACE IMFPluginControl
+DECLARE_INTERFACE_(IMFPluginControl,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFPluginControl methods */
+    STDMETHOD_(HRESULT,GetDisabledByIndex)(THIS_ DWORD pluginType,DWORD index,CLSID *clsid) PURE;
+    STDMETHOD_(HRESULT,GetPreferredClsid)(THIS_ DWORD pluginType,LPCWSTR selector,CLSID *clsid) PURE;
+    STDMETHOD_(HRESULT,GetPreferredClsidByIndex)(THIS_ DWORD pluginType,DWORD index,LPWSTR *selector,CLSID *clsid) PURE;
+    STDMETHOD_(HRESULT,IsDisabled)(THIS_ DWORD pluginType,REFCLSID clsid) PURE;
+    STDMETHOD_(HRESULT,SetDisabled)(THIS_ DWORD pluginType,REFCLSID clsid,WINBOOL disabled) PURE;
+    STDMETHOD_(HRESULT,SetPreferredClsid)(THIS_ DWORD pluginType,LPCWSTR selector,const CLSID *clsid) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFPluginControl_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFPluginControl_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFPluginControl_Release(This) (This)->pVtbl->Release(This)
+#define IMFPluginControl_GetDisabledByIndex(This,pluginType,index,clsid) (This)->lpVtbl->GetDisabledByIndex(This,pluginType,index,clsid)
+#define IMFPluginControl_GetPreferredClsid(This,pluginType,selector,clsid) (This)->lpVtbl->GetPreferredClsid(This,pluginType,selector,clsid)
+#define IMFPluginControl_GetPreferredClsidByIndex(This,pluginType,index,selector,clsid) (This)->lpVtbl->GetPreferredClsidByIndex(This,pluginType,index,selector,clsid)
+#define IMFPluginControl_IsDisabled(This,pluginType,clsid) (This)->lpVtbl->IsDisabled(This,pluginType,clsid)
+#define IMFPluginControl_SetDisabled(This,pluginType,clsid,disabled) (This)->lpVtbl->SetDisabled(This,pluginType,clsid,disabled)
+#define IMFPluginControl_SetPreferredClsid(This,pluginType,selector,clsid) (This)->lpVtbl->SetPreferredClsid(This,pluginType,selector,clsid)
+#endif /*COBJMACROS*/
+#endif /*(_WIN32_WINNT >= 0x0601)*/
+
+HRESULT WINAPI Invoke(IMFAsyncResult *pAsyncResult);
+HRESULT WINAPI MFDeserializeAttributesFromStream(IMFAttributes *pAttr,DWORD dwOptions,IStream *pStm);
+HRESULT WINAPI MFDeserializePresentationDescriptor(DWORD cbData,BYTE *pbData,IMFPresentationDescriptor **ppPD);
+HRESULT WINAPI MFGetAttribute2UINT32asUINT64(IMFAttributes *pAttributes,REFGUID guidKey,UINT32 *punHigh32,UINT32 *punLow32);
+HRESULT WINAPI MFSerializeAttributesToStream(IMFAttributes *pAttr,DWORD dwOptions,IStream *pStm);
+#if (_WIN32_WINNT >= 0x0601)
+HRESULT WINAPI MFGetPluginControl(IMFPluginControl **ppPluginControl);
+#endif /*(_WIN32_WINNT >= 0x0601)*/
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_EVR*/

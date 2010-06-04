@@ -597,6 +597,8 @@ DECLARE_INTERFACE_(IMFASFMultiplexer,IUnknown)
 
 HRESULT WINAPI MFCreateASFSplitter(IMFASFSplitter **ppISplitter);
 HRESULT WINAPI MFCreateAttributes(IMFAttributes **ppMFAttributes,UINT32 cInitialSize);
+HRESULT WINAPI MFCreateWMAEncoderActivate(IMFMediaType *pMediaType,IPropertyStore *pEncodingConfigurationProperties,IMFActivate **ppActivate);
+HRESULT WINAPI MFCreateWMVEncoderActivate(IMFMediaType *pMediaType,IPropertyStore *pEncodingConfigurationProperties,IMFActivate **ppActivate);
 
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_WMCONTAINER*/

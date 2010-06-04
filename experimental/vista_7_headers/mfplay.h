@@ -215,6 +215,29 @@ DECLARE_INTERFACE_(IMFPMediaPlayer,IUnknown)
 #define IMFPMediaPlayer_UpdateVideo() (This)->lpVtbl->UpdateVideo(This)
 #endif /*COBJMACROS*/
 
+#undef  INTERFACE
+#define INTERFACE IMFPMediaPlayerCallback
+DECLARE_INTERFACE_(IMFPMediaPlayerCallback,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFPMediaPlayerCallback methods */
+    STDMETHOD(OnMediaPlayerEvent)(THIS_ MFP_EVENT_HEADER *pEventHeader) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFPMediaPlayerCallback_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFPMediaPlayerCallback_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFPMediaPlayerCallback_Release(This) (This)->pVtbl->Release(This)
+#define IMFPMediaPlayerCallback_OnMediaPlayerEvent(This,pEventHeader) (This)->lpVtbl->OnMediaPlayerEvent(This,pEventHeader)
+#endif /*COBJMACROS*/
+
 typedef struct MFP_EVENT_HEADER {
   MFP_EVENT_TYPE        eEventType;
   HRESULT               hrEvent;
@@ -302,7 +325,7 @@ typedef struct MFP_ACQUIRE_USER_CREDENTIAL_EVENT {
 
 typedef UINT32 MFP_CREATION_OPTIONS;
 
-HRESULT MFPCreateMediaPlayer(LPCWSTR pwszURL,BOOL fStartPlayback,MFP_CREATION_OPTIONS creationOptions,IMFPMediaPlayerCallback *pCallback,HWND hWnd,IMFPMediaPlayer **ppMediaPlayer);
+HRESULT WINAPI MFPCreateMediaPlayer(LPCWSTR pwszURL,WINBOOL fStartPlayback,MFP_CREATION_OPTIONS creationOptions,IMFPMediaPlayerCallback *pCallback,HWND hWnd,IMFPMediaPlayer **ppMediaPlayer);
 
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 

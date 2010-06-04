@@ -343,14 +343,13 @@ typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessorCustomRates )(HANDLE hDev
 typedef HRESULT ( CALLBACK *PDXVAHDSW_SetVideoProcessBltState )(HANDLE hVideoProcessor,DXVAHD_BLT_STATE State,UINT DataSize,const void *pData);
 typedef HRESULT ( CALLBACK *PDXVAHDSW_CreateVideoProcessor )(HANDLE hDevice,const GUID *pVPGuid,HANDLE *phVideoProcessor);
 typedef HRESULT ( CALLBACK *PDXVAHDSW_DestroyDevice )(HANDLE hDevice);
-typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessorFilterRange )(HANDLE hDevice,DXVAHD_FILTER Filter,DXVAHD_FILTER_RANGE_DATA *pRange);typedef HRESULT ( CALLBACK *PDXVAHDSW_DestroyVideoProcessor )(HANDLE hVideoProcessor);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessorFilterRange )(HANDLE hDevice,DXVAHD_FILTER Filter,DXVAHD_FILTER_RANGE_DATA *pRange);
+typedef HRESULT ( CALLBACK *PDXVAHDSW_DestroyVideoProcessor )(HANDLE hVideoProcessor);
 typedef HRESULT ( CALLBACK *PDXVAHDSW_VideoProcessBltHD )(HANDLE hVideoProcessor,IDirect3DSurface9 *pOutputSurface,UINT OutputFrame,UINT StreamCount,const DXVAHD_STREAM_DATA *pStreams);
 typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessStreamStatePrivate )(HANDLE hVideoProcessor,UINT StreamNumber,DXVAHD_STREAM_STATE_PRIVATE_DATA *pData);
 typedef HRESULT ( CALLBACK *PDXVAHDSW_SetVideoProcessStreamState )(HANDLE hVideoProcessor,UINT StreamNumber,DXVAHD_STREAM_STATE State,UINT DataSize,const void *pData);
 typedef HRESULT ( CALLBACK *PDXVAHDSW_GetVideoProcessBltStatePrivate )(HANDLE hVideoProcessor,DXVAHD_BLT_STATE_PRIVATE_DATA *pData);
-
 typedef HRESULT ( CALLBACK *PDXVAHDSW_Plugin )(UINT Size,void *pCallbacks);
-
 
 typedef struct _DXVAHDSW_CALLBACKS {
   PDXVAHDSW_CreateDevice                      CreateDevice;
