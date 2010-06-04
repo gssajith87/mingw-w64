@@ -1,3 +1,21 @@
+2010-06-01  Jacek Caban  <jacek@codeweavers.com>
+
+	* include/mscft.idl: New.
+	* include/msctf.h: New.
+	* include/textstor.idl: New.
+	* include/textstor.h: New.
+
+2010-05-28  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* mstcpip.h: Added missing include guard.
+	* af_irda.h: Remove the _WINSOCKAPI_ guarded typedefs and include
+	mingw_inc/_bsd_types.h, instead.
+
+2010-05-25  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* afxres.h: Changed header guard check from _WINDOWS_H, which was
+	a left-over from mingw32, to _INC_WINDOWS which is what we define.
+
 2010-05-23  Ozkan Sezer  <sezeroz@gmail.com>
 
 	* mingw_inc/_socket_types.h: Provide SOCKET type as UINT_PTR in
