@@ -375,9 +375,13 @@ WCHAR *gai_strerrorW(int);
 #ifdef UNICODE
 #define addrinfoEx addrinfoExW
 #define PADDRINFOEX PADDRINFOEXW
+#define GetAddrInfoEx GetAddrInfoExW
+#define FreeAddrInfoEx FreeAddrInfoExW
 #else
 #define addrinfoEx addrinfoExA
 #define PADDRINFOEX PADDRINFOEXA
+#define GetAddrInfoEx GetAddrInfoExA
+#define FreeAddrInfoEx FreeAddrInfoExA
 #endif
 
   typedef struct addrinfoExA {
@@ -411,8 +415,10 @@ WCHAR *gai_strerrorW(int);
 typedef PVOID LOOKUPSERVICE_COMPLETION_ROUTINE; /*reserved*/
 typedef LOOKUPSERVICE_COMPLETION_ROUTINE *LPLOOKUPSERVICE_COMPLETION_ROUTINE;
 
-  int WSAAPI GetAddrInfoExA(LPCSTR pName,LPCSTR pServiceName,DWORD dwNameSpace,LPGUID lpNspId,const ADDRINFOEXA *pHints,PADDRINFOEXA *ppResult,struct timeval *timeout,LPOVERLAPPED lpOverlapped,LPLOOKUPSERVICE_COMPLETION_ROUTINE lpCompletionRoutine,LPHANDLE lpNameHandle);
+int WSAAPI GetAddrInfoExA(LPCSTR pName,LPCSTR pServiceName,DWORD dwNameSpace,LPGUID lpNspId,const ADDRINFOEXA *pHints,PADDRINFOEXA *ppResult,struct timeval *timeout,LPOVERLAPPED lpOverlapped,LPLOOKUPSERVICE_COMPLETION_ROUTINE lpCompletionRoutine,LPHANDLE lpNameHandle);
 int WSAAPI GetAddrInfoExW(LPCWSTR pName,LPCWSTR pServiceName,DWORD dwNameSpace,LPGUID lpNspId,const ADDRINFOEXW *pHints,PADDRINFOEXW *ppResult,struct timeval *timeout,LPOVERLAPPED lpOverlapped,LPLOOKUPSERVICE_COMPLETION_ROUTINE lpCompletionRoutine,LPHANDLE lpNameHandle);
+void WSAAPI FreeAddrInfoExA(PADDRINFOEXA pAddrInfo);
+void WSAAPI FreeAddrInfoExW(PADDRINFOEXW pAddrInfo);
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
