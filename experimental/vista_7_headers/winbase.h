@@ -3045,7 +3045,7 @@ WINBASEAPI HANDLE WINAPI OpenPrivateNamespaceA(LPVOID lpBoundaryDescriptor,LPCST
 WINBASEAPI HANDLE WINAPI OpenPrivateNamespaceW(LPVOID lpBoundaryDescriptor,LPCWSTR lpAliasPrefix);
 WINBASEAPI VOID WINAPI DeleteBoundaryDescriptor(HANDLE BoundaryDescriptor);
 WINBASEAPI HANDLE WINAPI CreatePrivateNamespaceA(LPSECURITY_ATTRIBUTES lpPrivateNamespaceAttributes,LPVOID lpBoundaryDescriptor,LPCSTR lpAliasPrefix);
-WINBASEAPI HANDLE WINAPI CreatePrivateNamespaceAWLPSECURITY_ATTRIBUTES lpPrivateNamespaceAttributes,LPVOID lpBoundaryDescriptor,LPCWSTR lpAliasPrefix);
+WINBASEAPI HANDLE WINAPI CreatePrivateNamespaceW(LPSECURITY_ATTRIBUTES lpPrivateNamespaceAttributes,LPVOID lpBoundaryDescriptor,LPCWSTR lpAliasPrefix);
 
 typedef BOOLEAN CALLBACK (*PSECURE_MEMORY_CACHE_CALLBACK) (PVOID Addr,SIZE_T Range);
 
