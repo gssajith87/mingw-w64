@@ -20,7 +20,9 @@
 #endif
 #endif
 
-typedef unsigned long POINTER_64; // FIXME! HACK!!!
+#ifndef POINTER_64
+#define POINTER_64  __ptr64
+#endif
 
 /* Pseudo Modifiers for Input Parameters */
 
@@ -66,13 +68,22 @@ typedef unsigned long POINTER_64; // FIXME! HACK!!!
 /* NULL/NULL64 */
 #ifndef NULL
 #ifdef __cplusplus
+#ifndef _WIN64
 #define NULL    0
-#define NULL64  0
+#else
+#define NULL    0LL
+#endif  /* W64 */
 #else
 #define NULL    ((void *)0)
-#define NULL64  ((void * POINTER_64)0)
 #endif
 #endif /* NULL */
+#ifndef NULL64
+#ifdef __cplusplus
+#define NULL64  0LL
+#else
+#define NULL64  ((void * POINTER_64)0)
+#endif
+#endif /* NULL64 */
 
 
 //
@@ -262,8 +273,7 @@ typedef unsigned long POINTER_64; // FIXME! HACK!!!
 
 /* Void Pointers */
 typedef void *PVOID;
-//typedef void * POINTER_64 PVOID64;
-typedef PVOID PVOID64; // FIXME!
+typedef void * POINTER_64 PVOID64;
 
 /* Handle Type */
 #ifdef STRICT
