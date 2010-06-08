@@ -5721,6 +5721,14 @@ extern "C" {
   WINUSERAPI UINT WINAPI GetRawInputDeviceList(PRAWINPUTDEVICELIST pRawInputDeviceList,PUINT puiNumDevices,UINT cbSize);
   WINUSERAPI LRESULT WINAPI DefRawInputProc(PRAWINPUT *paRawInput,INT nInput,UINT cbSizeHeader);
 
+#if (_WIN32_WINNT >= 0x0600)
+typedef struct _AUDIODESCRIPTION {
+  UINT cbSize;
+  BOOL Enabled;
+  LCID Locale;
+} AUDIODESCRIPTION, *PAUDIODESCRIPTION;
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /* NOUSER */
 
 #ifdef __cplusplus

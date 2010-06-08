@@ -1,0 +1,24 @@
+#ifndef _INC_NDATTRIB
+#define _INC_NDATTRIB
+#if (_WIN32_WINNT >= 0x0600)
+
+typedef enum tagATTRIBUTE_TYPE {
+  AT_INVALID        = 0,
+  AT_BOOLEAN,
+  AT_INT8,
+  AT_UINT8,
+  AT_INT16,
+  AT_UINT16,
+  AT_INT32,
+  AT_UINT32,
+  AT_INT64,
+  AT_UINT64,
+  AT_STRING,
+  AT_GUID,
+  AT_LIFE_TIME,
+  AT_SOCKADDR,
+  AT_OCTET_STRING 
+} ATTRIBUTE_TYPE;
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+#endif /*_INC_NDATTRIB*/

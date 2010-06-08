@@ -3,12 +3,12 @@
 
 #if (_WIN32_WINNT >= 0x0600)
 
-  typedef enum  {
+  typedef enum AlgorithmFlags {
     AlgorithmFlagsNone   = 0x00000000,
     AlgorithmFlagsWrap   = 0x00000001 
   } AlgorithmFlags;
 
-  typedef enum  {
+  typedef enum AlgorithmOperationFlags {
     XCN_NCRYPT_NO_OPERATION                      = 0,
     XCN_NCRYPT_CIPHER_OPERATION                  = 0x1,
     XCN_NCRYPT_HASH_OPERATION                    = 0x2,
@@ -33,7 +33,7 @@
     XCN_BCRYPT_RNG_INTERFACE                     = 0x6 
   } AlgorithmType;
 
-  typedef enum  {
+  typedef enum AlternativeNameType {
     XCN_CERT_ALT_NAME_UNKNOWN               = 0,
     XCN_CERT_ALT_NAME_OTHER_NAME            = 1,
     XCN_CERT_ALT_NAME_RFC822_NAME           = 2,
@@ -569,7 +569,7 @@
     LevelNext        = 1 
   } InnerRequestLevel;
 
-  typedef enum  {
+  typedef enum InstallResponseRestrictionFlags {
     AllowNone                   = 0x00000000,
     AllowNoOutstandingRequest   = 0x00000001,
     AllowUntrustedCertificate   = 0x00000002,
@@ -582,7 +582,7 @@
     SKIHashCapiSha1   = 2 
   } KeyIdentifierHashAlgorithm;
 
-  typedef enum  {
+  typedef enum ObjectIdGroupId {
     XCN_CRYPT_ANY_GROUP_ID                 = 0,
     XCN_CRYPT_HASH_ALG_OID_GROUP_ID        = 1,
     XCN_CRYPT_ENCRYPT_ALG_OID_GROUP_ID     = 2,
@@ -600,13 +600,13 @@
     XCN_CRYPT_KEY_LENGTH_MASK              = 0xffff0000 
   } ObjectIdGroupId;
 
-  typedef enum  {
+  typedef enum ObjectIdPublicKeyFlags {
     XCN_CRYPT_OID_INFO_PUBKEY_ANY                = 0,
     XCN_CRYPT_OID_INFO_PUBKEY_SIGN_KEY_FLAG      = 0x80000000,
     XCN_CRYPT_OID_INFO_PUBKEY_ENCRYPT_KEY_FLAG   = 0x40000000 
   } ObjectIdPublicKeyFlags;
 
-  typedef enum  {
+  typedef enum PFXExportOptions {
     PFXExportEEOnly          = 0,
     PFXExportChainNoRoot     = 1,
     PFXExportChainWithRoot   = 2 
@@ -617,7 +617,7 @@
     AllowedNullSignature   = 0x2 
   } Pkcs10AllowedSignatureTypes;
 
-  typedef enum  {
+  typedef enum PolicyQualifierType {
     PolicyQualifierTypeUnknown      = 0,
     PolicyQualifierTypeUrl          = 1,
     PolicyQualifierTypeUserNotice   = 2 
@@ -753,7 +753,7 @@
     ExportCAs         = 0x4 
   } X509EnrollmentPolicyExportFlags;
 
-  typedef enum  {
+  typedef enum X509EnrollmentPolicyLoadOption {
     LoadOptionDefault                = 0,
     LoadOptionCacheOnly              = 1,
     LoadOptionReload                 = 2,
@@ -783,7 +783,7 @@
     XCN_CERT_DECIPHER_ONLY_KEY_USAGE       = ( 0x80 << 8 ) 
   } X509KeyUsageFlags;
 
-  typedef enum  {
+  typedef enum X509PrivateKeyExportFlags {
     XCN_NCRYPT_ALLOW_EXPORT_NONE                = 0,
     XCN_NCRYPT_ALLOW_EXPORT_FLAG                = 0x1,
     XCN_NCRYPT_ALLOW_PLAINTEXT_EXPORT_FLAG      = 0x2,
@@ -791,7 +791,7 @@
     XCN_NCRYPT_ALLOW_PLAINTEXT_ARCHIVING_FLAG   = 0x8 
   } X509PrivateKeyExportFlags;
 
-  typedef enum  {
+  typedef enum X509PrivateKeyProtection {
     XCN_NCRYPT_UI_NO_PROTECTION_FLAG           = 0,
     XCN_NCRYPT_UI_PROTECT_KEY_FLAG             = 0x1,
     XCN_NCRYPT_UI_FORCE_HIGH_PROTECTION_FLAG   = 0x2 
@@ -843,7 +843,7 @@
     XCN_PROV_RSA_AES         = 24 
   } X509ProviderType;
 
-  typedef enum  {
+  typedef enum X509PrivateKeyVerify {
     VerifyNone              = 0,
     VerifySilent            = 1,
     VerifySmartCardNone     = 2,
@@ -851,7 +851,7 @@
     VerifyAllowUI           = 4 
   } X509PrivateKeyVerify;
 
-  typedef enum  {
+  typedef enum X509PrivateKeyUsageFlags {
     XCN_NCRYPT_ALLOW_USAGES_NONE          = 0,
     XCN_NCRYPT_ALLOW_DECRYPT_FLAG         = 0x1,
     XCN_NCRYPT_ALLOW_SIGNING_FLAG         = 0x2,

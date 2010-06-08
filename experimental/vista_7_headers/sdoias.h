@@ -691,6 +691,14 @@ extern "C" {
 #endif
 #endif
 
+#if (_WIN32_WINNT >= 0x0600)
+typedef enum _ATTRIBUTE_FILTER {
+  ATTRIBUTE_FILTER_NONE,
+  ATTRIBUTE_FILTER_VPN_DIALUP,
+  ATTRIBUTE_FILTER_IEEE_802_1x 
+} ATTRIBUTEFILTER;
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif

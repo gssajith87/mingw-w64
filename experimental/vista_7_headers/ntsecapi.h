@@ -1299,6 +1299,150 @@ extern "C" {
     ULONG Flags;
   } KERB_TRANSFER_CRED_REQUEST,*PKERB_TRANSFER_CRED_REQUEST;
 
+#if (_WIN32_WINNT >= 0x0600)
+
+  typedef enum _POLICY_AUDIT_EVENT_TYPE {
+    AuditCategorySystem,
+    AuditCategoryLogon,
+    AuditCategoryObjectAccess,
+    AuditCategoryPrivilegeUse,
+    AuditCategoryDetailedTracking,
+    AuditCategoryPolicyChange,
+    AuditCategoryAccountManagement,
+    AuditCategoryDirectoryServiceAccess,
+    AuditCategoryAccountLogon 
+  } POLICY_AUDIT_EVENT_TYPE, *PPOLICY_AUDIT_EVENT_TYPE;
+
+#define POLICY_AUDIT_EVENT_UNCHANGED 0x00000000
+#define POLICY_AUDIT_EVENT_SUCCESS 0x00000001
+#define POLICY_AUDIT_EVENT_FAILURE 0x00000002
+#define POLICY_AUDIT_EVENT_NONE 0x00000004
+#define PER_USER_POLICY_UNCHANGED 0x00
+#define PER_USER_AUDIT_SUCCESS_INCLUDE 0x01
+#define PER_USER_AUDIT_SUCCESS_EXCLUDE 0x02
+#define PER_USER_AUDIT_FAILURE_INCLUDE 0x04
+#define PER_USER_AUDIT_FAILURE_EXCLUDE 0x08
+#define PER_USER_AUDIT_NONE 0x10
+
+  typedef struct _AUDIT_POLICY_INFORMATION {
+    GUID  AuditSubCategoryGuid;
+    ULONG AuditingInformation;
+    GUID  AuditCategoryGuid;
+  } AUDIT_POLICY_INFORMATION, *PAUDIT_POLICY_INFORMATION, *PCAUDIT_POLICY_INFORMATION;
+
+  typedef struct _POLICY_AUDIT_SID_ARRAY {
+    ULONG UsersCount;
+    PSID  *UserSidArray;
+  } POLICY_AUDIT_SID_ARRAY, *PPOLICY_AUDIT_SID_ARRAY;
+
+  BOOLEAN WINAPI AuditComputeEffectivePolicyBySid(
+    const PSID pSid,
+    const GUID *pSubCategoryGuids,
+    ULONG PolicyCount,
+    PAUDIT_POLICY_INFORMATION *ppAuditPolicy
+  );
+
+  VOID WINAPI AuditFree(
+    PVOID Buffer
+  );
+
+  BOOLEAN WINAPI AuditSetSystemPolicy(
+    PCAUDIT_POLICY_INFORMATION pAuditPolicy,
+    ULONG PolicyCount
+  );
+
+  BOOLEAN WINAPI AuditQuerySystemPolicy(
+    const GUID *pSubCategoryGuids,
+    ULONG PolicyCount,
+    PAUDIT_POLICY_INFORMATION *ppAuditPolicy
+  );
+
+  BOOLEAN WINAPI AuditSetPerUserPolicy(
+    const PSID pSid,
+    PCAUDIT_POLICY_INFORMATION pAuditPolicy,
+    ULONG PolicyCount
+  );
+
+  BOOLEAN WINAPI AuditQueryPerUserPolicy(
+    const PSID pSid,
+    const GUID *pSubCategoryGuids,
+    ULONG PolicyCount,
+    PAUDIT_POLICY_INFORMATION *ppAuditPolicy
+  );
+
+  BOOLEAN WINAPI AuditComputeEffectivePolicyByToken(
+    HANDLE hTokenHandle,
+    const GUID *pSubCategoryGuids,
+    ULONG PolicyCount,
+    PAUDIT_POLICY_INFORMATION *ppAuditPolicy
+  );
+
+  BOOLEAN WINAPI AuditEnumerateCategories(
+    GUID **ppAuditCategoriesArray,
+    PULONG pCountReturned
+  );
+
+  BOOLEAN WINAPI AuditEnumeratePerUserPolicy(
+    PPOLICY_AUDIT_SID_ARRAY *ppAuditSidArray
+  );
+
+  BOOLEAN WINAPI AuditEnumerateSubCategories(
+    const GUID *pAuditCategoryGuid,
+    BOOLEAN bRetrieveAllSubCategories,
+    GUID **ppAuditSubCategoriesArray,
+    PULONG pCountReturned
+  );
+
+  BOOLEAN WINAPI AuditLookupCategoryGuidFromCategoryId(
+    POLICY_AUDIT_EVENT_TYPE AuditCategoryId,
+    GUID *pAuditCategoryGuid
+  );
+
+  BOOLEAN WINAPI AuditQuerySecurity(
+    SECURITY_INFORMATION SecurityInformation,
+    PSECURITY_DESCRIPTOR *ppSecurityDescriptor
+  );
+
+#ifdef UNICODE
+#define AuditLookupSubCategoryName AuditLookupSubCategoryNameW
+#define AuditLookupCategoryName AuditLookupCategoryNameW
+#else
+#define AuditLookupSubCategoryName AuditLookupSubCategoryNameA
+#define AuditLookupCategoryName AuditLookupCategoryNameA
+#endif
+
+  BOOLEAN WINAPI AuditLookupSubCategoryNameA(
+    const GUID *pAuditSubCategoryGuid,
+    LPSTR *ppszSubCategoryName
+  );
+
+  BOOLEAN WINAPI AuditLookupSubCategoryNameW(
+    const GUID *pAuditSubCategoryGuid,
+    LPWSTR *ppszSubCategoryName
+  );
+
+  BOOLEAN WINAPI AuditLookupCategoryNameA(
+    const GUID *pAuditCategoryGuid,
+    LPSTR *ppszCategoryName
+  );
+
+  BOOLEAN WINAPI AuditLookupCategoryNameW(
+    const GUID *pAuditCategoryGuid,
+    LPWSTR *ppszCategoryName
+  );
+
+  BOOLEAN WINAPI AuditLookupCategoryIdFromCategoryGuid(
+    const GUID *pAuditCategoryGuid,
+    PPOLICY_AUDIT_EVENT_TYPE pAuditCategoryId
+  );
+
+  BOOLEAN WINAPI AuditSetSecurity(
+    __in  SECURITY_INFORMATION SecurityInformation,
+    __in  PSECURITY_DESCRIPTOR pSecurityDescriptor
+  );
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif
