@@ -3071,7 +3071,7 @@ WINBASEAPI HRESULT WINAPI ApplicationRecoveryInProgress(PBOOL pbCanceled);
     HourUnit,
     MinuteUnit,
     SecondUnit,
-    TickUnit 
+    TickUnit
   };
   typedef struct _caldatetime {
     CALID CalId;
