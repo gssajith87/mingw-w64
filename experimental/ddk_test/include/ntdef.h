@@ -20,10 +20,6 @@
 #endif
 #endif
 
-#ifndef POINTER_64
-#define POINTER_64  __ptr64
-#endif
-
 /* Pseudo Modifiers for Input Parameters */
 
 #ifndef IN
