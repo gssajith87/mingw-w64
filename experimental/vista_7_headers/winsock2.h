@@ -284,12 +284,7 @@ extern int WINAPI __WSAFDIsSet(SOCKET,fd_set *);
 #define AF_TCNMESSAGE 30
 #define AF_ICLFXBM 31
 #define AF_BTH 32
-
-#if (_WIN32_WINNT >= 0x0600)
 #define AF_MAX 33
-#else
-#define AF_MAX 32
-#endif
 
 #define _SS_MAXSIZE 128
 #define _SS_ALIGNSIZE (8)
