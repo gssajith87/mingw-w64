@@ -1,6 +1,20 @@
 #ifndef _NTDEF_
 #define _NTDEF_
 
+#if !defined(I_X86_) && !defined(_IA64_) && !defined(_AMD64_) && (defined(_X86_) && !defined(__x86_64))
+#define I_X86_
+#endif
+
+#if !defined(I_X86_) && !defined(_IA64_) && !defined(_AMD64_) && defined(__x86_64)
+#define _AMD64_
+#endif
+
+#if !defined(I_X86_) && !(defined(_X86_) && !defined(__x86_64)) && !defined(_AMD64_) && defined(__ia64__)
+#if !defined(_IA64_)
+#define _IA64_
+#endif
+#endif
+
 /* Dependencies */
 #include <ctype.h>
 #include <basetsd.h>
