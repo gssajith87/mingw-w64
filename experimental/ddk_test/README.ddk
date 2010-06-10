@@ -12,15 +12,25 @@ sources from the ReactOS project.
 
 The "ddk" directory is from the ReactOS repo
 svn://svn.reactos.org/reactos/trunk/reactos/include/ddk/
-... revision 47574.
+... revision 47727.
 
 The individual files
-    atsmedia.h, devpropdef.h, dpfilter.h, evntprov.h, ktmtypes.h,
-    ntddkbd.h, ntdef.h, ntiologc.h, usb100.h, usb200.h, usbcamdi.h,
-    usbdi.h, usb.h, usbioctl.h, usbiodef.h, usbrpmif.h, usbuser.h
+    atsmedia.h,
+    compstui.h,
+    devioctl.h, devpropdef.h,
+    dpfilter.h,
+    evntprov.h,
+    ktmtypes.h, kcom.h, ksdebug.h, ksuuids.h,
+    lmon.h, nettypes.h, newdev.h,
+    ntdef.h, ntiologc.h,
+    ntddchgr.h, ntddkbd.h, ntddmou.h, ntddstor.h,
+    usb100.h, usb200.h, usbcamdi.h, usbdi.h, usb.h,
+    usbioctl.h, usbiodef.h, usbrpmif.h, usbuser.h,
+    winddi.h, winddiui.h,
+    winsplp.h
 ... are from the ReactOS repo:
 svn://svn.reactos.org/reactos/trunk/reactos/include/psdk/
-... revision 47697.
+... revision 47727.
 
 The bugcodes.mc file is from
 svn://svn.reactos.org/reactos/trunk/reactos/include/reactos/mc/
