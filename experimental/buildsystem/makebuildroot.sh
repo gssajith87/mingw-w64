@@ -15,7 +15,7 @@ out=/dev/null
 #Third part packages
 gmpver=gmp-5.0.1
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
-mpfrver=mpfr-2.4.2
+mpfrver=mpfr-3.0.0
 mpfr=http://www.mpfr.org/mpfr-current/${mpfrver}.tar.bz2
 mpcver=mpc-0.8.2
 mpc=http://www.multiprecision.org/mpc/download/${mpcver}.tar.gz
