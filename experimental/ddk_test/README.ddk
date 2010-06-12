@@ -30,7 +30,7 @@ The individual files
     winsplp.h
 ... are from the ReactOS repo:
 svn://svn.reactos.org/reactos/trunk/reactos/include/psdk/
-... revision 47755.
+... revision 47767.
 
 The individual files
     bdamedia.h, bdatypes.h,
@@ -40,8 +40,8 @@ svn://svn.reactos.org/reactos/trunk/reactos/include/dxsdk/
 
 The bugcodes.mc file is from
 svn://svn.reactos.org/reactos/trunk/reactos/include/reactos/mc/
-... revision 43282 and it was used for generating the bugcodes.h
-header using the wmc tool from wine-1.2-rc2.
+... revision 47767 and it was used for generating the bugcodes.h
+header using the wmc tool from wine-1.2-rc3.
 
 How to install this SDK
 -----------------------

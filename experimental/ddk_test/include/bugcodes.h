@@ -1,10 +1,10 @@
-/* This file is generated with wmc version 1.2-rc2. Do not edit! */
+/* This file is generated with wmc version 1.2-rc3. Do not edit! */
 /* Source : bugcodes.mc */
 /* Cmdline: wmc bugcodes.mc */
-/* Date   : Mon Jun  7 16:18:28 2010 */
+/* Date   : Sat Jun 12 18:23:40 2010 */
 
-#ifndef __WMCGENERATED_4c0cf1a4_H
-#define __WMCGENERATED_4c0cf1a4_H
+#ifndef __WMCGENERATED_4c13a67c_H
+#define __WMCGENERATED_4c13a67c_H
 
 /* Severity codes */
 #define STATUS_SEVERITY_ERROR	0x3
@@ -19,6 +19,10 @@
 #define FACILITY_SYSTEM	0x0
 
 /* Message definitions */
+
+/*  Created by : Marc Piulachs. */
+/*  This source code is offered for use in the public domain. */
+
 
 /*  ntoskrnl.exe bug codes  */
 
