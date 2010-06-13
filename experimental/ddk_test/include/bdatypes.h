@@ -1,9 +1,7 @@
-
 #ifndef _BDATYPES_
-
 #define _BDATYPES_ 1
-#define MIN_DIMENSION 1
 
+#define MIN_DIMENSION 1
 
 #ifdef __midl
 #define V1_ENUM [v1_enum]
@@ -20,14 +18,13 @@
 #define BDA_FREQUENCY_MULTIPLIER_NOT_SET -1
 #define BDA_FREQUENCY_MULTIPLIER_NOT_DEFINED 0
 
-
 typedef struct _BDA_TEMPLATE_CONNECTION
 {
     ULONG   FromNodeType;
     ULONG   FromNodePinType;
     ULONG   ToNodeType;
     ULONG   ToNodePinType;
-}BDA_TEMPLATE_CONNECTION, *PBDA_TEMPLATE_CONNECTION;
+} BDA_TEMPLATE_CONNECTION, *PBDA_TEMPLATE_CONNECTION;
 
 
 typedef struct _BDA_TEMPLATE_PIN_JOINT
@@ -72,7 +69,6 @@ typedef enum
 } BDA_EVENT_ID, *PBDA_EVENT_ID;
 
 
-
 typedef struct _BDA_ETHERNET_ADDRESS
 {
     BYTE rgbAddress[6];
@@ -101,7 +97,6 @@ typedef struct _BDA_IPv4_ADDRESS_LIST
     BDA_IPv4_ADDRESS rgAddressl[MIN_DIMENSION];
 } BDA_IPv4_ADDRESS_LIST, * PBDA_IPv4_ADDRESS_LIST;
 
-
 typedef struct _BDA_IPv6_ADDRESS
 {
     BYTE rgbAddress[6];
@@ -127,9 +122,6 @@ typedef enum
     BDA_SIGNAL_INACTIVE,
     BDA_SIGNAL_ACTIVE
 } BDA_SIGNAL_STATE, * PBDA_SIGNAL_STATE;
-
-
-
 
 
 typedef struct _BDANODE_DESCRIPTOR
@@ -255,9 +247,6 @@ typedef struct _MPEG2_TRANSPORT_STRIDE
 } MPEG2_TRANSPORT_STRIDE, *PMPEG2_TRANSPORT_STRIDE ;
 
 
-
-
-
 typedef V1_ENUM enum BinaryConvolutionCodeRate
 {
     BDA_BCC_RATE_NOT_SET = -1,
@@ -326,7 +315,6 @@ typedef V1_ENUM enum ModulationType
 } ModulationType;
 
 
-
 typedef V1_ENUM enum TransmissionMode
 {
     BDA_XMIT_MODE_NOT_SET = -1,
@@ -370,6 +358,5 @@ typedef V1_ENUM enum HierarchyAlpha
 } HierarchyAlpha;
 
 
-
-#endif
+#endif /* _BDATYPES_ */
 
