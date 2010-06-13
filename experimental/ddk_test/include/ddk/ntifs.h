@@ -7709,6 +7709,8 @@ FsRtlCheckOplockEx(
 
 #if (NTDDI_VERSION >= NTDDI_WIN7)
 
+typedef struct _ECP_HEADER ECP_HEADER, *PECP_HEADER;
+
 NTKERNELAPI
 BOOLEAN
 NTAPI
@@ -8834,10 +8836,6 @@ extern NTKERNELAPI PUSHORT NlsOemLeadByteInfo;
 #undef NLS_MB_CODE_PAGE_TAG
 #endif
 #define NLS_MB_CODE_PAGE_TAG              NlsMbOemCodePageTag
-
-#if (NTDDI_VERSION >= NTDDI_WIN7)
-typedef struct _ECP_HEADER ECP_HEADER, *PECP_HEADER;
-#endif
 
 #if (NTDDI_VERSION >= NTDDI_VISTA)
 
