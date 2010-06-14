@@ -1602,4 +1602,12 @@ typedef struct _VOLUME_DISK_EXTENTS {
   DWORD NumberOfDiskExtents;
   DISK_EXTENT Extents[1];
 } VOLUME_DISK_EXTENTS,*PVOLUME_DISK_EXTENTS;
+
+#if (_WIN32_WINNT >= 0x0600)
+#define MediaUnknown 0
+#define MediaPresent 1
+#define MediaNotPresent 2
+#define MediaUnavailable 3
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif

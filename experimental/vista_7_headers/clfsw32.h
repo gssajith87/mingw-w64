@@ -1,5 +1,6 @@
 #ifndef _INC_CLFSW32
 #define _INC_CLFSW32
+#include <clfs.h>
 
 #if (_WIN32_WINNT >= 0x0600)
 

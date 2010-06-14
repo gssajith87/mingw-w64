@@ -6,6 +6,7 @@
 #ifndef __WINCRYPT_H__
 #define __WINCRYPT_H__
 
+#include <_mingw.h>
 #include <guiddef.h>
 
 #ifdef __cplusplus
@@ -4266,6 +4267,191 @@ extern "C" {
 #define PKCS12_EXPORT_RESERVED_MASK 0xffff0000
 
   WINIMPM WINBOOL WINAPI PFXExportCertStore(HCERTSTORE hStore,CRYPT_DATA_BLOB *pPFX,LPCWSTR szPassword,DWORD dwFlags);
+
+#if (_WIN32_WINNT >= 0x0600)
+#define szOID_LOYALTY_OTHER_LOGOTYPE "1.3.6.1.5.5.7.20.1"
+#define szOID_BACKGROUND_OTHER_LOGOTYPE "1.3.6.1.5.5.7.20.2"
+#define szOID_QC_EU_COMPLIANCE "0.4.0.1862.1.1"
+#define szOID_QC_SSCD "0.4.0.1862.1.4"
+#define CERT_CHAIN_REVOCATION_CHECK_OCSP_CERT 0x04000000
+
+#define CERT_SRV_OCSP_RESP_MIN_VALIDITY_SECONDS_VALUE_NAME L"SrvOcspRespMinValiditySeconds"
+#define CERT_SRV_OCSP_RESP_MIN_VALIDITY_SECONDS_DEFAULT (10 * 60)
+#define CERT_SRV_OCSP_RESP_URL_RETRIEVAL_TIMEOUT_MILLISECONDS_VALUE_NAME L"SrvOcspRespUrlRetrievalTimeoutMilliseconds"
+#define CERT_SRV_OCSP_RESP_URL_RETRIEVAL_TIMEOUT_MILLISECONDS_DEFAULT (15 * 1000)
+#define CERT_SRV_OCSP_RESP_MAX_BEFORE_NEXT_UPDATE_SECONDS_VALUE_NAME L"SrvOcspRespMaxBeforeNextUpdateSeconds"
+#define CERT_SRV_OCSP_RESP_MAX_BEFORE_NEXT_UPDATE_SECONDS_DEFAULT (4 * 60 * 60)
+#define CERT_SRV_OCSP_RESP_MIN_BEFORE_NEXT_UPDATE_SECONDS_VALUE_NAME L"SrvOcspRespMinBeforeNextUpdateSeconds"
+#define CERT_SRV_OCSP_RESP_MIN_BEFORE_NEXT_UPDATE_SECONDS_DEFAULT (2 * 60)
+#define CERT_SRV_OCSP_RESP_MIN_AFTER_NEXT_UPDATE_SECONDS_VALUE_NAME L"SrvOcspRespMinAfterNextUpdateSeconds"
+#define CERT_SRV_OCSP_RESP_MIN_AFTER_NEXT_UPDATE_SECONDS_DEFAULT (1 * 60)
+
+typedef LPVOID HCERTCHAINENGINE;
+typedef LPVOID HCERTSTORE;
+typedef LPVOID HCERT_SERVER_OCSP_RESPONSE;
+
+typedef struct _CERT_BIOMETRIC_DATA {
+  DWORD dwTypeOfBiometricDataChoice;
+  union DUMMYUNIONNAME {
+    DWORD dwPredefined;
+    LPSTR pszObjId;
+  } ;
+  CERT_HASHED_URL HashedUrl;
+} CERT_BIOMETRIC_DATA, *PCERT_BIOMETRIC_DATA;
+
+typedef struct _CERT_BIOMETRIC_EXT_INFO {
+  DWORD                cBiometricData;
+  PCERT_BIOMETRIC_DATA rgBiometricData;
+} CERT_BIOMETRIC_EXT_INFO, *PCERT_BIOMETRIC_EXT_INFO;
+
+typedef struct _CERT_ECC_SIGNATURE {
+  CRYPT_UINT_BLOB r;
+  CRYPT_UINT_BLOB s;
+} CERT_ECC_SIGNATURE, *PCERT_ECC_SIGNATURE;
+
+typedef struct _CERT_HASHED_URL {
+  CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
+  CRYPT_HASH_BLOB            Hash;
+  LPWSTR                     pwszUrl;
+} CERT_HASHED_URL, *PCERT_HASHED_URL;
+
+typedef struct _CERT_LOGOTYPE_DETAILS {
+  LPWSTR           pwszMimeType;
+  DWORD            cHashedUrl;
+  PCERT_HASHED_URL rgHashedUrl;
+} CERT_LOGOTYPE_DETAILS, *PCERT_LOGOTYPE_DETAILS;
+
+typedef struct _CERT_LOGOTYPE_AUDIO_INFO {
+  DWORD  dwFileSize;
+  DWORD  dwPlayTime;
+  DWORD  dwChannels;
+  DWORD  dwSampleRate;
+  LPWSTR pwszLanguage;
+} CERT_LOGOTYPE_AUDIO_INFO, *PCERT_LOGOTYPE_AUDIO_INFO;
+
+typedef struct _CERT_LOGOTYPE_AUDIO {
+  CERT_LOGOTYPE_DETAILS     LogotypeDetails;
+  PCERT_LOGOTYPE_AUDIO_INFO pLogotypeAudioInfo;
+} CERT_LOGOTYPE_AUDIO, *PCERT_LOGOTYPE_AUDIO;
+
+typedef struct _CERT_LOGOTYPE_IMAGE_INFO {
+  DWORD  dwLogotypeImageInfoChoice;
+  DWORD  dwFileSize;
+  DWORD  dwXSize;
+  DWORD  dwYSize;
+  DWORD  dwLogotypeImageResolutionChoice;
+  union DUMMYUNIONNAME {
+    DWORD dwNumBits;
+    DWORD dwTableSize;
+  } ;
+  LPWSTR pwszLanguage;
+} CERT_LOGOTYPE_IMAGE_INFO, *PCERT_LOGOTYPE_IMAGE_INFO;
+
+typedef struct _CERT_LOGOTYPE_IMAGE {
+  CERT_LOGOTYPE_DETAILS     LogotypeDetails;
+  PCERT_LOGOTYPE_IMAGE_INFO pLogotypeImageInfo;
+} CERT_LOGOTYPE_IMAGE, *PCERT_LOGOTYPE_IMAGE;
+
+typedef struct _CERT_LOGOTYPE_DATA {
+  DWORD                cLogotypeImage;
+  PCERT_LOGOTYPE_IMAGE rgLogotypeImage;
+  DWORD                cLogotypeAudio;
+  PCERT_LOGOTYPE_AUDIO rgLogotypeAudio;
+} CERT_LOGOTYPE_DATA, *PCERT_LOGOTYPE_DATA;
+
+typedef struct _CERT_LOGOTYPE_REFERENCE {
+  DWORD            cHashedUrl;
+  PCERT_HASHED_URL rgHashedUrl;
+} CERT_LOGOTYPE_REFERENCE, *PCERT_LOGOTYPE_REFERENCE;
+
+typedef struct _CERT_OTHER_LOGOTYPE_INFO {
+  LPSTR              pszObjId;
+  CERT_LOGOTYPE_INFO LogotypeInfo;
+} CERT_OTHER_LOGOTYPE_INFO, *PCERT_OTHER_LOGOTYPE_INFO;
+
+typedef struct _CERT_LOGOTYPE_INFO {
+  DWORD dwLogotypeInfoChoice;
+  union DUMMYUNIONNAME {
+    PCERT_LOGOTYPE_DATA      pLogotypeDirectInfo;
+    PCERT_LOGOTYPE_REFERENCE pLogotypeIndirectInfo;
+  } ;
+} CERT_LOGOTYPE_INFO, *PCERT_LOGOTYPE_INFO;
+
+typedef struct _CERT_LOGOTYPE_EXT_INFO {
+  DWORD                     cCommunityLogo;
+  PCERT_LOGOTYPE_INFO       rgCommunityLogo;
+  PCERT_LOGOTYPE_INFO       pIssuerLogo;
+  PCERT_LOGOTYPE_INFO       pSubjectLogo;
+  DWORD                     cOtherLogo;
+  PCERT_OTHER_LOGOTYPE_INFO rgOtherLogo;
+} CERT_LOGOTYPE_EXT_INFO, *PCERT_LOGOTYPE_EXT_INFO;
+
+typedef struct _CERT_QC_STATEMENT {
+  LPSTR            pszStatementId;
+  CRYPT_OBJID_BLOB StatementInfo;
+} CERT_QC_STATEMENT, *PCERT_QC_STATEMENT;
+
+typedef struct _CERT_QC_STATEMENTS_EXT_INFO {
+  DWORD              cStatement;
+  PCERT_QC_STATEMENT rgStatement;
+} CERT_QC_STATEMENTS_EXT_INFO, *PCERT_QC_STATEMENTS_EXT_INFO;
+
+typedef struct _CERT_REVOCATION_CHAIN_PARA {
+  DWORD            cbSize;
+  HCERTCHAINENGINE hChainEngine;
+  HCERTSTORE       hAdditionalStore;
+  DWORD            dwChainFlags;
+  DWORD            dwUrlRetrievalTimeout;
+  LPFILETIME       pftCurrentTime;
+  LPFILETIME       pftCacheResync;
+  DWORD            cbMaxUrlRetrievalByteCount;
+} CERT_REVOCATION_CHAIN_PARA, *PCERT_REVOCATION_CHAIN_PARA;
+
+typedef struct _CERT_SERVER_OCSP_RESPONSE_CONTEXT {
+  DWORD cbSize;
+  BYTE  *pbEncodedOcspResponse;
+  DWORD cbEncodedOcspResponse;
+} CERT_SERVER_OCSP_RESPONSE_CONTEXT, *PCERT_SERVER_OCSP_RESPONSE_CONTEXT, *PCCERT_SERVER_OCSP_RESPONSE_CONTEXT;
+
+WINCRYPT32API VOID WINAPI CertAddRefServerOcspResponse(HCERT_SERVER_OCSP_RESPONSE hServerOcspResponse);
+HCERT_SERVER_OCSP_RESPONSE WINAPI CertOpenServerOcspResponse(
+  PCCERT_CHAIN_CONTEXT pChainContext,
+  DWORD dwFlags,
+  LPVOID pvReserved
+);
+
+VOID WINAPI CertAddRefServerOcspResponseContext(
+  PCCERT_SERVER_OCSP_RESPONSE_CONTEXT pServerOcspResponseContext
+);
+
+VOID WINAPI CertCloseServerOcspResponse(
+  HCERT_SERVER_OCSP_RESPONSE hServerOcspResponse,
+  DWORD dwFlags
+);
+
+WINAPI CertFreeServerOcspResponseContext(
+  PCCERT_SERVER_OCSP_RESPONSE_CONTEXT pServerOcspResponseContext
+);
+
+PCCERT_SERVER_OCSP_RESPONSE_CONTEXT WINAPI CertGetServerOcspResponseContext(
+  HCERT_SERVER_OCSP_RESPONSE hServerOcspResponse,
+  DWORD dwFlags,
+  LPVOID pvReserved
+);
+
+WINBOOL WINAPI CertRetrieveLogoOrBiometricInfo(
+  PCCERT_CONTEXT pCertContext,
+  LPCSTR lpszLogoOrBiometricType,
+  DWORD dwRetrievalFlags,
+  DWORD dwTimeout,
+  DWORD dwFlags,
+  void *pvReserved,
+  BYTE **ppbData,
+  DWORD *pcbData,
+  LPWSTR *ppwszMimeType
+);
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus
 }

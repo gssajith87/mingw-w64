@@ -13,6 +13,7 @@ extern "C" {
 #include <iprtrmib.h>
 #include <ipexport.h>
 #include <iptypes.h>
+#include <netioapi.h>
 
 #if (_WIN32_WINNT == 0x502 && WINVER == 0x502)
 typedef enum _TCP_TABLE_CLASS {
@@ -95,6 +96,8 @@ typedef enum _TCP_TABLE_CLASS {
   DWORD WINAPI RestoreMediaSense(OVERLAPPED *pOverlapped,LPDWORD lpdwEnableCount);
   DWORD WINAPI GetIpErrorString(IP_STATUS ErrorCode,PWCHAR Buffer,PDWORD Size);
 
+#if (_WIN32_WINNT == 0x0502) /* Only with Win2003 SP1 and SP2 */
+  WINBOOL WINAPI CancelSecurityHealthChangeNotify(LPOVERLAPPED notifyOverlapped);
 #ifdef __cplusplus
 }
 #endif

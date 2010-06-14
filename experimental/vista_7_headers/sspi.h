@@ -1181,7 +1181,18 @@ extern "C" {
   SECURITY_STATUS WINAPI DeleteSecurityPackageA(SEC_CHAR *pszPackageName);
   SECURITY_STATUS WINAPI DeleteSecurityPackageW(SEC_WCHAR *pszPackageName);
 
-
+#if (_WIN32_WINNT >= 0x0600)
+  SECURITY_STATUS WINAPI ChangeAccountPassword(
+    SEC_WCHAR *pszPackageName,
+    SEC_WCHAR *pszDomainName,
+    SEC_WCHAR *pszAccountName,
+    SEC_WCHAR *pszOldPassword,
+    SEC_WCHAR *pszNewPassword,
+    BOOLEAN bImpersonating,
+    unsigned long dwReserved,
+    PSecBufferDesc pOutput
+  );
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 #ifdef __cplusplus
 }
 #endif
