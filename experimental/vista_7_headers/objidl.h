@@ -5096,6 +5096,20 @@ extern "C" {
   void WINAPI AsyncIAdviseSink2_Finish_OnLinkSrcChange_Proxy(AsyncIAdviseSink2 *This);
   HRESULT WINAPI AsyncIAdviseSink2_Finish_OnLinkSrcChange_Stub(AsyncIAdviseSink2 *This);
 
+#if (_WIN32_WINNT >= 0x0600)
+typedef struct tagBIND_OPTS3 {
+  DWORD        cbStruct;
+  DWORD        grfFlags;
+  DWORD        grfMode;
+  DWORD        dwTickCountDeadline;
+  DWORD        dwTrackFlags;
+  DWORD        dwClassContext;
+  LCID         locale;
+  COSERVERINFO *pServerInfo;
+  HWND         hwnd;
+} BIND_OPTS3, *LPBIND_OPTS3;
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif
