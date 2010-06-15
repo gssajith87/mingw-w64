@@ -39,6 +39,11 @@ typedef enum ASM_NAME {
   ASM_NAME_MAX_PARAMS 
 } ASM_NAME ;
 
+typedef enum _CREATE_ASM_NAME_OBJ_FLAGS {
+  CANOF_PARSE_DISPLAY_NAME   = 0x1,
+  CANOF_SET_DEFAULT_VALUES   = 0x2 
+} CREATE_ASM_NAME_OBJ_FLAGS ;
+
 typedef struct _ASSEMBLY_INFO  {
   ULONG          cbAssemblyInfo;
   DWORD          dwAssemblyFlags;
@@ -56,6 +61,21 @@ typedef enum  {
   ASM_DISPLAYF_PROCESSORARCHITECTURE   = 0x20,
   ASM_DISPLAYF_LANGUAGEID              = 0x40 
 } ASM_DISPLAY_FLAGS ;
+
+/* in sxs.dll but not in any headers
+HRESULT STDAPI CreateAssemblyCache(
+    IAssemblyCache **ppAsmCache,
+    DWORD dwReserved
+);
+
+HRESULT STDAPI CreateAssemblyNameObject(
+    LPASSEMBLYNAME **ppAssemblyNameObj,
+    LPCWSTR szAssemblyName,
+    DWORD dwFlags,
+    LPVOID pvReserved
+);
+
+*/
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WINSXS*/

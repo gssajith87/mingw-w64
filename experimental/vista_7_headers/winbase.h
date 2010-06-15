@@ -2654,8 +2654,8 @@ extern "C" {
   WINADVAPI WINBOOL WINAPI CreateProcessAsUserA(HANDLE hToken,LPCSTR lpApplicationName,LPSTR lpCommandLine,LPSECURITY_ATTRIBUTES lpProcessAttributes,LPSECURITY_ATTRIBUTES lpThreadAttributes,WINBOOL bInheritHandles,DWORD dwCreationFlags,LPVOID lpEnvironment,LPCSTR lpCurrentDirectory,LPSTARTUPINFOA lpStartupInfo,LPPROCESS_INFORMATION lpProcessInformation);
   WINADVAPI WINBOOL WINAPI CreateProcessAsUserW(HANDLE hToken,LPCWSTR lpApplicationName,LPWSTR lpCommandLine,LPSECURITY_ATTRIBUTES lpProcessAttributes,LPSECURITY_ATTRIBUTES lpThreadAttributes,WINBOOL bInheritHandles,DWORD dwCreationFlags,LPVOID lpEnvironment,LPCWSTR lpCurrentDirectory,LPSTARTUPINFOW lpStartupInfo,LPPROCESS_INFORMATION lpProcessInformation);
 
-#define LOGON_WITH_PROFILE 0x1
-#define LOGON_NETCREDENTIALS_ONLY 0x2
+#define LOGON_WITH_PROFILE 0x00000001
+#define LOGON_NETCREDENTIALS_ONLY 0x00000002
 #define LOGON_ZERO_PASSWORD_BUFFER 0x80000000
 
   WINADVAPI WINBOOL WINAPI CreateProcessWithLogonW(LPCWSTR lpUsername,LPCWSTR lpDomain,LPCWSTR lpPassword,DWORD dwLogonFlags,LPCWSTR lpApplicationName,LPWSTR lpCommandLine,DWORD dwCreationFlags,LPVOID lpEnvironment,LPCWSTR lpCurrentDirectory,LPSTARTUPINFOW lpStartupInfo,LPPROCESS_INFORMATION lpProcessInformation);
@@ -2988,20 +2988,26 @@ extern "C" {
 #if (_WIN32_WINNT >= 0x0600)
 #define SYMBOLIC_LINK_FLAG_FILE		0x0
 #define SYMBOLIC_LINK_FLAG_DIRECTORY	0x1
+#define EXTENDED_STARTUPINFO_PRESENT 0x00080000
+
+#define CreateSymbolicLink __MINGW_NAME_AW(CreateSymbolicLink)
+#define CreateBoundaryDescriptor __MINGW_NAME_AW(CreateBoundaryDescriptor)
+#define OpenPrivateNamespace __MINGW_NAME_AW(OpenPrivateNamespace)
+#define CreatePrivateNamespace __MINGW_NAME_AW(CreatePrivateNamespace)
+#define CopyFileTransacted __MINGW_NAME_AW(CopyFileTransacted)
+#define CreateDirectoryTransacted __MINGW_NAME_AW(CreateDirectoryTransacted)
+#define CreateEventEx __MINGW_NAME_AW(CreateEventEx)
+#define CreateFileMappingNuma __MINGW_NAME_AW(CreateFileMappingNuma)
+#define CreateFileTransacted __MINGW_NAME_AW(CreateFileTransacted)
+#define CreateHardLinkTransacted __MINGW_NAME_AW(CreateHardLinkTransacted)
+#define DeleteFileTransacted __MINGW_NAME_AW(DeleteFileTransacted)
+#define CreateMutexEx __MINGW_NAME_AW(CreateMutexEx)
+#define CreateSemaphoreEx __MINGW_NAME_AW(CreateSemaphoreEx)
+#define CreateSymbolicLinkTransacted __MINGW_NAME_AW(CreateSymbolicLinkTransacted)
+#define CreateWaitableTimerEx __MINGW_NAME_AW(CreateWaitableTimerEx)
 
   WINBASEAPI WINBOOL WINAPI CreateSymbolicLinkA (LPSTR lpSymLinkFileName, LPSTR lpTargetFileName, DWORD dwFlags);
   WINBASEAPI WINBOOL WINAPI CreateSymbolicLinkW (LPWSTR lpSymLinkFileName, LPWSTR lpTargetFileName, DWORD dwFlags);
-#ifdef UNICODE
-#define CreateSymbolicLink CreateSymbolicLinkW
-#define CreateBoundaryDescriptor CreateBoundaryDescriptorW
-#define OpenPrivateNamespace OpenPrivateNamespaceW
-#define CreatePrivateNamespace CreatePrivateNamespaceW
-#else
-#define CreateSymbolicLink CreateSymbolicLinkA
-#define CreateBoundaryDescriptor CreateBoundaryDescriptorA
-#define OpenPrivateNamespace OpenPrivateNamespaceA
-#define CreatePrivateNamespace CreatePrivateNamespaceA
-#endif
 
 /*Condition Variables http://msdn.microsoft.com/en-us/library/ms682052%28VS.85%29.aspx*/
 typedef RTL_CONDITION_VARIABLE CONDITION_VARIABLE, *PCONDITION_VARIABLE;
@@ -3068,21 +3074,259 @@ WINBASEAPI WINBOOL WINAPI QueryThreadCycleTime(HANDLE ThreadHandle,PULONG64 Cycl
 WINBASEAPI WINBOOL WINAPI QueryIdleProcessorCycleTimeEx(USHORT Group,PULONG BufferLength,PULONG64 ProcessorIdleCycleTime);
 #endif
 
-typedef LPVOID TP_IO;
-typedef LPVOID TP_CALLBACK_INSTANCE;
-typedef LPVOID TP_WIN32_IO_CALLBACK;
-typedef LPVOID TP_CALLBACK_ENVIRON;
+typedef struct _TP_IO *PTP_IO;
+typedef struct _TP_CALLBACK_INSTANCE *PTP_CALLBACK_INSTANCE;
+typedef struct _TP_WIN32_IO_CALLBACK *PTP_WIN32_IO_CALLBACK;
+typedef struct _TP_CALLBACK_ENVIRON *PTP_CALLBACK_ENVIRON;
+typedef struct _TP_CLEANUP_GROUP *PTP_CLEANUP_GROUP;
+typedef struct _TP_TIMER *PTP_TIMER;
+typedef struct _TP_WAIT *PTP_WAIT;
 
-typedef TP_IO *PTP_IO;
-typedef TP_CALLBACK_INSTANCE *PTP_CALLBACK_INSTANCE;
-typedef TP_WIN32_IO_CALLBACK *PTP_WIN32_IO_CALLBACK;
-typedef TP_CALLBACK_ENVIRON *PTP_CALLBACK_ENVIRON;
+typedef DWORD TP_WAIT_RESULT;
+typedef VOID (CALLBACK *PTP_WAIT_CALLBACK)(
+  PTP_CALLBACK_INSTANCE Instance,
+  PVOID Context,
+  PTP_WAIT Wait,
+  TP_WAIT_RESULT WaitResult
+);
 
-WINBOOL WINAPI CallbackMayRunLong(PTP_CALLBACK_INSTANCE pci);
-WINBOOL WINAPI CancelIoEx(HANDLE hFile,LPOVERLAPPED lpOverlapped);
-WINBOOL WINAPI CancelSynchronousIo(HANDLE hThread)
-VOID WINAPI CancelThreadpoolIo(PTP_IO pio);
-PTP_IO WINAPI CreateThreadpoolIo(HANDLE fl,PTP_WIN32_IO_CALLBACK pfnio,PVOID pv,PTP_CALLBACK_ENVIRON pcbe);
+typedef VOID (CALLBACK *PTP_WORK_CALLBACK)(
+  PTP_CALLBACK_INSTANCE Instance,
+  PVOID Context,
+  PTP_WORK Work
+);
+
+typedef VOID (CALLBACK *PTP_TIMER_CALLBACK)(
+  PTP_CALLBACK_INSTANCE Instance,
+  PVOID Context,
+  PTP_TIMER Timer
+);
+
+#define PRIVATE_NAMESPACE_FLAG_DESTROY 0x00000001
+
+WINBASEAPI WINBOOL WINAPI CallbackMayRunLong(PTP_CALLBACK_INSTANCE pci);
+WINBASEAPI WINBOOL WINAPI CancelIoEx(HANDLE hFile,LPOVERLAPPED lpOverlapped);
+WINBASEAPI WINBOOL WINAPI CancelSynchronousIo(HANDLE hThread)
+WINBASEAPI VOID WINAPI CancelThreadpoolIo(PTP_IO pio);
+WINBASEAPI PTP_IO WINAPI CreateThreadpoolIo(HANDLE fl,PTP_WIN32_IO_CALLBACK pfnio,PVOID pv,PTP_CALLBACK_ENVIRON pcbe);
+WINBASEAPI VOID WINAPI CloseThreadpool(PTP_POOL ptpp);
+WINBASEAPI PTP_POOL WINAPI CreateThreadpool(PVOID reserved);
+WINBASEAPI VOID WINAPI CloseThreadpoolCleanupGroup(PTP_CLEANUP_GROUP ptpcg);
+WINBASEAPI VOID WINAPI CloseThreadpoolCleanupGroupMembers(PTP_CLEANUP_GROUP ptpcg,WINBOOL fCancelPendingCallbacks,PVOID pvCleanupContext);
+WINBASEAPI VOID WINAPI CloseThreadpoolIo(PTP_IO pio);
+WINBASEAPI VOID WINAPI CloseThreadpoolTimer(PTP_TIMER pti);
+WINBASEAPI VOID WINAPI CloseThreadpoolWait(PTP_WAIT pwa);
+WINBASEAPI VOID WINAPI CloseThreadpoolWork(PTP_WORK pwk);
+
+
+
+WINBASEAPI PTP_CLEANUP_GROUP WINAPI CreateThreadpoolCleanupGroup(void);
+WINBASEAPI PTP_WAIT WINAPI CreateThreadpoolWait(PTP_WAIT_CALLBACK pfnwa,PVOID pv,PTP_CALLBACK_ENVIRON pcbe);
+WINBASEAPI PTP_WORK WINAPI CreateThreadpoolWork(PTP_WORK_CALLBACK pfnwk,PVOID pv,PTP_CALLBACK_ENVIRON pcbe);
+WINBASEAPI PTP_TIMER WINAPI CreateThreadpoolTimer(PTP_TIMER_CALLBACK pfnti,PVOID pv,PTP_CALLBACK_ENVIRON pcbe);
+
+WINBASEAPI LPVOID WINAPI ConvertThreadToFiberEx(
+  LPVOID lpParameter,
+  DWORD dwFlags
+);
+
+WINBASEAPI VOID WINAPI SubmitThreadpoolWork(PTP_WORK pwk);
+
+WINBASEAPI WINBOOL WINAPI CopyFileTransactedA(
+  LPCSTR lpExistingFileName,
+  LPCSTR lpNewFileName,
+  LPPROGRESS_ROUTINE lpProgressRoutine,
+  LPVOID lpData,
+  LPBOOL pbCancel,
+  DWORD dwCopyFlags,
+  HANDLE hTransaction
+);
+
+WINBASEAPI WINBOOL WINAPI CopyFileTransactedW(
+  LPCWSTR lpExistingFileName,
+  LPCWSTR lpNewFileName,
+  LPPROGRESS_ROUTINE lpProgressRoutine,
+  LPVOID lpData,
+  LPBOOL pbCancel,
+  DWORD dwCopyFlags,
+  HANDLE hTransaction
+);
+
+WINBASEAPI WINBOOL WINAPI CreateDirectoryTransactedA(
+  LPCSTR lpTemplateDirectory,
+  LPCSTR lpNewDirectory,
+  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+  HANDLE hTransaction
+);
+
+WINBASEAPI WINBOOL WINAPI CreateDirectoryTransactedW(
+  LPCWSTR lpTemplateDirectory,
+  LPCWSTR lpNewDirectory,
+  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+  HANDLE hTransaction
+);
+
+#define CREATE_EVENT_INITIAL_SET 0x00000002
+#define CREATE_EVENT_MANUAL_RESET 0x00000001
+
+WINBASEAPI HANDLE WINAPI CreateEventExA(
+  LPSECURITY_ATTRIBUTES lpEventAttributes,
+  LPCSTR lpName,
+  DWORD dwFlags,
+  DWORD dwDesiredAccess
+);
+
+WINBASEAPI HANDLE WINAPI CreateEventExW(
+  LPSECURITY_ATTRIBUTES lpEventAttributes,
+  LPCWSTR lpName,
+  DWORD dwFlags,
+  DWORD dwDesiredAccess
+);
+
+WINBASEAPI HANDLE WINAPI CreateFileMappingNumaA(
+  HANDLE hFile,
+  LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
+  DWORD flProtect,
+  DWORD dwMaximumSizeHigh,
+  DWORD dwMaximumSizeLow,
+  LPCSTR lpName,
+  DWORD nndPreferred
+);
+
+WINBASEAPI HANDLE WINAPI CreateFileMappingNumaW(
+  HANDLE hFile,
+  LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
+  DWORD flProtect,
+  DWORD dwMaximumSizeHigh,
+  DWORD dwMaximumSizeLow,
+  LPCWSTR lpName,
+  DWORD nndPreferred
+);
+
+
+#define TXFS_MINIVERSION_COMMITTED_VIEW 0x0000
+#define TXFS_MINIVERSION_DIRTY_VIEW 0xFFFE
+#define TXFS_MINIVERSION_DEFAULT_VIEW 0xFFFF
+
+WINBASEAPI HANDLE WINAPI CreateFileTransactedA(
+  LPCSTR lpFileName,
+  DWORD dwDesiredAccess,
+  DWORD dwShareMode,
+  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+  DWORD dwCreationDisposition,
+  DWORD dwFlagsAndAttributes,
+  HANDLE hTemplateFile,
+  HANDLE hTransaction,
+  PUSHORT pusMiniVersion,
+  PVOID pExtendedParameter
+);
+
+WINBASEAPI HANDLE WINAPI CreateFileTransactedW(
+  LPCWSTR lpFileName,
+  DWORD dwDesiredAccess,
+  DWORD dwShareMode,
+  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+  DWORD dwCreationDisposition,
+  DWORD dwFlagsAndAttributes,
+  HANDLE hTemplateFile,
+  HANDLE hTransaction,
+  PUSHORT pusMiniVersion,
+  PVOID pExtendedParameter
+);
+
+WINBASEAPI WINBOOL WINAPI CreateHardLinkTransactedA(
+  LPCSTR lpFileName,
+  LPCSTR lpExistingFileName,
+  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+  HANDLE hTransaction
+);
+
+WINBASEAPI WINBOOL WINAPI CreateHardLinkTransactedW(
+  LPCWSTR lpFileName,
+  LPCWSTR lpExistingFileName,
+  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+  HANDLE hTransaction
+);
+
+WINBASEAPI HANDLE WINAPI CreateTransaction(
+  LPSECURITY_ATTRIBUTES lpTransactionAttributes,
+  LPGUID UOW,
+  DWORD CreateOptions,
+  DWORD IsolationLevel,
+  DWORD IsolationFlags,
+  DWORD Timeout,
+  LPWSTR Description
+);
+
+WINBASEAPI WINBOOL WINAPI DeleteFileTransactedA(
+  LPCSTR lpFileName,
+  HANDLE hTransaction
+);
+
+WINBASEAPI WINBOOL WINAPI DeleteFileTransactedW(
+  LPCWSTR lpFileName,
+  HANDLE hTransaction
+);
+
+WINBASEAPI HANDLE WINAPI CreateMutexExA(
+  LPSECURITY_ATTRIBUTES lpMutexAttributes,
+  LPCTSTR lpName,
+  DWORD dwFlags,
+  DWORD dwDesiredAccess
+);
+
+WINBASEAPI HANDLE WINAPI CreateMutexExW(
+  LPSECURITY_ATTRIBUTES lpMutexAttributes,
+  LPCWSTR lpName,
+  DWORD dwFlags,
+  DWORD dwDesiredAccess
+);
+
+WINBASEAPI HANDLE WINAPI CreateSemaphoreExA(
+  LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+  LONG lInitialCount,
+  LONG lMaximumCount,
+  LPCSTR lpName,
+  DWORD dwFlags,
+  DWORD dwDesiredAccess
+);
+
+WINBASEAPI HANDLE WINAPI CreateSemaphoreExW(
+  LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+  LONG lInitialCount,
+  LONG lMaximumCount,
+  LPCWSTR lpName,
+  DWORD dwFlags,
+  DWORD dwDesiredAccess
+);
+
+WINBASEAPI BOOLEAN WINAPI CreateSymbolicLinkTransactedW(
+  LPWSTR lpSymlinkFileName,
+  LPWSTR lpTargetFileName,
+  DWORD dwFlags,
+  HANDLE hTransaction
+);
+
+WINBASEAPI BOOLEAN WINAPI CreateSymbolicLinkTransactedA(
+  LPSTR lpSymlinkFileName,
+  LPSTR lpTargetFileName,
+  DWORD dwFlags,
+  HANDLE hTransaction
+);
+
+WINBASEAPI HANDLE WINAPI CreateWaitableTimerExA(
+  LPSECURITY_ATTRIBUTES lpTimerAttributes,
+  LPCSTR lpTimerName,
+  DWORD dwFlags,
+  DWORD dwDesiredAccess
+);
+
+WINBASEAPI HANDLE WINAPI CreateWaitableTimerExW(
+  LPSECURITY_ATTRIBUTES lpTimerAttributes,
+  LPCWSTR lpTimerName,
+  DWORD dwFlags,
+  DWORD dwDesiredAccess
+);
 
 /* no associated headers
   enum CALDATETIME_DATEUNIT {
@@ -3109,6 +3353,22 @@ PTP_IO WINAPI CreateThreadpoolIo(HANDLE fl,PTP_WIN32_IO_CALLBACK pfnio,PVOID pv,
     ULONG Tick;
   } CALDATETIME, *LPCALDATETIME;
 WINBOOL AdjustCalendarDate(LPCALDATETIME lpCalDateTime,CALDATETIME_DATEUNIT calUnit,INT amount);
+
+BOOL ConvertSystemTimeToCalDateTime(
+  __in   const SYSTEMTIME lpSysTime,
+  __in   CALID calId,
+  __out  LPCALDATETIME lpCalDateTime
+
+);
+
+void* CmFree(
+    void *pvPtr
+);
+
+void* CmMalloc(
+    size_t nBytes
+);
+
 */
 
 

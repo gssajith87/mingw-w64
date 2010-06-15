@@ -8,6 +8,8 @@
 
 #include <_mingw.h>
 #include <guiddef.h>
+#include <bcrypt.h>
+#include <ncrypt.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -4449,6 +4451,221 @@ WINBOOL WINAPI CertRetrieveLogoOrBiometricInfo(
   BYTE **ppbData,
   DWORD *pcbData,
   LPWSTR *ppwszMimeType
+);
+
+typedef WINBOOL ( WINAPI *PFN_CMSG_CNG_IMPORT_KEY_TRANS )(
+  PCMSG_CNG_CONTENT_DECRYPT_INFO pCNGContentDecryptInfo,
+  PCMSG_CTRL_KEY_TRANS_DECRYPT_PARA pKeyTransDecryptPara,
+  DWORD dwFlags,
+  void *pvReserved
+);
+
+typedef WINBOOL ( WINAPI *PFN_CMSG_CNG_IMPORT_KEY_AGREE )(
+  PCMSG_CNG_CONTENT_DECRYPT_INFO pCNGContentDecryptInfo,
+  PCMSG_CTRL_KEY_AGREE_DECRYPT_PARA pKeyAgreeDecryptPara,
+  DWORD dwFlags,
+  void *pvReserved
+);
+
+typedef WINBOOL ( WINAPI *PFN_CMSG_CNG_IMPORT_CONTENT_ENCRYPT_KEY )(
+  PCMSG_CNG_CONTENT_DECRYPT_INFO pCNGContentDecryptInfo,
+  DWORD dwFlags,
+  void *pvReserved
+);
+
+#define CMSG_OID_CNG_IMPORT_KEY_TRANS_FUNC "CryptMsgDllCNGImportKeyTrans"
+
+typedef struct _CMSG_CNG_CONTENT_DECRYPT_INFO {
+  DWORD                      cbSize;
+  CRYPT_ALGORITHM_IDENTIFIER ContentEncryptionAlgorithm;
+  PFN_CMSG_ALLOC             pfnAlloc;
+  PFN_CMSG_FREE              pfnFree;
+  NCRYPT_KEY_HANDLE          hNCryptKey;
+  BYTE                       *pbContentEncryptKey;
+  DWORD                      cbContentEncryptKey;
+  BCRYPT_KEY_HANDLE          hCNGContentEncryptKey;
+  BYTE                       *pbCNGContentEncryptKeyObject;
+} CMSG_CNG_CONTENT_DECRYPT_INFO, *PCMSG_CNG_CONTENT_DECRYPT_INFO;
+
+typedef struct _CRYPT_AES_128_KEY_STATE {
+  unsigned char Key[16];
+  unsigned char IV[16];
+  unsigned char EncryptionState[[11][16]];
+  unsigned char DecryptionState[[11][16]];
+  unsigned char Feedback[16];
+} CRYPT_AES_128_KEY_STATE, *PCRYPT_AES_128_KEY_STATE;
+
+typedef struct _CRYPT_AES_256_KEY_STATE {
+  unsigned char Key[32];
+  unsigned char IV[16];
+  unsigned char EncryptionState[[15][16]];
+  unsigned char DecryptionState[[15][16]];
+  unsigned char Feedback[16];
+} CRYPT_AES_256_KEY_STATE, *PCRYPT_AES_256_KEY_STATE;
+
+typedef struct _CRYPT_CREDENTIALS {
+  DWORD  cbSize;
+  LPCSTR pszCredentialsOid;
+  LPVOID pvCredentials;
+} CRYPT_CREDENTIALS, *PCRYPT_CREDENTIALS;
+
+#define CRYPT_ECC_CMS_SHARED_INFO_SUPPPUBINFO_BYTE_LENGTH 4
+
+typedef struct _CRYPT_ECC_CMS_SHARED_INFO {
+  CRYPT_ALGORITHM_IDENTIFIER Algorithm;
+  CRYPT_DATA_BLOB            EntityUInfo;
+  BYTE                       rgbSuppPubInfo[CRYPT_ECC_CMS_SHARED_INFO_SUPPPUBINFO_BYTE_LENGTH];
+} CRYPT_ECC_CMS_SHARED_INFO, *PCRYPT_ECC_CMS_SHARED_INFO;
+
+typedef struct _CRYPT_GET_TIME_VALID_OBJECT_EXTRA_INFO {
+  DWORD                       cbSize;
+  int                         iDeltaCrlIndicator;
+  LPFILETIME                  pftCacheResync;
+  LPFILETIME                  pLastSyncTime;
+  LPFILETIME                  pMaxAgeTime;
+  PCERT_REVOCATION_CHAIN_PARA pChainPara;
+  PCRYPT_INTEGER_BLOB         pDeltaCrlIndicator;
+} CRYPT_GET_TIME_VALID_OBJECT_EXTRA_INFO, *PCRYPT_GET_TIME_VALID_OBJECT_EXTRA_INFO;
+
+#define szOID_RSA_MGF1 "1.2.840.113549.1.1.8"
+
+typedef struct _CRYPT_MASK_GEN_ALGORITHM {
+  LPSTR                      pszObjId;
+  CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
+} CRYPT_MASK_GEN_ALGORITHM, *PCRYPT_MASK_GEN_ALGORITHM;
+
+#define CRYPT_PASSWORD_CREDENTIALS __MINGW_NAME_AW(CRYPT_PASSWORD_CREDENTIALS)
+#define PCRYPT_PASSWORD_CREDENTIALS __MINGW_NAME_AW(PCRYPT_PASSWORD_CREDENTIALS)
+typedef struct _CRYPT_PASSWORD_CREDENTIALSA {
+  DWORD  cbSize;
+  LPSTR pszUsername;
+  LPSTR pszPassword;
+} CRYPT_PASSWORD_CREDENTIALSA, *PCRYPT_PASSWORD_CREDENTIALSA;
+
+typedef struct _CRYPT_PASSWORD_CREDENTIALSW {
+  DWORD  cbSize;
+  LPWSTR pszUsername;
+  LPWSTR pszPassword;
+} CRYPT_PASSWORD_CREDENTIALSW, *PCRYPT_PASSWORD_CREDENTIALSW;
+
+typedef struct _CRYPT_PKCS12_PBE_PARAMS {
+  int   iIterations;
+  ULONG cbSalt;
+} CRYPT_PKCS12_PBE_PARAMS;
+
+#define szOID_RSA_PSPECIFIED "1.2.840.113549.1.1.9"
+
+typedef struct _CRYPT_PSOURCE_ALGORITHM {
+  LPSTR           pszObjId;
+  CRYPT_DATA_BLOB EncodingParameters;
+} CRYPT_PSOURCE_ALGORITHM, *PCRYPT_PSOURCE_ALGORITHM;
+
+typedef struct _CRYPT_RSA_SSA_PSS_PARAMETERS {
+  CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
+  CRYPT_MASK_GEN_ALGORITHM   MaskGenAlgorithm;
+  DWORD                      dwSaltLength;
+  DWORD                      dwTrailerField;
+} CRYPT_RSA_SSA_PSS_PARAMETERS, *PCRYPT_RSA_SSA_PSS_PARAMETERS;
+
+typedef struct _CRYPT_RSAES_OAEP_PARAMETERS {
+  CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
+  CRYPT_MASK_GEN_ALGORITHM   MaskGenAlgorithm;
+  CRYPT_PSOURCE_ALGORITHM    PSourceAlgorithm;
+} CRYPT_RSAES_OAEP_PARAMETERS, *PCRYPT_RSAES_OAEP_PARAMETERS;
+
+typedef struct _CRYPT_SMART_CARD_ROOT_INFO {
+  BYTE           rgbCardID[16];
+  ROOT_INFO_LUID luid;
+} CRYPT_SMART_CARD_ROOT_INFO, *PCRYPT_SMART_CARD_ROOT_INFO;
+
+#define CRYPTNET_URL_CACHE_DEFAULT_FLUSH 0
+#define CRYPTNET_URL_CACHE_DISABLE_FLUSH 0xFFFFFFFF
+
+typedef struct _CRYPTNET_URL_CACHE_FLUSH_INFO {
+  DWORD    cbSize;
+  DWORD    dwExemptSeconds;
+  FILETIME ExpireTime;
+} CRYPTNET_URL_CACHE_FLUSH_INFO, *PCRYPTNET_URL_CACHE_FLUSH_INFO;
+
+#define CRYPTNET_URL_CACHE_PRE_FETCH_NONE 0
+#define CRYPTNET_URL_CACHE_PRE_FETCH_BLOB 1
+#define CRYPTNET_URL_CACHE_PRE_FETCH_CRL 2
+#define CRYPTNET_URL_CACHE_PRE_FETCH_OCSP 3
+#define CRYPTNET_URL_CACHE_PRE_FETCH_AUTOROOT_CAB 5
+#define szOID_CRL_NEXT_PUBLISH "1.3.6.1.4.1.311.21.4"
+
+typedef struct _CRYPTNET_URL_CACHE_PRE_FETCH_INFO {
+  DWORD    cbSize;
+  DWORD    dwObjectType;
+  DWORD    dwError;
+  DWORD    dwReserved;
+  FILETIME ThisUpdateTime;
+  FILETIME NextUpdateTime;
+  FILETIME PublishTime;
+} CRYPTNET_URL_CACHE_PRE_FETCH_INFO, *PCRYPTNET_URL_CACHE_PRE_FETCH_INFO;
+
+#define CRYPTNET_URL_CACHE_RESPONSE_NONE 0
+#define CRYPTNET_URL_CACHE_RESPONSE_HTTP 1
+#define CRYPTNET_URL_CACHE_RESPONSE_VALIDATED 0x8000
+
+typedef struct _CRYPTNET_URL_CACHE_RESPONSE_INFO {
+  DWORD    cbSize;
+  WORD     wResponseType;
+  WORD     wResponseFlags;
+  FILETIME LastModifiedTime;
+  DWORD    dwMaxAge;
+  LPCWSTR  pwszETag;
+  DWORD    dwProxyId;
+} CRYPTNET_URL_CACHE_RESPONSE_INFO, *PCRYPTNET_URL_CACHE_RESPONSE_INFO;
+
+WINBOOL WINAPI CryptGetTimeValidObject(
+  LPCSTR pszTimeValidOid,
+  LPVOID pvPara,
+  PCCERT_CONTEXT pIssuer,
+  LPFILETIME pftValidFor,
+  DWORD dwFlags,
+  DWORD dwTimeout,
+  LPVOID *ppvObject,
+  PCRYPT_CREDENTIALS pCredentials,
+  PCRYPT_GET_TIME_VALID_OBJECT_EXTRA_INFO pExtraInfo
+);
+
+WINBOOL WINAPI CryptHashCertificate2(
+  LPCWSTR pwszCNGHashAlgid,
+  DWORD dwFlags,
+  void *pvReserved,
+  BYTE *pbEncoded,
+  DWORD cbEncoded,
+  BYTE *pbComputedHash,
+  DWORD *pcbComputedHash
+);
+
+WINBOOL WINAPI CryptImportPublicKeyInfoEx2(
+  DWORD dwCertEncodingType,
+  PCERT_PUBLIC_KEY_INFO pInfo,
+  DWORD dwFlags,
+  void *pvAuxInfo,
+  BCRYPT_KEY_HANDLE *phKey
+);
+
+WINBOOL WINAPI CryptProtectMemory(
+  LPVOID pData,
+  DWORD cbData,
+  DWORD dwFlags
+);
+
+WINBOOL WINAPI CryptUnprotectMemory(
+  LPVOID pData,
+  DWORD cbData,
+  DWORD dwFlags
+);
+
+WINBOOL WINAPI CryptUpdateProtectedState(
+  PSID pOldSid,
+  LPCWSTR pwszOldPassword,
+  DWORD dwFlags,
+  DWORD *pdwSuccessCount,
+  DWORD *pdwFailureCount
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

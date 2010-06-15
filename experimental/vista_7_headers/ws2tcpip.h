@@ -103,6 +103,8 @@ typedef struct sockaddr_in6 SOCKADDR_IN6;
 typedef struct sockaddr_in6 *PSOCKADDR_IN6;
 typedef struct sockaddr_in6 *LPSOCKADDR_IN6;
 
+#include <ws2ipdef.h>
+
 #define SS_PORT(ssp) (((struct sockaddr_in*)(ssp))->sin_port)
 
 #define IN6ADDR_ANY_INIT { 0 }

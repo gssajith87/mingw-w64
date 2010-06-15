@@ -74,6 +74,51 @@ typedef struct _CLFS_MGMT_POLICY {
   } PolicyParameters;
 } CLFS_MGMT_POLICY,  *PCLFS_MGMT_POLICY;
 
+typedef struct _ClfsMgmtPolicyAutoGrow {
+  ULONG Enabled;
+} ClfsMgmtPolicyAutoGrow;
+
+typedef struct _ClfsMgmtPolicyAutoShrink {
+  ULONG Percentage;
+} ClfsMgmtPolicyAutoShrink;
+
+typedef struct _ClfsMgmtPolicyGrowthRate {
+  ULONG AbsoluteGrowthInContainers;
+  ULONG RelativeGrowthPercentage;
+} ClfsMgmtPolicyGrowthRate;
+
+typedef struct _ClfsMgmtPolicyLogTail {
+  ULONG MinimumAvailablePercentage;
+  ULONG MinimumAvailableContainers;
+} ClfsMgmtPolicyLogTail;
+
+typedef struct _ClfsMgmtPolicyMinimumSize {
+  ULONG Containers;
+} ClfsMgmtPolicyMinimumSize;
+
+typedef struct _ClfsMgmtPolicyMaximumSize {
+  ULONG Containers;
+} ClfsMgmtPolicyMaximumSize;
+
+Copy
+
+typedef struct _ClfsMgmtPolicyNewContainerExtension {
+  ULONG ExtensionLengthInBytes;
+  WCHAR ExtensionString[1];
+} ClfsMgmtPolicyNewContainerExtension, *PClfsMgmtPolicyNewContainerExtension;
+
+typedef struct _ClfsMgmtPolicyNewContainerPrefix {
+  USHORT PrefixLengthInBytes;
+  WCHAR  PrefixString[1];
+} ClfsMgmtPolicyNewContainerPrefix;
+
+typedef struct _ClfsMgmtPolicyNewContainerSize {
+  ULONG SizeInBytes;
+} ClfsMgmtPolicyNewContainerSize;
+
+typedef struct _ClfsMgmtPolicyNewContainerSuffix {
+  ULONGLONG NextContainerSuffix;
+} ClfsMgmtPolicyNewContainerSuffix, *PClfsMgmtPolicyNewContainerSuffix;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_CLFSMGMT*/

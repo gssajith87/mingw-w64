@@ -98,7 +98,26 @@ typedef enum _TCP_TABLE_CLASS {
 
 #if (_WIN32_WINNT == 0x0502) /* Only with Win2003 SP1 and SP2 */
   WINBOOL WINAPI CancelSecurityHealthChangeNotify(LPOVERLAPPED notifyOverlapped);
+#endif /*(_WIN32_WINNT == 0x0502)*/
+
+#if (_WIN32_WINNT >= 0x0600)
+#include <windns.h>
+typedef struct _NET_ADDRESS_INFO {
+  NET_ADDRESS_FORMAT Format;
+  union DUMMYUNIONNAME {
+    struct DUMMYSTRUCTNAME {
+      WCHAR Address[DNS_MAX_NAME_BUFFER_LENGTH];
+      WCHAR Port[6];
+    } NamedAddress;
+    SOCKADDR_IN  Ipv4Address;
+    SOCKADDR_IN6 Ipv6Address;
+    SOCKADDR     IpAddress;
+  } ;
+} NET_ADDRESS_INFO, *PNET_ADDRESS_INFO;
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
+
 }
 #endif
 #endif

@@ -16,6 +16,7 @@ extern "C" {
 #define WINVER 0x0502
 #endif
 
+#include <_mingw.h>
 #include <stdarg.h>
 #include <guiddef.h>
 
@@ -5442,6 +5443,31 @@ typedef struct _AUDIODESCRIPTION {
   BOOL Enabled;
   LCID Locale;
 } AUDIODESCRIPTION, *PAUDIODESCRIPTION;
+
+#define CreateDesktopEx __MINGW_NAME_AW(CreateDesktopEx)
+
+HDESK WINAPI CreateDesktopExA(
+  LPCSTR lpszDesktop,
+  LPCSTR lpszDevice,
+  DEVMODE *pDevmode,
+  DWORD dwFlags,
+  ACCESS_MASK dwDesiredAccess,
+  LPSECURITY_ATTRIBUTES lpsa,
+  ULONG ulHeapSize,
+  PVOID pvoid
+);
+
+HDESK WINAPI CreateDesktopExW(
+  LPCWSTR lpszDesktop,
+  LPCWSTR lpszDevice,
+  DEVMODE *pDevmode,
+  DWORD dwFlags,
+  ACCESS_MASK dwDesiredAccess,
+  LPSECURITY_ATTRIBUTES lpsa,
+  ULONG ulHeapSize,
+  PVOID pvoid
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #endif /* NOUSER */

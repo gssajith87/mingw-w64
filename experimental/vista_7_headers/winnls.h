@@ -773,6 +773,28 @@ extern "C" {
   WINBASEAPI int WINAPI IdnToNameprepUnicode(DWORD dwFlags,LPCWSTR lpUnicodeCharStr,int cchUnicodeChar,LPWSTR lpNameprepCharStr,int cchNameprepChar);
   WINBASEAPI int WINAPI IdnToUnicode(DWORD dwFlags,LPCWSTR lpASCIICharStr,int cchASCIIChar,LPWSTR lpUnicodeCharStr,int cchUnicodeChar);
 
+#if (_WIN32_WINNT >= 0x0600)
+WINBASEAPI int WINAPI CompareStringEx(
+  LPCWSTR lpLocaleName,
+  DWORD dwCmpFlags,
+  LPCWSTR lpString1,
+  int cchCount1,
+  LPCWSTR lpString2,
+  int cchCount2,
+  LPNLSVERSIONINFO lpVersionInformation,
+  LPVOID lpReserved,
+  LPARAM lParam
+);
+
+WINBASEAPI int WINAPI CompareStringOrdinal(
+  LPCWSTR lpString1,
+  int cchCount1,
+  LPCWSTR lpString2,
+  int cchCount2,
+  WINBOOL bIgnoreCase
+);
+
+#endif /* (_WIN32_WINNT >= 0x0600) */
 #endif
 
 #ifdef __cplusplus

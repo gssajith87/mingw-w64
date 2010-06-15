@@ -5,6 +5,7 @@
  */
 #ifndef _WINSVC_
 #define _WINSVC_
+#include <_mingw.h>
 
 #ifndef WINADVAPI
 #define WINADVAPI DECLSPEC_IMPORT
@@ -390,6 +391,24 @@ extern "C" {
   WINADVAPI WINBOOL WINAPI StartServiceA(SC_HANDLE hService,DWORD dwNumServiceArgs,LPCSTR *lpServiceArgVectors);
   WINADVAPI WINBOOL WINAPI StartServiceW(SC_HANDLE hService,DWORD dwNumServiceArgs,LPCWSTR *lpServiceArgVectors);
   WINADVAPI WINBOOL WINAPI UnlockServiceDatabase(SC_LOCK ScLock);
+  
+#if (_WIN32_WINNT >= 0x0600)
+#define ControlServiceEx __MINGW_NAME_AW(ControlServiceEx)
+
+WINADVAPI WINBOOL WINAPI ControlServiceExA(
+  SC_HANDLE hService,
+  DWORD dwControl,
+  DWORD dwInfoLevel,
+  PVOID pControlParams
+);
+
+WINADVAPI WINBOOL WINAPI ControlServiceExW(
+  SC_HANDLE hService,
+  DWORD dwControl,
+  DWORD dwInfoLevel,
+  PVOID pControlParams
+);
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus
 }

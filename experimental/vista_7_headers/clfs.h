@@ -2,6 +2,12 @@
 #define _INC_CLFS
 #include <_mingw.h>
 #if (_WIN32_WINNT >= 0x0600)
+#define CLFS_SCAN_INIT 0x01
+#define CLFS_SCAN_FORWARD 0x02
+#define CLFS_SCAN_BACKWARD 0x04
+#define CLFS_SCAN_CLOSE 0x08
+#define CLFS_SCAN_INITIALIZED 0x10
+#define CLFS_SCAN_BUFFERED 0x20
 
 typedef enum  {
   ClfsContextNone       = 0x00,

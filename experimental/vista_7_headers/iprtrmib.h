@@ -7,7 +7,7 @@
 #define __ROUTING_IPRTRMIB_H__
 
 #include <mprapi.h>
-
+#include <ipmib.h>
 #include <ipifcons.h>
 
 #define IPRTRMGR_PID 10000
@@ -732,6 +732,11 @@ typedef struct _MIB_OPAQUE_INFO {
     BYTE rgbyData[1];
   };
 } MIB_OPAQUE_INFO,*PMIB_OPAQUE_INFO;
+
+typedef struct {
+  PWCHAR pModuleName;
+  PWCHAR pModulePath;
+} TCPIP_OWNER_MODULE_BASIC_INFO, *PTCPIP_OWNER_MODULE_BASIC_INFO;
 
 #define MAX_MIB_OFFSET 8
 

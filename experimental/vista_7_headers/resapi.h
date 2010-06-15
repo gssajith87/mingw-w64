@@ -237,6 +237,31 @@ extern "C" {
   DWORD WINAPI ResUtilGetCoreClusterResources(HCLUSTER hCluster,HRESOURCE *phClusterNameResource,HRESOURCE *phClusterIPAddressResource,HRESOURCE *phClusterQuorumResource);
   DWORD WINAPI ResUtilGetResourceName(HRESOURCE hResource,PWSTR pszResourceName,DWORD *pcchResourceNameInOut);
 
+#if (_WIN32_WINNT >= 0x0600)
+typedef enum _CLUSTER_ROLE {
+  ClusterRoleDHCP                          = 0,
+  ClusterRoleDTC                           = 1,
+  ClusterRoleFileServer                    = 2,
+  ClusterRoleGenericApplication            = 3,
+  ClusterRoleGenericScript                 = 4,
+  ClusterRoleGenericService                = 5,
+  ClusterRoleISCSINameServer               = 6,
+  ClusterRoleMSMQ                          = 7,
+  ClusterRoleNFS                           = 8,
+  ClusterRolePrintServer                   = 9,
+  ClusterRoleStandAloneNamespaceServer     = 10,
+  ClusterRoleVolumeShadowCopyServiceTask   = 11,
+  ClusterRoleWINS                          = 12 
+} CLUSTER_ROLE;
+
+typedef enum _CLUSTER_ROLE_STATE {
+  ClusterRoleUnknown       = -1,
+  ClusterRoleClustered     = 0,
+  ClusterRoleUnclustered   = 1 
+} CLUSTER_ROLE_STATE;
+
+#endif /* (_WIN32_WINNT >= 0x0600) */
+
 #ifdef __cplusplus
 }
 #endif

@@ -294,6 +294,45 @@ extern "C" {
   WINBASEAPI DWORD WINAPI GetConsoleAliasesW(LPWSTR AliasBuffer,DWORD AliasBufferLength,LPWSTR ExeName);
   WINBASEAPI DWORD WINAPI GetConsoleAliasExesA(LPSTR ExeNameBuffer,DWORD ExeNameBufferLength);
   WINBASEAPI DWORD WINAPI GetConsoleAliasExesW(LPWSTR ExeNameBuffer,DWORD ExeNameBufferLength);
+#if (_WIN32_WINNT >= 0x0600)
+#define LF_FACESIZE 32
+
+typedef struct _CONSOLE_FONT_INFOEX {
+  ULONG cbSize;
+  DWORD nFont;
+  COORD dwFontSize;
+  UINT  FontFamily;
+  UINT  FontWeight;
+  WCHAR FaceName[LF_FACESIZE];
+} CONSOLE_FONT_INFOEX, *PCONSOLE_FONT_INFOEX;
+
+typedef struct _CONSOLE_HISTORY_INFO {
+  UINT  cbSize;
+  UINT  HistoryBufferSize;
+  UINT  NumberOfHistoryBuffers;
+  DWORD dwFlags;
+} CONSOLE_HISTORY_INFO, *PCONSOLE_HISTORY_INFO;
+
+typedef struct _CONSOLE_READCONSOLE_CONTROL {
+  ULONG nLength;
+  ULONG nInitialChars;
+  ULONG dwCtrlWakeupMask;
+  ULONG dwControlKeyState;
+} CONSOLE_READCONSOLE_CONTROL, *PCONSOLE_READCONSOLE_CONTROL;
+
+typedef struct _CONSOLE_SCREEN_BUFFER_INFOEX {
+  ULONG      cbSize;
+  COORD      dwSize;
+  COORD      dwCursorPosition;
+  WORD       wAttributes;
+  SMALL_RECT srWindow;
+  COORD      dwMaximumWindowSize;
+  WORD       wPopupAttributes;
+  BOOL       bFullscreenSupported;
+  COLORREF   ColorTable[16];
+} CONSOLE_SCREEN_BUFFER_INFOEX, *PCONSOLE_SCREEN_BUFFER_INFOEX;
+
+#endif /* (_WIN32_WINNT >= 0x0600) */
 
 #ifdef __cplusplus
 }
