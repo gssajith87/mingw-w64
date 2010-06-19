@@ -90,6 +90,14 @@ typedef enum  {
   DXVA2_SurfaceType_D3DRenderTargetTexture   = 2 
 } DXVA2_SurfaceType;
 
+typedef enum _DXVA2_VideoTransferMatrix {
+  DXVA2_VideoTransferMatrixMask         = 0x07,
+  DXVA2_VideoTransferMatrix_Unknown     = 0,
+  DXVA2_VideoTransferMatrix_BT709       = 1,
+  DXVA2_VideoTransferMatrix_BT601       = 2,
+  DXVA2_VideoTransferMatrix_SMPTE240M   = 3 
+} DXVA2_VideoTransferMatrix;
+
 typedef struct _DXVA2_AYUVSample16 {
   USHORT Cr;
   USHORT Cb;
@@ -276,6 +284,22 @@ DXVA2_DetailFilterTech_Unknown
 DXVA2_DetailFilterTech_Edge
 DXVA2_DetailFilterTech_Sharpening
 */
+typedef struct _DXVA2_VideoProcessBltParams {
+  REFERENCE_TIME       TargetFrame;
+  RECT                 TargetRect;
+  SIZE                 ConstrictionSize;
+  UINT                 StreamingFlags;
+  DXVA2_AYUVSample16   BackgroundColor;
+  DXVA2_ExtendedFormat DestFormat;
+  DXVA2_ProcAmpValues  ProcAmpValues;
+  DXVA2_Fixed32        Alpha;
+  DXVA2_FilterValues   NoiseFilterLuma;
+  DXVA2_FilterValues   NoiseFilterChroma;
+  DXVA2_FilterValues   DetailFilterLuma;
+  DXVA2_FilterValues   DetailFilterChroma;
+  DWORD                DestData;
+} DXVA2_VideoProcessBltParams;
+
 typedef struct _DXVA2_VideoProcessorCaps {
   UINT    DeviceCaps;
   D3DPOOL InputPool;
