@@ -1,8 +1,17 @@
 #ifndef _INC_MFOBJECTS
 #define _INC_MFOBJECTS
+#include <windows.h>
 #include <oaidl.h>
+#include <propidl.h>
 
 #if (_WIN32_WINNT >= 0x0600)
+
+typedef struct IMFAsyncCallback IMFAsyncCallback;
+typedef struct IMFMediaEvent IMFMediaEvent;
+typedef struct IMFPresentationDescriptor IMFPresentationDescriptor;
+typedef LPVOID MediaEventType;
+typedef struct PROPVARIANT *REFPROPVARIANT;
+__MINGW_EXTENSION typedef unsigned __int64 QWORD;
 
 enum MF_ATTRIBUTE_SERIALIZE_OPTIONS {
   MF_ATTRIBUTE_SERIALIZE_UNKNOWN_BYREF   = 0x00000001 
@@ -39,7 +48,7 @@ typedef enum MF_FILE_ACCESSMODE {
   MF_ACCESSMODE_READ        = 1,
   MF_ACCESSMODE_WRITE       = 2,
   MF_ACCESSMODE_READWRITE   = 3 
-} ;
+} MF_FILE_ACCESSMODE;
 
 typedef enum  {
   MF_FILEFLAGS_NONE                  = 0x00000000,
@@ -55,11 +64,22 @@ typedef enum  {
   MF_OPENMODE_DELETE_IF_EXIST     = 4 
 } MF_FILE_OPENMODE;
 
-typedef enum MF_OBJECT_TYPE {
-  MF_OBJECT_MEDIASOURCE,
-  MF_OBJECT_BYTESTREAM,
-  MF_OBJECT_INVALID 
-} MF_OBJECT_TYPE;
+typedef enum _MFVideoTransferFunction {
+  MFVideoTransFunc_Unknown      = 0,
+  MFVideoTransFunc_10           = 1,
+  MFVideoTransFunc_18           = 2,
+  MFVideoTransFunc_20           = 3,
+  MFVideoTransFunc_22           = 4,
+  MFVideoTransFunc_709          = 5,
+  MFVideoTransFunc_240M         = 6,
+  MFVideoTransFunc_sRGB         = 7,
+  MFVideoTransFunc_28           = 8,
+  MFVideoTransFunc_Log_100      = 9,
+  MFVideoTransFunc_Log_316      = 10,
+  MFVideoTransFunc_709_sym      = 11,
+  MFVideoTransFunc_Last,
+  MFVideoTransFunc_ForceDWORD   = 0x7FFFFFFF 
+} MFVideoTransferFunction;
 
 #if (_WIN32_WINNT >= 0x0601)
 
@@ -228,20 +248,6 @@ typedef struct _MFVideoInfo {
   unsigned __int64         VideoFlags;
 } MFVideoInfo;
 
-typedef struct _MFVideoSurfaceInfo {
-  DWORD          Format;
-  DWORD          PaletteEntries;
-  MFPaletteEntry Palette[];
-} MFVideoSurfaceInfo;
-
-typedef struct _MFVIDEOFORMAT {
-  DWORD                 dwSize;
-  MFVideoInfo           videoInfo;
-  GUID                  guidFormat;
-  MFVideoCompressedInfo compressedInfo;
-  MFVideoSurfaceInfo    surfaceInfo;
-} MFVIDEOFORMAT;
-
 typedef struct _MFARGB {
   BYTE rgbBlue;
   BYTE rgbGreen;
@@ -255,6 +261,25 @@ typedef struct __MFAYUVSample {
   BYTE bYValue;
   BYTE bSampleAlpha8;
 } MFAYUVSample;
+
+typedef union _MFPaletteEntry {
+  MFARGB       ARGB;
+  MFAYUVSample AYCbCr;
+} MFPaletteEntry;
+
+typedef struct _MFVideoSurfaceInfo {
+  DWORD          Format;
+  DWORD          PaletteEntries;
+  MFPaletteEntry Palette[];
+} MFVideoSurfaceInfo;
+
+typedef struct _MFVIDEOFORMAT {
+  DWORD                 dwSize;
+  MFVideoInfo           videoInfo;
+  GUID                  guidFormat;
+  MFVideoCompressedInfo compressedInfo;
+  MFVideoSurfaceInfo    surfaceInfo;
+} MFVIDEOFORMAT;
 
 #define MF_MEDIATYPE_EQUAL_MAJOR_TYPES          0x00000001
 #define MF_MEDIATYPE_EQUAL_FORMAT_TYPES         0x00000002
@@ -1061,6 +1086,39 @@ DECLARE_INTERFACE_(IMFVideoMediaType,IMFMediaType)
 #define IMFVideoMediaType_IsEqual(This,pIMediaType,pdwFlags) (This)->lpVtbl->IsEqual(This,pIMediaType,pdwFlags)
 #define IMFVideoMediaType_GetVideoFormat() (This)->lpVtbl->GetVideoFormat(This)
 #define IMFVideoMediaType_GetVideoRepresentation(This,guidRepresentation,ppvRepresentation,lStride) (This)->lpVtbl->GetVideoRepresentation(This,guidRepresentation,ppvRepresentation,lStride)
+#endif /*COBJMACROS*/
+
+#undef  INTERFACE
+#define INTERFACE IMFCollection
+DECLARE_INTERFACE_(IMFCollection,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFCollection methods */
+    STDMETHOD_(HRESULT,AddElement)(THIS_ IUnknown *pUnkElement) PURE;
+    STDMETHOD_(HRESULT,GetElement)(THIS_ DWORD dwElementIndex,IUnknown **ppUnkElement) PURE;
+    STDMETHOD_(HRESULT,GetElementCount)(THIS_ DWORD *pcElements) PURE;
+    STDMETHOD_(HRESULT,InsertElementAt)(THIS_ DWORD dwIndex,IUnknown *pUnknown) PURE;
+    STDMETHOD_(HRESULT,RemoveAllElements)(THIS) PURE;
+    STDMETHOD_(HRESULT,RemoveElement)(THIS_ DWORD dwElementIndex,IUnknown **ppUnkElement) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFCollection_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFCollection_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFCollection_Release(This) (This)->pVtbl->Release(This)
+#define IMFCollection_AddElement(This,pUnkElement) (This)->lpVtbl->AddElement(This,pUnkElement)
+#define IMFCollection_GetElement(This,dwElementIndex,ppUnkElement) (This)->lpVtbl->GetElement(This,dwElementIndex,ppUnkElement)
+#define IMFCollection_GetElementCount(This,pcElements) (This)->lpVtbl->GetElementCount(This,pcElements)
+#define IMFCollection_InsertElementAt(This,dwIndex,pUnknown) (This)->lpVtbl->InsertElementAt(This,dwIndex,pUnknown)
+#define IMFCollection_RemoveAllElements() (This)->lpVtbl->RemoveAllElements(This)
+#define IMFCollection_RemoveElement(This,dwElementIndex,ppUnkElement) (This)->lpVtbl->RemoveElement(This,dwElementIndex,ppUnkElement)
 #endif /*COBJMACROS*/
 
 #if (_WIN32_WINNT >= 0x0601)

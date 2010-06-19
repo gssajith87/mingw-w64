@@ -1,8 +1,19 @@
 #ifndef _INC_MFAPI
 #define _INC_MFAPI
+#include <windows.h>
 #include <mfidl.h>
+#include <dshow.h>
+#include <dvdmedia.h>
+#include <opmapi.h>
+#include <propsys.h>
 
 #if (_WIN32_WINNT >= 0x0600)
+/*ksmedia.h needs fixing about "multi-character character constant"*/
+typedef struct _MFT_REGISTRATION_INFO MFT_REGISTRATION_INFO;
+typedef struct tagKS_VIDEOINFOHEADER KS_VIDEOINFOHEADER, *PKS_VIDEOINFOHEADER;
+typedef struct tagKS_VIDEOINFOHEADER2 KS_VIDEOINFOHEADER2, *PKS_VIDEOINFOHEADER2;
+typedef struct IMFActivate IMFActivate;
+typedef enum _EAllocationType { eAllocationTypeIgnore } EAllocationType; /*Unknown type*/
 
 typedef enum  {
   MF_TOPOSTATUS_INVALID           = 0,
@@ -43,31 +54,6 @@ typedef enum _MFWaveFormatExConvertFlags {
   MFWaveFormatExConvertFlag_Normal            = 0,
   MFWaveFormatExConvertFlag_ForceExtensible   = 1 
 } MFWaveFormatExConvertFlags;
-
-#undef  INTERFACE
-#define INTERFACE IMFAsyncCallback
-DECLARE_INTERFACE_(IMFAsyncCallback,IUnknown)
-{
-    BEGIN_INTERFACE
-
-    /* IUnknown methods */
-    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
-    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
-    STDMETHOD_(ULONG, Release)(THIS) PURE;
-
-    /* IMFAsyncCallback methods */
-    STDMETHOD_(HRESULT,GetParameters)(THIS_ DWORD *pdwFlags,DWORD *pdwQueue) PURE;
-    STDMETHOD_(HRESULT,MFInvokeCallback)(THIS_ IMFAsyncResult *pAsyncResult) PURE;
-
-    END_INTERFACE
-};
-#ifdef COBJMACROS
-#define IMFAsyncCallback_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
-#define IMFAsyncCallback_AddRef(This) (This)->pVtbl->AddRef(This)
-#define IMFAsyncCallback_Release(This) (This)->pVtbl->Release(This)
-#define IMFAsyncCallback_GetParameters(This,pdwFlags,pdwQueue) (This)->lpVtbl->GetParameters(This,pdwFlags,pdwQueue)
-#define IMFAsyncCallback_MFInvokeCallback(This,pAsyncResult) (This)->lpVtbl->MFInvokeCallback(This,pAsyncResult)
-#endif /*COBJMACROS*/
 
 #if (_WIN32_WINNT >= 0x0601)
 #undef  INTERFACE
@@ -167,7 +153,7 @@ HRESULT WINAPI MFGetAttributeRatio(IMFAttributes *pAttributes,REFGUID guidKey,UI
 HRESULT WINAPI MFGetAttributesAsBlob(IMFAttributes *pAttributes,UINT8 *pBuf,UINT cbBufSize);
 HRESULT WINAPI MFGetAttributesAsBlobSize(IMFAttributes *pAttributes,UINT32 *pcbBufSize);
 HRESULT WINAPI MFGetAttributeSize(IMFAttributes *pAttributes,REFGUID guidKey,UINT32 *punWidth,UINT32 *punHeight);
-UINT32 WINAPI MFGetAttributeUINT32(__in  IMFAttributes *pAttributes,__in  REFGUID guidKey,__in  UINT32 unDefault);
+UINT32 WINAPI MFGetAttributeUINT32(IMFAttributes *pAttributes,REFGUID guidKey,UINT32 unDefault);
 UINT64 WINAPI MFGetAttributeUINT64(IMFAttributes *pAttributes,REFGUID guidKey,UINT64 unDefault);
 HRESULT WINAPI MFGetPlaneSize(DWORD format,DWORD dwWidth,DWORD dwHeight,DWORD *pdwPlaneSize);
 HRESULT WINAPI MFGetStrideForBitmapInfoHeader(DWORD format,DWORD dwWidth,LONG *pStride);

@@ -2,6 +2,7 @@
 #define _INC_WMCONTAINER
 #include <objbase.h>
 #include <oaidl.h>
+#include <propsys.h>
 #include <mfidl.h>
 
 #if (_WIN32_WINNT >= 0x0600)
@@ -9,6 +10,15 @@
 #ifdef __IMFASFSplitter_FWD_DEFINED__
 #define __IMFASFSplitter_FWD_DEFINED__
 typedef struct IMFASFSplitter IMFASFSplitter;
+#endif
+
+typedef struct IMFASFContentInfo IMFASFContentInfo;
+typedef struct IMFASFProfile IMFASFProfile;
+typedef struct IMFActivate IMFActivate;
+
+#ifndef __MFTIME_DEFINED__
+#define __MFTIME_DEFINED__
+__MINGW_EXTENSION typedef LONGLONG MFTIME;
 #endif
 
 typedef enum ASF_SELECTION_STATUS {
@@ -24,17 +34,17 @@ typedef enum ASF_STATUSFLAGS {
 
 typedef enum MFASF_MULTIPLEXERFLAGS {
   MFASF_MULTIPLEXER_AUTOADJUST_BITRATE   = 0x00000001 
-} ;
+} MFASF_MULTIPLEXERFLAGS;
 
 typedef enum MFASF_SPLITTERFLAGS {
   MFASF_SPLITTER_REVERSE   = 0x00000001,
   MFASF_SPLITTER_WMDRM     = 0x00000002 
-} ;
+} MFASF_SPLITTERFLAGS;
 
 typedef enum MFASF_STREAMSELECTORFLAGS {
   MFASF_STREAMSELECTOR_DISABLE_THINNING      = 0x00000001,
   MFASF_STREAMSELECTOR_USE_AVERAGE_BITRATE   = 0x00000002 
-} ;
+} MFASF_STREAMSELECTORFLAGS;
 
 typedef struct ASF_MUX_STATISTICS {
   DWORD cFramesWritten;
@@ -161,37 +171,6 @@ DECLARE_INTERFACE_(IMFASFSplitter,IUnknown)
 #define IMFASFSplitter_ParseData(This,pIBuffer,cbBufferOffset,cbLength) (This)->lpVtbl->ParseData(This,pIBuffer,cbBufferOffset,cbLength)
 #define IMFASFSplitter_SelectStreams(This,pwStreamNumbers,wNumStreams) (This)->lpVtbl->SelectStreams(This,pwStreamNumbers,wNumStreams)
 #define IMFASFSplitter_SetFlags(This,dwFlags) (This)->lpVtbl->SetFlags(This,dwFlags)
-#endif /*COBJMACROS*/
-
-#undef  INTERFACE
-#define INTERFACE IMFASFIndexer
-DECLARE_INTERFACE_(IMFASFIndexer,IUnknown)
-{
-    BEGIN_INTERFACE
-
-    /* IUnknown methods */
-    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
-    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
-    STDMETHOD_(ULONG, Release)(THIS) PURE;
-
-    /* IMFASFIndexer methods */
-    STDMETHOD_(HRESULT,CommitIndex)(THIS_ IMFASFContentInfo *pIContentInfo) PURE;
-    STDMETHOD_(HRESULT,GenerateIndexEntries)(THIS_ IMFSample *pIASFPacketSample) PURE;
-    STDMETHOD_(HRESULT,GetCompletedIndex)(THIS_ IMFMediaBuffer *pIIndexBuffer,QWORD cbOffsetWithinIndex) PURE;
-    STDMETHOD_(HRESULT,GetFlags)(THIS_ DWORD *pdwFlags) PURE;
-    STDMETHOD_(HRESULT,GetIndexByteStreamCount)(THIS_ DWORD *pcByteStreams) PURE;
-
-    END_INTERFACE
-};
-#ifdef COBJMACROS
-#define IMFASFIndexer_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
-#define IMFASFIndexer_AddRef(This) (This)->pVtbl->AddRef(This)
-#define IMFASFIndexer_Release(This) (This)->pVtbl->Release(This)
-#define IMFASFIndexer_CommitIndex(This,pIContentInfo) (This)->lpVtbl->CommitIndex(This,pIContentInfo)
-#define IMFASFIndexer_GenerateIndexEntries(This,pIASFPacketSample) (This)->lpVtbl->GenerateIndexEntries(This,pIASFPacketSample)
-#define IMFASFIndexer_GetCompletedIndex(This,pIIndexBuffer,cbOffsetWithinIndex) (This)->lpVtbl->GetCompletedIndex(This,pIIndexBuffer,cbOffsetWithinIndex)
-#define IMFASFIndexer_GetFlags(This,pdwFlags) (This)->lpVtbl->GetFlags(This,pdwFlags)
-#define IMFASFIndexer_GetIndexByteStreamCount(This,pcByteStreams) (This)->lpVtbl->GetIndexByteStreamCount(This,pcByteStreams)
 #endif /*COBJMACROS*/
 
 #undef  INTERFACE

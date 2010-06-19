@@ -1,6 +1,8 @@
 #ifndef _INC_EVR
 #define _INC_EVR
+#include <windows.h>
 #include <oaidl.h>
+#include <mfidl.h>
 
 #if (_WIN32_WINNT >= 0x0600)
 #if (_WIN32_WINNT >= 0x0601)
@@ -45,20 +47,7 @@ typedef enum MFVideoRenderPrefs {
   MFVideoRenderPrefs_Mask                    = 0x000000ff 
 } MFVideoRenderPrefs;
 
-Copy
-
-typedef enum  {
-  MFVP_MESSAGE_FLUSH                 = 0x00000000,
-  MFVP_MESSAGE_INVALIDATEMEDIATYPE   = 0x00000001,
-  MFVP_MESSAGE_PROCESSINPUTNOTIFY    = 0x00000002,
-  MFVP_MESSAGE_BEGINSTREAMING        = 0x00000003,
-  MFVP_MESSAGE_ENDSTREAMING          = 0x00000004,
-  MFVP_MESSAGE_ENDOFSTREAM           = 0x00000005,
-  MFVP_MESSAGE_STEP                  = 0x00000006,
-  MFVP_MESSAGE_CANCELSTEP            = 0x00000007 
-} MFVP_MESSAGE_TYPE;
-
-typedef enum  {
+typedef enum _MFVP_MESSAGE_TYPE {
   MFVP_MESSAGE_FLUSH                 = 0x00000000,
   MFVP_MESSAGE_INVALIDATEMEDIATYPE   = 0x00000001,
   MFVP_MESSAGE_PROCESSINPUTNOTIFY    = 0x00000002,

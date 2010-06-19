@@ -1,23 +1,41 @@
 #ifndef _INC_MFIDL
 #define _INC_MFIDL
+#include <windows.h>
 #include <mfobjects.h>
 #include <mfapi.h>
 #include <wmcontainer.h>
+#include <evr.h>
+#include <mftransform.h>
+#include <propsys.h>
 
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifndef __MFTIME_DEFINED__
+#define __MFTIME_DEFINED__
+__MINGW_EXTENSION typedef LONGLONG MFTIME;
+#endif
+
+__MINGW_EXTENSION typedef unsigned __int64 TOPOID;
+typedef DWORD MFSequencerElementId; /*Unknown type*/
+
+typedef struct _MFT_REGISTER_TYPE_INFO MFT_REGISTER_TYPE_INFO;
+typedef struct IMFStreamDescriptor IMFStreamDescriptor;
+typedef struct IMFMediaSink IMFMediaSink;
+typedef struct IMFMediaTypeHandler IMFMediaTypeHandler;
+typedef struct IMFCollection IMFCollection;
 
 typedef enum MFCLOCK_CHARACTERISTICS_FLAGS {
   MFCLOCK_CHARACTERISTICS_FLAG_FREQUENCY_10MHZ   = 0x2,
   MFCLOCK_CHARACTERISTICS_FLAG_ALWAYS_RUNNING    = 0x4,
   MFCLOCK_CHARACTERISTICS_FLAG_IS_SYSTEM_CLOCK   = 0x8 
-};
+} MFCLOCK_CHARACTERISTICS_FLAGS;
 
 typedef enum _MF_CLOCK_STATE {
   MFCLOCK_STATE_INVALID,
   MFCLOCK_STATE_RUNNING,
   MFCLOCK_STATE_STOPPED,
   MFCLOCK_STATE_PAUSED 
-} MF_CLOCK_STATE;
+} MF_CLOCK_STATE, MFCLOCK_STATE;
 
 #if (_WIN32_WINNT >= 0x0601)
 
@@ -55,7 +73,7 @@ typedef enum _MF_TOPOLOGY_RESOLUTION_STATUS_FLAGS {
   MF_TOPOLOGY_RESOLUTION_SUCCEEDED              = 0x00000000,
   MF_OPTIONAL_NODE_REJECTED_MEDIA_TYPE          = 0x00000001,
   MF_OPTIONAL_NODE_REJECTED_PROTECTED_PROCESS   = 0x00000002 
-} MF_TOPOLOGY_RESOLUTION_STATUS_FLAGS
+} MF_TOPOLOGY_RESOLUTION_STATUS_FLAGS;
 
 typedef enum MF_TOPOLOGY_TYPE {
   MF_TOPOLOGY_OUTPUT_NODE,
@@ -96,24 +114,11 @@ typedef enum MFASF_INDEXERFLAGS {
   MFASF_INDEXER_WRITE_NEW_INDEX            = 0x00000001,
   MFASF_INDEXER_READ_FOR_REVERSEPLAYBACK   = 0x00000004,
   MFASF_INDEXER_WRITE_FOR_LIVEREAD         = 0x00000008 
-} ;
-
-typedef enum MFCLOCK_CHARACTERISTICS_FLAGS {
-  MFCLOCK_CHARACTERISTICS_FLAG_FREQUENCY_10MHZ   = 0x2,
-  MFCLOCK_CHARACTERISTICS_FLAG_ALWAYS_RUNNING    = 0x4,
-  MFCLOCK_CHARACTERISTICS_FLAG_IS_SYSTEM_CLOCK   = 0x8 
-} ;
+} MFASF_INDEXERFLAGS;
 
 typedef enum _MFCLOCK_RELATIONAL_FLAGS {
   MFCLOCK_RELATIONAL_FLAG_JITTER_NEVER_AHEAD   = 0x1 
 } MFCLOCK_RELATIONAL_FLAGS;
-
-typedef enum _MF_CLOCK_STATE {
-  MFCLOCK_STATE_INVALID,
-  MFCLOCK_STATE_RUNNING,
-  MFCLOCK_STATE_STOPPED,
-  MFCLOCK_STATE_PAUSED 
-} MF_CLOCK_STATE;
 
 typedef enum _MFMEDIASOURCE_CHARACTERISTICS {
   MFMEDIASOURCE_IS_LIVE                      = 0x1,
@@ -259,7 +264,7 @@ typedef enum MFSTREAMSINK_MARKER_TYPE {
   MFSTREAMSINK_MARKER_ENDOFSEGMENT,
   MFSTREAMSINK_MARKER_TICK,
   MFSTREAMSINK_MARKER_EVENT 
-} ;
+} MFSTREAMSINK_MARKER_TYPE;
 
 typedef enum MFTIMER_FLAGS {
   MFTIMER_RELATIVE   = 0x00000001 
@@ -302,35 +307,12 @@ typedef struct _ASFFlatSynchronisedLyrics {
   DWORD dwLyricsLen;
 } ASF_FLAT_SYNCHRONISED_LYRICS;
 
-typedef struct _ASF_INDEX_DESCRIPTOR {
-  ASF_INDEX_IDENTIFIER Identifier;
-  WORD                 cPerEntryBytes;
-  WCHAR                szDescription[32];
-  DWORD                dwInterval;
-} ASF_INDEX_DESCRIPTOR;
-
-typedef struct _ASF_INDEX_IDENTIFIER {
-  GUID guidIndexType;
-  WORD wStreamNumber;
-} ASF_INDEX_IDENTIFIER;
-
-typedef struct ASF_MUX_STATISTICS {
-  DWORD cFramesWritten;
-  DWORD cFramesDropped;
-} ASF_MUX_STATISTICS;
-
 typedef enum SAMPLE_PROTECTION_VERSION {
   SAMPLE_PROTECTION_VERSION_NO           = 0,
   SAMPLE_PROTECTION_VERSION_BASIC_LOKI   = 1,
   SAMPLE_PROTECTION_VERSION_SCATTER      = 2,
   SAMPLE_PROTECTION_VERSION_RC4          = 3 
 } SAMPLE_PROTECTION_VERSION;
-
-typedef struct _ASFFlatSynchronisedLyrics {
-  BYTE  bTimeStampFormat;
-  BYTE  bContentType;
-  DWORD dwLyricsLen;
-} ASF_FLAT_SYNCHRONISED_LYRICS;
 
 typedef struct _MF_LEAKY_BUCKET_PAIR {
   DWORD dwBitrate;
@@ -676,11 +658,6 @@ DECLARE_INTERFACE_(IMFPresentationClock,IMFClock)
     STDMETHOD_(HRESULT,GetCorrelatedTime)(THIS_ DWORD dwReserved,LONGLONG *pllClockTime,MFTIME *phnsSystemTime) PURE;
     STDMETHOD_(HRESULT,GetProperties)(THIS_ MFCLOCK_PROPERTIES *pClockProperties) PURE;
     STDMETHOD_(HRESULT,GetState)(THIS_ DWORD dwReserved,MFCLOCK_STATE *peClockState) PURE;
-    STDMETHOD_(HRESULT,GetClockCharacteristics)(THIS_ DWORD *pdwCharacteristics) PURE;
-    STDMETHOD_(HRESULT,GetContinuityKey)(THIS_ DWORD *pdwContinuityKey) PURE;
-    STDMETHOD_(HRESULT,GetCorrelatedTime)(THIS_ DWORD dwReserved,LONGLONG *pllClockTime,MFTIME *phnsSystemTime) PURE;
-    STDMETHOD_(HRESULT,GetProperties)(THIS_ MFCLOCK_PROPERTIES *pClockProperties) PURE;
-    STDMETHOD_(HRESULT,GetState)(THIS_ DWORD dwReserved,MFCLOCK_STATE *peClockState) PURE;
 
     /* IMFPresentationClock methods */
     STDMETHOD_(HRESULT,AddClockStateSink)(THIS_ IMFClockStateSink *pStateSink) PURE;
@@ -698,11 +675,6 @@ DECLARE_INTERFACE_(IMFPresentationClock,IMFClock)
 #define IMFPresentationClock_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
 #define IMFPresentationClock_AddRef(This) (This)->pVtbl->AddRef(This)
 #define IMFPresentationClock_Release(This) (This)->pVtbl->Release(This)
-#define IMFPresentationClock_GetClockCharacteristics(This,pdwCharacteristics) (This)->lpVtbl->GetClockCharacteristics(This,pdwCharacteristics)
-#define IMFPresentationClock_GetContinuityKey(This,pdwContinuityKey) (This)->lpVtbl->GetContinuityKey(This,pdwContinuityKey)
-#define IMFPresentationClock_GetCorrelatedTime(This,dwReserved,pllClockTime,phnsSystemTime) (This)->lpVtbl->GetCorrelatedTime(This,dwReserved,pllClockTime,phnsSystemTime)
-#define IMFPresentationClock_GetProperties(This,pClockProperties) (This)->lpVtbl->GetProperties(This,pClockProperties)
-#define IMFPresentationClock_GetState(This,dwReserved,peClockState) (This)->lpVtbl->GetState(This,dwReserved,peClockState)
 #define IMFPresentationClock_GetClockCharacteristics(This,pdwCharacteristics) (This)->lpVtbl->GetClockCharacteristics(This,pdwCharacteristics)
 #define IMFPresentationClock_GetContinuityKey(This,pdwContinuityKey) (This)->lpVtbl->GetContinuityKey(This,pdwContinuityKey)
 #define IMFPresentationClock_GetCorrelatedTime(This,dwReserved,pllClockTime,phnsSystemTime) (This)->lpVtbl->GetCorrelatedTime(This,dwReserved,pllClockTime,phnsSystemTime)
@@ -1061,9 +1033,6 @@ DECLARE_INTERFACE_(IMFTopology,IMFAttributes)
     STDMETHOD_(HRESULT,ActivateObject)(THIS_ REFIID riid,void **ppv) PURE;
     STDMETHOD_(HRESULT,DetachObject)(THIS) PURE;
     STDMETHOD_(HRESULT,ShutdownObject)(THIS) PURE;
-    STDMETHOD_(HRESULT,ActivateObject)(THIS_ REFIID riid,void **ppv) PURE;
-    STDMETHOD_(HRESULT,DetachObject)(THIS) PURE;
-    STDMETHOD_(HRESULT,ShutdownObject)(THIS) PURE;
     STDMETHOD_(HRESULT,AddNode)(THIS_ IMFTopologyNode *pNode) PURE;
     STDMETHOD_(HRESULT,Clear)(THIS) PURE;
     STDMETHOD_(HRESULT,CloneFrom)(THIS_ IMFTopology *pTopology) PURE;
@@ -1114,9 +1083,6 @@ DECLARE_INTERFACE_(IMFTopology,IMFAttributes)
 #define IMFTopology_ActivateObject(This,riid,ppv) (This)->lpVtbl->ActivateObject(This,riid,ppv)
 #define IMFTopology_DetachObject() (This)->lpVtbl->DetachObject(This)
 #define IMFTopology_ShutdownObject() (This)->lpVtbl->ShutdownObject(This)
-#define IMFTopology_ActivateObject(This,riid,ppv) (This)->lpVtbl->ActivateObject(This,riid,ppv)
-#define IMFTopology_DetachObject() (This)->lpVtbl->DetachObject(This)
-#define IMFTopology_ShutdownObject() (This)->lpVtbl->ShutdownObject(This)
 #define IMFTopology_AddNode(This,pNode) (This)->lpVtbl->AddNode(This,pNode)
 #define IMFTopology_Clear() (This)->lpVtbl->Clear(This)
 #define IMFTopology_CloneFrom(This,pTopology) (This)->lpVtbl->CloneFrom(This,pTopology)
@@ -1127,6 +1093,29 @@ DECLARE_INTERFACE_(IMFTopology,IMFAttributes)
 #define IMFTopology_GetSourceNodeCollection(This,ppCollection) (This)->lpVtbl->GetSourceNodeCollection(This,ppCollection)
 #define IMFTopology_GetTopologyID(This,pID) (This)->lpVtbl->GetTopologyID(This,pID)
 #define IMFTopology_RemoveNode(This,pNode) (This)->lpVtbl->RemoveNode(This,pNode)
+#endif /*COBJMACROS*/
+
+#undef  INTERFACE
+#define INTERFACE IMFTopoLoader
+DECLARE_INTERFACE_(IMFTopoLoader,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFTopoLoader methods */
+    STDMETHOD_(HRESULT,Load)(THIS_ IMFTopology *pInputTopo,IMFTopology **ppOutputTopo,IMFTopology *pCurrentTopo) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFTopoLoader_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFTopoLoader_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFTopoLoader_Release(This) (This)->pVtbl->Release(This)
+#define IMFTopoLoader_Load(This,pInputTopo,ppOutputTopo,pCurrentTopo) (This)->lpVtbl->Load(This,pInputTopo,ppOutputTopo,pCurrentTopo)
 #endif /*COBJMACROS*/
 
 #undef  INTERFACE
@@ -1658,7 +1647,7 @@ DECLARE_INTERFACE_(IMFTranscodeSinkInfoProvider,IUnknown)
 #endif /*COBJMACROS*/
 
 #endif /*(_WIN32_WINNT >= 0x0601)*/
-
+typedef enum _MFVP_MESSAGE_TYPE MFVP_MESSAGE_TYPE;
 #undef  INTERFACE
 #define INTERFACE IMFVideoSampleAllocator
 DECLARE_INTERFACE_(IMFVideoSampleAllocator,IUnknown)
@@ -1671,8 +1660,6 @@ DECLARE_INTERFACE_(IMFVideoSampleAllocator,IUnknown)
     STDMETHOD_(ULONG, Release)(THIS) PURE;
 
     /* IMFVideoSampleAllocator methods */
-    STDMETHOD_(HRESULT,GetCurrentMediaType)(THIS_ IMFVideoMediaType **ppMediaType) PURE;
-    STDMETHOD_(HRESULT,ProcessMessage)(THIS_ MFVP_MESSAGE_TYPE eMessage,ULONG_PTR ulParam) PURE;
     STDMETHOD_(HRESULT,GetCurrentMediaType)(THIS_ IMFVideoMediaType **ppMediaType) PURE;
     STDMETHOD_(HRESULT,ProcessMessage)(THIS_ MFVP_MESSAGE_TYPE eMessage,ULONG_PTR ulParam) PURE;
     STDMETHOD_(HRESULT,AllocateSample)(THIS_ IMFSample **ppSample) PURE;
@@ -1688,37 +1675,10 @@ DECLARE_INTERFACE_(IMFVideoSampleAllocator,IUnknown)
 #define IMFVideoSampleAllocator_Release(This) (This)->pVtbl->Release(This)
 #define IMFVideoSampleAllocator_GetCurrentMediaType(This,ppMediaType) (This)->lpVtbl->GetCurrentMediaType(This,ppMediaType)
 #define IMFVideoSampleAllocator_ProcessMessage(This,eMessage,ulParam) (This)->lpVtbl->ProcessMessage(This,eMessage,ulParam)
-#define IMFVideoSampleAllocator_GetCurrentMediaType(This,ppMediaType) (This)->lpVtbl->GetCurrentMediaType(This,ppMediaType)
-#define IMFVideoSampleAllocator_ProcessMessage(This,eMessage,ulParam) (This)->lpVtbl->ProcessMessage(This,eMessage,ulParam)
 #define IMFVideoSampleAllocator_AllocateSample(This,ppSample) (This)->lpVtbl->AllocateSample(This,ppSample)
 #define IMFVideoSampleAllocator_InitializeSampleAllocator(This,cRequestedFrames,pMediaType) (This)->lpVtbl->InitializeSampleAllocator(This,cRequestedFrames,pMediaType)
 #define IMFVideoSampleAllocator_SetDirectXManager(This,pManager) (This)->lpVtbl->SetDirectXManager(This,pManager)
 #define IMFVideoSampleAllocator_UninitializeSampleAllocator() (This)->lpVtbl->UninitializeSampleAllocator(This)
-#endif /*COBJMACROS*/
-
-#undef  INTERFACE
-#define INTERFACE IMFVideoSampleAllocatorCallback
-DECLARE_INTERFACE_(IMFVideoSampleAllocatorCallback,IUnknown)
-{
-    BEGIN_INTERFACE
-
-    /* IUnknown methods */
-    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
-    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
-    STDMETHOD_(ULONG, Release)(THIS) PURE;
-
-    /* IMFVideoSampleAllocatorCallback methods */
-    STDMETHOD_(HRESULT,GetFreeSampleCount)(THIS_ LONG *plSamples) PURE;
-    STDMETHOD_(HRESULT,SetCallback)(THIS_ IMFVideoSampleAllocatorNotify *pNotify) PURE;
-
-    END_INTERFACE
-};
-#ifdef COBJMACROS
-#define IMFVideoSampleAllocatorCallback_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
-#define IMFVideoSampleAllocatorCallback_AddRef(This) (This)->pVtbl->AddRef(This)
-#define IMFVideoSampleAllocatorCallback_Release(This) (This)->pVtbl->Release(This)
-#define IMFVideoSampleAllocatorCallback_GetFreeSampleCount(This,plSamples) (This)->lpVtbl->GetFreeSampleCount(This,plSamples)
-#define IMFVideoSampleAllocatorCallback_SetCallback(This,pNotify) (This)->lpVtbl->SetCallback(This,pNotify)
 #endif /*COBJMACROS*/
 
 #undef  INTERFACE
@@ -1750,6 +1710,55 @@ HRESULT WINAPI CreateNamedPropertyStore(INamedPropertyStore **ppStore);
 HRESULT WINAPI CreatePropertyStore(IPropertyStore **ppStore);
 
 #if (_WIN32_WINNT >= 0x0601)
+
+#undef  INTERFACE
+#define INTERFACE IMFVideoSampleAllocatorNotify
+DECLARE_INTERFACE_(IMFVideoSampleAllocatorNotify,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFVideoSampleAllocatorNotify methods */
+    STDMETHOD_(HRESULT,NotifyRelease)(THIS) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFVideoSampleAllocatorNotify_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFVideoSampleAllocatorNotify_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFVideoSampleAllocatorNotify_Release(This) (This)->pVtbl->Release(This)
+#define IMFVideoSampleAllocatorNotify_NotifyRelease() (This)->lpVtbl->NotifyRelease(This)
+#endif /*COBJMACROS*/
+
+#undef  INTERFACE
+#define INTERFACE IMFVideoSampleAllocatorCallback
+DECLARE_INTERFACE_(IMFVideoSampleAllocatorCallback,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFVideoSampleAllocatorCallback methods */
+    STDMETHOD_(HRESULT,GetFreeSampleCount)(THIS_ LONG *plSamples) PURE;
+    STDMETHOD_(HRESULT,SetCallback)(THIS_ IMFVideoSampleAllocatorNotify *pNotify) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFVideoSampleAllocatorCallback_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFVideoSampleAllocatorCallback_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFVideoSampleAllocatorCallback_Release(This) (This)->pVtbl->Release(This)
+#define IMFVideoSampleAllocatorCallback_GetFreeSampleCount(This,plSamples) (This)->lpVtbl->GetFreeSampleCount(This,plSamples)
+#define IMFVideoSampleAllocatorCallback_SetCallback(This,pNotify) (This)->lpVtbl->SetCallback(This,pNotify)
+#endif /*COBJMACROS*/
+
 HRESULT MFCreate3GPMediaSink(IMFByteStream *pIByteStream,IMFMediaType *pVideoMediaType,IMFMediaType *pAudioMediaType,IMFMediaSink **ppIMediaSink);
 HRESULT MFCreateAggregateSource(IMFCollection *pSourceCollection,IMFMediaSource **ppAggSource);
 #endif /*(_WIN32_WINNT >= 0x0601)*/

@@ -1,10 +1,11 @@
 #ifndef _INC_OPMAPI
 #define _INC_OPMAPI
-#include <oaidl.h>
+#include <windows.h>
+#include <d3d9.h>
 
 #if (_WIN32_WINNT >= 0x0600)
 
-#define OPM_OMAC                                     /*?*/
+#define OPM_OMAC_SIZE                                1/*?*/
 #define OPM_CONFIGURE_SETTING_DATA_SIZE              4056
 #define OPM_REQUESTED_INFORMATION_SIZE               4076
 #define OPM_ENCRYPTED_INITIALIZATION_PARAMETERS_SIZE 256
@@ -50,6 +51,14 @@ typedef struct _OPM_GET_INFO_PARAMETERS {
   ULONG             cbParametersSize;
   BYTE              abParameters[OPM_GET_INFORMATION_PARAMETERS_SIZE];
 } OPM_GET_INFO_PARAMETERS;
+
+typedef struct _OPM_COPP_COMPATIBLE_GET_INFO_PARAMETERS {
+  OPM_RANDOM_NUMBER rnRandomNumber;
+  GUID              guidInformation;
+  ULONG             ulSequenceNumber;
+  ULONG             cbParametersSize;
+  BYTE              abParameters[OPM_GET_INFORMATION_PARAMETERS_SIZE];
+} OPM_COPP_COMPATIBLE_GET_INFO_PARAMETERS;
 
 #undef  INTERFACE
 #define INTERFACE IOPMVideoOutput

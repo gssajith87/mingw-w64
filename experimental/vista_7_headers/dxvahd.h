@@ -1,11 +1,16 @@
 #ifndef _INC_DXAVHD
 #define _INC_DXAVHD
+#include <windows.h>
+#include <d3d9.h>
 
 #if (_WIN32_WINNT >= 0x0601)
 
 #ifndef CALLBACK
 #define CALLBACK __stdcall
 #endif
+
+typedef struct IDXVAHD_Device IDXVAHD_Device;
+typedef struct IDXVAHD_VideoProcessor IDXVAHD_VideoProcessor;
 
   typedef enum _DXVAHD_ALPHA_FILL_MODE {
     DXVAHD_ALPHA_FILL_MODE_OPAQUE          = 0,
@@ -205,6 +210,11 @@ typedef struct _DXVAHD_BLT_STATE_TARGET_RECT_DATA {
   RECT TargetRect;
 } DXVAHD_BLT_STATE_TARGET_RECT_DATA;
 
+typedef struct _DXVAHD_RATIONAL {
+  UINT Numerator;
+  UINT Denominator;
+} DXVAHD_RATIONAL;
+
 typedef struct _DXVAHD_CONTENT_DESC {
   DXVAHD_FRAME_FORMAT InputFrameFormat;
   DXVAHD_RATIONAL     InputFrameRate;
@@ -214,10 +224,6 @@ typedef struct _DXVAHD_CONTENT_DESC {
   UINT                OutputWidth;
   UINT                OutputHeight;
 } DXVAHD_CONTENT_DESC;
-typedef struct _DXVAHD_RATIONAL {
-  UINT Numerator;
-  UINT Denominator;
-} DXVAHD_RATIONAL;
 
 typedef struct _DXVAHD_CUSTOM_RATE_DATA {
   DXVAHD_RATIONAL CustomRate;
@@ -243,15 +249,6 @@ typedef struct _DXVAHD_STREAM_DATA {
   IDirect3DSurface9 *pInputSurface;
   IDirect3DSurface9 **ppFutureSurfaces;
 } DXVAHD_STREAM_DATA;
-
-typedef struct _DXVAHD_VPCAPS {
-  GUID VPGuid;
-  UINT PastFrames;
-  UINT FutureFrames;
-  UINT ProcessorCaps;
-  UINT ITelecineCaps;
-  UINT CustomRateCount;
-} DXVAHD_VPCAPS;
 
 typedef struct _DXVAHD_VPCAPS {
   GUID VPGuid;
@@ -371,6 +368,74 @@ typedef struct _DXVAHDSW_CALLBACKS {
 } DXVAHDSW_CALLBACKS;
 
 HRESULT DXVAHD_CreateDevice(IDirect3DDevice9Ex *pD3DDevice,const DXVAHD_CONTENT_DESC *pContentDesc,DXVAHD_DEVICE_USAGE Usage,PDXVAHDSW_Plugin pPlugin,IDXVAHD_Device **ppDevice);
+
+#undef  INTERFACE
+#define INTERFACE IDXVAHD_Device
+DECLARE_INTERFACE_(IDXVAHD_Device,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IDXVAHD_Device methods */
+    STDMETHOD_(HRESULT,CreateVideoProcessor)(THIS_ const GUID *pVPGuid,IDXVAHD_VideoProcessor **ppVideoProcessor) PURE;
+    STDMETHOD_(HRESULT,CreateVideoSurface)(THIS_ UINT Width,UINT Height,D3DFORMAT Format,D3DPOOL Pool,DWORD Usage,DXVAHD_SURFACE_TYPE Type,UINT NumSurfaces,IDirect3DSurface9 **ppSurfaces,HANDLE *pSharedHandle) PURE;
+    STDMETHOD_(HRESULT,GetVideoProcessorCaps)(THIS_ UINT Count,DXVAHD_VPCAPS *pCaps) PURE;
+    STDMETHOD_(HRESULT,GetVideoProcessorCustomRates)(THIS_ const GUID *pVPGuid,UINT Count,DXVAHD_CUSTOM_RATE_DATA *pRates) PURE;
+    STDMETHOD_(HRESULT,GetVideoProcessorDeviceCaps)(THIS_ DXVAHD_VPDEVCAPS *pCaps) PURE;
+    STDMETHOD_(HRESULT,GetVideoProcessorFilterRange)(THIS_ DXVAHD_FILTER Filter,DXVAHD_FILTER_RANGE_DATA *pRange) PURE;
+    STDMETHOD_(HRESULT,GetVideoProcessorInputFormats)(THIS_ UINT Count,D3DFORMAT *pFormats) PURE;
+    STDMETHOD_(HRESULT,GetVideoProcessorOutputFormats)(THIS_ UINT Count,D3DFORMAT *pFormats) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IDXVAHD_Device_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IDXVAHD_Device_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IDXVAHD_Device_Release(This) (This)->pVtbl->Release(This)
+#define IDXVAHD_Device_CreateVideoProcessor(This,pVPGuid,ppVideoProcessor) (This)->lpVtbl->CreateVideoProcessor(This,pVPGuid,ppVideoProcessor)
+#define IDXVAHD_Device_CreateVideoSurface(This,Width,Height,Format,Pool,Usage,Type,NumSurfaces,ppSurfaces,pSharedHandle) (This)->lpVtbl->CreateVideoSurface(This,Width,Height,Format,Pool,Usage,Type,NumSurfaces,ppSurfaces,pSharedHandle)
+#define IDXVAHD_Device_GetVideoProcessorCaps(This,Count,pCaps) (This)->lpVtbl->GetVideoProcessorCaps(This,Count,pCaps)
+#define IDXVAHD_Device_GetVideoProcessorCustomRates(This,pVPGuid,Count,pRates) (This)->lpVtbl->GetVideoProcessorCustomRates(This,pVPGuid,Count,pRates)
+#define IDXVAHD_Device_GetVideoProcessorDeviceCaps(This,pCaps) (This)->lpVtbl->GetVideoProcessorDeviceCaps(This,pCaps)
+#define IDXVAHD_Device_GetVideoProcessorFilterRange(This,Filter,pRange) (This)->lpVtbl->GetVideoProcessorFilterRange(This,Filter,pRange)
+#define IDXVAHD_Device_GetVideoProcessorInputFormats(This,Count,pFormats) (This)->lpVtbl->GetVideoProcessorInputFormats(This,Count,pFormats)
+#define IDXVAHD_Device_GetVideoProcessorOutputFormats(This,Count,pFormats) (This)->lpVtbl->GetVideoProcessorOutputFormats(This,Count,pFormats)
+#endif /*COBJMACROS*/
+
+#undef  INTERFACE
+#define INTERFACE IDXVAHD_VideoProcessor
+DECLARE_INTERFACE_(IDXVAHD_VideoProcessor,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IDXVAHD_VideoProcessor methods */
+    STDMETHOD_(HRESULT,GetVideoProcessBltState)(THIS_ DXVAHD_BLT_STATE State,UINT DataSize,void *pData) PURE;
+    STDMETHOD_(HRESULT,GetVideoProcessStreamState)(THIS_ UINT StreamNumber,DXVAHD_STREAM_STATE State,UINT DataSize,void *pData) PURE;
+    STDMETHOD_(HRESULT,SetVideoProcessBltState)(THIS_ DXVAHD_BLT_STATE State,UINT DataSize,const void *pData) PURE;
+    STDMETHOD_(HRESULT,SetVideoProcessStreamState)(THIS_ UINT StreamNumber,DXVAHD_STREAM_STATE State,UINT DataSize,const void *pData) PURE;
+    STDMETHOD_(HRESULT,VideoProcessBltHD)(THIS_ IDirect3DSurface9 *pOutputSurface,UINT OutputFrame,UINT StreamCount,const DXVAHD_STREAM_DATA *pStreams) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IDXVAHD_VideoProcessor_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IDXVAHD_VideoProcessor_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IDXVAHD_VideoProcessor_Release(This) (This)->pVtbl->Release(This)
+#define IDXVAHD_VideoProcessor_GetVideoProcessBltState(This,State,DataSize,pData) (This)->lpVtbl->GetVideoProcessBltState(This,State,DataSize,pData)
+#define IDXVAHD_VideoProcessor_GetVideoProcessStreamState(This,StreamNumber,State,DataSize,pData) (This)->lpVtbl->GetVideoProcessStreamState(This,StreamNumber,State,DataSize,pData)
+#define IDXVAHD_VideoProcessor_SetVideoProcessBltState(This,State,DataSize,pData) (This)->lpVtbl->SetVideoProcessBltState(This,State,DataSize,pData)
+#define IDXVAHD_VideoProcessor_SetVideoProcessStreamState(This,StreamNumber,State,DataSize,pData) (This)->lpVtbl->SetVideoProcessStreamState(This,StreamNumber,State,DataSize,pData)
+#define IDXVAHD_VideoProcessor_VideoProcessBltHD(This,pOutputSurface,OutputFrame,StreamCount,pStreams) (This)->lpVtbl->VideoProcessBltHD(This,pOutputSurface,OutputFrame,StreamCount,pStreams)
+#endif /*COBJMACROS*/
 
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 #endif /*_INC_DXAVHD*/

@@ -1,7 +1,11 @@
 #ifndef _INC_DXVA2API
 #define _INC_DXVA2API
-
+#include <windows.h>
+#include <dshow.h>
+#include <d3d9.h>
 #if (_WIN32_WINNT >= 0x0600)
+
+typedef struct IDirect3DDeviceManager9 IDirect3DDeviceManager9;
 
 typedef enum _DXVA2_SampleFormat {
   DXVA2_SampleFormatMask                  = 0x00FF,
@@ -311,6 +315,41 @@ DXVA2_Fixed32 DXVA2FloatToFixed(const float _float_);
 
 HRESULT WINAPI DXVA2CreateDirect3DDeviceManager9(UINT *pResetToken,IDirect3DDeviceManager9 **ppDXVAManager);
 HRESULT WINAPI DXVA2CreateVideoService(IDirect3DDevice9 *pDD,REFIID riid,void **ppService);
+
+#undef  INTERFACE
+#define INTERFACE IDirect3DDeviceManager9
+DECLARE_INTERFACE_(IDirect3DDeviceManager9,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IDirect3DDeviceManager9 methods */
+    STDMETHOD_(HRESULT,CloseDeviceHandle)(THIS_ HANDLE hDevice) PURE;
+    STDMETHOD_(HRESULT,GetVideoService)(THIS_ HANDLE hDevice,REFIID riid,void **ppService) PURE;
+    STDMETHOD_(HRESULT,LockDevice)(THIS_ HANDLE hDevice,IDirect3DDevice9 **ppDevice,WINBOOL fBlock) PURE;
+    STDMETHOD_(HRESULT,OpenDeviceHandle)(THIS_ HANDLE *phDevice) PURE;
+    STDMETHOD_(HRESULT,ResetDevice)(THIS_ IDirect3DDevice9 *pDevice,UINT resetToken) PURE;
+    STDMETHOD_(HRESULT,TestDevice)(THIS_ HANDLE hDevice) PURE;
+    STDMETHOD_(HRESULT,UnlockDevice)(THIS_ HANDLE hDevice,BOOL fSaveState) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IDirect3DDeviceManager9_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IDirect3DDeviceManager9_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IDirect3DDeviceManager9_Release(This) (This)->pVtbl->Release(This)
+#define IDirect3DDeviceManager9_CloseDeviceHandle(This,hDevice) (This)->lpVtbl->CloseDeviceHandle(This,hDevice)
+#define IDirect3DDeviceManager9_GetVideoService(This,hDevice,riid,ppService) (This)->lpVtbl->GetVideoService(This,hDevice,riid,ppService)
+#define IDirect3DDeviceManager9_LockDevice(This,hDevice,ppDevice,fBlock) (This)->lpVtbl->LockDevice(This,hDevice,ppDevice,fBlock)
+#define IDirect3DDeviceManager9_OpenDeviceHandle(This,phDevice) (This)->lpVtbl->OpenDeviceHandle(This,phDevice)
+#define IDirect3DDeviceManager9_ResetDevice(This,pDevice,resetToken) (This)->lpVtbl->ResetDevice(This,pDevice,resetToken)
+#define IDirect3DDeviceManager9_TestDevice(This,hDevice) (This)->lpVtbl->TestDevice(This,hDevice)
+#define IDirect3DDeviceManager9_UnlockDevice(This,hDevice,fSaveState) (This)->lpVtbl->UnlockDevice(This,hDevice,fSaveState)
+#endif /*COBJMACROS*/
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_DXVA2API*/
