@@ -7,6 +7,7 @@
 #define __REQUIRED_RPCNDR_H_VERSION__ 475
 #endif
 
+#include <_mingw_unicode.h>
 #include "rpc.h"
 #include "rpcndr.h"
 
@@ -529,13 +530,8 @@ extern "C" {
   int WINAPI SyncMgrResolveConflictW(HWND hWndParent,RFCDLGPARAMW *pdlgParam);
   int WINAPI SyncMgrResolveConflictA(HWND hWndParent,RFCDLGPARAMA *pdlgParam);
 
-#ifdef UNICODE
-#define SyncMgrResolveConflict SyncMgrResolveConflictW
-#define RFCDLGPARAM RFCDLGPARAMW
-#else
-#define SyncMgrResolveConflict SyncMgrResolveConflictA
-#define RFCDLGPARAM RFCDLGPARAMA
-#endif
+#define SyncMgrResolveConflict __MINGW_NAME_AW(SyncMgrResolveConflict)
+#define RFCDLGPARAM __MINGW_NAME_AW(RFCDLGPARAM)
 
   extern RPC_IF_HANDLE __MIDL_itf_mobsync_0122_v0_0_c_ifspec;
   extern RPC_IF_HANDLE __MIDL_itf_mobsync_0122_v0_0_s_ifspec;

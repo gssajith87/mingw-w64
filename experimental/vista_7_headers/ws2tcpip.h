@@ -6,6 +6,8 @@
 #ifndef _WS2TCPIP_H_
 #define _WS2TCPIP_H_
 
+#include <_mingw_unicode.h>
+
 #if __GNUC__ >=3
 #pragma GCC system_header
 #endif
@@ -254,11 +256,7 @@ typedef struct addrinfoW {
   struct addrinfoW *ai_next;
 } ADDRINFOW,*PADDRINFOW;
 
-#ifdef UNICODE
-typedef ADDRINFOW ADDRINFOT,*PADDRINFOT;
-#else
-typedef ADDRINFOA ADDRINFOT,*PADDRINFOT;
-#endif
+typedef __MINGW_NAME_AW(ADDRINFO) ADDRINFOT,*PADDRINFOT;
 
 typedef ADDRINFOA ADDRINFO,*LPADDRINFO;
 
@@ -289,11 +287,7 @@ extern "C" {
 
 #define LPFN_GETADDRINFOA LPFN_GETADDRINFO
 
-#ifdef UNICODE
-#define LPFN_GETADDRINFOT LPFN_GETADDRINFOW
-#else
-#define LPFN_GETADDRINFOT LPFN_GETADDRINFOA
-#endif
+#define LPFN_GETADDRINFOT __MINGW_NAME_AW(LPFN_GETADDRINFO)
 #endif
 
 #define FreeAddrInfo __MINGW_NAME_AW(FreeAddrInfo)
@@ -309,11 +303,7 @@ extern "C" {
 
 #define LPFN_FREEADDRINFOA LPFN_FREEADDRINFO
 
-#ifdef UNICODE
-#define LPFN_FREEADDRINFOT LPFN_FREEADDRINFOW
-#else
-#define LPFN_FREEADDRINFOT LPFN_FREEADDRINFOA
-#endif
+#define LPFN_FREEADDRINFOT __MINGW_NAME_AW(LPFN_FREEADDRINFO)
 #endif
 
   typedef int socklen_t;
@@ -331,11 +321,7 @@ extern "C" {
 
 #define LPFN_GETNAMEINFOA LPFN_GETNAMEINFO
 
-#ifdef UNICODE
-#define LPFN_GETNAMEINFOT LPFN_GETNAMEINFOW
-#else
-#define LPFN_GETNAMEINFOT LPFN_GETNAMEINFOA
-#endif
+#define LPFN_GETNAMEINFOT __MINGW_NAME_AW(LPFN_GETNAMEINFO)
 #endif
 
 #define gai_strerror __MINGW_NAME_AW(gai_strerror)

@@ -6,6 +6,8 @@
 #ifndef _INC_PROFINFO
 #define _INC_PROFINFO
 
+#include <_mingw_unicode.h>
+
 typedef struct _PROFILEINFOA {
   DWORD dwSize;
   DWORD dwFlags;
@@ -28,13 +30,9 @@ typedef struct _PROFILEINFOW {
   HANDLE hProfile;
 } PROFILEINFOW,*LPPROFILEINFOW;
 
-#ifdef UNICODE
-typedef PROFILEINFOW PROFILEINFO;
-typedef LPPROFILEINFOW LPPROFILEINFO;
-#else
-typedef PROFILEINFOA PROFILEINFO;
-typedef LPPROFILEINFOA LPPROFILEINFO;
-#endif
+__MINGW_TYPEDEF_AW(PROFILEINFO)
+__MINGW_TYPEDEF_AW(LPPROFILEINFO)
 
 #define MIDL_STRING
+
 #endif

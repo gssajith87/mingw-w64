@@ -6,6 +6,8 @@
 #ifndef _LOADPERF_H_
 #define _LOADPERF_H_
 
+#include <_mingw_unicode.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,19 +36,11 @@ extern "C" {
   DWORD BackupPerfRegistryToFileW(LPCWSTR szFileName,LPCWSTR szCommentString);
   DWORD RestorePerfRegistryFromFileW(LPCWSTR szFileName,LPCWSTR szLangId);
 
-#ifdef UNICODE
-#define InstallPerfDll InstallPerfDllW
-#define LoadPerfCounterTextStrings LoadPerfCounterTextStringsW
-#define UnloadPerfCounterTextStrings UnloadPerfCounterTextStringsW
-#define UpdatePerfNameFiles UpdatePerfNameFilesW
-#define SetServiceAsTrusted SetServiceAsTrustedW
-#else
-#define InstallPerfDll InstallPerfDllA
-#define LoadPerfCounterTextStrings LoadPerfCounterTextStringsA
-#define UnloadPerfCounterTextStrings UnloadPerfCounterTextStringsA
-#define UpdatePerfNameFiles UpdatePerfNameFilesA
-#define SetServiceAsTrusted SetServiceAsTrustedA
-#endif
+#define InstallPerfDll __MINGW_NAME_AW(InstallPerfDll)
+#define LoadPerfCounterTextStrings __MINGW_NAME_AW(LoadPerfCounterTextStrings)
+#define UnloadPerfCounterTextStrings __MINGW_NAME_AW(UnloadPerfCounterTextStrings)
+#define UpdatePerfNameFiles __MINGW_NAME_AW(UpdatePerfNameFiles)
+#define SetServiceAsTrusted __MINGW_NAME_AW(SetServiceAsTrusted)
 
 #ifdef __cplusplus
 }

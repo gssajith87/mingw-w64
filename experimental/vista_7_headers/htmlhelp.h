@@ -6,6 +6,8 @@
 #ifndef __HTMLHELP_H__
 #define __HTMLHELP_H__
 
+#include <_mingw_unicode.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -283,11 +285,7 @@ extern "C" {
     HH_WINTYPE *phhWinType;
   } HHNTRACK;
 
-#ifdef UNICODE
-#define HtmlHelp HtmlHelpW
-#else
-#define HtmlHelp HtmlHelpA
-#endif
+#define HtmlHelp __MINGW_NAME_AW(HtmlHelp)
 
   HWND WINAPI HtmlHelpA(HWND hwndCaller,LPCSTR pszFile,UINT uCommand,DWORD_PTR dwData);
   HWND WINAPI HtmlHelpW(HWND hwndCaller,LPCWSTR pszFile,UINT uCommand,DWORD_PTR dwData);

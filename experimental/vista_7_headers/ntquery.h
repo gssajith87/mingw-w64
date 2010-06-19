@@ -6,6 +6,8 @@
 #if !defined(__NTQUERY_H__)
 #define __NTQUERY_H__
 
+#include <_mingw_unicode.h>
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -19,11 +21,7 @@ extern "C" {
 #define LIFF_IMPLEMENT_TEXT_FILTER_FALLBACK_POLICY 2
 #define LIFF_FORCE_TEXT_FILTER_FALLBACK 3
 
-#ifdef UNICODE
-#define LocateCatalogs LocateCatalogsW
-#else
-#define LocateCatalogs LocateCatalogsA
-#endif
+#define LocateCatalogs __MINGW_NAME_AW(LocateCatalogs)
 
   STDAPI LoadIFilterEx(WCHAR const *pwcsPath,DWORD dwFlags,REFIID riid,void **ppIUnk);
   STDAPI BindIFilterFromStorage(IStorage *pStg,IUnknown *pUnkOuter,void **ppIUnk);

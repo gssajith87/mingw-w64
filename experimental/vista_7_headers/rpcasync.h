@@ -6,6 +6,7 @@
 #ifndef __RPCASYNC_H__
 #define __RPCASYNC_H__
 
+#include <_mingw_unicode.h>
 #ifdef __RPC_WIN64__
 #include <pshpack8.h>
 #endif
@@ -169,13 +170,8 @@ extern "C" {
     WINBOOL NullSession;
   } RPC_CALL_ATTRIBUTES_V1_A;
 
-#ifdef UNICODE
-#define RPC_CALL_ATTRIBUTES_V1 RPC_CALL_ATTRIBUTES_V1_W
-#define RpcServerInqCallAttributes RpcServerInqCallAttributesW
-#else
-#define RPC_CALL_ATTRIBUTES_V1 RPC_CALL_ATTRIBUTES_V1_A
-#define RpcServerInqCallAttributes RpcServerInqCallAttributesA
-#endif
+#define RPC_CALL_ATTRIBUTES_V1 __MINGW_NAME_UAW(RPC_CALL_ATTRIBUTES_V1)
+#define RpcServerInqCallAttributes __MINGW_NAME_AW(RpcServerInqCallAttributes)
 
   RPCRTAPI RPC_STATUS RPC_ENTRY RpcServerInqCallAttributesW(RPC_BINDING_HANDLE ClientBinding,void *RpcCallAttributes);
   RPCRTAPI RPC_STATUS RPC_ENTRY RpcServerInqCallAttributesA(RPC_BINDING_HANDLE ClientBinding,void *RpcCallAttributes);

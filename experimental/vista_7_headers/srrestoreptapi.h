@@ -6,6 +6,8 @@
 #if !defined(_SRRESTOREPTAPI_H)
 #define _SRRESTOREPTAPI_H
 
+#include <_mingw_unicode.h>
+
 #define MIN_EVENT 100
 #define BEGIN_SYSTEM_CHANGE 100
 #define END_SYSTEM_CHANGE 101
@@ -70,13 +72,8 @@ extern "C" {
 }
 #endif
 
-#ifdef UNICODE
-#define RESTOREPOINTINFO RESTOREPOINTINFOW
-#define PRESTOREPOINTINFO PRESTOREPOINTINFOW
-#define SRSetRestorePoint SRSetRestorePointW
-#else
-#define RESTOREPOINTINFO RESTOREPOINTINFOA
-#define PRESTOREPOINTINFO PRESTOREPOINTINFOA
-#define SRSetRestorePoint SRSetRestorePointA
-#endif
+#define RESTOREPOINTINFO __MINGW_NAME_AW(RESTOREPOINTINFO)
+#define PRESTOREPOINTINFO __MINGW_NAME_AW(PRESTOREPOINTINFO)
+#define SRSetRestorePoint __MINGW_NAME_AW(SRSetRestorePoint)
+
 #endif
