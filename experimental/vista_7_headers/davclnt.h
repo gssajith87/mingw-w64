@@ -1,5 +1,6 @@
 #ifndef _INC_DAVCLNT
 #define _INC_DAVCLNT
+#include <windows.h>
 
 #if (_WIN32_WINNT >= 0x0600)
 #define DAV_AUTHN_SCHEME_BASIC      0x00000001
@@ -52,13 +53,73 @@ typedef DWORD (*PFNDAVAUTHCALLBACK)(
   PFNDAVAUTHCALLBACK_FREECRED *pFreeCred
 );
 
-OPAQUE_HANDLE DavRegisterAuthCallback(
+OPAQUE_HANDLE WINAPI DavRegisterAuthCallback(
   PFNDAVAUTHCALLBACK CallBack,
   ULONG Version
 );
 
-VOID DavUnregisterAuthCallback(
+VOID WINAPI DavUnregisterAuthCallback(
   OPAQUE_HANDLE hCallback
+);
+
+DWORD WINAPI DavAddConnection(
+  HANDLE *ConnectionHandle,
+  LPCWSTR RemoteName,
+  LPCWSTR UserName,
+  LPCWSTR Password,
+  PBYTE ClientCert,
+  DWORD CertSize
+);
+
+DWORD WINAPI DavCancelConnectionsToServer(
+  LPWSTR lpName,
+  WINBOOL fForce
+);
+
+DWORD WINAPI DavDeleteConnection(
+  HANDLE ConnectionHandle
+);
+
+DWORD WINAPI DavFlushFile(
+  HANDLE hFile
+);
+
+DWORD WINAPI DavGetExtendedError(
+  HANDLE hFile,
+  DWORD *ExtError,
+  LPWSTR ExtErrorString,
+  DWORD *cChSize
+);
+
+DWORD WINAPI DavGetHTTPFromUNCPath(
+  LPCWSTR UncPath,
+  LPWSTR HttpPath,
+  LPDWORD lpSize
+);
+
+DWORD WINAPI DavGetTheLockOwnerOfTheFile(
+  LPCWSTR FileName,
+  PWSTR LockOwnerName,
+  PULONG LockOwnerNameLengthInBytes
+);
+
+DWORD WINAPI DavGetUNCFromHTTPPath(
+  LPCWSTR HttpPath,
+  LPWSTR UncPath,
+  LPDWORD lpSize
+);
+
+DWORD WINAPI DavInvalidateCache(
+  LPWSTR URLName
+);
+
+OPAQUE_HANDLE WINAPI DavRegisterAuthCallback(
+  PFNDAVAUTHCALLBACK CallBack,
+  ULONG Version
+);
+
+VOID WINAPI DavUnregisterAuthCallback(
+  __in  OPAQUE_HANDLE hCallback
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

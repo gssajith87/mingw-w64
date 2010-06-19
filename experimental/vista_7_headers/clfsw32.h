@@ -1,11 +1,16 @@
 #ifndef _INC_CLFSW32
 #define _INC_CLFSW32
+#include <windows.h>
 #include <clfs.h>
 
 #if (_WIN32_WINNT >= 0x0600)
 
 typedef PVOID (* CLFS_BLOCK_ALLOCATION) (ULONG cbBufferSize, PVOID pvUserContext);
 typedef void  (* CLFS_BLOCK_DEALLOCATION) (PVOID pvBuffer, PVOID pvUserContext);
+typedef LPVOID PFILE;
+typedef LPVOID CLFS_PRINT_RECORD_ROUTINE; /*Unknown Callback*/
+
+WINBOOL WINAPI AdvanceLogBase(PVOID pvMarshal,PCLFS_LSN plsnBase,ULONG fFlags,LPOVERLAPPED pOverlapped);
 
 WINBOOL WINAPI AlignReservedLog(PVOID pvMarshal,ULONG cReservedRecords,LONGLONG rgcbReservation,PLONGLONG pcbAlignReservation);
 WINBOOL WINAPI AllocReservedLog(PVOID pvMarshal,ULONG cReservedRecords,PLONGLONG pcbAdjustment);
@@ -51,6 +56,58 @@ WINBOOL WINAPI CreateLogMarshallingArea(
 
 WINBOOL WINAPI DeleteLogMarshallingArea(
   PVOID pvMarshal
+);
+
+WINBOOL WINAPI DeleteLogByHandle(
+  HANDLE hLog
+);
+
+WINBOOL WINAPI DeleteLogFile(
+  LPCWSTR pszLogFileName,
+  PVOID pvReserved
+);
+
+WINBOOL WINAPI DeregisterManageableLogClient(
+  HANDLE hLog
+);
+
+WINBOOL WINAPI DumpLogRecords(
+  PWSTR pwszLogFileName,
+  CLFS_RECORD_TYPE fRecordType,
+  PCLFS_LSN plsnStart,
+  PCLFS_LSN plsnEnd,
+  PFILE pstrmOut,
+  CLFS_PRINT_RECORD_ROUTINE pfnPrintRecord,
+  CLFS_BLOCK_ALLOCATION pfnAllocBlock,
+  CLFS_BLOCK_DEALLOCATION pfnFreeBlock,
+  PVOID   pvBlockAllocContext,
+  ULONG cbBlock,
+  ULONG cMaxBlocks
+);
+
+WINBOOL WINAPI ReadLogRecord(
+  PVOID pvMarshal,
+  PCLFS_LSN plsnFirst,
+  CLFS_CONTEXT_MODE eContextMode,
+  PVOID *ppvReadBuffer,
+  PULONG pcbReadBuffer,
+  PCLFS_RECORD_TYPE peRecordType,
+  PCLFS_LSN plsnUndoNext,
+  PCLFS_LSN plsnPrevious,
+  PVOID *ppvReadContext,
+  LPOVERLAPPED pOverlapped
+);
+
+WINBOOL WINAPI ReadNextLogRecord(
+  PVOID pvReadContext,
+  PVOID *ppvBuffer,
+  PULONG pcbBuffer,
+  PCLFS_RECORD_TYPE peRecordType,
+  PCLFS_LSN plsnUser,
+  PCLFS_LSN plsnUndoNext,
+  PCLFS_LSN plsnPrevious,
+  PCLFS_LSN plsnRecord,
+  LPOVERLAPPED pOverlapped
 );
 
 #endif /* (_WIN32_WINNT >= 0x0600) */

@@ -16,19 +16,24 @@
 #define NCRYPTBUFFER_PKCS_SECRET 46
 #define NCRYPTBUFFER_CERT_BLOB 47
 
-typedef struct _NCRYPT_KEY_HANDLE NCRYPT_KEY_HANDLE;
+#ifndef __SECSTATUS_DEFINED__
+  typedef LONG SECURITY_STATUS;
+#define __SECSTATUS_DEFINED__
+#endif
 
-typedef struct _NCryptBufferDesc {
-  ULONG         ulVersion;
-  ULONG         cBuffers;
-  PNCryptBuffer pBuffers;
-} NCryptBufferDesc, *PNCryptBufferDesc;
+typedef LPVOID NCRYPT_KEY_HANDLE;
 
 typedef struct _NCryptBuffer {
   ULONG cbBuffer;
   ULONG BufferType;
   PVOID pvBuffer;
 } NCryptBuffer, *PNCryptBuffer;
+
+typedef struct _NCryptBufferDesc {
+  ULONG         ulVersion;
+  ULONG         cBuffers;
+  PNCryptBuffer pBuffers;
+} NCryptBufferDesc, *PNCryptBufferDesc;
 
 SECURITY_STATUS WINAPI NCryptExportKey(
   NCRYPT_KEY_HANDLE hKey,

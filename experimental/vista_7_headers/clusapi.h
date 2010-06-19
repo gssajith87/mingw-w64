@@ -1403,6 +1403,10 @@ HCLUSTER WINAPI CreateCluster(
   PVOID pvCallbackArg
 );
 
+DWORD DestroyClusterGroup(
+  HGROUP hGroup
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 
 #ifdef __cplusplus

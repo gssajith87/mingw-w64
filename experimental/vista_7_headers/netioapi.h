@@ -1,6 +1,6 @@
 #ifndef _INC_NETIOAPI
 #define _INC_NETIOAPI
-#include <_mingw.h>
+#include <windows.h>
 #include <iprtrmib.h>
 #include <ifdef.h>
 #if (_WIN32_WINNT >= 0x0600)
@@ -24,6 +24,11 @@ typedef struct _MIB_ANYCASTIPADDRESS_ROW {
   SCOPE_ID      ScopeId;
 } MIB_ANYCASTIPADDRESS_ROW, *PMIB_ANYCASTIPADDRESS_ROW;
 
+typedef struct _MIB_ANYCASTIPADDRESS_TABLE {
+  ULONG                    NumEntries;
+  MIB_ANYCASTIPADDRESS_ROW Table[];
+} MIB_ANYCASTIPADDRESS_TABLE, *PMIB_ANYCASTIPADDRESS_TABLE;
+
 typedef struct _MIB_IPFORWARD_ROW2 {
   NET_LUID          InterfaceLuid;
   NET_IFINDEX       InterfaceIndex;
@@ -41,26 +46,6 @@ typedef struct _MIB_IPFORWARD_ROW2 {
   ULONG             Age;
   NL_ROUTE_ORIGIN   Origin;
 } MIB_IPFORWARD_ROW2, *PMIB_IPFORWARD_ROW2;
-
-typedef struct _MIB_IPNET_ROW2 {
-  SOCKADDR_INET     Address;
-  NET_IFINDEX       InterfaceIndex;
-  NET_LUID          InterfaceLuid;
-  UCHAR             PhysicalAddress[IF_MAX_PHYS_ADDRESS_LENGTH];
-  ULONG             PhysicalAddressLength;
-  NL_NEIGHBOR_STATE State;
-  union DUMMYUNIONNAME1 {
-    struct DUMMYSTRUCTNAME1 {
-      BOOLEAN IsRouter  :1;
-      BOOLEAN IsUnreachable  :1;
-    } ;
-    UCHAR  Flags;
-  } ;
-  union DUMMYUNIONNAME2 {
-    ULONG LastReachable;
-    ULONG LastUnreachable;
-  } ReachabilityTime;
-} MIB_IPNET_ROW2, *PMIB_IPNET_ROW2;
 
 typedef struct _MIB_IPNET_ROW2 {
   SOCKADDR_INET     Address;
@@ -272,7 +257,41 @@ NETIOAPI_API CreateIpNetEntry2(
 );
 
 NETIOAPI_API CreateUnicastIpAddressEntry(
-  __in  const MIB_UNICASTIPADDRESS_ROW *Row
+  const MIB_UNICASTIPADDRESS_ROW *Row
+);
+
+NETIOAPI_API DeleteIpForwardEntry2(
+  const MIB_IPFORWARD_ROW2 *Row
+);
+
+NETIOAPI_API GetIpForwardTable2(
+  ADDRESS_FAMILY  Family,
+  PMIB_IPFORWARD_TABLE2 *Table
+);
+
+VOID NETIOAPI_API_ FreeMibTable(
+  PVOID Memory
+);
+
+NETIOAPI_API DeleteIpNetEntry2(
+  const MIB_IPNET_ROW2 *Row
+);
+
+NETIOAPI_API GetIpNetTable2(
+  ADDRESS_FAMILY  Family,
+  PMIB_IPNET_TABLE2 *Table
+);
+
+NETIOAPI_API DeleteUnicastIpAddressEntry(
+  const MIB_UNICASTIPADDRESS_ROW *Row
+);
+
+NETIOAPI_API GetUnicastIpAddressEntry(
+  PMIB_UNICASTIPADDRESS_ROW Row
+);
+
+NETIOAPI_API DeleteAnycastIpAddressEntry(
+  const MIB_ANYCASTIPADDRESS_ROW *Row
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

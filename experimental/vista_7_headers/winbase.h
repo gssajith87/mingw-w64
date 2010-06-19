@@ -2808,7 +2808,6 @@ typedef BOOLEAN CALLBACK (*PSECURE_MEMORY_CACHE_CALLBACK) (PVOID Addr,SIZE_T Ran
 
 WINBASEAPI WINBOOL WINAPI AddSecureMemoryCacheCallback(PSECURE_MEMORY_CACHE_CALLBACK pfnCallBack);
 WINBASEAPI WINBOOL WINAPI RemoveSecureMemoryCacheCallback(PSECURE_MEMORY_CACHE_CALLBACK pfnCallBack);
-WINBASEAPI WINBOOL WINAPI AdvanceLogBase(PVOID pvMarshal,PCLFS_LSN plsnBase,ULONG fFlags,LPOVERLAPPED pOverlapped);
 
 WINBASEAPI WINBOOL WINAPI AllocateUserPhysicalPagesNuma(HANDLE hProcess,PULONG_PTR NumberOfPages,PULONG_PTR PageArray,DWORD nndPreferred);
 
@@ -2821,7 +2820,7 @@ WINBASEAPI WINBOOL WINAPI QueryIdleProcessorCycleTime(PULONG BufferLength,PULONG
 WINBASEAPI WINBOOL WINAPI QueryProcessCycleTime(HANDLE ProcessHandle,PULONG64 CycleTime);
 WINBASEAPI WINBOOL WINAPI QueryThreadCycleTime(HANDLE ThreadHandle,PULONG64 CycleTime);
 
-#if defined (_WIN32_WINNT >= 0x0601)
+#if (_WIN32_WINNT >= 0x0601)
 WINBASEAPI WINBOOL WINAPI QueryIdleProcessorCycleTimeEx(USHORT Group,PULONG BufferLength,PULONG64 ProcessorIdleCycleTime);
 #endif
 
@@ -2832,6 +2831,8 @@ typedef struct _TP_CALLBACK_ENVIRON *PTP_CALLBACK_ENVIRON;
 typedef struct _TP_CLEANUP_GROUP *PTP_CLEANUP_GROUP;
 typedef struct _TP_TIMER *PTP_TIMER;
 typedef struct _TP_WAIT *PTP_WAIT;
+typedef struct _TP_WORK *PTP_WORK;
+typedef struct _TP_POOL *PTP_POOL;
 
 typedef DWORD TP_WAIT_RESULT;
 typedef VOID (CALLBACK *PTP_WAIT_CALLBACK)(
@@ -2857,7 +2858,7 @@ typedef VOID (CALLBACK *PTP_TIMER_CALLBACK)(
 
 WINBASEAPI WINBOOL WINAPI CallbackMayRunLong(PTP_CALLBACK_INSTANCE pci);
 WINBASEAPI WINBOOL WINAPI CancelIoEx(HANDLE hFile,LPOVERLAPPED lpOverlapped);
-WINBASEAPI WINBOOL WINAPI CancelSynchronousIo(HANDLE hThread)
+WINBASEAPI WINBOOL WINAPI CancelSynchronousIo(HANDLE hThread);
 WINBASEAPI VOID WINAPI CancelThreadpoolIo(PTP_IO pio);
 WINBASEAPI PTP_IO WINAPI CreateThreadpoolIo(HANDLE fl,PTP_WIN32_IO_CALLBACK pfnio,PVOID pv,PTP_CALLBACK_ENVIRON pcbe);
 WINBASEAPI VOID WINAPI CloseThreadpool(PTP_POOL ptpp);
@@ -3078,6 +3079,38 @@ WINBASEAPI HANDLE WINAPI CreateWaitableTimerExW(
   DWORD dwFlags,
   DWORD dwDesiredAccess
 );
+
+#define DeleteFileTransacted __MINGW_NAME_AW(DeleteFileTransacted)
+
+WINBASEAPI WINBOOL WINAPI DeleteFileTransactedW(
+  LPCWSTR lpFileName,
+  HANDLE hTransaction
+);
+
+WINBASEAPI WINBOOL WINAPI DeleteFileTransactedA(
+  LPCSTR lpFileName,
+  HANDLE hTransaction
+);
+
+WINBASEAPI VOID WINAPI DestroyThreadpoolEnvironment(
+  PTP_CALLBACK_ENVIRON pcbe
+);
+
+WINBASEAPI VOID WINAPI DisassociateCurrentThreadFromCallback(
+  PTP_CALLBACK_INSTANCE pci
+);
+
+typedef struct _TIME_DYNAMIC_ZONE_INFORMATION {
+  LONG       Bias;
+  WCHAR      StandardName[32];
+  SYSTEMTIME StandardDate;
+  LONG       StandardBias;
+  WCHAR      DaylightName[32];
+  SYSTEMTIME DaylightDate;
+  LONG       DaylightBias;
+  WCHAR      TimeZoneKeyName[128];
+  BOOLEAN    DynamicDaylightTimeDisabled;
+} DYNAMIC_TIME_ZONE_INFORMATION, *PDYNAMIC_TIME_ZONE_INFORMATION;
 
 /* no associated headers
   enum CALDATETIME_DATEUNIT {

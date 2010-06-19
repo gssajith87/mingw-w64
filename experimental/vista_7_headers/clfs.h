@@ -2,12 +2,6 @@
 #define _INC_CLFS
 #include <_mingw.h>
 #if (_WIN32_WINNT >= 0x0600)
-#define CLFS_SCAN_INIT 0x01
-#define CLFS_SCAN_FORWARD 0x02
-#define CLFS_SCAN_BACKWARD 0x04
-#define CLFS_SCAN_CLOSE 0x08
-#define CLFS_SCAN_INITIALIZED 0x10
-#define CLFS_SCAN_BUFFERED 0x20
 
 typedef enum  {
   ClfsContextNone       = 0x00,
@@ -26,10 +20,38 @@ typedef enum _CLFS_LOG_ARCHIVE_MODE {
   ClfsLogArchiveDisabled   = 0x02 
 } CLFS_LOG_ARCHIVE_MODE, *PCLFS_LOG_ARCHIVE_MODE;
 
+typedef enum _CLFS_RECORD_TYPE {
+  ClfsDataRecord = 0x01,
+  ClfsRestartRecord = 0x02,
+  ClfsClientRecord = 0x3F 
+} CLFS_RECORD_TYPE, *PCLFS_RECORD_TYPE;
+
 typedef union _CLFS_LSN {
   ULONGLONG Internal;
 } CLFS_LSN, *PCLFS_LSN;
 
+/*http://msdn.microsoft.com/en-us/library/bb540355%28VS.85%29.aspx*/
+typedef enum _CLFS_SCAN_MODE {
+  CLFS_SCAN_INIT = 0x01,
+  CLFS_SCAN_FORWARD = 0x02,
+  CLFS_SCAN_BACKWARD = 0x04,
+  CLFS_SCAN_CLOSE = 0x08,
+  CLFS_SCAN_INITIALIZED = 0x10,
+  CLFS_SCAN_BUFFERED = 0x20
+} CLFS_SCAN_MODE;
+
+/* enum guessed from http://msdn.microsoft.com/en-us/library/bb540336%28VS.85%29.aspx */
+typedef enum _CLFS_CONTAINER_STATE {
+  ClfsContainerInitializing,
+  ClfsContainerInactive,
+  ClfsContainerActive,
+  ClfsContainerActivePendingDelete,
+  ClfsContainerPendingArchive,
+  ClfsContainerPendingArchiveAndDelete
+} CLFS_CONTAINER_STATE;
+typedef LPVOID CLFS_CONTAINER_ID;
+
+/* Goes in wdm.h */
 typedef struct _CLFS_CONTAINER_INFORMATION {
   ULONG                FileAttributes;
   ULONGLONG            CreationTime;
@@ -38,11 +60,20 @@ typedef struct _CLFS_CONTAINER_INFORMATION {
   LONGLONG             ContainerSize;
   ULONG                FileNameActualLength;
   ULONG                FileNameLength;
-  WCHAR                FileName[[MAX_PATH]];
+  WCHAR                FileName[MAX_PATH];
   CLFS_CONTAINER_STATE State;
   CLFS_CONTAINER_ID    PhysicalContainerId;
   CLFS_CONTAINER_ID    LogicalContainerId;
 } CLFS_CONTAINER_INFORMATION, *PCLFS_CONTAINER_INFORMATION, **PPCLFS_CONTAINER_INFORMATION;
+/**/
+
+typedef struct _CLFS_IO_STATISTICS_HEADER {
+  UCHAR              ubMajorVersion;
+  UCHAR              ubMinorVersion;
+  CLFS_IOSTATS_CLASS eStatsClass;
+  USHORT             cbLength;
+  ULONG              coffData;
+} CLFS_IO_STATISTICS_HEADER, *PCLFS_IO_STATISTICS_HEADER, **PPCLFS_IO_STATISTICS_HEADER;
 
 typedef struct _CLFS_ARCHIVE_DESCRIPTOR {
   ULONGLONG                  coffLow;
@@ -78,13 +109,10 @@ typedef struct _CLFS_IO_STATISTICS {
   ULONGLONG                 cbMetaFlush;
 } CLFS_IO_STATISTICS, *PCLFS_IO_STATISTICS, **PPCLFS_IO_STATISTICS;
 
-typedef struct _CLFS_IO_STATISTICS_HEADER {
-  UCHAR              ubMajorVersion;
-  UCHAR              ubMinorVersion;
-  CLFS_IOSTATS_CLASS eStatsClass;
-  USHORT             cbLength;
-  ULONG              coffData;
-} CLFS_IO_STATISTICS_HEADER, *PCLFS_IO_STATISTICS_HEADER, **PPCLFS_IO_STATISTICS_HEADER;
+typedef struct _CLFS_NODE_ID {
+  ULONG cType;
+  ULONG cbNode;
+} CLFS_NODE_ID, *PCLFS_NODE_ID;
 
 typedef struct _CLFS_SCAN_CONTEXT {
   CLFS_NODE_ID                cidNode;

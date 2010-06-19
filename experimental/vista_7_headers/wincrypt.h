@@ -4237,6 +4237,12 @@ typedef LPVOID HCERTCHAINENGINE;
 typedef LPVOID HCERTSTORE;
 typedef LPVOID HCERT_SERVER_OCSP_RESPONSE;
 
+typedef struct _CERT_HASHED_URL {
+  CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
+  CRYPT_HASH_BLOB            Hash;
+  LPWSTR                     pwszUrl;
+} CERT_HASHED_URL, *PCERT_HASHED_URL;
+
 typedef struct _CERT_BIOMETRIC_DATA {
   DWORD dwTypeOfBiometricDataChoice;
   union DUMMYUNIONNAME {
@@ -4255,12 +4261,6 @@ typedef struct _CERT_ECC_SIGNATURE {
   CRYPT_UINT_BLOB r;
   CRYPT_UINT_BLOB s;
 } CERT_ECC_SIGNATURE, *PCERT_ECC_SIGNATURE;
-
-typedef struct _CERT_HASHED_URL {
-  CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
-  CRYPT_HASH_BLOB            Hash;
-  LPWSTR                     pwszUrl;
-} CERT_HASHED_URL, *PCERT_HASHED_URL;
 
 typedef struct _CERT_LOGOTYPE_DETAILS {
   LPWSTR           pwszMimeType;
@@ -4311,11 +4311,6 @@ typedef struct _CERT_LOGOTYPE_REFERENCE {
   PCERT_HASHED_URL rgHashedUrl;
 } CERT_LOGOTYPE_REFERENCE, *PCERT_LOGOTYPE_REFERENCE;
 
-typedef struct _CERT_OTHER_LOGOTYPE_INFO {
-  LPSTR              pszObjId;
-  CERT_LOGOTYPE_INFO LogotypeInfo;
-} CERT_OTHER_LOGOTYPE_INFO, *PCERT_OTHER_LOGOTYPE_INFO;
-
 typedef struct _CERT_LOGOTYPE_INFO {
   DWORD dwLogotypeInfoChoice;
   union DUMMYUNIONNAME {
@@ -4323,6 +4318,11 @@ typedef struct _CERT_LOGOTYPE_INFO {
     PCERT_LOGOTYPE_REFERENCE pLogotypeIndirectInfo;
   } ;
 } CERT_LOGOTYPE_INFO, *PCERT_LOGOTYPE_INFO;
+
+typedef struct _CERT_OTHER_LOGOTYPE_INFO {
+  LPSTR              pszObjId;
+  CERT_LOGOTYPE_INFO LogotypeInfo;
+} CERT_OTHER_LOGOTYPE_INFO, *PCERT_OTHER_LOGOTYPE_INFO;
 
 typedef struct _CERT_LOGOTYPE_EXT_INFO {
   DWORD                     cCommunityLogo;
@@ -4360,6 +4360,39 @@ typedef struct _CERT_SERVER_OCSP_RESPONSE_CONTEXT {
   DWORD cbEncodedOcspResponse;
 } CERT_SERVER_OCSP_RESPONSE_CONTEXT, *PCERT_SERVER_OCSP_RESPONSE_CONTEXT, *PCCERT_SERVER_OCSP_RESPONSE_CONTEXT;
 
+typedef struct _CMSG_CNG_CONTENT_DECRYPT_INFO {
+  DWORD                      cbSize;
+  CRYPT_ALGORITHM_IDENTIFIER ContentEncryptionAlgorithm;
+  PFN_CMSG_ALLOC             pfnAlloc;
+  PFN_CMSG_FREE              pfnFree;
+  NCRYPT_KEY_HANDLE          hNCryptKey;
+  BYTE                       *pbContentEncryptKey;
+  DWORD                      cbContentEncryptKey;
+  BCRYPT_KEY_HANDLE          hCNGContentEncryptKey;
+  BYTE                       *pbCNGContentEncryptKeyObject;
+} CMSG_CNG_CONTENT_DECRYPT_INFO, *PCMSG_CNG_CONTENT_DECRYPT_INFO;
+
+typedef struct _CRYPT_AES_128_KEY_STATE {
+  unsigned char Key[16];
+  unsigned char IV[16];
+  unsigned char EncryptionState[11][16];
+  unsigned char DecryptionState[11][16];
+  unsigned char Feedback[16];
+} CRYPT_AES_128_KEY_STATE, *PCRYPT_AES_128_KEY_STATE;
+
+typedef struct _CRYPT_AES_256_KEY_STATE {
+  unsigned char Key[32];
+  unsigned char IV[16];
+  unsigned char EncryptionState[15][16];
+  unsigned char DecryptionState[15][16];
+  unsigned char Feedback[16];
+} CRYPT_AES_256_KEY_STATE, *PCRYPT_AES_256_KEY_STATE;
+
+typedef struct _ROOT_INFO_LUID {
+  DWORD LowPart;
+  LONG  HighPart;
+} ROOT_INFO_LUID, *PROOT_INFO_LUID;
+
 WINCRYPT32API VOID WINAPI CertAddRefServerOcspResponse(HCERT_SERVER_OCSP_RESPONSE hServerOcspResponse);
 HCERT_SERVER_OCSP_RESPONSE WINAPI CertOpenServerOcspResponse(
   PCCERT_CHAIN_CONTEXT pChainContext,
@@ -4376,7 +4409,7 @@ VOID WINAPI CertCloseServerOcspResponse(
   DWORD dwFlags
 );
 
-WINAPI CertFreeServerOcspResponseContext(
+VOID WINAPI CertFreeServerOcspResponseContext(
   PCCERT_SERVER_OCSP_RESPONSE_CONTEXT pServerOcspResponseContext
 );
 
@@ -4420,40 +4453,6 @@ typedef WINBOOL ( WINAPI *PFN_CMSG_CNG_IMPORT_CONTENT_ENCRYPT_KEY )(
 
 #define CMSG_OID_CNG_IMPORT_KEY_TRANS_FUNC "CryptMsgDllCNGImportKeyTrans"
 
-typedef struct _CMSG_CNG_CONTENT_DECRYPT_INFO {
-  DWORD                      cbSize;
-  CRYPT_ALGORITHM_IDENTIFIER ContentEncryptionAlgorithm;
-  PFN_CMSG_ALLOC             pfnAlloc;
-  PFN_CMSG_FREE              pfnFree;
-  NCRYPT_KEY_HANDLE          hNCryptKey;
-  BYTE                       *pbContentEncryptKey;
-  DWORD                      cbContentEncryptKey;
-  BCRYPT_KEY_HANDLE          hCNGContentEncryptKey;
-  BYTE                       *pbCNGContentEncryptKeyObject;
-} CMSG_CNG_CONTENT_DECRYPT_INFO, *PCMSG_CNG_CONTENT_DECRYPT_INFO;
-
-typedef struct _CRYPT_AES_128_KEY_STATE {
-  unsigned char Key[16];
-  unsigned char IV[16];
-  unsigned char EncryptionState[[11][16]];
-  unsigned char DecryptionState[[11][16]];
-  unsigned char Feedback[16];
-} CRYPT_AES_128_KEY_STATE, *PCRYPT_AES_128_KEY_STATE;
-
-typedef struct _CRYPT_AES_256_KEY_STATE {
-  unsigned char Key[32];
-  unsigned char IV[16];
-  unsigned char EncryptionState[[15][16]];
-  unsigned char DecryptionState[[15][16]];
-  unsigned char Feedback[16];
-} CRYPT_AES_256_KEY_STATE, *PCRYPT_AES_256_KEY_STATE;
-
-typedef struct _CRYPT_CREDENTIALS {
-  DWORD  cbSize;
-  LPCSTR pszCredentialsOid;
-  LPVOID pvCredentials;
-} CRYPT_CREDENTIALS, *PCRYPT_CREDENTIALS;
-
 #define CRYPT_ECC_CMS_SHARED_INFO_SUPPPUBINFO_BYTE_LENGTH 4
 
 typedef struct _CRYPT_ECC_CMS_SHARED_INFO {
@@ -4478,20 +4477,6 @@ typedef struct _CRYPT_MASK_GEN_ALGORITHM {
   LPSTR                      pszObjId;
   CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
 } CRYPT_MASK_GEN_ALGORITHM, *PCRYPT_MASK_GEN_ALGORITHM;
-
-#define CRYPT_PASSWORD_CREDENTIALS __MINGW_NAME_AW(CRYPT_PASSWORD_CREDENTIALS)
-#define PCRYPT_PASSWORD_CREDENTIALS __MINGW_NAME_AW(PCRYPT_PASSWORD_CREDENTIALS)
-typedef struct _CRYPT_PASSWORD_CREDENTIALSA {
-  DWORD  cbSize;
-  LPSTR pszUsername;
-  LPSTR pszPassword;
-} CRYPT_PASSWORD_CREDENTIALSA, *PCRYPT_PASSWORD_CREDENTIALSA;
-
-typedef struct _CRYPT_PASSWORD_CREDENTIALSW {
-  DWORD  cbSize;
-  LPWSTR pszUsername;
-  LPWSTR pszPassword;
-} CRYPT_PASSWORD_CREDENTIALSW, *PCRYPT_PASSWORD_CREDENTIALSW;
 
 typedef struct _CRYPT_PKCS12_PBE_PARAMS {
   int   iIterations;
@@ -4563,18 +4548,6 @@ typedef struct _CRYPTNET_URL_CACHE_RESPONSE_INFO {
   DWORD    dwProxyId;
 } CRYPTNET_URL_CACHE_RESPONSE_INFO, *PCRYPTNET_URL_CACHE_RESPONSE_INFO;
 
-WINBOOL WINAPI CryptGetTimeValidObject(
-  LPCSTR pszTimeValidOid,
-  LPVOID pvPara,
-  PCCERT_CONTEXT pIssuer,
-  LPFILETIME pftValidFor,
-  DWORD dwFlags,
-  DWORD dwTimeout,
-  LPVOID *ppvObject,
-  PCRYPT_CREDENTIALS pCredentials,
-  PCRYPT_GET_TIME_VALID_OBJECT_EXTRA_INFO pExtraInfo
-);
-
 WINBOOL WINAPI CryptHashCertificate2(
   LPCWSTR pwszCNGHashAlgid,
   DWORD dwFlags,
@@ -4591,18 +4564,6 @@ WINBOOL WINAPI CryptImportPublicKeyInfoEx2(
   DWORD dwFlags,
   void *pvAuxInfo,
   BCRYPT_KEY_HANDLE *phKey
-);
-
-WINBOOL WINAPI CryptProtectMemory(
-  LPVOID pData,
-  DWORD cbData,
-  DWORD dwFlags
-);
-
-WINBOOL WINAPI CryptUnprotectMemory(
-  LPVOID pData,
-  DWORD cbData,
-  DWORD dwFlags
 );
 
 WINBOOL WINAPI CryptUpdateProtectedState(

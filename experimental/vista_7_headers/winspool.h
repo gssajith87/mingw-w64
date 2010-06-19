@@ -1350,6 +1350,8 @@ extern "C" {
 
 #if (_WIN32_WINNT >= 0x0600)
 #define AddPrinterConnection2 __MINGW_NAME_AW(AddPrinterConnection2)
+#define DeletePrinterDriverPackage __MINGW_NAME_AW(DeletePrinterDriverPackage)
+#define DocumentEvent __MINGW_NAME_AW(DocumentEvent)
 
 #define PRINTER_CONNECTION_MISMATCH 0x00000020
 #define PRINTER_CONNECTION_NO_UI    0x00000040
@@ -1361,6 +1363,98 @@ typedef struct _PRINTER_CONNECTION_INFO_1 {
 
   WINBOOL AddPrinterConnection2W(HWND hWnd,LPCWSTR pszName,DWORD dwLevel,PVOID pConnectionInfo);
   WINBOOL AddPrinterConnection2A(HWND hWnd,LPCSTR pszName,DWORD dwLevel,PVOID pConnectionInfo); /*Not supported and returns ERROR_NOT_SUPPORTED.*/
+
+HRESULT WINAPI DeletePrinterDriverPackageA(
+  LPCSTR pszServer,
+  LPCSTR pszInfPath,
+  LPCSTR pszEnvironment
+);
+
+HRESULT WINAPI DeletePrinterDriverPackageW(
+  LPCWSTR pszServer,
+  LPCWSTR pszInfPath,
+  LPCWSTR pszEnvironment
+);
+
+HRESULT DocumentEventA(
+  HANDLE hPrinter,
+  HDC hdc,
+  INT iEsc,
+  ULONG cbIn,
+  PVOID pvIn,
+  ULONG cbOut,
+  PVOID pvOut
+);
+
+HRESULT DocumentEventW(
+  HANDLE hPrinter,
+  HDC hdc,
+  INT iEsc,
+  ULONG cbIn,
+  PVOID pvIn,
+  ULONG cbOut,
+  PVOID pvOut
+);
+
+typedef struct _DRIVER_INFO_8W {
+  DWORD     cVersion;
+  LPWSTR    pName;
+  LPWSTR    pEnvironment;
+  LPWSTR    pDriverPath;
+  LPWSTR    pDataFile;
+  LPWSTR    pConfigFile;
+  LPWSTR    pHelpFile;
+  LPWSTR    pDependentFiles;
+  LPWSTR    pMonitorName;
+  LPWSTR    pDefaultDataType;
+  LPWSTR    pszzPreviousNames;
+  FILETIME  ftDriverDate;
+  DWORDLONG dwlDriverVersion;
+  LPWSTR    pszMfgName;
+  LPWSTR    pszOEMUrl;
+  LPWSTR    pszHardwareID;
+  LPWSTR    pszProvider;
+  LPWSTR    pszPrintProcessor;
+  LPWSTR    pszVendorSetup;
+  LPWSTR    pszzColorProfiles;
+  LPWSTR    pszInfPath;
+  DWORD     dwPrinterDriverAttributes;
+  LPWSTR    pszzCoreDriverDependencies;
+  FILETIME  ftMinInboxDriverVerDate;
+  DWORDLONG dwlMinInboxDriverVerVersion;
+} DRIVER_INFO_8W, *PDRIVER_INFO_8W, *LPDRIVER_INFO_8W;
+
+typedef struct _DRIVER_INFO_8A {
+  DWORD     cVersion;
+  LPSTR    pName;
+  LPSTR    pEnvironment;
+  LPSTR    pDriverPath;
+  LPSTR    pDataFile;
+  LPSTR    pConfigFile;
+  LPSTR    pHelpFile;
+  LPSTR    pDependentFiles;
+  LPSTR    pMonitorName;
+  LPSTR    pDefaultDataType;
+  LPSTR    pszzPreviousNames;
+  FILETIME  ftDriverDate;
+  DWORDLONG dwlDriverVersion;
+  LPSTR    pszMfgName;
+  LPSTR    pszOEMUrl;
+  LPSTR    pszHardwareID;
+  LPSTR    pszProvider;
+  LPSTR    pszPrintProcessor;
+  LPSTR    pszVendorSetup;
+  LPSTR    pszzColorProfiles;
+  LPSTR    pszInfPath;
+  DWORD     dwPrinterDriverAttributes;
+  LPSTR    pszzCoreDriverDependencies;
+  FILETIME  ftMinInboxDriverVerDate;
+  DWORDLONG dwlMinInboxDriverVerVersion;
+} DRIVER_INFO_8A, *PDRIVER_INFO_8A, *LPDRIVER_INFO_8A;
+
+__MINGW_TYPEDEF_AW(DRIVER_INFO_8)
+__MINGW_TYPEDEF_AW(PDRIVER_INFO_8)
+__MINGW_TYPEDEF_AW(LPDRIVER_INFO_8)
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 

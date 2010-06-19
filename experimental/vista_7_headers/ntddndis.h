@@ -1834,6 +1834,12 @@ extern "C" {
     BPC_HANDLE nhDevice;
   } NDIS_BPC_STATUS_CONNECTED,*PNDIS_BPC_STATUS_CONNECTED;
 
+typedef struct _NDIS_OBJECT_HEADER {
+  UCHAR  Type;
+  UCHAR  Revision;
+  USHORT Size;
+} NDIS_OBJECT_HEADER, *PNDIS_OBJECT_HEADER;
+
 #ifdef __cplusplus
 }
 #endif
