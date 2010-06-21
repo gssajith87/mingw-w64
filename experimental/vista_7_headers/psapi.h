@@ -120,6 +120,16 @@ extern "C" {
   DWORD WINAPI GetProcessImageFileNameA(HANDLE hProcess,LPSTR lpImageFileName,DWORD nSize);
   DWORD WINAPI GetProcessImageFileNameW(HANDLE hProcess,LPWSTR lpImageFileName,DWORD nSize);
 
+#if (_WIN32_WINNT >= 0x0600)
+WINBOOL WINAPI EnumProcessModulesEx(
+  HANDLE hProcess,
+  HMODULE *lphModule,
+  DWORD cb,
+  LPDWORD lpcbNeeded,
+  DWORD dwFilterFlag
+);
+#endif /* (_WIN32_WINNT >= 0x0600) */
+
 #ifdef __cplusplus
 }
 #endif

@@ -3112,51 +3112,20 @@ typedef struct _TIME_DYNAMIC_ZONE_INFORMATION {
   BOOLEAN    DynamicDaylightTimeDisabled;
 } DYNAMIC_TIME_ZONE_INFORMATION, *PDYNAMIC_TIME_ZONE_INFORMATION;
 
-/* no associated headers
-  enum CALDATETIME_DATEUNIT {
-    EraUnit,
-    YearUnit,
-    MonthUnit,
-    WeekUnit,
-    DayUnit,
-    HourUnit,
-    MinuteUnit,
-    SecondUnit,
-    TickUnit
-  };
-  typedef struct _caldatetime {
-    CALID CalId;
-    UINT  Era;
-    UINT  Year;
-    UINT  Month;
-    UINT  Day;
-    UINT  DayOfWeek;
-    UINT  Hour;
-    UINT  Minute;
-    UINT  Second;
-    ULONG Tick;
-  } CALDATETIME, *LPCALDATETIME;
-WINBOOL AdjustCalendarDate(LPCALDATETIME lpCalDateTime,CALDATETIME_DATEUNIT calUnit,INT amount);
+#endif /*(_WIN32_WINNT >= 0x0601)*/
 
-BOOL ConvertSystemTimeToCalDateTime(
-  __in   const SYSTEMTIME lpSysTime,
-  __in   CALID calId,
-  __out  LPCALDATETIME lpCalDateTime
-
+WINBASEAPI UINT WINAPI EnumSystemFirmwareTables(
+  DWORD FirmwareTableProviderSignature,
+  PVOID pFirmwareTableBuffer,
+  DWORD BufferSize
 );
 
-void* CmFree(
-    void *pvPtr
+WINBASEAPI UINT WINAPI GetSystemFirmwareTable(
+  DWORD FirmwareTableProviderSignature,
+  DWORD FirmwareTableID,
+  PVOID pFirmwareTableBuffer,
+  DWORD BufferSize
 );
-
-void* CmMalloc(
-    size_t nBytes
-);
-
-*/
-
-
-#endif
 
 #ifdef __cplusplus
 }

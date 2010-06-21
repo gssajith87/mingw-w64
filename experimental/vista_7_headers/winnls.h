@@ -447,6 +447,9 @@ extern "C" {
 #define CAL_GREGORIAN_ARABIC 10
 #define CAL_GREGORIAN_XLIT_ENGLISH 11
 #define CAL_GREGORIAN_XLIT_FRENCH 12
+#if (_WIN32_WINNT >= 0x0600)
+#define CAL_UMALQURA 23
+#endif /* (_WIN32_WINNT >= 0x0600) */
 
 #define LGRPID_WESTERN_EUROPE 0x0001
 #define LGRPID_CENTRAL_EUROPE 0x0002
@@ -739,6 +742,60 @@ WINBASEAPI int WINAPI CompareStringOrdinal(
   LPCWSTR lpString2,
   int cchCount2,
   WINBOOL bIgnoreCase
+);
+
+typedef WINBOOL (CALLBACK *CALINFO_ENUMPROCEXEX)(
+  LPWSTR lpCalendarInfoString,
+  CALID Calendar,
+  LPWSTR lpReserved,
+  LPARAM lParam
+);
+
+typedef WINBOOL (CALLBACK *DATEFMT_ENUMPROCEXEX)(
+  LPWSTR lpDateFormatString,
+  CALID CalendarID,
+  LPARAM lParam
+);
+
+WINBASEAPI WINBOOL int WINAPI EnumCalendarInfoExEx(
+  CALINFO_ENUMPROCEXEX pCalInfoEnumProcExEx,
+  LPCWSTR lpLocaleName,
+  CALID Calendar,
+  LPCWSTR lpReserved,
+  CALTYPE CalType,
+  LPARAM lParam
+);
+
+WINBASEAPI WINBOOL WINAPI EnumDateFormatsExEx(
+  DATEFMT_ENUMPROCEXEX lpDateFmtEnumProcExEx,
+  LPCWSTR lpLocaleName,
+  DWORD dwFlags,
+  LPARAM lParam
+);
+
+typedef WINBOOL (CALLBACK *LOCALE_ENUMPROCEX)(
+  LPWSTR lpLocaleString,
+  DWORD dwFlags,
+  LPARAM lParam
+);
+
+WINBASEAPI WINBOOL WINAPI EnumSystemLocalesEx(
+  LOCALE_ENUMPROCEX lpLocaleEnumProcEx,
+  DWORD dwFlags,
+  LPARAM lParam,
+  LPVOID lpReserved
+);
+
+typedef WINBOOL (CALLBACK *TIMEFMT_ENUMPROCEX)(
+  LPWSTR lpTimeFormatString,
+  LPARAM lParam
+);
+
+WINBOOL WINAPI EnumTimeFormatsEx(
+  TIMEFMT_ENUMPROCEX lpTimeFmtEnumProcEx,
+  LPCWSTR lpLocaleName,
+  DWORD dwFlags,
+  LPARAM lParam
 );
 
 #endif /* (_WIN32_WINNT >= 0x0600) */

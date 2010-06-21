@@ -1,7 +1,7 @@
 #ifndef _INC_RDPENCOMAPI
 #define _INC_RDPENCOMAPI
 #if (_WIN32_WINNT >= 0x0600)
-#include <oaidl.h>
+#include <windows.h>
 
 typedef enum _ATTENDEE_DISCONNECT_REASON {
   ATTENDEE_DISCONNECT_REASON_MIN   = 0,

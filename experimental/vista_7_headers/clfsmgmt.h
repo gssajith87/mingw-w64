@@ -54,20 +54,20 @@ typedef struct _CLFS_MGMT_POLICY {
       ULONG MinimumAvailablePercentage;
       ULONG MinimumAvailableContainers;
     } LogTail;
-    struct DUMMYSTRUCTNAME6 {
+    struct DUMMYSTRUCTNAME(6) {
       ULONG Percentage;
     } AutoShrink;
-    struct DUMMYSTRUCTNAME7 {
+    struct DUMMYSTRUCTNAME(7) {
       ULONG Enabled;
     } AutoGrow;
-    struct DUMMYSTRUCTNAME8 {
+    struct DUMMYSTRUCTNAME(8) {
       USHORT PrefixLengthInBytes;
       WCHAR PrefixString[1];
     } NewContainerPrefix;
-    struct DUMMYSTRUCTNAME9 {
+    struct DUMMYSTRUCTNAME(9) {
       ULONGLONG NextContainerSuffix;
     } NewContainerSuffix;
-    struct DUMMYSTRUCTNAME {
+    struct DUMMYSTRUCTNAME(10) {
       USHORT ExtensionLengthInBytes;
       WCHAR ExtensionString[1];
     } NewContainerExtension;

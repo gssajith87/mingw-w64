@@ -1356,6 +1356,24 @@ extern "C" {
 #define PRINTER_CONNECTION_MISMATCH 0x00000020
 #define PRINTER_CONNECTION_NO_UI    0x00000040
 
+typedef enum tagEPrintXPSJobOperation {
+  kJobProduction,
+  kJobConsumption 
+} EPrintXPSJobOperation;
+
+typedef enum tagEPrintXPSJobProgress {
+  kAddingDocumentSequence,
+  kDocumentSequenceAdded,
+  kAddingFixedDocument,
+  kFixedDocumentAdded,
+  kAddingFixedPage,
+  kFixedPageAdded,
+  kResourceAdded,
+  kFontAdded,
+  kImageAdded,
+  kXpsDocumentCommitted 
+} EPrintXPSJobProgress;
+
 typedef struct _PRINTER_CONNECTION_INFO_1 {
   DWORD  dwFlags;
   LPTSTR pszDriverName;
@@ -1455,6 +1473,13 @@ typedef struct _DRIVER_INFO_8A {
 __MINGW_TYPEDEF_AW(DRIVER_INFO_8)
 __MINGW_TYPEDEF_AW(PDRIVER_INFO_8)
 __MINGW_TYPEDEF_AW(LPDRIVER_INFO_8)
+
+HRESULT ReportJobProcessingProgress(
+  HANDLE printerHandle,
+  ULONG jobId,
+  EPrintXPSJobOperation jobOperation,
+  EPrintXPSJobProgress jobProgress
+);
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 

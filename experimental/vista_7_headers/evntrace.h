@@ -10,7 +10,7 @@
 #ifndef WMIAPI
 #define WMIAPI DECLSPEC_IMPORT WINAPI
 #endif
-
+#include <evntprov.h>
 #include <guiddef.h>
 
 DEFINE_GUID (EventTraceGuid,0x68fdd900,0x4a3e,0x11d1,0x84,0xf4,0x00,0x00,0xf8,0x04,0x64,0xe3);
@@ -433,6 +433,82 @@ extern "C" {
   EXTERN_C ULONG __cdecl TraceMessage(TRACEHANDLE LoggerHandle,ULONG MessageFlags,LPGUID MessageGuid,USHORT MessageNumber,...);
   EXTERN_C ULONG TraceMessageVa(TRACEHANDLE LoggerHandle,ULONG MessageFlags,LPGUID MessageGuid,USHORT MessageNumber,va_list MessageArgList);
 
+#if (_WIN32_WINNT >= 0x0600)
+#define TRACE_LEVEL_CRITICAL 1
+#define TRACE_LEVEL_ERROR 2
+#define TRACE_LEVEL_WARNING 3
+#define TRACE_LEVEL_INFORMATION 4
+#define TRACE_LEVEL_VERBOSE 5
+
+EXTERN_C ULONG WINAPI EnableTraceEx(
+  LPCGUID ProviderId,
+  LPCGUID SourceId,
+  TRACEHANDLE TraceHandle,
+  ULONG IsEnabled,
+  UCHAR Level,
+  ULONGLONG MatchAnyKeyword,
+  ULONGLONG MatchAllKeyword,
+  ULONG EnableProperty,
+  PEVENT_FILTER_DESCRIPTOR EnableFilterDesc
+);
+
+typedef enum _TRACE_QUERY_INFO_CLASS {
+  TraceGuidQueryList,
+  TraceGuidQueryInfo,
+  TraceGuidQueryProcess,
+  TraceStackTracingInfo,
+  MaxTraceSetInfoClass 
+} TRACE_QUERY_INFO_CLASS;
+
+EXTERN_C ULONG WINAPI EnumerateTraceGuidsEx(
+  TRACE_QUERY_INFO_CLASS TraceQueryInfoClass,
+  PVOID InBuffer,
+  ULONG InBufferSize,
+  PVOID OutBuffer,
+  ULONG OutBufferSize,
+  PULONG ReturnLength
+);
+
+typedef struct _ETW_BUFFER_CONTEXT {
+  UCHAR  ProcessorNumber;
+  UCHAR  Alignment;
+  USHORT LoggerId;
+} ETW_BUFFER_CONTEXT, *PETW_BUFFER_CONTEXT;
+
+typedef VOID (WINAPI *PEVENT_RECORD_CALLBACK)(
+  PEVENT_RECORD EventRecord
+);
+
+#if (_WIN32_WINNT >= 0x0601)
+typedef enum TRACE_INFO_CLASS {
+  TraceGuidQueryList,
+  TraceGuidQueryInfo,
+  TraceGuidQueryProcess,
+  TraceStackTracingInfo,
+  MaxTraceSetInfoClass 
+} TRACE_INFO_CLASS;
+
+typedef struct _ENABLE_TRACE_PARAMETERS {
+  ULONG                    Version;
+  ULONG                    EnableProperty;
+  ULONG                    ControlFlags;
+  GUID                     SourceId;
+  PEVENT_FILTER_DESCRIPTOR EnableFilterDesc;
+} ENABLE_TRACE_PARAMETERS, *PENABLE_TRACE_PARAMETERS;
+
+ULONG EnableTraceEx2(
+  TRACEHANDLE TraceHandle,
+  LPCGUID ProviderId,
+  ULONG ControlCode,
+  UCHAR Level,
+  ULONGLONG MatchAnyKeyword,
+  ULONGLONG MatchAllKeyword,
+  ULONG Timeout,
+  PENABLE_TRACE_PARAMETERS EnableParameters
+);
+#endif /*(_WIN32_WINNT >= 0x0601)*/
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 #ifdef __cplusplus
 }
 #endif

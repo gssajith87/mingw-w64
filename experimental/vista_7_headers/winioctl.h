@@ -1603,6 +1603,18 @@ typedef struct _VOLUME_DISK_EXTENTS {
   DISK_EXTENT Extents[1];
 } VOLUME_DISK_EXTENTS,*PVOLUME_DISK_EXTENTS;
 
+typedef struct _EXFAT_STATISTICS {
+  DWORD CreateHits;
+  DWORD SuccessfulCreates;
+  DWORD FailedCreates;
+  DWORD NonCachedReads;
+  DWORD NonCachedReadBytes;
+  DWORD NonCachedWrites;
+  DWORD NonCachedWriteBytes;
+  DWORD NonCachedDiskReads;
+  DWORD NonCachedDiskWrites;
+} EXFAT_STATISTICS, *PEXFAT_STATISTICS;
+
 #if (_WIN32_WINNT >= 0x0600)
 #define MediaUnknown 0
 #define MediaPresent 1

@@ -89,4 +89,12 @@ typedef struct _RM_FEC_INFO {
   UCHAR FECGroupSize;
   BOOLEAN fFECOnDemandParityEnabled;
 } RM_FEC_INFO;
+
+#if (_WIN32_WINNT >= 0x0600)
+typedef enum _eWINDOW_ADVANCE_METHOD {
+  E_WINDOW_ADVANCE_BY_TIME     = 1,
+  E_WINDOW_USE_AS_DATA_CACHE 
+} eWINDOW_ADVANCE_METHOD;
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif
