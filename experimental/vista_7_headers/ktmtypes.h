@@ -1,5 +1,6 @@
 #ifndef _INC_KTMTYPES
 #define _INC_KTMTYPES
+#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
 
 #define TRANSACTION_NOTIFY_MASK                 0x3FFFFFFF
