@@ -1,7 +1,40 @@
+#include <stdlib.h>
 #include <math.h>
 #include <complex.h>
 
-int main() {
+#include "compare_flt.c"
+
+int main()
+{
+  volatile float complex val;
+  val = 0 + I*0;
+  if (compare_cflt(0.0f + I * 1.57079632679489661920f, cacoshf(val)))
+    exit(1);
+
+  val = 0.76159415595576488811945828260479359f + I * 0.0f;
+  if (compare_cflt(0.0f + I*0.70502684355523799494171984544790700f, cacoshf(val)))
+    exit(2);
+
+  val = 0.0f + I * 0.76159415595576488811945828260479359f;
+  if (compare_cflt(0.7023967071298748277842210626074970f + I * 1.5707963267948966192313216916397514f, cacoshf(val)))
+    exit(3);
+
+  val = 0.76159415595576488811945828260479359f + I * 0.76159415595576488811945828260479359f;
+  if (compare_cflt(0.82342412550090412964986631390412834f + I * 0.97572246647867028592557299754796005f, cacoshf(val)))
+    exit(4);
+
+  val = 1.0f + I * 1.0f;
+  if (compare_cflt(1.06127506190503565203301891621357349f + I * 0.90455689430238136412731679566195872f, cacoshf(val)))
+    exit(5);
+
+  val = 1.1f + I * 1.1f;
+  if (compare_cflt(1.1501268012743558167841552173817673f + I * 0.8852979204922192742868771448602364f, cacoshf(val)))
+    exit(6);
+
+  val = -1.1f + I * -1.1f;
+  if (compare_cflt(1.1501268012743558167841552173817673f + I * -2.2562947330975739641757662384192665f, cacoshf(val)))
+    exit(7);
+
   return 0;
 }
 
