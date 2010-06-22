@@ -1,0 +1,11 @@
+
+Some new complex library tests and changes.
+
+1) Issue of Testsuite incomplete
+2) To run the testsuite against the installed mingw,
+   make check
+3) To run the testsuite against the newcomplex,
+   make clean-checkPROGRAMS check LIBS=libnewcomplex.a
+
+hint, on linux you can run 
+make check TESTS_ENVIRONMENT=wine64
