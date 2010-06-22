@@ -7,10 +7,11 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/complex.h])
 AC_CONFIG_HEADERS([config.h])
 
-AM_INIT_AUTOMAKE([foreign parallel-tests color-tests silent-rules])
+AM_INIT_AUTOMAKE([subdir-objects foreign parallel-tests color-tests silent-rules])
 
 # Checks for programs.
 AC_PROG_CC
+AC_PROG_RANLIB
 
 # Checks for libraries.
 
