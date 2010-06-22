@@ -20,3 +20,12 @@
 #define M_PI_3_4 (M_PI - M_PI_4)
 #define M_PI_3_4l (M_PIl - M_PI_4l)
 
+#if defined(_NEWCOMPLEX_FLOAT)
+#include "complex.def_f.h"
+#elif defined(_NEWCOMPLEX_DOUBLE)
+#include "complex.def_d.h"
+#elif defined(_NEWCOMPLEX_LDOUBLE)
+#include "complex.def_ld.h"
+#else
+#error "Unknown complex number type"
+#endif
