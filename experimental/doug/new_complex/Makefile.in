@@ -32,36 +32,6 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = dummy$(EXEEXT)
-TESTS = tests/cabs$(EXEEXT) tests/cabsf$(EXEEXT) tests/cabsl$(EXEEXT) \
-	tests/cacos$(EXEEXT) tests/cacosf$(EXEEXT) \
-	tests/cacosh$(EXEEXT) tests/cacoshf$(EXEEXT) \
-	tests/cacoshl$(EXEEXT) tests/cacosl$(EXEEXT) \
-	tests/carg$(EXEEXT) tests/cargf$(EXEEXT) tests/cargl$(EXEEXT) \
-	tests/casin$(EXEEXT) tests/casinf$(EXEEXT) \
-	tests/casinh$(EXEEXT) tests/casinhf$(EXEEXT) \
-	tests/casinhl$(EXEEXT) tests/casinl$(EXEEXT) \
-	tests/catan$(EXEEXT) tests/catanf$(EXEEXT) \
-	tests/catanh$(EXEEXT) tests/catanhf$(EXEEXT) \
-	tests/catanhl$(EXEEXT) tests/catanl$(EXEEXT) \
-	tests/ccos$(EXEEXT) tests/ccosf$(EXEEXT) tests/ccosh$(EXEEXT) \
-	tests/ccoshf$(EXEEXT) tests/ccoshl$(EXEEXT) \
-	tests/ccosl$(EXEEXT) tests/cexp$(EXEEXT) tests/cexpf$(EXEEXT) \
-	tests/cexpl$(EXEEXT) tests/cimag$(EXEEXT) \
-	tests/cimagf$(EXEEXT) tests/cimagl$(EXEEXT) \
-	tests/clog$(EXEEXT) tests/clogf$(EXEEXT) tests/clogl$(EXEEXT) \
-	tests/conj$(EXEEXT) tests/conjf$(EXEEXT) tests/conjl$(EXEEXT) \
-	tests/cpow$(EXEEXT) tests/cpowf$(EXEEXT) tests/cpowl$(EXEEXT) \
-	tests/cproj$(EXEEXT) tests/cprojf$(EXEEXT) \
-	tests/cprojl$(EXEEXT) tests/creal$(EXEEXT) \
-	tests/crealf$(EXEEXT) tests/creall$(EXEEXT) \
-	tests/csin$(EXEEXT) tests/csinf$(EXEEXT) tests/csinh$(EXEEXT) \
-	tests/csinhf$(EXEEXT) tests/csinhl$(EXEEXT) \
-	tests/csinl$(EXEEXT) tests/csqrt$(EXEEXT) \
-	tests/csqrtf$(EXEEXT) tests/csqrtl$(EXEEXT) \
-	tests/ctan$(EXEEXT) tests/ctanf$(EXEEXT) tests/ctanh$(EXEEXT) \
-	tests/ctanhf$(EXEEXT) tests/ctanhl$(EXEEXT) \
-	tests/ctanl$(EXEEXT)
 check_PROGRAMS = $(am__EXEEXT_1)
 subdir = .
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
@@ -78,7 +48,47 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)"
+am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+  esac;
+am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
+am__install_max = 40
+am__nobase_strip_setup = \
+  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
+am__nobase_strip = \
+  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
+am__nobase_list = $(am__nobase_strip_setup); \
+  for p in $$list; do echo "$$p $$p"; done | \
+  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
+  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
+    if (++n[$$2] == $(am__install_max)) \
+      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
+    END { for (dir in files) print dir, files[dir] }'
+am__base_list = \
+  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
+  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
+am__installdirs = "$(DESTDIR)$(libdir)"
+LIBRARIES = $(lib_LIBRARIES)
+AR = ar
+ARFLAGS = cru
+AM_V_AR = $(am__v_AR_$(V))
+am__v_AR_ = $(am__v_AR_$(AM_DEFAULT_VERBOSITY))
+am__v_AR_0 = @echo "  AR    " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
+libnewcomplex_a_AR = $(AR) $(ARFLAGS)
+libnewcomplex_a_LIBADD =
+am__dirstamp = $(am__leading_dot)dirstamp
+am__objects_1 = src/cabs.$(OBJEXT) src/ccos.$(OBJEXT) \
+	src/csin.$(OBJEXT) src/conj.$(OBJEXT) src/carg.$(OBJEXT) \
+	src/cexp.$(OBJEXT) src/cpow.$(OBJEXT) src/csqrt.$(OBJEXT) \
+	src/cimag.$(OBJEXT) src/cproj.$(OBJEXT) src/ctan.$(OBJEXT) \
+	src/clog.$(OBJEXT) src/creal.$(OBJEXT)
+am_libnewcomplex_a_OBJECTS = $(am__objects_1)
+libnewcomplex_a_OBJECTS = $(am_libnewcomplex_a_OBJECTS)
 am__EXEEXT_1 = tests/cabs$(EXEEXT) tests/cabsf$(EXEEXT) \
 	tests/cabsl$(EXEEXT) tests/cacos$(EXEEXT) \
 	tests/cacosf$(EXEEXT) tests/cacosh$(EXEEXT) \
@@ -108,224 +118,213 @@ am__EXEEXT_1 = tests/cabs$(EXEEXT) tests/cabsf$(EXEEXT) \
 	tests/ctan$(EXEEXT) tests/ctanf$(EXEEXT) tests/ctanh$(EXEEXT) \
 	tests/ctanhf$(EXEEXT) tests/ctanhl$(EXEEXT) \
 	tests/ctanl$(EXEEXT)
-PROGRAMS = $(bin_PROGRAMS)
-am_dummy_OBJECTS = dummy.$(OBJEXT)
-dummy_OBJECTS = $(am_dummy_OBJECTS)
-dummy_LDADD = $(LDADD)
 tests_cabs_SOURCES = tests/cabs.c
-tests_cabs_OBJECTS = cabs.$(OBJEXT)
+tests_cabs_OBJECTS = tests/cabs.$(OBJEXT)
 tests_cabs_LDADD = $(LDADD)
-am__dirstamp = $(am__leading_dot)dirstamp
 tests_cabsf_SOURCES = tests/cabsf.c
-tests_cabsf_OBJECTS = cabsf.$(OBJEXT)
+tests_cabsf_OBJECTS = tests/cabsf.$(OBJEXT)
 tests_cabsf_LDADD = $(LDADD)
 tests_cabsl_SOURCES = tests/cabsl.c
-tests_cabsl_OBJECTS = cabsl.$(OBJEXT)
+tests_cabsl_OBJECTS = tests/cabsl.$(OBJEXT)
 tests_cabsl_LDADD = $(LDADD)
 tests_cacos_SOURCES = tests/cacos.c
-tests_cacos_OBJECTS = cacos.$(OBJEXT)
+tests_cacos_OBJECTS = tests/cacos.$(OBJEXT)
 tests_cacos_LDADD = $(LDADD)
 tests_cacosf_SOURCES = tests/cacosf.c
-tests_cacosf_OBJECTS = cacosf.$(OBJEXT)
+tests_cacosf_OBJECTS = tests/cacosf.$(OBJEXT)
 tests_cacosf_LDADD = $(LDADD)
 tests_cacosh_SOURCES = tests/cacosh.c
-tests_cacosh_OBJECTS = cacosh.$(OBJEXT)
+tests_cacosh_OBJECTS = tests/cacosh.$(OBJEXT)
 tests_cacosh_LDADD = $(LDADD)
 tests_cacoshf_SOURCES = tests/cacoshf.c
-tests_cacoshf_OBJECTS = cacoshf.$(OBJEXT)
+tests_cacoshf_OBJECTS = tests/cacoshf.$(OBJEXT)
 tests_cacoshf_LDADD = $(LDADD)
 tests_cacoshl_SOURCES = tests/cacoshl.c
-tests_cacoshl_OBJECTS = cacoshl.$(OBJEXT)
+tests_cacoshl_OBJECTS = tests/cacoshl.$(OBJEXT)
 tests_cacoshl_LDADD = $(LDADD)
 tests_cacosl_SOURCES = tests/cacosl.c
-tests_cacosl_OBJECTS = cacosl.$(OBJEXT)
+tests_cacosl_OBJECTS = tests/cacosl.$(OBJEXT)
 tests_cacosl_LDADD = $(LDADD)
 tests_carg_SOURCES = tests/carg.c
-tests_carg_OBJECTS = carg.$(OBJEXT)
+tests_carg_OBJECTS = tests/carg.$(OBJEXT)
 tests_carg_LDADD = $(LDADD)
 tests_cargf_SOURCES = tests/cargf.c
-tests_cargf_OBJECTS = cargf.$(OBJEXT)
+tests_cargf_OBJECTS = tests/cargf.$(OBJEXT)
 tests_cargf_LDADD = $(LDADD)
 tests_cargl_SOURCES = tests/cargl.c
-tests_cargl_OBJECTS = cargl.$(OBJEXT)
+tests_cargl_OBJECTS = tests/cargl.$(OBJEXT)
 tests_cargl_LDADD = $(LDADD)
 tests_casin_SOURCES = tests/casin.c
-tests_casin_OBJECTS = casin.$(OBJEXT)
+tests_casin_OBJECTS = tests/casin.$(OBJEXT)
 tests_casin_LDADD = $(LDADD)
 tests_casinf_SOURCES = tests/casinf.c
-tests_casinf_OBJECTS = casinf.$(OBJEXT)
+tests_casinf_OBJECTS = tests/casinf.$(OBJEXT)
 tests_casinf_LDADD = $(LDADD)
 tests_casinh_SOURCES = tests/casinh.c
-tests_casinh_OBJECTS = casinh.$(OBJEXT)
+tests_casinh_OBJECTS = tests/casinh.$(OBJEXT)
 tests_casinh_LDADD = $(LDADD)
 tests_casinhf_SOURCES = tests/casinhf.c
-tests_casinhf_OBJECTS = casinhf.$(OBJEXT)
+tests_casinhf_OBJECTS = tests/casinhf.$(OBJEXT)
 tests_casinhf_LDADD = $(LDADD)
 tests_casinhl_SOURCES = tests/casinhl.c
-tests_casinhl_OBJECTS = casinhl.$(OBJEXT)
+tests_casinhl_OBJECTS = tests/casinhl.$(OBJEXT)
 tests_casinhl_LDADD = $(LDADD)
 tests_casinl_SOURCES = tests/casinl.c
-tests_casinl_OBJECTS = casinl.$(OBJEXT)
+tests_casinl_OBJECTS = tests/casinl.$(OBJEXT)
 tests_casinl_LDADD = $(LDADD)
 tests_catan_SOURCES = tests/catan.c
-tests_catan_OBJECTS = catan.$(OBJEXT)
+tests_catan_OBJECTS = tests/catan.$(OBJEXT)
 tests_catan_LDADD = $(LDADD)
 tests_catanf_SOURCES = tests/catanf.c
-tests_catanf_OBJECTS = catanf.$(OBJEXT)
+tests_catanf_OBJECTS = tests/catanf.$(OBJEXT)
 tests_catanf_LDADD = $(LDADD)
 tests_catanh_SOURCES = tests/catanh.c
-tests_catanh_OBJECTS = catanh.$(OBJEXT)
+tests_catanh_OBJECTS = tests/catanh.$(OBJEXT)
 tests_catanh_LDADD = $(LDADD)
 tests_catanhf_SOURCES = tests/catanhf.c
-tests_catanhf_OBJECTS = catanhf.$(OBJEXT)
+tests_catanhf_OBJECTS = tests/catanhf.$(OBJEXT)
 tests_catanhf_LDADD = $(LDADD)
 tests_catanhl_SOURCES = tests/catanhl.c
-tests_catanhl_OBJECTS = catanhl.$(OBJEXT)
+tests_catanhl_OBJECTS = tests/catanhl.$(OBJEXT)
 tests_catanhl_LDADD = $(LDADD)
 tests_catanl_SOURCES = tests/catanl.c
-tests_catanl_OBJECTS = catanl.$(OBJEXT)
+tests_catanl_OBJECTS = tests/catanl.$(OBJEXT)
 tests_catanl_LDADD = $(LDADD)
 tests_ccos_SOURCES = tests/ccos.c
-tests_ccos_OBJECTS = ccos.$(OBJEXT)
+tests_ccos_OBJECTS = tests/ccos.$(OBJEXT)
 tests_ccos_LDADD = $(LDADD)
 tests_ccosf_SOURCES = tests/ccosf.c
-tests_ccosf_OBJECTS = ccosf.$(OBJEXT)
+tests_ccosf_OBJECTS = tests/ccosf.$(OBJEXT)
 tests_ccosf_LDADD = $(LDADD)
 tests_ccosh_SOURCES = tests/ccosh.c
-tests_ccosh_OBJECTS = ccosh.$(OBJEXT)
+tests_ccosh_OBJECTS = tests/ccosh.$(OBJEXT)
 tests_ccosh_LDADD = $(LDADD)
 tests_ccoshf_SOURCES = tests/ccoshf.c
-tests_ccoshf_OBJECTS = ccoshf.$(OBJEXT)
+tests_ccoshf_OBJECTS = tests/ccoshf.$(OBJEXT)
 tests_ccoshf_LDADD = $(LDADD)
 tests_ccoshl_SOURCES = tests/ccoshl.c
-tests_ccoshl_OBJECTS = ccoshl.$(OBJEXT)
+tests_ccoshl_OBJECTS = tests/ccoshl.$(OBJEXT)
 tests_ccoshl_LDADD = $(LDADD)
 tests_ccosl_SOURCES = tests/ccosl.c
-tests_ccosl_OBJECTS = ccosl.$(OBJEXT)
+tests_ccosl_OBJECTS = tests/ccosl.$(OBJEXT)
 tests_ccosl_LDADD = $(LDADD)
 tests_cexp_SOURCES = tests/cexp.c
-tests_cexp_OBJECTS = cexp.$(OBJEXT)
+tests_cexp_OBJECTS = tests/cexp.$(OBJEXT)
 tests_cexp_LDADD = $(LDADD)
 tests_cexpf_SOURCES = tests/cexpf.c
-tests_cexpf_OBJECTS = cexpf.$(OBJEXT)
+tests_cexpf_OBJECTS = tests/cexpf.$(OBJEXT)
 tests_cexpf_LDADD = $(LDADD)
 tests_cexpl_SOURCES = tests/cexpl.c
-tests_cexpl_OBJECTS = cexpl.$(OBJEXT)
+tests_cexpl_OBJECTS = tests/cexpl.$(OBJEXT)
 tests_cexpl_LDADD = $(LDADD)
 tests_cimag_SOURCES = tests/cimag.c
-tests_cimag_OBJECTS = cimag.$(OBJEXT)
+tests_cimag_OBJECTS = tests/cimag.$(OBJEXT)
 tests_cimag_LDADD = $(LDADD)
 tests_cimagf_SOURCES = tests/cimagf.c
-tests_cimagf_OBJECTS = cimagf.$(OBJEXT)
+tests_cimagf_OBJECTS = tests/cimagf.$(OBJEXT)
 tests_cimagf_LDADD = $(LDADD)
 tests_cimagl_SOURCES = tests/cimagl.c
-tests_cimagl_OBJECTS = cimagl.$(OBJEXT)
+tests_cimagl_OBJECTS = tests/cimagl.$(OBJEXT)
 tests_cimagl_LDADD = $(LDADD)
 tests_clog_SOURCES = tests/clog.c
-tests_clog_OBJECTS = clog.$(OBJEXT)
+tests_clog_OBJECTS = tests/clog.$(OBJEXT)
 tests_clog_LDADD = $(LDADD)
 tests_clogf_SOURCES = tests/clogf.c
-tests_clogf_OBJECTS = clogf.$(OBJEXT)
+tests_clogf_OBJECTS = tests/clogf.$(OBJEXT)
 tests_clogf_LDADD = $(LDADD)
 tests_clogl_SOURCES = tests/clogl.c
-tests_clogl_OBJECTS = clogl.$(OBJEXT)
+tests_clogl_OBJECTS = tests/clogl.$(OBJEXT)
 tests_clogl_LDADD = $(LDADD)
 tests_conj_SOURCES = tests/conj.c
-tests_conj_OBJECTS = conj.$(OBJEXT)
+tests_conj_OBJECTS = tests/conj.$(OBJEXT)
 tests_conj_LDADD = $(LDADD)
 tests_conjf_SOURCES = tests/conjf.c
-tests_conjf_OBJECTS = conjf.$(OBJEXT)
+tests_conjf_OBJECTS = tests/conjf.$(OBJEXT)
 tests_conjf_LDADD = $(LDADD)
 tests_conjl_SOURCES = tests/conjl.c
-tests_conjl_OBJECTS = conjl.$(OBJEXT)
+tests_conjl_OBJECTS = tests/conjl.$(OBJEXT)
 tests_conjl_LDADD = $(LDADD)
 tests_cpow_SOURCES = tests/cpow.c
-tests_cpow_OBJECTS = cpow.$(OBJEXT)
+tests_cpow_OBJECTS = tests/cpow.$(OBJEXT)
 tests_cpow_LDADD = $(LDADD)
 tests_cpowf_SOURCES = tests/cpowf.c
-tests_cpowf_OBJECTS = cpowf.$(OBJEXT)
+tests_cpowf_OBJECTS = tests/cpowf.$(OBJEXT)
 tests_cpowf_LDADD = $(LDADD)
 tests_cpowl_SOURCES = tests/cpowl.c
-tests_cpowl_OBJECTS = cpowl.$(OBJEXT)
+tests_cpowl_OBJECTS = tests/cpowl.$(OBJEXT)
 tests_cpowl_LDADD = $(LDADD)
 tests_cproj_SOURCES = tests/cproj.c
-tests_cproj_OBJECTS = cproj.$(OBJEXT)
+tests_cproj_OBJECTS = tests/cproj.$(OBJEXT)
 tests_cproj_LDADD = $(LDADD)
 tests_cprojf_SOURCES = tests/cprojf.c
-tests_cprojf_OBJECTS = cprojf.$(OBJEXT)
+tests_cprojf_OBJECTS = tests/cprojf.$(OBJEXT)
 tests_cprojf_LDADD = $(LDADD)
 tests_cprojl_SOURCES = tests/cprojl.c
-tests_cprojl_OBJECTS = cprojl.$(OBJEXT)
+tests_cprojl_OBJECTS = tests/cprojl.$(OBJEXT)
 tests_cprojl_LDADD = $(LDADD)
 tests_creal_SOURCES = tests/creal.c
-tests_creal_OBJECTS = creal.$(OBJEXT)
+tests_creal_OBJECTS = tests/creal.$(OBJEXT)
 tests_creal_LDADD = $(LDADD)
 tests_crealf_SOURCES = tests/crealf.c
-tests_crealf_OBJECTS = crealf.$(OBJEXT)
+tests_crealf_OBJECTS = tests/crealf.$(OBJEXT)
 tests_crealf_LDADD = $(LDADD)
 tests_creall_SOURCES = tests/creall.c
-tests_creall_OBJECTS = creall.$(OBJEXT)
+tests_creall_OBJECTS = tests/creall.$(OBJEXT)
 tests_creall_LDADD = $(LDADD)
 tests_csin_SOURCES = tests/csin.c
-tests_csin_OBJECTS = csin.$(OBJEXT)
+tests_csin_OBJECTS = tests/csin.$(OBJEXT)
 tests_csin_LDADD = $(LDADD)
 tests_csinf_SOURCES = tests/csinf.c
-tests_csinf_OBJECTS = csinf.$(OBJEXT)
+tests_csinf_OBJECTS = tests/csinf.$(OBJEXT)
 tests_csinf_LDADD = $(LDADD)
 tests_csinh_SOURCES = tests/csinh.c
-tests_csinh_OBJECTS = csinh.$(OBJEXT)
+tests_csinh_OBJECTS = tests/csinh.$(OBJEXT)
 tests_csinh_LDADD = $(LDADD)
 tests_csinhf_SOURCES = tests/csinhf.c
-tests_csinhf_OBJECTS = csinhf.$(OBJEXT)
+tests_csinhf_OBJECTS = tests/csinhf.$(OBJEXT)
 tests_csinhf_LDADD = $(LDADD)
 tests_csinhl_SOURCES = tests/csinhl.c
-tests_csinhl_OBJECTS = csinhl.$(OBJEXT)
+tests_csinhl_OBJECTS = tests/csinhl.$(OBJEXT)
 tests_csinhl_LDADD = $(LDADD)
 tests_csinl_SOURCES = tests/csinl.c
-tests_csinl_OBJECTS = csinl.$(OBJEXT)
+tests_csinl_OBJECTS = tests/csinl.$(OBJEXT)
 tests_csinl_LDADD = $(LDADD)
 tests_csqrt_SOURCES = tests/csqrt.c
-tests_csqrt_OBJECTS = csqrt.$(OBJEXT)
+tests_csqrt_OBJECTS = tests/csqrt.$(OBJEXT)
 tests_csqrt_LDADD = $(LDADD)
 tests_csqrtf_SOURCES = tests/csqrtf.c
-tests_csqrtf_OBJECTS = csqrtf.$(OBJEXT)
+tests_csqrtf_OBJECTS = tests/csqrtf.$(OBJEXT)
 tests_csqrtf_LDADD = $(LDADD)
 tests_csqrtl_SOURCES = tests/csqrtl.c
-tests_csqrtl_OBJECTS = csqrtl.$(OBJEXT)
+tests_csqrtl_OBJECTS = tests/csqrtl.$(OBJEXT)
 tests_csqrtl_LDADD = $(LDADD)
 tests_ctan_SOURCES = tests/ctan.c
-tests_ctan_OBJECTS = ctan.$(OBJEXT)
+tests_ctan_OBJECTS = tests/ctan.$(OBJEXT)
 tests_ctan_LDADD = $(LDADD)
 tests_ctanf_SOURCES = tests/ctanf.c
-tests_ctanf_OBJECTS = ctanf.$(OBJEXT)
+tests_ctanf_OBJECTS = tests/ctanf.$(OBJEXT)
 tests_ctanf_LDADD = $(LDADD)
 tests_ctanh_SOURCES = tests/ctanh.c
-tests_ctanh_OBJECTS = ctanh.$(OBJEXT)
+tests_ctanh_OBJECTS = tests/ctanh.$(OBJEXT)
 tests_ctanh_LDADD = $(LDADD)
 tests_ctanhf_SOURCES = tests/ctanhf.c
-tests_ctanhf_OBJECTS = ctanhf.$(OBJEXT)
+tests_ctanhf_OBJECTS = tests/ctanhf.$(OBJEXT)
 tests_ctanhf_LDADD = $(LDADD)
 tests_ctanhl_SOURCES = tests/ctanhl.c
-tests_ctanhl_OBJECTS = ctanhl.$(OBJEXT)
+tests_ctanhl_OBJECTS = tests/ctanhl.$(OBJEXT)
 tests_ctanhl_LDADD = $(LDADD)
 tests_ctanl_SOURCES = tests/ctanl.c
-tests_ctanl_OBJECTS = ctanl.$(OBJEXT)
+tests_ctanl_OBJECTS = tests/ctanl.$(OBJEXT)
 tests_ctanl_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
-AM_V_lt = $(am__v_lt_$(V))
-am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
-am__v_lt_0 = --silent
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_$(V))
 am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
 am__v_CC_0 = @echo "  CC    " $@;
-AM_V_at = $(am__v_at_$(V))
-am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
-am__v_at_0 = @
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_CCLD = $(am__v_CCLD_$(V))
@@ -334,24 +333,24 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(dummy_SOURCES) tests/cabs.c tests/cabsf.c tests/cabsl.c \
-	tests/cacos.c tests/cacosf.c tests/cacosh.c tests/cacoshf.c \
-	tests/cacoshl.c tests/cacosl.c tests/carg.c tests/cargf.c \
-	tests/cargl.c tests/casin.c tests/casinf.c tests/casinh.c \
-	tests/casinhf.c tests/casinhl.c tests/casinl.c tests/catan.c \
-	tests/catanf.c tests/catanh.c tests/catanhf.c tests/catanhl.c \
-	tests/catanl.c tests/ccos.c tests/ccosf.c tests/ccosh.c \
-	tests/ccoshf.c tests/ccoshl.c tests/ccosl.c tests/cexp.c \
-	tests/cexpf.c tests/cexpl.c tests/cimag.c tests/cimagf.c \
-	tests/cimagl.c tests/clog.c tests/clogf.c tests/clogl.c \
-	tests/conj.c tests/conjf.c tests/conjl.c tests/cpow.c \
-	tests/cpowf.c tests/cpowl.c tests/cproj.c tests/cprojf.c \
-	tests/cprojl.c tests/creal.c tests/crealf.c tests/creall.c \
-	tests/csin.c tests/csinf.c tests/csinh.c tests/csinhf.c \
-	tests/csinhl.c tests/csinl.c tests/csqrt.c tests/csqrtf.c \
-	tests/csqrtl.c tests/ctan.c tests/ctanf.c tests/ctanh.c \
-	tests/ctanhf.c tests/ctanhl.c tests/ctanl.c
-DIST_SOURCES = $(dummy_SOURCES) tests/cabs.c tests/cabsf.c \
+SOURCES = $(libnewcomplex_a_SOURCES) tests/cabs.c tests/cabsf.c \
+	tests/cabsl.c tests/cacos.c tests/cacosf.c tests/cacosh.c \
+	tests/cacoshf.c tests/cacoshl.c tests/cacosl.c tests/carg.c \
+	tests/cargf.c tests/cargl.c tests/casin.c tests/casinf.c \
+	tests/casinh.c tests/casinhf.c tests/casinhl.c tests/casinl.c \
+	tests/catan.c tests/catanf.c tests/catanh.c tests/catanhf.c \
+	tests/catanhl.c tests/catanl.c tests/ccos.c tests/ccosf.c \
+	tests/ccosh.c tests/ccoshf.c tests/ccoshl.c tests/ccosl.c \
+	tests/cexp.c tests/cexpf.c tests/cexpl.c tests/cimag.c \
+	tests/cimagf.c tests/cimagl.c tests/clog.c tests/clogf.c \
+	tests/clogl.c tests/conj.c tests/conjf.c tests/conjl.c \
+	tests/cpow.c tests/cpowf.c tests/cpowl.c tests/cproj.c \
+	tests/cprojf.c tests/cprojl.c tests/creal.c tests/crealf.c \
+	tests/creall.c tests/csin.c tests/csinf.c tests/csinh.c \
+	tests/csinhf.c tests/csinhl.c tests/csinl.c tests/csqrt.c \
+	tests/csqrtf.c tests/csqrtl.c tests/ctan.c tests/ctanf.c \
+	tests/ctanh.c tests/ctanhf.c tests/ctanhl.c tests/ctanl.c
+DIST_SOURCES = $(libnewcomplex_a_SOURCES) tests/cabs.c tests/cabsf.c \
 	tests/cabsl.c tests/cacos.c tests/cacosf.c tests/cacosh.c \
 	tests/cacoshf.c tests/cacoshl.c tests/cacosl.c tests/carg.c \
 	tests/cargf.c tests/cargl.c tests/casin.c tests/casinf.c \
@@ -385,27 +384,6 @@ test "X$(AM_COLOR_TESTS)" != Xno \
   blu='[1;34m'; \
   std='[m'; \
 }
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
-am__install_max = 40
-am__nobase_strip_setup = \
-  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
-am__nobase_strip = \
-  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
-am__nobase_list = $(am__nobase_strip_setup); \
-  for p in $$list; do echo "$$p $$p"; done | \
-  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
-  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
-    if (++n[$$2] == $(am__install_max)) \
-      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
-    END { for (dir in files) print dir, files[dir] }'
-am__base_list = \
-  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
-  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 # Restructured Text title and section.
 am__rst_title = sed 's/.*/   &   /;h;s/./=/g;p;x;p;g;p;s/.*//'
 am__rst_section = sed 'p;s/./=/g;p;g'
@@ -504,6 +482,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -550,8 +529,90 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-dummy_SOURCES = src/dummy.c
 AM_CPPFLAGS = -I $(srcdir)/src
+newcomplex_src = \
+src/cabs.c        src/catanh.def.h  src/clog.def.h          src/creal.def.h \
+src/cabs.def.h    src/ccos.c        src/complex_internal.h  src/csin.c      \
+src/cacos.def.h   src/ccos.def.h    src/conj.c              src/csin.def.h  \
+src/cacosh.def.h  src/ccosh.def.h   src/conj.def.h          src/csinh.def.h \
+src/carg.c        src/cexp.c        src/cpow.c              src/csqrt.c     \
+src/carg.def.h    src/cexp.def.h    src/cpow.def.h          src/csqrt.def.h \
+src/casin.def.h   src/cimag.c       src/cproj.c             src/ctan.c      \
+src/casinh.def.h  src/cimag.def.h   src/cproj.def.h         src/ctan.def.h  \
+src/catan.def.h   src/clog.c        src/creal.c             src/ctanh.def.h \
+src/complex.def_f.h  src/complex.def_d.h src/complex.def_ld.h
+
+lib_LIBRARIES = libnewcomplex.a
+libnewcomplex_a_SOURCES = $(newcomplex_src)
+newcomplex_tests = \
+  tests/cabs \
+  tests/cabsf \
+  tests/cabsl \
+  tests/cacos \
+  tests/cacosf \
+  tests/cacosh \
+  tests/cacoshf \
+  tests/cacoshl \
+  tests/cacosl \
+  tests/carg \
+  tests/cargf \
+  tests/cargl \
+  tests/casin \
+  tests/casinf \
+  tests/casinh \
+  tests/casinhf \
+  tests/casinhl \
+  tests/casinl \
+  tests/catan \
+  tests/catanf \
+  tests/catanh \
+  tests/catanhf \
+  tests/catanhl \
+  tests/catanl \
+  tests/ccos \
+  tests/ccosf \
+  tests/ccosh \
+  tests/ccoshf \
+  tests/ccoshl \
+  tests/ccosl \
+  tests/cexp \
+  tests/cexpf \
+  tests/cexpl \
+  tests/cimag \
+  tests/cimagf \
+  tests/cimagl \
+  tests/clog \
+  tests/clogf \
+  tests/clogl \
+  tests/conj \
+  tests/conjf \
+  tests/conjl \
+  tests/cpow \
+  tests/cpowf \
+  tests/cpowl \
+  tests/cproj \
+  tests/cprojf \
+  tests/cprojl \
+  tests/creal \
+  tests/crealf \
+  tests/creall \
+  tests/csin \
+  tests/csinf \
+  tests/csinh \
+  tests/csinhf \
+  tests/csinhl \
+  tests/csinl \
+  tests/csqrt \
+  tests/csqrtf \
+  tests/csqrtl \
+  tests/ctan \
+  tests/ctanf \
+  tests/ctanh \
+  tests/ctanhf \
+  tests/ctanhl \
+  tests/ctanl 
+
+TESTS = $(check_PROGRAMS)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -608,1412 +669,583 @@ $(srcdir)/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
-install-binPROGRAMS: $(bin_PROGRAMS)
+install-libLIBRARIES: $(lib_LIBRARIES)
 	@$(NORMAL_INSTALL)
-	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
-	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
-	for p in $$list; do echo "$$p $$p"; done | \
-	sed 's/$(EXEEXT)$$//' | \
-	while read p p1; do if test -f $$p; \
-	  then echo "$$p"; echo "$$p"; else :; fi; \
-	done | \
-	sed -e 'p;s,.*/,,;n;h' -e 's|.*|.|' \
-	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
-	sed 'N;N;N;s,\n, ,g' | \
-	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
-	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
-	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
-	    else { print "f", $$3 "/" $$4, $$1; } } \
-	  END { for (d in files) print "f", d, files[d] }' | \
-	while read type dir files; do \
-	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
-	    test -z "$$files" || { \
-	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
-	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
-	    } \
-	; done
+	test -z "$(libdir)" || $(MKDIR_P) "$(DESTDIR)$(libdir)"
+	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	list2=; for p in $$list; do \
+	  if test -f $$p; then \
+	    list2="$$list2 $$p"; \
+	  else :; fi; \
+	done; \
+	test -z "$$list2" || { \
+	  echo " $(INSTALL_DATA) $$list2 '$(DESTDIR)$(libdir)'"; \
+	  $(INSTALL_DATA) $$list2 "$(DESTDIR)$(libdir)" || exit $$?; }
+	@$(POST_INSTALL)
+	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	for p in $$list; do \
+	  if test -f $$p; then \
+	    $(am__strip_dir) \
+	    echo " ( cd '$(DESTDIR)$(libdir)' && $(RANLIB) $$f )"; \
+	    ( cd "$(DESTDIR)$(libdir)" && $(RANLIB) $$f ) || exit $$?; \
+	  else :; fi; \
+	done
 
-uninstall-binPROGRAMS:
+uninstall-libLIBRARIES:
 	@$(NORMAL_UNINSTALL)
-	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
-	files=`for p in $$list; do echo "$$p"; done | \
-	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
-	      -e 's/$$/$(EXEEXT)/' `; \
-	test -n "$$list" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(bindir)" && rm -f $$files
+	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	test -n "$$files" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(libdir)' && rm -f "$$files" )"; \
+	cd "$(DESTDIR)$(libdir)" && rm -f $$files
 
-clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+clean-libLIBRARIES:
+	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
+src/$(am__dirstamp):
+	@$(MKDIR_P) src
+	@: > src/$(am__dirstamp)
+src/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/$(DEPDIR)
+	@: > src/$(DEPDIR)/$(am__dirstamp)
+src/cabs.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/ccos.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/csin.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/conj.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/carg.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cexp.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cpow.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/csqrt.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cimag.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cproj.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/ctan.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/clog.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/creal.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+libnewcomplex.a: $(libnewcomplex_a_OBJECTS) $(libnewcomplex_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libnewcomplex.a
+	$(AM_V_AR)$(libnewcomplex_a_AR) libnewcomplex.a $(libnewcomplex_a_OBJECTS) $(libnewcomplex_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libnewcomplex.a
 
 clean-checkPROGRAMS:
 	-test -z "$(check_PROGRAMS)" || rm -f $(check_PROGRAMS)
-dummy$(EXEEXT): $(dummy_OBJECTS) $(dummy_DEPENDENCIES) 
-	@rm -f dummy$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(dummy_OBJECTS) $(dummy_LDADD) $(LIBS)
 tests/$(am__dirstamp):
 	@$(MKDIR_P) tests
 	@: > tests/$(am__dirstamp)
+tests/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) tests/$(DEPDIR)
+	@: > tests/$(DEPDIR)/$(am__dirstamp)
+tests/cabs.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cabs$(EXEEXT): $(tests_cabs_OBJECTS) $(tests_cabs_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cabs$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cabs_OBJECTS) $(tests_cabs_LDADD) $(LIBS)
+tests/cabsf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cabsf$(EXEEXT): $(tests_cabsf_OBJECTS) $(tests_cabsf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cabsf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cabsf_OBJECTS) $(tests_cabsf_LDADD) $(LIBS)
+tests/cabsl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cabsl$(EXEEXT): $(tests_cabsl_OBJECTS) $(tests_cabsl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cabsl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cabsl_OBJECTS) $(tests_cabsl_LDADD) $(LIBS)
+tests/cacos.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cacos$(EXEEXT): $(tests_cacos_OBJECTS) $(tests_cacos_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cacos$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cacos_OBJECTS) $(tests_cacos_LDADD) $(LIBS)
+tests/cacosf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cacosf$(EXEEXT): $(tests_cacosf_OBJECTS) $(tests_cacosf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cacosf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cacosf_OBJECTS) $(tests_cacosf_LDADD) $(LIBS)
+tests/cacosh.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cacosh$(EXEEXT): $(tests_cacosh_OBJECTS) $(tests_cacosh_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cacosh$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cacosh_OBJECTS) $(tests_cacosh_LDADD) $(LIBS)
+tests/cacoshf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cacoshf$(EXEEXT): $(tests_cacoshf_OBJECTS) $(tests_cacoshf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cacoshf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cacoshf_OBJECTS) $(tests_cacoshf_LDADD) $(LIBS)
+tests/cacoshl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cacoshl$(EXEEXT): $(tests_cacoshl_OBJECTS) $(tests_cacoshl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cacoshl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cacoshl_OBJECTS) $(tests_cacoshl_LDADD) $(LIBS)
+tests/cacosl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cacosl$(EXEEXT): $(tests_cacosl_OBJECTS) $(tests_cacosl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cacosl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cacosl_OBJECTS) $(tests_cacosl_LDADD) $(LIBS)
+tests/carg.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/carg$(EXEEXT): $(tests_carg_OBJECTS) $(tests_carg_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/carg$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_carg_OBJECTS) $(tests_carg_LDADD) $(LIBS)
+tests/cargf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cargf$(EXEEXT): $(tests_cargf_OBJECTS) $(tests_cargf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cargf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cargf_OBJECTS) $(tests_cargf_LDADD) $(LIBS)
+tests/cargl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cargl$(EXEEXT): $(tests_cargl_OBJECTS) $(tests_cargl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cargl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cargl_OBJECTS) $(tests_cargl_LDADD) $(LIBS)
+tests/casin.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/casin$(EXEEXT): $(tests_casin_OBJECTS) $(tests_casin_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/casin$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_casin_OBJECTS) $(tests_casin_LDADD) $(LIBS)
+tests/casinf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/casinf$(EXEEXT): $(tests_casinf_OBJECTS) $(tests_casinf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/casinf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_casinf_OBJECTS) $(tests_casinf_LDADD) $(LIBS)
+tests/casinh.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/casinh$(EXEEXT): $(tests_casinh_OBJECTS) $(tests_casinh_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/casinh$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_casinh_OBJECTS) $(tests_casinh_LDADD) $(LIBS)
+tests/casinhf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/casinhf$(EXEEXT): $(tests_casinhf_OBJECTS) $(tests_casinhf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/casinhf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_casinhf_OBJECTS) $(tests_casinhf_LDADD) $(LIBS)
+tests/casinhl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/casinhl$(EXEEXT): $(tests_casinhl_OBJECTS) $(tests_casinhl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/casinhl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_casinhl_OBJECTS) $(tests_casinhl_LDADD) $(LIBS)
+tests/casinl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/casinl$(EXEEXT): $(tests_casinl_OBJECTS) $(tests_casinl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/casinl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_casinl_OBJECTS) $(tests_casinl_LDADD) $(LIBS)
+tests/catan.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/catan$(EXEEXT): $(tests_catan_OBJECTS) $(tests_catan_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/catan$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_catan_OBJECTS) $(tests_catan_LDADD) $(LIBS)
+tests/catanf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/catanf$(EXEEXT): $(tests_catanf_OBJECTS) $(tests_catanf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/catanf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_catanf_OBJECTS) $(tests_catanf_LDADD) $(LIBS)
+tests/catanh.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/catanh$(EXEEXT): $(tests_catanh_OBJECTS) $(tests_catanh_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/catanh$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_catanh_OBJECTS) $(tests_catanh_LDADD) $(LIBS)
+tests/catanhf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/catanhf$(EXEEXT): $(tests_catanhf_OBJECTS) $(tests_catanhf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/catanhf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_catanhf_OBJECTS) $(tests_catanhf_LDADD) $(LIBS)
+tests/catanhl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/catanhl$(EXEEXT): $(tests_catanhl_OBJECTS) $(tests_catanhl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/catanhl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_catanhl_OBJECTS) $(tests_catanhl_LDADD) $(LIBS)
+tests/catanl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/catanl$(EXEEXT): $(tests_catanl_OBJECTS) $(tests_catanl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/catanl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_catanl_OBJECTS) $(tests_catanl_LDADD) $(LIBS)
+tests/ccos.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ccos$(EXEEXT): $(tests_ccos_OBJECTS) $(tests_ccos_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ccos$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ccos_OBJECTS) $(tests_ccos_LDADD) $(LIBS)
+tests/ccosf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ccosf$(EXEEXT): $(tests_ccosf_OBJECTS) $(tests_ccosf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ccosf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ccosf_OBJECTS) $(tests_ccosf_LDADD) $(LIBS)
+tests/ccosh.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ccosh$(EXEEXT): $(tests_ccosh_OBJECTS) $(tests_ccosh_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ccosh$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ccosh_OBJECTS) $(tests_ccosh_LDADD) $(LIBS)
+tests/ccoshf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ccoshf$(EXEEXT): $(tests_ccoshf_OBJECTS) $(tests_ccoshf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ccoshf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ccoshf_OBJECTS) $(tests_ccoshf_LDADD) $(LIBS)
+tests/ccoshl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ccoshl$(EXEEXT): $(tests_ccoshl_OBJECTS) $(tests_ccoshl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ccoshl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ccoshl_OBJECTS) $(tests_ccoshl_LDADD) $(LIBS)
+tests/ccosl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ccosl$(EXEEXT): $(tests_ccosl_OBJECTS) $(tests_ccosl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ccosl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ccosl_OBJECTS) $(tests_ccosl_LDADD) $(LIBS)
+tests/cexp.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cexp$(EXEEXT): $(tests_cexp_OBJECTS) $(tests_cexp_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cexp$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cexp_OBJECTS) $(tests_cexp_LDADD) $(LIBS)
+tests/cexpf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cexpf$(EXEEXT): $(tests_cexpf_OBJECTS) $(tests_cexpf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cexpf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cexpf_OBJECTS) $(tests_cexpf_LDADD) $(LIBS)
+tests/cexpl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cexpl$(EXEEXT): $(tests_cexpl_OBJECTS) $(tests_cexpl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cexpl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cexpl_OBJECTS) $(tests_cexpl_LDADD) $(LIBS)
+tests/cimag.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cimag$(EXEEXT): $(tests_cimag_OBJECTS) $(tests_cimag_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cimag$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cimag_OBJECTS) $(tests_cimag_LDADD) $(LIBS)
+tests/cimagf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cimagf$(EXEEXT): $(tests_cimagf_OBJECTS) $(tests_cimagf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cimagf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cimagf_OBJECTS) $(tests_cimagf_LDADD) $(LIBS)
+tests/cimagl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cimagl$(EXEEXT): $(tests_cimagl_OBJECTS) $(tests_cimagl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cimagl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cimagl_OBJECTS) $(tests_cimagl_LDADD) $(LIBS)
+tests/clog.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/clog$(EXEEXT): $(tests_clog_OBJECTS) $(tests_clog_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/clog$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_clog_OBJECTS) $(tests_clog_LDADD) $(LIBS)
+tests/clogf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/clogf$(EXEEXT): $(tests_clogf_OBJECTS) $(tests_clogf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/clogf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_clogf_OBJECTS) $(tests_clogf_LDADD) $(LIBS)
+tests/clogl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/clogl$(EXEEXT): $(tests_clogl_OBJECTS) $(tests_clogl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/clogl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_clogl_OBJECTS) $(tests_clogl_LDADD) $(LIBS)
+tests/conj.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/conj$(EXEEXT): $(tests_conj_OBJECTS) $(tests_conj_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/conj$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_conj_OBJECTS) $(tests_conj_LDADD) $(LIBS)
+tests/conjf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/conjf$(EXEEXT): $(tests_conjf_OBJECTS) $(tests_conjf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/conjf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_conjf_OBJECTS) $(tests_conjf_LDADD) $(LIBS)
+tests/conjl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/conjl$(EXEEXT): $(tests_conjl_OBJECTS) $(tests_conjl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/conjl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_conjl_OBJECTS) $(tests_conjl_LDADD) $(LIBS)
+tests/cpow.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cpow$(EXEEXT): $(tests_cpow_OBJECTS) $(tests_cpow_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cpow$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cpow_OBJECTS) $(tests_cpow_LDADD) $(LIBS)
+tests/cpowf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cpowf$(EXEEXT): $(tests_cpowf_OBJECTS) $(tests_cpowf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cpowf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cpowf_OBJECTS) $(tests_cpowf_LDADD) $(LIBS)
+tests/cpowl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cpowl$(EXEEXT): $(tests_cpowl_OBJECTS) $(tests_cpowl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cpowl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cpowl_OBJECTS) $(tests_cpowl_LDADD) $(LIBS)
+tests/cproj.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cproj$(EXEEXT): $(tests_cproj_OBJECTS) $(tests_cproj_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cproj$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cproj_OBJECTS) $(tests_cproj_LDADD) $(LIBS)
+tests/cprojf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cprojf$(EXEEXT): $(tests_cprojf_OBJECTS) $(tests_cprojf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cprojf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cprojf_OBJECTS) $(tests_cprojf_LDADD) $(LIBS)
+tests/cprojl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/cprojl$(EXEEXT): $(tests_cprojl_OBJECTS) $(tests_cprojl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/cprojl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_cprojl_OBJECTS) $(tests_cprojl_LDADD) $(LIBS)
+tests/creal.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/creal$(EXEEXT): $(tests_creal_OBJECTS) $(tests_creal_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/creal$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_creal_OBJECTS) $(tests_creal_LDADD) $(LIBS)
+tests/crealf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/crealf$(EXEEXT): $(tests_crealf_OBJECTS) $(tests_crealf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/crealf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_crealf_OBJECTS) $(tests_crealf_LDADD) $(LIBS)
+tests/creall.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/creall$(EXEEXT): $(tests_creall_OBJECTS) $(tests_creall_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/creall$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_creall_OBJECTS) $(tests_creall_LDADD) $(LIBS)
+tests/csin.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/csin$(EXEEXT): $(tests_csin_OBJECTS) $(tests_csin_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/csin$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_csin_OBJECTS) $(tests_csin_LDADD) $(LIBS)
+tests/csinf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/csinf$(EXEEXT): $(tests_csinf_OBJECTS) $(tests_csinf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/csinf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_csinf_OBJECTS) $(tests_csinf_LDADD) $(LIBS)
+tests/csinh.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/csinh$(EXEEXT): $(tests_csinh_OBJECTS) $(tests_csinh_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/csinh$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_csinh_OBJECTS) $(tests_csinh_LDADD) $(LIBS)
+tests/csinhf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/csinhf$(EXEEXT): $(tests_csinhf_OBJECTS) $(tests_csinhf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/csinhf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_csinhf_OBJECTS) $(tests_csinhf_LDADD) $(LIBS)
+tests/csinhl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/csinhl$(EXEEXT): $(tests_csinhl_OBJECTS) $(tests_csinhl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/csinhl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_csinhl_OBJECTS) $(tests_csinhl_LDADD) $(LIBS)
+tests/csinl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/csinl$(EXEEXT): $(tests_csinl_OBJECTS) $(tests_csinl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/csinl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_csinl_OBJECTS) $(tests_csinl_LDADD) $(LIBS)
+tests/csqrt.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/csqrt$(EXEEXT): $(tests_csqrt_OBJECTS) $(tests_csqrt_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/csqrt$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_csqrt_OBJECTS) $(tests_csqrt_LDADD) $(LIBS)
+tests/csqrtf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/csqrtf$(EXEEXT): $(tests_csqrtf_OBJECTS) $(tests_csqrtf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/csqrtf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_csqrtf_OBJECTS) $(tests_csqrtf_LDADD) $(LIBS)
+tests/csqrtl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/csqrtl$(EXEEXT): $(tests_csqrtl_OBJECTS) $(tests_csqrtl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/csqrtl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_csqrtl_OBJECTS) $(tests_csqrtl_LDADD) $(LIBS)
+tests/ctan.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ctan$(EXEEXT): $(tests_ctan_OBJECTS) $(tests_ctan_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ctan$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ctan_OBJECTS) $(tests_ctan_LDADD) $(LIBS)
+tests/ctanf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ctanf$(EXEEXT): $(tests_ctanf_OBJECTS) $(tests_ctanf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ctanf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ctanf_OBJECTS) $(tests_ctanf_LDADD) $(LIBS)
+tests/ctanh.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ctanh$(EXEEXT): $(tests_ctanh_OBJECTS) $(tests_ctanh_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ctanh$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ctanh_OBJECTS) $(tests_ctanh_LDADD) $(LIBS)
+tests/ctanhf.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ctanhf$(EXEEXT): $(tests_ctanhf_OBJECTS) $(tests_ctanhf_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ctanhf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ctanhf_OBJECTS) $(tests_ctanhf_LDADD) $(LIBS)
+tests/ctanhl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ctanhl$(EXEEXT): $(tests_ctanhl_OBJECTS) $(tests_ctanhl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ctanhl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ctanhl_OBJECTS) $(tests_ctanhl_LDADD) $(LIBS)
+tests/ctanl.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 tests/ctanl$(EXEEXT): $(tests_ctanl_OBJECTS) $(tests_ctanl_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/ctanl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_ctanl_OBJECTS) $(tests_ctanl_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f src/cabs.$(OBJEXT)
+	-rm -f src/carg.$(OBJEXT)
+	-rm -f src/ccos.$(OBJEXT)
+	-rm -f src/cexp.$(OBJEXT)
+	-rm -f src/cimag.$(OBJEXT)
+	-rm -f src/clog.$(OBJEXT)
+	-rm -f src/conj.$(OBJEXT)
+	-rm -f src/cpow.$(OBJEXT)
+	-rm -f src/cproj.$(OBJEXT)
+	-rm -f src/creal.$(OBJEXT)
+	-rm -f src/csin.$(OBJEXT)
+	-rm -f src/csqrt.$(OBJEXT)
+	-rm -f src/ctan.$(OBJEXT)
+	-rm -f tests/cabs.$(OBJEXT)
+	-rm -f tests/cabsf.$(OBJEXT)
+	-rm -f tests/cabsl.$(OBJEXT)
+	-rm -f tests/cacos.$(OBJEXT)
+	-rm -f tests/cacosf.$(OBJEXT)
+	-rm -f tests/cacosh.$(OBJEXT)
+	-rm -f tests/cacoshf.$(OBJEXT)
+	-rm -f tests/cacoshl.$(OBJEXT)
+	-rm -f tests/cacosl.$(OBJEXT)
+	-rm -f tests/carg.$(OBJEXT)
+	-rm -f tests/cargf.$(OBJEXT)
+	-rm -f tests/cargl.$(OBJEXT)
+	-rm -f tests/casin.$(OBJEXT)
+	-rm -f tests/casinf.$(OBJEXT)
+	-rm -f tests/casinh.$(OBJEXT)
+	-rm -f tests/casinhf.$(OBJEXT)
+	-rm -f tests/casinhl.$(OBJEXT)
+	-rm -f tests/casinl.$(OBJEXT)
+	-rm -f tests/catan.$(OBJEXT)
+	-rm -f tests/catanf.$(OBJEXT)
+	-rm -f tests/catanh.$(OBJEXT)
+	-rm -f tests/catanhf.$(OBJEXT)
+	-rm -f tests/catanhl.$(OBJEXT)
+	-rm -f tests/catanl.$(OBJEXT)
+	-rm -f tests/ccos.$(OBJEXT)
+	-rm -f tests/ccosf.$(OBJEXT)
+	-rm -f tests/ccosh.$(OBJEXT)
+	-rm -f tests/ccoshf.$(OBJEXT)
+	-rm -f tests/ccoshl.$(OBJEXT)
+	-rm -f tests/ccosl.$(OBJEXT)
+	-rm -f tests/cexp.$(OBJEXT)
+	-rm -f tests/cexpf.$(OBJEXT)
+	-rm -f tests/cexpl.$(OBJEXT)
+	-rm -f tests/cimag.$(OBJEXT)
+	-rm -f tests/cimagf.$(OBJEXT)
+	-rm -f tests/cimagl.$(OBJEXT)
+	-rm -f tests/clog.$(OBJEXT)
+	-rm -f tests/clogf.$(OBJEXT)
+	-rm -f tests/clogl.$(OBJEXT)
+	-rm -f tests/conj.$(OBJEXT)
+	-rm -f tests/conjf.$(OBJEXT)
+	-rm -f tests/conjl.$(OBJEXT)
+	-rm -f tests/cpow.$(OBJEXT)
+	-rm -f tests/cpowf.$(OBJEXT)
+	-rm -f tests/cpowl.$(OBJEXT)
+	-rm -f tests/cproj.$(OBJEXT)
+	-rm -f tests/cprojf.$(OBJEXT)
+	-rm -f tests/cprojl.$(OBJEXT)
+	-rm -f tests/creal.$(OBJEXT)
+	-rm -f tests/crealf.$(OBJEXT)
+	-rm -f tests/creall.$(OBJEXT)
+	-rm -f tests/csin.$(OBJEXT)
+	-rm -f tests/csinf.$(OBJEXT)
+	-rm -f tests/csinh.$(OBJEXT)
+	-rm -f tests/csinhf.$(OBJEXT)
+	-rm -f tests/csinhl.$(OBJEXT)
+	-rm -f tests/csinl.$(OBJEXT)
+	-rm -f tests/csqrt.$(OBJEXT)
+	-rm -f tests/csqrtf.$(OBJEXT)
+	-rm -f tests/csqrtl.$(OBJEXT)
+	-rm -f tests/ctan.$(OBJEXT)
+	-rm -f tests/ctanf.$(OBJEXT)
+	-rm -f tests/ctanh.$(OBJEXT)
+	-rm -f tests/ctanhf.$(OBJEXT)
+	-rm -f tests/ctanhl.$(OBJEXT)
+	-rm -f tests/ctanl.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cabs.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cabsf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cabsl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cacos.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cacosf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cacosh.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cacoshf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cacoshl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cacosl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/carg.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cargf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cargl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/casin.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/casinf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/casinh.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/casinhf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/casinhl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/casinl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/catan.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/catanf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/catanh.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/catanhf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/catanhl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/catanl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ccos.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ccosf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ccosh.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ccoshf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ccoshl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ccosl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cexp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cexpf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cexpl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cimag.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cimagf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cimagl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clogf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clogl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/conj.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/conjf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/conjl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpow.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpowf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpowl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cproj.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cprojf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cprojl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/creal.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/crealf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/creall.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csin.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csinf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csinh.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csinhf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csinhl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csinl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csqrt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csqrtf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csqrtl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctan.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctanf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctanh.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctanhf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctanhl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctanl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dummy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cabs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/carg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ccos.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cexp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cimag.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/clog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/conj.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cpow.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cproj.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/creal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/csin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/csqrt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ctan.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cabs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cabsf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cabsl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cacos.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cacosf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cacosh.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cacoshf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cacoshl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cacosl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/carg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cargf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cargl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/casin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/casinf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/casinh.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/casinhf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/casinhl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/casinl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/catan.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/catanf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/catanh.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/catanhf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/catanhl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/catanl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ccos.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ccosf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ccosh.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ccoshf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ccoshl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ccosl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cexp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cexpf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cexpl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cimag.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cimagf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cimagl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/clog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/clogf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/clogl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/conj.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/conjf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/conjl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cpow.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cpowf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cpowl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cproj.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cprojf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cprojl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/creal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/crealf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/creall.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/csin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/csinf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/csinh.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/csinhf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/csinhl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/csinl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/csqrt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/csqrtf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/csqrtl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ctan.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ctanf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ctanh.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ctanhf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ctanhl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ctanl.Po@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(COMPILE) -c $<
+@am__fastdepCC_FALSE@	$(COMPILE) -c -o $@ $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
-
-dummy.o: src/dummy.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dummy.o -MD -MP -MF $(DEPDIR)/dummy.Tpo -c -o dummy.o `test -f 'src/dummy.c' || echo '$(srcdir)/'`src/dummy.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dummy.Tpo $(DEPDIR)/dummy.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/dummy.c' object='dummy.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dummy.o `test -f 'src/dummy.c' || echo '$(srcdir)/'`src/dummy.c
-
-dummy.obj: src/dummy.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dummy.obj -MD -MP -MF $(DEPDIR)/dummy.Tpo -c -o dummy.obj `if test -f 'src/dummy.c'; then $(CYGPATH_W) 'src/dummy.c'; else $(CYGPATH_W) '$(srcdir)/src/dummy.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dummy.Tpo $(DEPDIR)/dummy.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/dummy.c' object='dummy.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dummy.obj `if test -f 'src/dummy.c'; then $(CYGPATH_W) 'src/dummy.c'; else $(CYGPATH_W) '$(srcdir)/src/dummy.c'; fi`
-
-cabs.o: tests/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cabs.o -MD -MP -MF $(DEPDIR)/cabs.Tpo -c -o cabs.o `test -f 'tests/cabs.c' || echo '$(srcdir)/'`tests/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cabs.Tpo $(DEPDIR)/cabs.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cabs.c' object='cabs.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cabs.o `test -f 'tests/cabs.c' || echo '$(srcdir)/'`tests/cabs.c
-
-cabs.obj: tests/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cabs.obj -MD -MP -MF $(DEPDIR)/cabs.Tpo -c -o cabs.obj `if test -f 'tests/cabs.c'; then $(CYGPATH_W) 'tests/cabs.c'; else $(CYGPATH_W) '$(srcdir)/tests/cabs.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cabs.Tpo $(DEPDIR)/cabs.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cabs.c' object='cabs.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cabs.obj `if test -f 'tests/cabs.c'; then $(CYGPATH_W) 'tests/cabs.c'; else $(CYGPATH_W) '$(srcdir)/tests/cabs.c'; fi`
-
-cabsf.o: tests/cabsf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cabsf.o -MD -MP -MF $(DEPDIR)/cabsf.Tpo -c -o cabsf.o `test -f 'tests/cabsf.c' || echo '$(srcdir)/'`tests/cabsf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cabsf.Tpo $(DEPDIR)/cabsf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cabsf.c' object='cabsf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cabsf.o `test -f 'tests/cabsf.c' || echo '$(srcdir)/'`tests/cabsf.c
-
-cabsf.obj: tests/cabsf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cabsf.obj -MD -MP -MF $(DEPDIR)/cabsf.Tpo -c -o cabsf.obj `if test -f 'tests/cabsf.c'; then $(CYGPATH_W) 'tests/cabsf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cabsf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cabsf.Tpo $(DEPDIR)/cabsf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cabsf.c' object='cabsf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cabsf.obj `if test -f 'tests/cabsf.c'; then $(CYGPATH_W) 'tests/cabsf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cabsf.c'; fi`
-
-cabsl.o: tests/cabsl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cabsl.o -MD -MP -MF $(DEPDIR)/cabsl.Tpo -c -o cabsl.o `test -f 'tests/cabsl.c' || echo '$(srcdir)/'`tests/cabsl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cabsl.Tpo $(DEPDIR)/cabsl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cabsl.c' object='cabsl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cabsl.o `test -f 'tests/cabsl.c' || echo '$(srcdir)/'`tests/cabsl.c
-
-cabsl.obj: tests/cabsl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cabsl.obj -MD -MP -MF $(DEPDIR)/cabsl.Tpo -c -o cabsl.obj `if test -f 'tests/cabsl.c'; then $(CYGPATH_W) 'tests/cabsl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cabsl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cabsl.Tpo $(DEPDIR)/cabsl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cabsl.c' object='cabsl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cabsl.obj `if test -f 'tests/cabsl.c'; then $(CYGPATH_W) 'tests/cabsl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cabsl.c'; fi`
-
-cacos.o: tests/cacos.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacos.o -MD -MP -MF $(DEPDIR)/cacos.Tpo -c -o cacos.o `test -f 'tests/cacos.c' || echo '$(srcdir)/'`tests/cacos.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacos.Tpo $(DEPDIR)/cacos.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacos.c' object='cacos.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacos.o `test -f 'tests/cacos.c' || echo '$(srcdir)/'`tests/cacos.c
-
-cacos.obj: tests/cacos.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacos.obj -MD -MP -MF $(DEPDIR)/cacos.Tpo -c -o cacos.obj `if test -f 'tests/cacos.c'; then $(CYGPATH_W) 'tests/cacos.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacos.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacos.Tpo $(DEPDIR)/cacos.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacos.c' object='cacos.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacos.obj `if test -f 'tests/cacos.c'; then $(CYGPATH_W) 'tests/cacos.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacos.c'; fi`
-
-cacosf.o: tests/cacosf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacosf.o -MD -MP -MF $(DEPDIR)/cacosf.Tpo -c -o cacosf.o `test -f 'tests/cacosf.c' || echo '$(srcdir)/'`tests/cacosf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacosf.Tpo $(DEPDIR)/cacosf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacosf.c' object='cacosf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacosf.o `test -f 'tests/cacosf.c' || echo '$(srcdir)/'`tests/cacosf.c
-
-cacosf.obj: tests/cacosf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacosf.obj -MD -MP -MF $(DEPDIR)/cacosf.Tpo -c -o cacosf.obj `if test -f 'tests/cacosf.c'; then $(CYGPATH_W) 'tests/cacosf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacosf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacosf.Tpo $(DEPDIR)/cacosf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacosf.c' object='cacosf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacosf.obj `if test -f 'tests/cacosf.c'; then $(CYGPATH_W) 'tests/cacosf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacosf.c'; fi`
-
-cacosh.o: tests/cacosh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacosh.o -MD -MP -MF $(DEPDIR)/cacosh.Tpo -c -o cacosh.o `test -f 'tests/cacosh.c' || echo '$(srcdir)/'`tests/cacosh.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacosh.Tpo $(DEPDIR)/cacosh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacosh.c' object='cacosh.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacosh.o `test -f 'tests/cacosh.c' || echo '$(srcdir)/'`tests/cacosh.c
-
-cacosh.obj: tests/cacosh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacosh.obj -MD -MP -MF $(DEPDIR)/cacosh.Tpo -c -o cacosh.obj `if test -f 'tests/cacosh.c'; then $(CYGPATH_W) 'tests/cacosh.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacosh.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacosh.Tpo $(DEPDIR)/cacosh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacosh.c' object='cacosh.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacosh.obj `if test -f 'tests/cacosh.c'; then $(CYGPATH_W) 'tests/cacosh.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacosh.c'; fi`
-
-cacoshf.o: tests/cacoshf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacoshf.o -MD -MP -MF $(DEPDIR)/cacoshf.Tpo -c -o cacoshf.o `test -f 'tests/cacoshf.c' || echo '$(srcdir)/'`tests/cacoshf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacoshf.Tpo $(DEPDIR)/cacoshf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacoshf.c' object='cacoshf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacoshf.o `test -f 'tests/cacoshf.c' || echo '$(srcdir)/'`tests/cacoshf.c
-
-cacoshf.obj: tests/cacoshf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacoshf.obj -MD -MP -MF $(DEPDIR)/cacoshf.Tpo -c -o cacoshf.obj `if test -f 'tests/cacoshf.c'; then $(CYGPATH_W) 'tests/cacoshf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacoshf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacoshf.Tpo $(DEPDIR)/cacoshf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacoshf.c' object='cacoshf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacoshf.obj `if test -f 'tests/cacoshf.c'; then $(CYGPATH_W) 'tests/cacoshf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacoshf.c'; fi`
-
-cacoshl.o: tests/cacoshl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacoshl.o -MD -MP -MF $(DEPDIR)/cacoshl.Tpo -c -o cacoshl.o `test -f 'tests/cacoshl.c' || echo '$(srcdir)/'`tests/cacoshl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacoshl.Tpo $(DEPDIR)/cacoshl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacoshl.c' object='cacoshl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacoshl.o `test -f 'tests/cacoshl.c' || echo '$(srcdir)/'`tests/cacoshl.c
-
-cacoshl.obj: tests/cacoshl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacoshl.obj -MD -MP -MF $(DEPDIR)/cacoshl.Tpo -c -o cacoshl.obj `if test -f 'tests/cacoshl.c'; then $(CYGPATH_W) 'tests/cacoshl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacoshl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacoshl.Tpo $(DEPDIR)/cacoshl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacoshl.c' object='cacoshl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacoshl.obj `if test -f 'tests/cacoshl.c'; then $(CYGPATH_W) 'tests/cacoshl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacoshl.c'; fi`
-
-cacosl.o: tests/cacosl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacosl.o -MD -MP -MF $(DEPDIR)/cacosl.Tpo -c -o cacosl.o `test -f 'tests/cacosl.c' || echo '$(srcdir)/'`tests/cacosl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacosl.Tpo $(DEPDIR)/cacosl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacosl.c' object='cacosl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacosl.o `test -f 'tests/cacosl.c' || echo '$(srcdir)/'`tests/cacosl.c
-
-cacosl.obj: tests/cacosl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cacosl.obj -MD -MP -MF $(DEPDIR)/cacosl.Tpo -c -o cacosl.obj `if test -f 'tests/cacosl.c'; then $(CYGPATH_W) 'tests/cacosl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacosl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cacosl.Tpo $(DEPDIR)/cacosl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cacosl.c' object='cacosl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cacosl.obj `if test -f 'tests/cacosl.c'; then $(CYGPATH_W) 'tests/cacosl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cacosl.c'; fi`
-
-carg.o: tests/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT carg.o -MD -MP -MF $(DEPDIR)/carg.Tpo -c -o carg.o `test -f 'tests/carg.c' || echo '$(srcdir)/'`tests/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/carg.Tpo $(DEPDIR)/carg.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/carg.c' object='carg.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o carg.o `test -f 'tests/carg.c' || echo '$(srcdir)/'`tests/carg.c
-
-carg.obj: tests/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT carg.obj -MD -MP -MF $(DEPDIR)/carg.Tpo -c -o carg.obj `if test -f 'tests/carg.c'; then $(CYGPATH_W) 'tests/carg.c'; else $(CYGPATH_W) '$(srcdir)/tests/carg.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/carg.Tpo $(DEPDIR)/carg.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/carg.c' object='carg.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o carg.obj `if test -f 'tests/carg.c'; then $(CYGPATH_W) 'tests/carg.c'; else $(CYGPATH_W) '$(srcdir)/tests/carg.c'; fi`
-
-cargf.o: tests/cargf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cargf.o -MD -MP -MF $(DEPDIR)/cargf.Tpo -c -o cargf.o `test -f 'tests/cargf.c' || echo '$(srcdir)/'`tests/cargf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cargf.Tpo $(DEPDIR)/cargf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cargf.c' object='cargf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cargf.o `test -f 'tests/cargf.c' || echo '$(srcdir)/'`tests/cargf.c
-
-cargf.obj: tests/cargf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cargf.obj -MD -MP -MF $(DEPDIR)/cargf.Tpo -c -o cargf.obj `if test -f 'tests/cargf.c'; then $(CYGPATH_W) 'tests/cargf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cargf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cargf.Tpo $(DEPDIR)/cargf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cargf.c' object='cargf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cargf.obj `if test -f 'tests/cargf.c'; then $(CYGPATH_W) 'tests/cargf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cargf.c'; fi`
-
-cargl.o: tests/cargl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cargl.o -MD -MP -MF $(DEPDIR)/cargl.Tpo -c -o cargl.o `test -f 'tests/cargl.c' || echo '$(srcdir)/'`tests/cargl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cargl.Tpo $(DEPDIR)/cargl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cargl.c' object='cargl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cargl.o `test -f 'tests/cargl.c' || echo '$(srcdir)/'`tests/cargl.c
-
-cargl.obj: tests/cargl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cargl.obj -MD -MP -MF $(DEPDIR)/cargl.Tpo -c -o cargl.obj `if test -f 'tests/cargl.c'; then $(CYGPATH_W) 'tests/cargl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cargl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cargl.Tpo $(DEPDIR)/cargl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cargl.c' object='cargl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cargl.obj `if test -f 'tests/cargl.c'; then $(CYGPATH_W) 'tests/cargl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cargl.c'; fi`
-
-casin.o: tests/casin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casin.o -MD -MP -MF $(DEPDIR)/casin.Tpo -c -o casin.o `test -f 'tests/casin.c' || echo '$(srcdir)/'`tests/casin.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casin.Tpo $(DEPDIR)/casin.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casin.c' object='casin.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casin.o `test -f 'tests/casin.c' || echo '$(srcdir)/'`tests/casin.c
-
-casin.obj: tests/casin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casin.obj -MD -MP -MF $(DEPDIR)/casin.Tpo -c -o casin.obj `if test -f 'tests/casin.c'; then $(CYGPATH_W) 'tests/casin.c'; else $(CYGPATH_W) '$(srcdir)/tests/casin.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casin.Tpo $(DEPDIR)/casin.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casin.c' object='casin.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casin.obj `if test -f 'tests/casin.c'; then $(CYGPATH_W) 'tests/casin.c'; else $(CYGPATH_W) '$(srcdir)/tests/casin.c'; fi`
-
-casinf.o: tests/casinf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casinf.o -MD -MP -MF $(DEPDIR)/casinf.Tpo -c -o casinf.o `test -f 'tests/casinf.c' || echo '$(srcdir)/'`tests/casinf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casinf.Tpo $(DEPDIR)/casinf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casinf.c' object='casinf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casinf.o `test -f 'tests/casinf.c' || echo '$(srcdir)/'`tests/casinf.c
-
-casinf.obj: tests/casinf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casinf.obj -MD -MP -MF $(DEPDIR)/casinf.Tpo -c -o casinf.obj `if test -f 'tests/casinf.c'; then $(CYGPATH_W) 'tests/casinf.c'; else $(CYGPATH_W) '$(srcdir)/tests/casinf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casinf.Tpo $(DEPDIR)/casinf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casinf.c' object='casinf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casinf.obj `if test -f 'tests/casinf.c'; then $(CYGPATH_W) 'tests/casinf.c'; else $(CYGPATH_W) '$(srcdir)/tests/casinf.c'; fi`
-
-casinh.o: tests/casinh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casinh.o -MD -MP -MF $(DEPDIR)/casinh.Tpo -c -o casinh.o `test -f 'tests/casinh.c' || echo '$(srcdir)/'`tests/casinh.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casinh.Tpo $(DEPDIR)/casinh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casinh.c' object='casinh.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casinh.o `test -f 'tests/casinh.c' || echo '$(srcdir)/'`tests/casinh.c
-
-casinh.obj: tests/casinh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casinh.obj -MD -MP -MF $(DEPDIR)/casinh.Tpo -c -o casinh.obj `if test -f 'tests/casinh.c'; then $(CYGPATH_W) 'tests/casinh.c'; else $(CYGPATH_W) '$(srcdir)/tests/casinh.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casinh.Tpo $(DEPDIR)/casinh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casinh.c' object='casinh.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casinh.obj `if test -f 'tests/casinh.c'; then $(CYGPATH_W) 'tests/casinh.c'; else $(CYGPATH_W) '$(srcdir)/tests/casinh.c'; fi`
-
-casinhf.o: tests/casinhf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casinhf.o -MD -MP -MF $(DEPDIR)/casinhf.Tpo -c -o casinhf.o `test -f 'tests/casinhf.c' || echo '$(srcdir)/'`tests/casinhf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casinhf.Tpo $(DEPDIR)/casinhf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casinhf.c' object='casinhf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casinhf.o `test -f 'tests/casinhf.c' || echo '$(srcdir)/'`tests/casinhf.c
-
-casinhf.obj: tests/casinhf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casinhf.obj -MD -MP -MF $(DEPDIR)/casinhf.Tpo -c -o casinhf.obj `if test -f 'tests/casinhf.c'; then $(CYGPATH_W) 'tests/casinhf.c'; else $(CYGPATH_W) '$(srcdir)/tests/casinhf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casinhf.Tpo $(DEPDIR)/casinhf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casinhf.c' object='casinhf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casinhf.obj `if test -f 'tests/casinhf.c'; then $(CYGPATH_W) 'tests/casinhf.c'; else $(CYGPATH_W) '$(srcdir)/tests/casinhf.c'; fi`
-
-casinhl.o: tests/casinhl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casinhl.o -MD -MP -MF $(DEPDIR)/casinhl.Tpo -c -o casinhl.o `test -f 'tests/casinhl.c' || echo '$(srcdir)/'`tests/casinhl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casinhl.Tpo $(DEPDIR)/casinhl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casinhl.c' object='casinhl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casinhl.o `test -f 'tests/casinhl.c' || echo '$(srcdir)/'`tests/casinhl.c
-
-casinhl.obj: tests/casinhl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casinhl.obj -MD -MP -MF $(DEPDIR)/casinhl.Tpo -c -o casinhl.obj `if test -f 'tests/casinhl.c'; then $(CYGPATH_W) 'tests/casinhl.c'; else $(CYGPATH_W) '$(srcdir)/tests/casinhl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casinhl.Tpo $(DEPDIR)/casinhl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casinhl.c' object='casinhl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casinhl.obj `if test -f 'tests/casinhl.c'; then $(CYGPATH_W) 'tests/casinhl.c'; else $(CYGPATH_W) '$(srcdir)/tests/casinhl.c'; fi`
-
-casinl.o: tests/casinl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casinl.o -MD -MP -MF $(DEPDIR)/casinl.Tpo -c -o casinl.o `test -f 'tests/casinl.c' || echo '$(srcdir)/'`tests/casinl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casinl.Tpo $(DEPDIR)/casinl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casinl.c' object='casinl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casinl.o `test -f 'tests/casinl.c' || echo '$(srcdir)/'`tests/casinl.c
-
-casinl.obj: tests/casinl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT casinl.obj -MD -MP -MF $(DEPDIR)/casinl.Tpo -c -o casinl.obj `if test -f 'tests/casinl.c'; then $(CYGPATH_W) 'tests/casinl.c'; else $(CYGPATH_W) '$(srcdir)/tests/casinl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/casinl.Tpo $(DEPDIR)/casinl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/casinl.c' object='casinl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o casinl.obj `if test -f 'tests/casinl.c'; then $(CYGPATH_W) 'tests/casinl.c'; else $(CYGPATH_W) '$(srcdir)/tests/casinl.c'; fi`
-
-catan.o: tests/catan.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catan.o -MD -MP -MF $(DEPDIR)/catan.Tpo -c -o catan.o `test -f 'tests/catan.c' || echo '$(srcdir)/'`tests/catan.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catan.Tpo $(DEPDIR)/catan.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catan.c' object='catan.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catan.o `test -f 'tests/catan.c' || echo '$(srcdir)/'`tests/catan.c
-
-catan.obj: tests/catan.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catan.obj -MD -MP -MF $(DEPDIR)/catan.Tpo -c -o catan.obj `if test -f 'tests/catan.c'; then $(CYGPATH_W) 'tests/catan.c'; else $(CYGPATH_W) '$(srcdir)/tests/catan.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catan.Tpo $(DEPDIR)/catan.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catan.c' object='catan.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catan.obj `if test -f 'tests/catan.c'; then $(CYGPATH_W) 'tests/catan.c'; else $(CYGPATH_W) '$(srcdir)/tests/catan.c'; fi`
-
-catanf.o: tests/catanf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catanf.o -MD -MP -MF $(DEPDIR)/catanf.Tpo -c -o catanf.o `test -f 'tests/catanf.c' || echo '$(srcdir)/'`tests/catanf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catanf.Tpo $(DEPDIR)/catanf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catanf.c' object='catanf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catanf.o `test -f 'tests/catanf.c' || echo '$(srcdir)/'`tests/catanf.c
-
-catanf.obj: tests/catanf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catanf.obj -MD -MP -MF $(DEPDIR)/catanf.Tpo -c -o catanf.obj `if test -f 'tests/catanf.c'; then $(CYGPATH_W) 'tests/catanf.c'; else $(CYGPATH_W) '$(srcdir)/tests/catanf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catanf.Tpo $(DEPDIR)/catanf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catanf.c' object='catanf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catanf.obj `if test -f 'tests/catanf.c'; then $(CYGPATH_W) 'tests/catanf.c'; else $(CYGPATH_W) '$(srcdir)/tests/catanf.c'; fi`
-
-catanh.o: tests/catanh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catanh.o -MD -MP -MF $(DEPDIR)/catanh.Tpo -c -o catanh.o `test -f 'tests/catanh.c' || echo '$(srcdir)/'`tests/catanh.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catanh.Tpo $(DEPDIR)/catanh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catanh.c' object='catanh.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catanh.o `test -f 'tests/catanh.c' || echo '$(srcdir)/'`tests/catanh.c
-
-catanh.obj: tests/catanh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catanh.obj -MD -MP -MF $(DEPDIR)/catanh.Tpo -c -o catanh.obj `if test -f 'tests/catanh.c'; then $(CYGPATH_W) 'tests/catanh.c'; else $(CYGPATH_W) '$(srcdir)/tests/catanh.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catanh.Tpo $(DEPDIR)/catanh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catanh.c' object='catanh.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catanh.obj `if test -f 'tests/catanh.c'; then $(CYGPATH_W) 'tests/catanh.c'; else $(CYGPATH_W) '$(srcdir)/tests/catanh.c'; fi`
-
-catanhf.o: tests/catanhf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catanhf.o -MD -MP -MF $(DEPDIR)/catanhf.Tpo -c -o catanhf.o `test -f 'tests/catanhf.c' || echo '$(srcdir)/'`tests/catanhf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catanhf.Tpo $(DEPDIR)/catanhf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catanhf.c' object='catanhf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catanhf.o `test -f 'tests/catanhf.c' || echo '$(srcdir)/'`tests/catanhf.c
-
-catanhf.obj: tests/catanhf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catanhf.obj -MD -MP -MF $(DEPDIR)/catanhf.Tpo -c -o catanhf.obj `if test -f 'tests/catanhf.c'; then $(CYGPATH_W) 'tests/catanhf.c'; else $(CYGPATH_W) '$(srcdir)/tests/catanhf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catanhf.Tpo $(DEPDIR)/catanhf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catanhf.c' object='catanhf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catanhf.obj `if test -f 'tests/catanhf.c'; then $(CYGPATH_W) 'tests/catanhf.c'; else $(CYGPATH_W) '$(srcdir)/tests/catanhf.c'; fi`
-
-catanhl.o: tests/catanhl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catanhl.o -MD -MP -MF $(DEPDIR)/catanhl.Tpo -c -o catanhl.o `test -f 'tests/catanhl.c' || echo '$(srcdir)/'`tests/catanhl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catanhl.Tpo $(DEPDIR)/catanhl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catanhl.c' object='catanhl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catanhl.o `test -f 'tests/catanhl.c' || echo '$(srcdir)/'`tests/catanhl.c
-
-catanhl.obj: tests/catanhl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catanhl.obj -MD -MP -MF $(DEPDIR)/catanhl.Tpo -c -o catanhl.obj `if test -f 'tests/catanhl.c'; then $(CYGPATH_W) 'tests/catanhl.c'; else $(CYGPATH_W) '$(srcdir)/tests/catanhl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catanhl.Tpo $(DEPDIR)/catanhl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catanhl.c' object='catanhl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catanhl.obj `if test -f 'tests/catanhl.c'; then $(CYGPATH_W) 'tests/catanhl.c'; else $(CYGPATH_W) '$(srcdir)/tests/catanhl.c'; fi`
-
-catanl.o: tests/catanl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catanl.o -MD -MP -MF $(DEPDIR)/catanl.Tpo -c -o catanl.o `test -f 'tests/catanl.c' || echo '$(srcdir)/'`tests/catanl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catanl.Tpo $(DEPDIR)/catanl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catanl.c' object='catanl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catanl.o `test -f 'tests/catanl.c' || echo '$(srcdir)/'`tests/catanl.c
-
-catanl.obj: tests/catanl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT catanl.obj -MD -MP -MF $(DEPDIR)/catanl.Tpo -c -o catanl.obj `if test -f 'tests/catanl.c'; then $(CYGPATH_W) 'tests/catanl.c'; else $(CYGPATH_W) '$(srcdir)/tests/catanl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/catanl.Tpo $(DEPDIR)/catanl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/catanl.c' object='catanl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o catanl.obj `if test -f 'tests/catanl.c'; then $(CYGPATH_W) 'tests/catanl.c'; else $(CYGPATH_W) '$(srcdir)/tests/catanl.c'; fi`
-
-ccos.o: tests/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccos.o -MD -MP -MF $(DEPDIR)/ccos.Tpo -c -o ccos.o `test -f 'tests/ccos.c' || echo '$(srcdir)/'`tests/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccos.Tpo $(DEPDIR)/ccos.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccos.c' object='ccos.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccos.o `test -f 'tests/ccos.c' || echo '$(srcdir)/'`tests/ccos.c
-
-ccos.obj: tests/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccos.obj -MD -MP -MF $(DEPDIR)/ccos.Tpo -c -o ccos.obj `if test -f 'tests/ccos.c'; then $(CYGPATH_W) 'tests/ccos.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccos.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccos.Tpo $(DEPDIR)/ccos.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccos.c' object='ccos.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccos.obj `if test -f 'tests/ccos.c'; then $(CYGPATH_W) 'tests/ccos.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccos.c'; fi`
-
-ccosf.o: tests/ccosf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccosf.o -MD -MP -MF $(DEPDIR)/ccosf.Tpo -c -o ccosf.o `test -f 'tests/ccosf.c' || echo '$(srcdir)/'`tests/ccosf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccosf.Tpo $(DEPDIR)/ccosf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccosf.c' object='ccosf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccosf.o `test -f 'tests/ccosf.c' || echo '$(srcdir)/'`tests/ccosf.c
-
-ccosf.obj: tests/ccosf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccosf.obj -MD -MP -MF $(DEPDIR)/ccosf.Tpo -c -o ccosf.obj `if test -f 'tests/ccosf.c'; then $(CYGPATH_W) 'tests/ccosf.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccosf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccosf.Tpo $(DEPDIR)/ccosf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccosf.c' object='ccosf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccosf.obj `if test -f 'tests/ccosf.c'; then $(CYGPATH_W) 'tests/ccosf.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccosf.c'; fi`
-
-ccosh.o: tests/ccosh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccosh.o -MD -MP -MF $(DEPDIR)/ccosh.Tpo -c -o ccosh.o `test -f 'tests/ccosh.c' || echo '$(srcdir)/'`tests/ccosh.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccosh.Tpo $(DEPDIR)/ccosh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccosh.c' object='ccosh.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccosh.o `test -f 'tests/ccosh.c' || echo '$(srcdir)/'`tests/ccosh.c
-
-ccosh.obj: tests/ccosh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccosh.obj -MD -MP -MF $(DEPDIR)/ccosh.Tpo -c -o ccosh.obj `if test -f 'tests/ccosh.c'; then $(CYGPATH_W) 'tests/ccosh.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccosh.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccosh.Tpo $(DEPDIR)/ccosh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccosh.c' object='ccosh.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccosh.obj `if test -f 'tests/ccosh.c'; then $(CYGPATH_W) 'tests/ccosh.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccosh.c'; fi`
-
-ccoshf.o: tests/ccoshf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccoshf.o -MD -MP -MF $(DEPDIR)/ccoshf.Tpo -c -o ccoshf.o `test -f 'tests/ccoshf.c' || echo '$(srcdir)/'`tests/ccoshf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccoshf.Tpo $(DEPDIR)/ccoshf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccoshf.c' object='ccoshf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccoshf.o `test -f 'tests/ccoshf.c' || echo '$(srcdir)/'`tests/ccoshf.c
-
-ccoshf.obj: tests/ccoshf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccoshf.obj -MD -MP -MF $(DEPDIR)/ccoshf.Tpo -c -o ccoshf.obj `if test -f 'tests/ccoshf.c'; then $(CYGPATH_W) 'tests/ccoshf.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccoshf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccoshf.Tpo $(DEPDIR)/ccoshf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccoshf.c' object='ccoshf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccoshf.obj `if test -f 'tests/ccoshf.c'; then $(CYGPATH_W) 'tests/ccoshf.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccoshf.c'; fi`
-
-ccoshl.o: tests/ccoshl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccoshl.o -MD -MP -MF $(DEPDIR)/ccoshl.Tpo -c -o ccoshl.o `test -f 'tests/ccoshl.c' || echo '$(srcdir)/'`tests/ccoshl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccoshl.Tpo $(DEPDIR)/ccoshl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccoshl.c' object='ccoshl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccoshl.o `test -f 'tests/ccoshl.c' || echo '$(srcdir)/'`tests/ccoshl.c
-
-ccoshl.obj: tests/ccoshl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccoshl.obj -MD -MP -MF $(DEPDIR)/ccoshl.Tpo -c -o ccoshl.obj `if test -f 'tests/ccoshl.c'; then $(CYGPATH_W) 'tests/ccoshl.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccoshl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccoshl.Tpo $(DEPDIR)/ccoshl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccoshl.c' object='ccoshl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccoshl.obj `if test -f 'tests/ccoshl.c'; then $(CYGPATH_W) 'tests/ccoshl.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccoshl.c'; fi`
-
-ccosl.o: tests/ccosl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccosl.o -MD -MP -MF $(DEPDIR)/ccosl.Tpo -c -o ccosl.o `test -f 'tests/ccosl.c' || echo '$(srcdir)/'`tests/ccosl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccosl.Tpo $(DEPDIR)/ccosl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccosl.c' object='ccosl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccosl.o `test -f 'tests/ccosl.c' || echo '$(srcdir)/'`tests/ccosl.c
-
-ccosl.obj: tests/ccosl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ccosl.obj -MD -MP -MF $(DEPDIR)/ccosl.Tpo -c -o ccosl.obj `if test -f 'tests/ccosl.c'; then $(CYGPATH_W) 'tests/ccosl.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccosl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ccosl.Tpo $(DEPDIR)/ccosl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ccosl.c' object='ccosl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ccosl.obj `if test -f 'tests/ccosl.c'; then $(CYGPATH_W) 'tests/ccosl.c'; else $(CYGPATH_W) '$(srcdir)/tests/ccosl.c'; fi`
-
-cexp.o: tests/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cexp.o -MD -MP -MF $(DEPDIR)/cexp.Tpo -c -o cexp.o `test -f 'tests/cexp.c' || echo '$(srcdir)/'`tests/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cexp.Tpo $(DEPDIR)/cexp.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cexp.c' object='cexp.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cexp.o `test -f 'tests/cexp.c' || echo '$(srcdir)/'`tests/cexp.c
-
-cexp.obj: tests/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cexp.obj -MD -MP -MF $(DEPDIR)/cexp.Tpo -c -o cexp.obj `if test -f 'tests/cexp.c'; then $(CYGPATH_W) 'tests/cexp.c'; else $(CYGPATH_W) '$(srcdir)/tests/cexp.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cexp.Tpo $(DEPDIR)/cexp.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cexp.c' object='cexp.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cexp.obj `if test -f 'tests/cexp.c'; then $(CYGPATH_W) 'tests/cexp.c'; else $(CYGPATH_W) '$(srcdir)/tests/cexp.c'; fi`
-
-cexpf.o: tests/cexpf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cexpf.o -MD -MP -MF $(DEPDIR)/cexpf.Tpo -c -o cexpf.o `test -f 'tests/cexpf.c' || echo '$(srcdir)/'`tests/cexpf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cexpf.Tpo $(DEPDIR)/cexpf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cexpf.c' object='cexpf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cexpf.o `test -f 'tests/cexpf.c' || echo '$(srcdir)/'`tests/cexpf.c
-
-cexpf.obj: tests/cexpf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cexpf.obj -MD -MP -MF $(DEPDIR)/cexpf.Tpo -c -o cexpf.obj `if test -f 'tests/cexpf.c'; then $(CYGPATH_W) 'tests/cexpf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cexpf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cexpf.Tpo $(DEPDIR)/cexpf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cexpf.c' object='cexpf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cexpf.obj `if test -f 'tests/cexpf.c'; then $(CYGPATH_W) 'tests/cexpf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cexpf.c'; fi`
-
-cexpl.o: tests/cexpl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cexpl.o -MD -MP -MF $(DEPDIR)/cexpl.Tpo -c -o cexpl.o `test -f 'tests/cexpl.c' || echo '$(srcdir)/'`tests/cexpl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cexpl.Tpo $(DEPDIR)/cexpl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cexpl.c' object='cexpl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cexpl.o `test -f 'tests/cexpl.c' || echo '$(srcdir)/'`tests/cexpl.c
-
-cexpl.obj: tests/cexpl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cexpl.obj -MD -MP -MF $(DEPDIR)/cexpl.Tpo -c -o cexpl.obj `if test -f 'tests/cexpl.c'; then $(CYGPATH_W) 'tests/cexpl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cexpl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cexpl.Tpo $(DEPDIR)/cexpl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cexpl.c' object='cexpl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cexpl.obj `if test -f 'tests/cexpl.c'; then $(CYGPATH_W) 'tests/cexpl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cexpl.c'; fi`
-
-cimag.o: tests/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cimag.o -MD -MP -MF $(DEPDIR)/cimag.Tpo -c -o cimag.o `test -f 'tests/cimag.c' || echo '$(srcdir)/'`tests/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cimag.Tpo $(DEPDIR)/cimag.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cimag.c' object='cimag.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cimag.o `test -f 'tests/cimag.c' || echo '$(srcdir)/'`tests/cimag.c
-
-cimag.obj: tests/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cimag.obj -MD -MP -MF $(DEPDIR)/cimag.Tpo -c -o cimag.obj `if test -f 'tests/cimag.c'; then $(CYGPATH_W) 'tests/cimag.c'; else $(CYGPATH_W) '$(srcdir)/tests/cimag.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cimag.Tpo $(DEPDIR)/cimag.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cimag.c' object='cimag.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cimag.obj `if test -f 'tests/cimag.c'; then $(CYGPATH_W) 'tests/cimag.c'; else $(CYGPATH_W) '$(srcdir)/tests/cimag.c'; fi`
-
-cimagf.o: tests/cimagf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cimagf.o -MD -MP -MF $(DEPDIR)/cimagf.Tpo -c -o cimagf.o `test -f 'tests/cimagf.c' || echo '$(srcdir)/'`tests/cimagf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cimagf.Tpo $(DEPDIR)/cimagf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cimagf.c' object='cimagf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cimagf.o `test -f 'tests/cimagf.c' || echo '$(srcdir)/'`tests/cimagf.c
-
-cimagf.obj: tests/cimagf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cimagf.obj -MD -MP -MF $(DEPDIR)/cimagf.Tpo -c -o cimagf.obj `if test -f 'tests/cimagf.c'; then $(CYGPATH_W) 'tests/cimagf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cimagf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cimagf.Tpo $(DEPDIR)/cimagf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cimagf.c' object='cimagf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cimagf.obj `if test -f 'tests/cimagf.c'; then $(CYGPATH_W) 'tests/cimagf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cimagf.c'; fi`
-
-cimagl.o: tests/cimagl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cimagl.o -MD -MP -MF $(DEPDIR)/cimagl.Tpo -c -o cimagl.o `test -f 'tests/cimagl.c' || echo '$(srcdir)/'`tests/cimagl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cimagl.Tpo $(DEPDIR)/cimagl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cimagl.c' object='cimagl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cimagl.o `test -f 'tests/cimagl.c' || echo '$(srcdir)/'`tests/cimagl.c
-
-cimagl.obj: tests/cimagl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cimagl.obj -MD -MP -MF $(DEPDIR)/cimagl.Tpo -c -o cimagl.obj `if test -f 'tests/cimagl.c'; then $(CYGPATH_W) 'tests/cimagl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cimagl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cimagl.Tpo $(DEPDIR)/cimagl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cimagl.c' object='cimagl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cimagl.obj `if test -f 'tests/cimagl.c'; then $(CYGPATH_W) 'tests/cimagl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cimagl.c'; fi`
-
-clog.o: tests/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT clog.o -MD -MP -MF $(DEPDIR)/clog.Tpo -c -o clog.o `test -f 'tests/clog.c' || echo '$(srcdir)/'`tests/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clog.Tpo $(DEPDIR)/clog.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/clog.c' object='clog.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o clog.o `test -f 'tests/clog.c' || echo '$(srcdir)/'`tests/clog.c
-
-clog.obj: tests/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT clog.obj -MD -MP -MF $(DEPDIR)/clog.Tpo -c -o clog.obj `if test -f 'tests/clog.c'; then $(CYGPATH_W) 'tests/clog.c'; else $(CYGPATH_W) '$(srcdir)/tests/clog.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clog.Tpo $(DEPDIR)/clog.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/clog.c' object='clog.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o clog.obj `if test -f 'tests/clog.c'; then $(CYGPATH_W) 'tests/clog.c'; else $(CYGPATH_W) '$(srcdir)/tests/clog.c'; fi`
-
-clogf.o: tests/clogf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT clogf.o -MD -MP -MF $(DEPDIR)/clogf.Tpo -c -o clogf.o `test -f 'tests/clogf.c' || echo '$(srcdir)/'`tests/clogf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clogf.Tpo $(DEPDIR)/clogf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/clogf.c' object='clogf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o clogf.o `test -f 'tests/clogf.c' || echo '$(srcdir)/'`tests/clogf.c
-
-clogf.obj: tests/clogf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT clogf.obj -MD -MP -MF $(DEPDIR)/clogf.Tpo -c -o clogf.obj `if test -f 'tests/clogf.c'; then $(CYGPATH_W) 'tests/clogf.c'; else $(CYGPATH_W) '$(srcdir)/tests/clogf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clogf.Tpo $(DEPDIR)/clogf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/clogf.c' object='clogf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o clogf.obj `if test -f 'tests/clogf.c'; then $(CYGPATH_W) 'tests/clogf.c'; else $(CYGPATH_W) '$(srcdir)/tests/clogf.c'; fi`
-
-clogl.o: tests/clogl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT clogl.o -MD -MP -MF $(DEPDIR)/clogl.Tpo -c -o clogl.o `test -f 'tests/clogl.c' || echo '$(srcdir)/'`tests/clogl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clogl.Tpo $(DEPDIR)/clogl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/clogl.c' object='clogl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o clogl.o `test -f 'tests/clogl.c' || echo '$(srcdir)/'`tests/clogl.c
-
-clogl.obj: tests/clogl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT clogl.obj -MD -MP -MF $(DEPDIR)/clogl.Tpo -c -o clogl.obj `if test -f 'tests/clogl.c'; then $(CYGPATH_W) 'tests/clogl.c'; else $(CYGPATH_W) '$(srcdir)/tests/clogl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clogl.Tpo $(DEPDIR)/clogl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/clogl.c' object='clogl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o clogl.obj `if test -f 'tests/clogl.c'; then $(CYGPATH_W) 'tests/clogl.c'; else $(CYGPATH_W) '$(srcdir)/tests/clogl.c'; fi`
-
-conj.o: tests/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT conj.o -MD -MP -MF $(DEPDIR)/conj.Tpo -c -o conj.o `test -f 'tests/conj.c' || echo '$(srcdir)/'`tests/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/conj.Tpo $(DEPDIR)/conj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/conj.c' object='conj.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o conj.o `test -f 'tests/conj.c' || echo '$(srcdir)/'`tests/conj.c
-
-conj.obj: tests/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT conj.obj -MD -MP -MF $(DEPDIR)/conj.Tpo -c -o conj.obj `if test -f 'tests/conj.c'; then $(CYGPATH_W) 'tests/conj.c'; else $(CYGPATH_W) '$(srcdir)/tests/conj.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/conj.Tpo $(DEPDIR)/conj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/conj.c' object='conj.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o conj.obj `if test -f 'tests/conj.c'; then $(CYGPATH_W) 'tests/conj.c'; else $(CYGPATH_W) '$(srcdir)/tests/conj.c'; fi`
-
-conjf.o: tests/conjf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT conjf.o -MD -MP -MF $(DEPDIR)/conjf.Tpo -c -o conjf.o `test -f 'tests/conjf.c' || echo '$(srcdir)/'`tests/conjf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/conjf.Tpo $(DEPDIR)/conjf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/conjf.c' object='conjf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o conjf.o `test -f 'tests/conjf.c' || echo '$(srcdir)/'`tests/conjf.c
-
-conjf.obj: tests/conjf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT conjf.obj -MD -MP -MF $(DEPDIR)/conjf.Tpo -c -o conjf.obj `if test -f 'tests/conjf.c'; then $(CYGPATH_W) 'tests/conjf.c'; else $(CYGPATH_W) '$(srcdir)/tests/conjf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/conjf.Tpo $(DEPDIR)/conjf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/conjf.c' object='conjf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o conjf.obj `if test -f 'tests/conjf.c'; then $(CYGPATH_W) 'tests/conjf.c'; else $(CYGPATH_W) '$(srcdir)/tests/conjf.c'; fi`
-
-conjl.o: tests/conjl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT conjl.o -MD -MP -MF $(DEPDIR)/conjl.Tpo -c -o conjl.o `test -f 'tests/conjl.c' || echo '$(srcdir)/'`tests/conjl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/conjl.Tpo $(DEPDIR)/conjl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/conjl.c' object='conjl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o conjl.o `test -f 'tests/conjl.c' || echo '$(srcdir)/'`tests/conjl.c
-
-conjl.obj: tests/conjl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT conjl.obj -MD -MP -MF $(DEPDIR)/conjl.Tpo -c -o conjl.obj `if test -f 'tests/conjl.c'; then $(CYGPATH_W) 'tests/conjl.c'; else $(CYGPATH_W) '$(srcdir)/tests/conjl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/conjl.Tpo $(DEPDIR)/conjl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/conjl.c' object='conjl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o conjl.obj `if test -f 'tests/conjl.c'; then $(CYGPATH_W) 'tests/conjl.c'; else $(CYGPATH_W) '$(srcdir)/tests/conjl.c'; fi`
-
-cpow.o: tests/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cpow.o -MD -MP -MF $(DEPDIR)/cpow.Tpo -c -o cpow.o `test -f 'tests/cpow.c' || echo '$(srcdir)/'`tests/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cpow.Tpo $(DEPDIR)/cpow.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cpow.c' object='cpow.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cpow.o `test -f 'tests/cpow.c' || echo '$(srcdir)/'`tests/cpow.c
-
-cpow.obj: tests/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cpow.obj -MD -MP -MF $(DEPDIR)/cpow.Tpo -c -o cpow.obj `if test -f 'tests/cpow.c'; then $(CYGPATH_W) 'tests/cpow.c'; else $(CYGPATH_W) '$(srcdir)/tests/cpow.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cpow.Tpo $(DEPDIR)/cpow.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cpow.c' object='cpow.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cpow.obj `if test -f 'tests/cpow.c'; then $(CYGPATH_W) 'tests/cpow.c'; else $(CYGPATH_W) '$(srcdir)/tests/cpow.c'; fi`
-
-cpowf.o: tests/cpowf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cpowf.o -MD -MP -MF $(DEPDIR)/cpowf.Tpo -c -o cpowf.o `test -f 'tests/cpowf.c' || echo '$(srcdir)/'`tests/cpowf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cpowf.Tpo $(DEPDIR)/cpowf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cpowf.c' object='cpowf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cpowf.o `test -f 'tests/cpowf.c' || echo '$(srcdir)/'`tests/cpowf.c
-
-cpowf.obj: tests/cpowf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cpowf.obj -MD -MP -MF $(DEPDIR)/cpowf.Tpo -c -o cpowf.obj `if test -f 'tests/cpowf.c'; then $(CYGPATH_W) 'tests/cpowf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cpowf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cpowf.Tpo $(DEPDIR)/cpowf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cpowf.c' object='cpowf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cpowf.obj `if test -f 'tests/cpowf.c'; then $(CYGPATH_W) 'tests/cpowf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cpowf.c'; fi`
-
-cpowl.o: tests/cpowl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cpowl.o -MD -MP -MF $(DEPDIR)/cpowl.Tpo -c -o cpowl.o `test -f 'tests/cpowl.c' || echo '$(srcdir)/'`tests/cpowl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cpowl.Tpo $(DEPDIR)/cpowl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cpowl.c' object='cpowl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cpowl.o `test -f 'tests/cpowl.c' || echo '$(srcdir)/'`tests/cpowl.c
-
-cpowl.obj: tests/cpowl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cpowl.obj -MD -MP -MF $(DEPDIR)/cpowl.Tpo -c -o cpowl.obj `if test -f 'tests/cpowl.c'; then $(CYGPATH_W) 'tests/cpowl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cpowl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cpowl.Tpo $(DEPDIR)/cpowl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cpowl.c' object='cpowl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cpowl.obj `if test -f 'tests/cpowl.c'; then $(CYGPATH_W) 'tests/cpowl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cpowl.c'; fi`
-
-cproj.o: tests/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cproj.o -MD -MP -MF $(DEPDIR)/cproj.Tpo -c -o cproj.o `test -f 'tests/cproj.c' || echo '$(srcdir)/'`tests/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cproj.Tpo $(DEPDIR)/cproj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cproj.c' object='cproj.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cproj.o `test -f 'tests/cproj.c' || echo '$(srcdir)/'`tests/cproj.c
-
-cproj.obj: tests/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cproj.obj -MD -MP -MF $(DEPDIR)/cproj.Tpo -c -o cproj.obj `if test -f 'tests/cproj.c'; then $(CYGPATH_W) 'tests/cproj.c'; else $(CYGPATH_W) '$(srcdir)/tests/cproj.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cproj.Tpo $(DEPDIR)/cproj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cproj.c' object='cproj.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cproj.obj `if test -f 'tests/cproj.c'; then $(CYGPATH_W) 'tests/cproj.c'; else $(CYGPATH_W) '$(srcdir)/tests/cproj.c'; fi`
-
-cprojf.o: tests/cprojf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cprojf.o -MD -MP -MF $(DEPDIR)/cprojf.Tpo -c -o cprojf.o `test -f 'tests/cprojf.c' || echo '$(srcdir)/'`tests/cprojf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cprojf.Tpo $(DEPDIR)/cprojf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cprojf.c' object='cprojf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cprojf.o `test -f 'tests/cprojf.c' || echo '$(srcdir)/'`tests/cprojf.c
-
-cprojf.obj: tests/cprojf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cprojf.obj -MD -MP -MF $(DEPDIR)/cprojf.Tpo -c -o cprojf.obj `if test -f 'tests/cprojf.c'; then $(CYGPATH_W) 'tests/cprojf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cprojf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cprojf.Tpo $(DEPDIR)/cprojf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cprojf.c' object='cprojf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cprojf.obj `if test -f 'tests/cprojf.c'; then $(CYGPATH_W) 'tests/cprojf.c'; else $(CYGPATH_W) '$(srcdir)/tests/cprojf.c'; fi`
-
-cprojl.o: tests/cprojl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cprojl.o -MD -MP -MF $(DEPDIR)/cprojl.Tpo -c -o cprojl.o `test -f 'tests/cprojl.c' || echo '$(srcdir)/'`tests/cprojl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cprojl.Tpo $(DEPDIR)/cprojl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cprojl.c' object='cprojl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cprojl.o `test -f 'tests/cprojl.c' || echo '$(srcdir)/'`tests/cprojl.c
-
-cprojl.obj: tests/cprojl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cprojl.obj -MD -MP -MF $(DEPDIR)/cprojl.Tpo -c -o cprojl.obj `if test -f 'tests/cprojl.c'; then $(CYGPATH_W) 'tests/cprojl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cprojl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cprojl.Tpo $(DEPDIR)/cprojl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/cprojl.c' object='cprojl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cprojl.obj `if test -f 'tests/cprojl.c'; then $(CYGPATH_W) 'tests/cprojl.c'; else $(CYGPATH_W) '$(srcdir)/tests/cprojl.c'; fi`
-
-creal.o: tests/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT creal.o -MD -MP -MF $(DEPDIR)/creal.Tpo -c -o creal.o `test -f 'tests/creal.c' || echo '$(srcdir)/'`tests/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/creal.Tpo $(DEPDIR)/creal.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/creal.c' object='creal.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o creal.o `test -f 'tests/creal.c' || echo '$(srcdir)/'`tests/creal.c
-
-creal.obj: tests/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT creal.obj -MD -MP -MF $(DEPDIR)/creal.Tpo -c -o creal.obj `if test -f 'tests/creal.c'; then $(CYGPATH_W) 'tests/creal.c'; else $(CYGPATH_W) '$(srcdir)/tests/creal.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/creal.Tpo $(DEPDIR)/creal.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/creal.c' object='creal.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o creal.obj `if test -f 'tests/creal.c'; then $(CYGPATH_W) 'tests/creal.c'; else $(CYGPATH_W) '$(srcdir)/tests/creal.c'; fi`
-
-crealf.o: tests/crealf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT crealf.o -MD -MP -MF $(DEPDIR)/crealf.Tpo -c -o crealf.o `test -f 'tests/crealf.c' || echo '$(srcdir)/'`tests/crealf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/crealf.Tpo $(DEPDIR)/crealf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/crealf.c' object='crealf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o crealf.o `test -f 'tests/crealf.c' || echo '$(srcdir)/'`tests/crealf.c
-
-crealf.obj: tests/crealf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT crealf.obj -MD -MP -MF $(DEPDIR)/crealf.Tpo -c -o crealf.obj `if test -f 'tests/crealf.c'; then $(CYGPATH_W) 'tests/crealf.c'; else $(CYGPATH_W) '$(srcdir)/tests/crealf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/crealf.Tpo $(DEPDIR)/crealf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/crealf.c' object='crealf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o crealf.obj `if test -f 'tests/crealf.c'; then $(CYGPATH_W) 'tests/crealf.c'; else $(CYGPATH_W) '$(srcdir)/tests/crealf.c'; fi`
-
-creall.o: tests/creall.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT creall.o -MD -MP -MF $(DEPDIR)/creall.Tpo -c -o creall.o `test -f 'tests/creall.c' || echo '$(srcdir)/'`tests/creall.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/creall.Tpo $(DEPDIR)/creall.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/creall.c' object='creall.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o creall.o `test -f 'tests/creall.c' || echo '$(srcdir)/'`tests/creall.c
-
-creall.obj: tests/creall.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT creall.obj -MD -MP -MF $(DEPDIR)/creall.Tpo -c -o creall.obj `if test -f 'tests/creall.c'; then $(CYGPATH_W) 'tests/creall.c'; else $(CYGPATH_W) '$(srcdir)/tests/creall.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/creall.Tpo $(DEPDIR)/creall.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/creall.c' object='creall.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o creall.obj `if test -f 'tests/creall.c'; then $(CYGPATH_W) 'tests/creall.c'; else $(CYGPATH_W) '$(srcdir)/tests/creall.c'; fi`
-
-csin.o: tests/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csin.o -MD -MP -MF $(DEPDIR)/csin.Tpo -c -o csin.o `test -f 'tests/csin.c' || echo '$(srcdir)/'`tests/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csin.Tpo $(DEPDIR)/csin.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csin.c' object='csin.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csin.o `test -f 'tests/csin.c' || echo '$(srcdir)/'`tests/csin.c
-
-csin.obj: tests/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csin.obj -MD -MP -MF $(DEPDIR)/csin.Tpo -c -o csin.obj `if test -f 'tests/csin.c'; then $(CYGPATH_W) 'tests/csin.c'; else $(CYGPATH_W) '$(srcdir)/tests/csin.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csin.Tpo $(DEPDIR)/csin.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csin.c' object='csin.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csin.obj `if test -f 'tests/csin.c'; then $(CYGPATH_W) 'tests/csin.c'; else $(CYGPATH_W) '$(srcdir)/tests/csin.c'; fi`
-
-csinf.o: tests/csinf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csinf.o -MD -MP -MF $(DEPDIR)/csinf.Tpo -c -o csinf.o `test -f 'tests/csinf.c' || echo '$(srcdir)/'`tests/csinf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csinf.Tpo $(DEPDIR)/csinf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csinf.c' object='csinf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csinf.o `test -f 'tests/csinf.c' || echo '$(srcdir)/'`tests/csinf.c
-
-csinf.obj: tests/csinf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csinf.obj -MD -MP -MF $(DEPDIR)/csinf.Tpo -c -o csinf.obj `if test -f 'tests/csinf.c'; then $(CYGPATH_W) 'tests/csinf.c'; else $(CYGPATH_W) '$(srcdir)/tests/csinf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csinf.Tpo $(DEPDIR)/csinf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csinf.c' object='csinf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csinf.obj `if test -f 'tests/csinf.c'; then $(CYGPATH_W) 'tests/csinf.c'; else $(CYGPATH_W) '$(srcdir)/tests/csinf.c'; fi`
-
-csinh.o: tests/csinh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csinh.o -MD -MP -MF $(DEPDIR)/csinh.Tpo -c -o csinh.o `test -f 'tests/csinh.c' || echo '$(srcdir)/'`tests/csinh.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csinh.Tpo $(DEPDIR)/csinh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csinh.c' object='csinh.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csinh.o `test -f 'tests/csinh.c' || echo '$(srcdir)/'`tests/csinh.c
-
-csinh.obj: tests/csinh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csinh.obj -MD -MP -MF $(DEPDIR)/csinh.Tpo -c -o csinh.obj `if test -f 'tests/csinh.c'; then $(CYGPATH_W) 'tests/csinh.c'; else $(CYGPATH_W) '$(srcdir)/tests/csinh.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csinh.Tpo $(DEPDIR)/csinh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csinh.c' object='csinh.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csinh.obj `if test -f 'tests/csinh.c'; then $(CYGPATH_W) 'tests/csinh.c'; else $(CYGPATH_W) '$(srcdir)/tests/csinh.c'; fi`
-
-csinhf.o: tests/csinhf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csinhf.o -MD -MP -MF $(DEPDIR)/csinhf.Tpo -c -o csinhf.o `test -f 'tests/csinhf.c' || echo '$(srcdir)/'`tests/csinhf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csinhf.Tpo $(DEPDIR)/csinhf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csinhf.c' object='csinhf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csinhf.o `test -f 'tests/csinhf.c' || echo '$(srcdir)/'`tests/csinhf.c
-
-csinhf.obj: tests/csinhf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csinhf.obj -MD -MP -MF $(DEPDIR)/csinhf.Tpo -c -o csinhf.obj `if test -f 'tests/csinhf.c'; then $(CYGPATH_W) 'tests/csinhf.c'; else $(CYGPATH_W) '$(srcdir)/tests/csinhf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csinhf.Tpo $(DEPDIR)/csinhf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csinhf.c' object='csinhf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csinhf.obj `if test -f 'tests/csinhf.c'; then $(CYGPATH_W) 'tests/csinhf.c'; else $(CYGPATH_W) '$(srcdir)/tests/csinhf.c'; fi`
-
-csinhl.o: tests/csinhl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csinhl.o -MD -MP -MF $(DEPDIR)/csinhl.Tpo -c -o csinhl.o `test -f 'tests/csinhl.c' || echo '$(srcdir)/'`tests/csinhl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csinhl.Tpo $(DEPDIR)/csinhl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csinhl.c' object='csinhl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csinhl.o `test -f 'tests/csinhl.c' || echo '$(srcdir)/'`tests/csinhl.c
-
-csinhl.obj: tests/csinhl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csinhl.obj -MD -MP -MF $(DEPDIR)/csinhl.Tpo -c -o csinhl.obj `if test -f 'tests/csinhl.c'; then $(CYGPATH_W) 'tests/csinhl.c'; else $(CYGPATH_W) '$(srcdir)/tests/csinhl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csinhl.Tpo $(DEPDIR)/csinhl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csinhl.c' object='csinhl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csinhl.obj `if test -f 'tests/csinhl.c'; then $(CYGPATH_W) 'tests/csinhl.c'; else $(CYGPATH_W) '$(srcdir)/tests/csinhl.c'; fi`
-
-csinl.o: tests/csinl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csinl.o -MD -MP -MF $(DEPDIR)/csinl.Tpo -c -o csinl.o `test -f 'tests/csinl.c' || echo '$(srcdir)/'`tests/csinl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csinl.Tpo $(DEPDIR)/csinl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csinl.c' object='csinl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csinl.o `test -f 'tests/csinl.c' || echo '$(srcdir)/'`tests/csinl.c
-
-csinl.obj: tests/csinl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csinl.obj -MD -MP -MF $(DEPDIR)/csinl.Tpo -c -o csinl.obj `if test -f 'tests/csinl.c'; then $(CYGPATH_W) 'tests/csinl.c'; else $(CYGPATH_W) '$(srcdir)/tests/csinl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csinl.Tpo $(DEPDIR)/csinl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csinl.c' object='csinl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csinl.obj `if test -f 'tests/csinl.c'; then $(CYGPATH_W) 'tests/csinl.c'; else $(CYGPATH_W) '$(srcdir)/tests/csinl.c'; fi`
-
-csqrt.o: tests/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csqrt.o -MD -MP -MF $(DEPDIR)/csqrt.Tpo -c -o csqrt.o `test -f 'tests/csqrt.c' || echo '$(srcdir)/'`tests/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csqrt.Tpo $(DEPDIR)/csqrt.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csqrt.c' object='csqrt.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csqrt.o `test -f 'tests/csqrt.c' || echo '$(srcdir)/'`tests/csqrt.c
-
-csqrt.obj: tests/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csqrt.obj -MD -MP -MF $(DEPDIR)/csqrt.Tpo -c -o csqrt.obj `if test -f 'tests/csqrt.c'; then $(CYGPATH_W) 'tests/csqrt.c'; else $(CYGPATH_W) '$(srcdir)/tests/csqrt.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csqrt.Tpo $(DEPDIR)/csqrt.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csqrt.c' object='csqrt.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csqrt.obj `if test -f 'tests/csqrt.c'; then $(CYGPATH_W) 'tests/csqrt.c'; else $(CYGPATH_W) '$(srcdir)/tests/csqrt.c'; fi`
-
-csqrtf.o: tests/csqrtf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csqrtf.o -MD -MP -MF $(DEPDIR)/csqrtf.Tpo -c -o csqrtf.o `test -f 'tests/csqrtf.c' || echo '$(srcdir)/'`tests/csqrtf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csqrtf.Tpo $(DEPDIR)/csqrtf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csqrtf.c' object='csqrtf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csqrtf.o `test -f 'tests/csqrtf.c' || echo '$(srcdir)/'`tests/csqrtf.c
-
-csqrtf.obj: tests/csqrtf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csqrtf.obj -MD -MP -MF $(DEPDIR)/csqrtf.Tpo -c -o csqrtf.obj `if test -f 'tests/csqrtf.c'; then $(CYGPATH_W) 'tests/csqrtf.c'; else $(CYGPATH_W) '$(srcdir)/tests/csqrtf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csqrtf.Tpo $(DEPDIR)/csqrtf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csqrtf.c' object='csqrtf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csqrtf.obj `if test -f 'tests/csqrtf.c'; then $(CYGPATH_W) 'tests/csqrtf.c'; else $(CYGPATH_W) '$(srcdir)/tests/csqrtf.c'; fi`
-
-csqrtl.o: tests/csqrtl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csqrtl.o -MD -MP -MF $(DEPDIR)/csqrtl.Tpo -c -o csqrtl.o `test -f 'tests/csqrtl.c' || echo '$(srcdir)/'`tests/csqrtl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csqrtl.Tpo $(DEPDIR)/csqrtl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csqrtl.c' object='csqrtl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csqrtl.o `test -f 'tests/csqrtl.c' || echo '$(srcdir)/'`tests/csqrtl.c
-
-csqrtl.obj: tests/csqrtl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT csqrtl.obj -MD -MP -MF $(DEPDIR)/csqrtl.Tpo -c -o csqrtl.obj `if test -f 'tests/csqrtl.c'; then $(CYGPATH_W) 'tests/csqrtl.c'; else $(CYGPATH_W) '$(srcdir)/tests/csqrtl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csqrtl.Tpo $(DEPDIR)/csqrtl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/csqrtl.c' object='csqrtl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o csqrtl.obj `if test -f 'tests/csqrtl.c'; then $(CYGPATH_W) 'tests/csqrtl.c'; else $(CYGPATH_W) '$(srcdir)/tests/csqrtl.c'; fi`
-
-ctan.o: tests/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctan.o -MD -MP -MF $(DEPDIR)/ctan.Tpo -c -o ctan.o `test -f 'tests/ctan.c' || echo '$(srcdir)/'`tests/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctan.Tpo $(DEPDIR)/ctan.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctan.c' object='ctan.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctan.o `test -f 'tests/ctan.c' || echo '$(srcdir)/'`tests/ctan.c
-
-ctan.obj: tests/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctan.obj -MD -MP -MF $(DEPDIR)/ctan.Tpo -c -o ctan.obj `if test -f 'tests/ctan.c'; then $(CYGPATH_W) 'tests/ctan.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctan.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctan.Tpo $(DEPDIR)/ctan.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctan.c' object='ctan.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctan.obj `if test -f 'tests/ctan.c'; then $(CYGPATH_W) 'tests/ctan.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctan.c'; fi`
-
-ctanf.o: tests/ctanf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctanf.o -MD -MP -MF $(DEPDIR)/ctanf.Tpo -c -o ctanf.o `test -f 'tests/ctanf.c' || echo '$(srcdir)/'`tests/ctanf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctanf.Tpo $(DEPDIR)/ctanf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctanf.c' object='ctanf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctanf.o `test -f 'tests/ctanf.c' || echo '$(srcdir)/'`tests/ctanf.c
-
-ctanf.obj: tests/ctanf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctanf.obj -MD -MP -MF $(DEPDIR)/ctanf.Tpo -c -o ctanf.obj `if test -f 'tests/ctanf.c'; then $(CYGPATH_W) 'tests/ctanf.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctanf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctanf.Tpo $(DEPDIR)/ctanf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctanf.c' object='ctanf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctanf.obj `if test -f 'tests/ctanf.c'; then $(CYGPATH_W) 'tests/ctanf.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctanf.c'; fi`
-
-ctanh.o: tests/ctanh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctanh.o -MD -MP -MF $(DEPDIR)/ctanh.Tpo -c -o ctanh.o `test -f 'tests/ctanh.c' || echo '$(srcdir)/'`tests/ctanh.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctanh.Tpo $(DEPDIR)/ctanh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctanh.c' object='ctanh.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctanh.o `test -f 'tests/ctanh.c' || echo '$(srcdir)/'`tests/ctanh.c
-
-ctanh.obj: tests/ctanh.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctanh.obj -MD -MP -MF $(DEPDIR)/ctanh.Tpo -c -o ctanh.obj `if test -f 'tests/ctanh.c'; then $(CYGPATH_W) 'tests/ctanh.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctanh.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctanh.Tpo $(DEPDIR)/ctanh.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctanh.c' object='ctanh.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctanh.obj `if test -f 'tests/ctanh.c'; then $(CYGPATH_W) 'tests/ctanh.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctanh.c'; fi`
-
-ctanhf.o: tests/ctanhf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctanhf.o -MD -MP -MF $(DEPDIR)/ctanhf.Tpo -c -o ctanhf.o `test -f 'tests/ctanhf.c' || echo '$(srcdir)/'`tests/ctanhf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctanhf.Tpo $(DEPDIR)/ctanhf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctanhf.c' object='ctanhf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctanhf.o `test -f 'tests/ctanhf.c' || echo '$(srcdir)/'`tests/ctanhf.c
-
-ctanhf.obj: tests/ctanhf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctanhf.obj -MD -MP -MF $(DEPDIR)/ctanhf.Tpo -c -o ctanhf.obj `if test -f 'tests/ctanhf.c'; then $(CYGPATH_W) 'tests/ctanhf.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctanhf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctanhf.Tpo $(DEPDIR)/ctanhf.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctanhf.c' object='ctanhf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctanhf.obj `if test -f 'tests/ctanhf.c'; then $(CYGPATH_W) 'tests/ctanhf.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctanhf.c'; fi`
-
-ctanhl.o: tests/ctanhl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctanhl.o -MD -MP -MF $(DEPDIR)/ctanhl.Tpo -c -o ctanhl.o `test -f 'tests/ctanhl.c' || echo '$(srcdir)/'`tests/ctanhl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctanhl.Tpo $(DEPDIR)/ctanhl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctanhl.c' object='ctanhl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctanhl.o `test -f 'tests/ctanhl.c' || echo '$(srcdir)/'`tests/ctanhl.c
-
-ctanhl.obj: tests/ctanhl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctanhl.obj -MD -MP -MF $(DEPDIR)/ctanhl.Tpo -c -o ctanhl.obj `if test -f 'tests/ctanhl.c'; then $(CYGPATH_W) 'tests/ctanhl.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctanhl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctanhl.Tpo $(DEPDIR)/ctanhl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctanhl.c' object='ctanhl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctanhl.obj `if test -f 'tests/ctanhl.c'; then $(CYGPATH_W) 'tests/ctanhl.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctanhl.c'; fi`
-
-ctanl.o: tests/ctanl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctanl.o -MD -MP -MF $(DEPDIR)/ctanl.Tpo -c -o ctanl.o `test -f 'tests/ctanl.c' || echo '$(srcdir)/'`tests/ctanl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctanl.Tpo $(DEPDIR)/ctanl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctanl.c' object='ctanl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctanl.o `test -f 'tests/ctanl.c' || echo '$(srcdir)/'`tests/ctanl.c
-
-ctanl.obj: tests/ctanl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ctanl.obj -MD -MP -MF $(DEPDIR)/ctanl.Tpo -c -o ctanl.obj `if test -f 'tests/ctanl.c'; then $(CYGPATH_W) 'tests/ctanl.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctanl.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ctanl.Tpo $(DEPDIR)/ctanl.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tests/ctanl.c' object='ctanl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ctanl.obj `if test -f 'tests/ctanl.c'; then $(CYGPATH_W) 'tests/ctanl.c'; else $(CYGPATH_W) '$(srcdir)/tests/ctanl.c'; fi`
+@am__fastdepCC_FALSE@	$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -2507,9 +1739,9 @@ check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
-all-am: Makefile $(PROGRAMS) config.h
+all-am: Makefile $(LIBRARIES) config.h
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)"; do \
+	for dir in "$(DESTDIR)$(libdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -2537,6 +1769,9 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f src/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/$(am__dirstamp)
+	-rm -f tests/$(DEPDIR)/$(am__dirstamp)
 	-rm -f tests/$(am__dirstamp)
 
 maintainer-clean-generic:
@@ -2544,12 +1779,12 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
+clean-am: clean-checkPROGRAMS clean-generic clean-libLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf ./$(DEPDIR)
+	-rm -rf src/$(DEPDIR) tests/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -2572,7 +1807,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-binPROGRAMS
+install-exec-am: install-libLIBRARIES
 
 install-html: install-html-am
 
@@ -2597,7 +1832,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf ./$(DEPDIR)
+	-rm -rf src/$(DEPDIR) tests/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -2613,27 +1848,27 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS
+uninstall-am: uninstall-libLIBRARIES
 
 .MAKE: all check-am check-html install-am install-strip recheck \
 	recheck-html
 
 .PHONY: CTAGS GTAGS all all-am am--refresh check check-TESTS check-am \
-	check-html clean clean-binPROGRAMS clean-checkPROGRAMS \
-	clean-generic ctags dist dist-all dist-bzip2 dist-gzip \
+	check-html clean clean-checkPROGRAMS clean-generic \
+	clean-libLIBRARIES ctags dist dist-all dist-bzip2 dist-gzip \
 	dist-lzma dist-shar dist-tarZ dist-xz dist-zip distcheck \
 	distclean distclean-compile distclean-generic distclean-hdr \
 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
 	dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-libLIBRARIES install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
 	install-strip installcheck installcheck-am installdirs \
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
 	recheck recheck-html tags uninstall uninstall-am \
-	uninstall-binPROGRAMS
+	uninstall-libLIBRARIES
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

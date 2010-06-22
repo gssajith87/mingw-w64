@@ -1,10 +1,22 @@
-bin_PROGRAMS = dummy
-dummy_SOURCES = src/dummy.c
-
 AM_CPPFLAGS = -I $(srcdir)/src
-#TEST_EXTENSIONS = .c
 
-TESTS = \
+newcomplex_src =  \
+src/cabs.c        src/catanh.def.h  src/clog.def.h          src/creal.def.h \
+src/cabs.def.h    src/ccos.c        src/complex_internal.h  src/csin.c      \
+src/cacos.def.h   src/ccos.def.h    src/conj.c              src/csin.def.h  \
+src/cacosh.def.h  src/ccosh.def.h   src/conj.def.h          src/csinh.def.h \
+src/carg.c        src/cexp.c        src/cpow.c              src/csqrt.c     \
+src/carg.def.h    src/cexp.def.h    src/cpow.def.h          src/csqrt.def.h \
+src/casin.def.h   src/cimag.c       src/cproj.c             src/ctan.c      \
+src/casinh.def.h  src/cimag.def.h   src/cproj.def.h         src/ctan.def.h  \
+src/catan.def.h   src/clog.c        src/creal.c             src/ctanh.def.h \
+src/complex.def_f.h  src/complex.def_d.h src/complex.def_ld.h
+
+lib_LIBRARIES = libnewcomplex.a
+
+libnewcomplex_a_SOURCES = $(newcomplex_src)
+
+newcomplex_tests = \
   tests/cabs \
   tests/cabsf \
   tests/cabsl \
@@ -72,4 +84,5 @@ TESTS = \
   tests/ctanhl \
   tests/ctanl 
 
-check_PROGRAMS = $(TESTS)
+TESTS = $(check_PROGRAMS)
+check_PROGRAMS = $(newcomplex_tests)
