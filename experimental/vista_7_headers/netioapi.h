@@ -17,6 +17,8 @@
 #define ConvertInterfaceLuidToName __MINGW_NAME_AW(ConvertInterfaceLuidToName)
 #define ConvertInterfaceNameToLuid __MINGW_NAME_AW(ConvertInterfaceNameToLuid)
 
+typedef LPVOID NET_IFINDEX;
+
 typedef struct _MIB_ANYCASTIPADDRESS_ROW {
   SOCKADDR_INET Address;
   NET_LUID      InterfaceLuid;
@@ -292,6 +294,15 @@ NETIOAPI_API GetUnicastIpAddressEntry(
 
 NETIOAPI_API DeleteAnycastIpAddressEntry(
   const MIB_ANYCASTIPADDRESS_ROW *Row
+);
+
+NETIOAPI_API FlushIpNetTable2(
+  ADDRESS_FAMILY  Family,
+  NET_IFINDEX InterfaceIndex
+);
+
+NETIOAPI_API FlushIpPathTable(
+  ADDRESS_FAMILY  Family
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

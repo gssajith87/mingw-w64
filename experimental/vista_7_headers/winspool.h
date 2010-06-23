@@ -1470,9 +1470,38 @@ typedef struct _DRIVER_INFO_8A {
   DWORDLONG dwlMinInboxDriverVerVersion;
 } DRIVER_INFO_8A, *PDRIVER_INFO_8A, *LPDRIVER_INFO_8A;
 
+typedef struct _FORM_INFO_2A {
+  DWORD   Flags;
+  LPSTR   pName;
+  SIZEL   Size;
+  RECTL   ImageableArea;
+  LPCSTR  pKeyword;
+  DWORD   StringType;
+  LPCSTR  pMuiDll;
+  DWORD   dwResourceId;
+  LPCSTR  pDisplayName;
+  LANGID  wLangId;
+} FORM_INFO_2A, *PFORM_INFO_2A;
+
+typedef struct _FORM_INFO_2W {
+  DWORD   Flags;
+  LPWSTR  pName;
+  SIZEL   Size;
+  RECTL   ImageableArea;
+  LPCSTR  pKeyword;
+  DWORD   StringType;
+  LPCWSTR pMuiDll;
+  DWORD   dwResourceId;
+  LPCWSTR pDisplayName;
+  LANGID  wLangId;
+} FORM_INFO_2W, *PFORM_INFO_2W;
+
+
 __MINGW_TYPEDEF_AW(DRIVER_INFO_8)
 __MINGW_TYPEDEF_AW(PDRIVER_INFO_8)
 __MINGW_TYPEDEF_AW(LPDRIVER_INFO_8)
+__MINGW_TYPEDEF_AW(FORM_INFO_2)
+__MINGW_TYPEDEF_AW(PFORM_INFO_2)
 
 HRESULT ReportJobProcessingProgress(
   HANDLE printerHandle,

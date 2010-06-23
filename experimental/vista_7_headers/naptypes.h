@@ -1,6 +1,6 @@
 #ifndef _INC_NAPTYPES
 #define _INC_NAPTYPES
-
+#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
 
 #define maxSoHAttributeCount          0x64
@@ -13,9 +13,9 @@
 #define maxStringLength               0x400
 #define maxStringLengthInBytes        ((maxStringLength + 1) * sizeof(WCHAR))
 #define maxSystemHealthEntityCount    0x14
-#define SystemHealthEntityCount       [range(0, maxSystemHealthEntityCount)]
+#define SystemHealthEntityCount       0x14 /*[range(0, maxSystemHealthEntityCount)]*/
 #define maxEnforcerCount              0x14
-#define EnforcementEntityCount        [range(0, maxEnforcerCount)]
+#define EnforcementEntityCount        0x14 /*[range(0, maxEnforcerCount)]*/
 #define maxPrivateDataSize            0xC8
 #define maxConnectionCountPerEnforcer 0x14
 #define maxCachedSoHCount             (maxSystemHealthEntityCount * maxEnforcerCount * maxConnectionCountPerEnforcer)
@@ -109,6 +109,8 @@ typedef enum tagFailureCategory {
     MessageId   fixupMsgId;
   }FixupInfo;
 
+#define failureCategoryCount 5
+
   typedef struct tagFailureCategoryMapping {
     WINBOOL mappingCompliance[failureCategoryCount];
   }FailureCategoryMapping;
@@ -167,5 +169,4 @@ typedef enum tagFailureCategory {
   } NapNotifyType;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
-
 #endif _INC_NAPTYPES

@@ -791,10 +791,49 @@ typedef WINBOOL (CALLBACK *TIMEFMT_ENUMPROCEX)(
   LPARAM lParam
 );
 
-WINBOOL WINAPI EnumTimeFormatsEx(
+WINBASEAPI WINBOOL WINAPI EnumTimeFormatsEx(
   TIMEFMT_ENUMPROCEX lpTimeFmtEnumProcEx,
   LPCWSTR lpLocaleName,
   DWORD dwFlags,
+  LPARAM lParam
+);
+
+typedef struct _FILEMUIINFO {
+  DWORD dwSize;
+  DWORD dwVersion;
+  DWORD dwFileType;
+  BYTE  pChecksum[16];
+  BYTE  pServiceChecksum[16];
+  DWORD dwLanguageNameOffset;
+  DWORD dwTypeIDMainSize;
+  DWORD dwTypeIDMainOffset;
+  DWORD dwTypeNameMainOffset;
+  DWORD dwTypeIDMUISize;
+  DWORD dwTypeIDMUIOffset;
+  DWORD dwTypeNameMUIOffset;
+  BYTE  abBuffer[8];
+} FILEMUIINFO, *PFILEMUIINFO;
+
+WINBASEAPI int WINAPI FindNLSString(
+  LCID Locale,
+  DWORD dwFindNLSStringFlags,
+  LPCWSTR lpStringSource,
+  int cchSource,
+  LPCWSTR lpStringValue,
+  int cchValue,
+  LPINT pcchFound
+);
+
+WINBASEAPI int WINAPI FindNLSStringEx(
+  LPCWSTR lpLocaleName,
+  DWORD dwFindNLSStringFlags,
+  LPCWSTR lpStringSource,
+  int cchSource,
+  LPCWSTR lpStringValue,
+  int cchValue,
+  LPINT pcchFound,
+  LPNLSVERSIONINFO lpVersionInformation,
+  LPVOID lpReserved,
   LPARAM lParam
 );
 

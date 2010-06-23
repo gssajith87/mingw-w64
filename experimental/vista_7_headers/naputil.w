@@ -1,6 +1,8 @@
 #ifndef _INC_NAPUTIL
 #define _INC_NAPUTIL
-/*Duplicated in naputil.w */
+#include <windows.h>
+#include <naptypes.h>
+/* Duplicated in naputil.h */
 
 #if (_WIN32_WINNT >= 0x0600)
 
@@ -23,5 +25,4 @@
   NAPAPI VOID WINAPI UninitializeNapAgentNotifier(NapNotifyType type);
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
-
 #endif _INC_NAPUTIL

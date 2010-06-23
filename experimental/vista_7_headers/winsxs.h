@@ -60,7 +60,15 @@ typedef enum  {
   ASM_DISPLAYF_CUSTOM                  = 0x10,
   ASM_DISPLAYF_PROCESSORARCHITECTURE   = 0x20,
   ASM_DISPLAYF_LANGUAGEID              = 0x40 
-} ASM_DISPLAY_FLAGS ;
+} ASM_DISPLAY_FLAGS;
+
+typedef struct _FUSION_INSTALL_REFERENCE  {
+  DWORD   cbSize;
+  DWORD   dwFlags;
+  GUID    guidScheme;
+  LPCWSTR szIdentifier;
+  LPCWSTR szNonCannonicalData;
+} FUSION_INSTALL_REFERENCE , *LPFUSION_INSTALL_REFERENCE;
 
 /* in sxs.dll but not in any headers
 HRESULT STDAPI CreateAssemblyCache(

@@ -1,0 +1,49 @@
+#ifndef _INC_TABFLICKS
+#define _INC_TABFLICKS
+#include <windows.h>
+#if (_WIN32_WINNT >= 0x0600)
+
+typedef struct FLICK_DATA {
+  FLICKACTION_COMMANDCODE iFlickActionCommandCode  :5;
+  FLICKDIRECTION          iFlickDirection  :3;
+  WINBOOL                 fControlModifier  :1;
+  WINBOOL                 fMenuModifier  :1;
+  WINBOOL                 fAltGRModifier  :1;
+  WINBOOL                 fWinModifier  :1;
+  WINBOOL                 fShiftModifier  :1;
+  INT                     iReserved  :2;
+  WINBOOL                 fOnInkingSurface  :1;
+  INT                     iActionArgument  :16;
+} FLICK_DATA;
+
+typedef struct FLICK_POINT {
+  INT x  :16;
+  INT y  :16;
+} FLICK_POINT;
+
+typedef enum FLICKACTION_COMMANDCODE {
+  FLICKACTION_COMMANDCODE_NULL          = 0,
+  FLICKACTION_COMMANDCODE_SCROLL        = 1,
+  FLICKACTION_COMMANDCODE_APPCOMMAND    = 2,
+  FLICKACTION_COMMANDCODE_CUSTOMKEY     = 3,
+  FLICKACTION_COMMANDCODE_KEYMODIFIER   = 4 
+} FLICKACTION_COMMANDCODE;
+
+typedef enum FLICKDIRECTION {
+  FLICKDIRECTION_RIGHT       = 0,
+  FLICKDIRECTION_UPRIGHT     = 1,
+  FLICKDIRECTION_UP          = 2,
+  FLICKDIRECTION_UPLEFT      = 3,
+  FLICKDIRECTION_LEFT        = 4,
+  FLICKDIRECTION_DOWN        = 6,
+  FLICKDIRECTION_DOWNRIGHT   = 7,
+  FLICKDIRECTION_INVALID     = 8 
+} FLICKDIRECTION;
+
+typedef enum FLICKMODE {
+  FLICKMODE_OFF   = 0,
+  FLICKMODE_ON    = 1 
+} FLICKMODE;
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+#endif _INC_TABFLICKS

@@ -1603,6 +1603,12 @@ typedef struct _VOLUME_DISK_EXTENTS {
   DISK_EXTENT Extents[1];
 } VOLUME_DISK_EXTENTS,*PVOLUME_DISK_EXTENTS;
 
+#if (_WIN32_WINNT >= 0x0600)
+#define MediaUnknown 0
+#define MediaPresent 1
+#define MediaNotPresent 2
+#define MediaUnavailable 3
+
 typedef struct _EXFAT_STATISTICS {
   DWORD CreateHits;
   DWORD SuccessfulCreates;
@@ -1615,11 +1621,35 @@ typedef struct _EXFAT_STATISTICS {
   DWORD NonCachedDiskWrites;
 } EXFAT_STATISTICS, *PEXFAT_STATISTICS;
 
-#if (_WIN32_WINNT >= 0x0600)
-#define MediaUnknown 0
-#define MediaPresent 1
-#define MediaNotPresent 2
-#define MediaUnavailable 3
+typedef struct _FILE_MAKE_COMPATIBLE_BUFFER {
+  BOOLEAN CloseDisc;
+} FILE_MAKE_COMPATIBLE_BUFFER, *PFILE_MAKE_COMPATIBLE_BUFFER;
+
+typedef struct _FILE_QUERY_ON_DISK_VOL_INFO_BUFFER {
+  LARGE_INTEGER DirectoryCount;
+  LARGE_INTEGER FileCount;
+  WORD          FsFormatMajVersion;
+  WORD          FsFormatMinVersion;
+  WCHAR         FsFormatName[12];
+  LARGE_INTEGER FormatTime;
+  LARGE_INTEGER LastUpdateTime;
+  WCHAR         CopyrightInfo[34];
+  WCHAR         AbstractInfo[34];
+  WCHAR         FormattingImplementationInfo[34];
+  WCHAR         LastModifyingImplementationInfo[34];
+} FILE_QUERY_ON_DISK_VOL_INFO_BUFFER, *PFILE_QUERY_ON_DISK_VOL_INFO_BUFFER;
+
+typedef struct _FILE_QUERY_SPARING_BUFFER {
+  ULONG   SparingUnitBytes;
+  BOOLEAN SoftwareSparing;
+  ULONG   TotalSpareBlocks;
+  ULONG   FreeSpareBlocks;
+} FILE_QUERY_SPARING_BUFFER, *PFILE_QUERY_SPARING_BUFFER;
+
+typedef struct _FILE_SET_DEFECT_MGMT_BUFFER {
+  BOOLEAN Disable;
+} FILE_SET_DEFECT_MGMT_BUFFER, *PFILE_SET_DEFECT_MGMT_BUFFER;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #endif

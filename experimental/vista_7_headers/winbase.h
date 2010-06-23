@@ -2751,6 +2751,7 @@ extern "C" {
 #define CreateSemaphoreEx __MINGW_NAME_AW(CreateSemaphoreEx)
 #define CreateSymbolicLinkTransacted __MINGW_NAME_AW(CreateSymbolicLinkTransacted)
 #define CreateWaitableTimerEx __MINGW_NAME_AW(CreateWaitableTimerEx)
+#define FindFirstFileTransacted __MINGW_NAME_AW(FindFirstFileTransacted)
 
   WINBASEAPI WINBOOL WINAPI CreateSymbolicLinkA (LPSTR lpSymLinkFileName, LPSTR lpTargetFileName, DWORD dwFlags);
   WINBASEAPI WINBOOL WINAPI CreateSymbolicLinkW (LPWSTR lpSymLinkFileName, LPWSTR lpTargetFileName, DWORD dwFlags);
@@ -3112,7 +3113,229 @@ typedef struct _TIME_DYNAMIC_ZONE_INFORMATION {
   BOOLEAN    DynamicDaylightTimeDisabled;
 } DYNAMIC_TIME_ZONE_INFORMATION, *PDYNAMIC_TIME_ZONE_INFORMATION;
 
-#endif /*(_WIN32_WINNT >= 0x0601)*/
+typedef struct _FILE_ALLOCATION_INFO {
+  LARGE_INTEGER AllocationSize;
+} FILE_ALLOCATION_INFO, *PFILE_ALLOCATION_INFO;
+
+typedef struct _FILE_ATTRIBUTE_TAG_INFO {
+  DWORD FileAttributes;
+  DWORD ReparseTag;
+} FILE_ATTRIBUTE_TAG_INFO, *PFILE_ATTRIBUTE_TAG_INFO;
+
+typedef struct _FILE_BASIC_INFO {
+  LARGE_INTEGER CreationTime;
+  LARGE_INTEGER LastAccessTime;
+  LARGE_INTEGER LastWriteTime;
+  LARGE_INTEGER ChangeTime;
+  DWORD         FileAttributes;
+} FILE_BASIC_INFO, *PFILE_BASIC_INFO;
+
+typedef struct _FILE_COMPRESSION_INFO {
+  LARGE_INTEGER CompressedFileSize;
+  WORD          CompressionFormat;
+  UCHAR         CompressionUnitShift;
+  UCHAR         ChunkShift;
+  UCHAR         ClusterShift;
+  UCHAR         Reserved[3];
+} FILE_COMPRESSION_INFO, *PFILE_COMPRESSION_INFO;
+
+typedef struct _FILE_DISPOSITION_INFO {
+  WINBOOL DeleteFile;
+} FILE_DISPOSITION_INFO, *PFILE_DISPOSITION_INFO;
+
+typedef struct _FILE_END_OF_FILE_INFO {
+  LARGE_INTEGER EndOfFile;
+} FILE_END_OF_FILE_INFO, *PFILE_END_OF_FILE_INFO;
+
+typedef struct _FILE_ID_BOTH_DIR_INFO {
+  DWORD         NextEntryOffset;
+  DWORD         FileIndex;
+  LARGE_INTEGER CreationTime;
+  LARGE_INTEGER LastAccessTime;
+  LARGE_INTEGER LastWriteTime;
+  LARGE_INTEGER ChangeTime;
+  LARGE_INTEGER EndOfFile;
+  LARGE_INTEGER AllocationSize;
+  DWORD         FileAttributes;
+  DWORD         FileNameLength;
+  DWORD         EaSize;
+  CCHAR         ShortNameLength;
+  WCHAR         ShortName[12];
+  LARGE_INTEGER FileId;
+  WCHAR         FileName[1];
+} FILE_ID_BOTH_DIR_INFO, *PFILE_ID_BOTH_DIR_INFO;
+
+typedef struct _FILE_ID_DESCRIPTOR{
+  DWORD        dwSize;
+  FILE_ID_TYPE Type;
+  union DUMMYUNIONNAME {
+    LARGE_INTEGER FileId;
+    GUID          ObjectId;
+  } ;
+} FILE_ID_DESCRIPTOR;
+
+typedef enum _FILE_ID_TYPE {
+  FileIdType,
+  ObjectIdType,
+  MaximumFileIdType 
+} FILE_ID_TYPE, *PFILE_ID_TYPE;
+
+typedef enum _FILE_INFO_BY_HANDLE_CLASS {
+  FileBasicInfo                    = 0,
+  FileStandardInfo                 = 1,
+  FileNameInfo                     = 2,
+  FileRenameInfo                   = 3,
+  FileDispositionInfo              = 4,
+  FileAllocationInfo               = 5,
+  FileEndOfFileInfo                = 6,
+  FileStreamInfo                   = 7,
+  FileCompressionInfo              = 8,
+  FileAttributeTagInfo             = 9,
+  FileIdBothDirectoryInfo          = 10,  // 0xA
+  FileIdBothDirectoryRestartInfo   = 11,  // 0xB
+  FileIoPriorityHintInfo           = 12,  // 0xC
+  FileRemoteProtocolInfo           = 13,  // 0xD
+  MaximumFileInfoByHandlesClass    = 14   // 0xE
+} FILE_INFO_BY_HANDLE_CLASS, *PFILE_INFO_BY_HANDLE_CLASS;
+
+typedef enum _PRIORITY_HINT {
+  IoPriorityHintVeryLow       = 0,
+  IoPriorityHintLow,
+  IoPriorityHintNormal,
+  MaximumIoPriorityHintType 
+} PRIORITY_HINT;
+
+typedef struct _FILE_IO_PRIORITY_HINT_INFO {
+  PRIORITY_HINT PriorityHint;
+} FILE_IO_PRIORITY_HINT_INFO, *PFILE_IO_PRIORITY_HINT_INFO;
+
+typedef struct _FILE_NAME_INFO {
+  DWORD FileNameLength;
+  WCHAR FileName[1];
+} FILE_NAME_INFO, *PFILE_NAME_INFO;
+
+typedef struct _FILE_RENAME_INFO {
+  BOOL   ReplaceIfExists;
+  HANDLE RootDirectory;
+  DWORD  FileNameLength;
+  WCHAR  FileName[1];
+} FILE_RENAME_INFO, *PFILE_RENAME_INFO;
+
+typedef struct _FILE_STANDARD_INFO {
+  LARGE_INTEGER AllocationSize;
+  LARGE_INTEGER EndOfFile;
+  DWORD          NumberOfLinks;
+  WINBOOL        DeletePending;
+  WINBOOL        Directory;
+} FILE_STANDARD_INFO, *PFILE_STANDARD_INFO;
+
+typedef struct _FILE_STREAM_INFO {
+  DWORD         NextEntryOffset;
+  DWORD         StreamNameLength;
+  LARGE_INTEGER StreamSize;
+  LARGE_INTEGER StreamAllocationSize;
+  WCHAR         StreamName[1];
+} FILE_STREAM_INFO, *PFILE_STREAM_INFO;
+
+WINBASEAPI HANDLE WINAPI FindFirstFileNameTransactedW(
+  LPCWSTR lpFileName,
+  DWORD dwFlags,
+  LPDWORD StringLength,
+  PWCHAR LinkName,
+  HANDLE hTransaction
+);
+
+WINBASEAPI HANDLE WINAPI FindFirstFileNameW(
+  LPCWSTR lpFileName,
+  DWORD dwFlags,
+  LPDWORD StringLength,
+  PWCHAR LinkName
+);
+
+WINBASEAPI HANDLE WINAPI FindFirstFileTransactedA(
+  LPCSTR lpFileName,
+  FINDEX_INFO_LEVELS fInfoLevelId,
+  LPVOID lpFindFileData,
+  FINDEX_SEARCH_OPS fSearchOp,
+  LPVOID lpSearchFilter,
+  DWORD dwAdditionalFlags,
+  HANDLE hTransaction
+);
+
+WINBASEAPI HANDLE WINAPI FindFirstFileTransactedW(
+  LPCWSTR lpFileName,
+  FINDEX_INFO_LEVELS fInfoLevelId,
+  LPVOID lpFindFileData,
+  FINDEX_SEARCH_OPS fSearchOp,
+  LPVOID lpSearchFilter,
+  DWORD dwAdditionalFlags,
+  HANDLE hTransaction
+);
+
+typedef enum _STREAM_INFO_LEVELS {
+  FindStreamInfoStandard 
+} STREAM_INFO_LEVELS;
+
+typedef struct _WIN32_FIND_STREAM_DATA {
+  LARGE_INTEGER StreamSize;
+  WCHAR         cStreamName[MAX_PATH + 36];
+} WIN32_FIND_STREAM_DATA, *PWIN32_FIND_STREAM_DATA;
+
+WINBASEAPI HANDLE WINAPI FindFirstStreamTransactedW(
+  LPCWSTR lpFileName,
+  STREAM_INFO_LEVELS InfoLevel,
+  LPVOID lpFindStreamData,
+  DWORD dwFlags,
+  HANDLE hTransaction
+);
+
+WINBASEAPI HANDLE WINAPI FindFirstStreamW(
+  LPCWSTR lpFileName,
+  STREAM_INFO_LEVELS InfoLevel,
+  LPVOID lpFindStreamData,
+  DWORD dwFlags
+);
+
+WINBASEAPI WINBOOL WINAPI FindNextFileNameW(
+  HANDLE hFindStream,
+  LPDWORD StringLength,
+  PWCHAR LinkName
+);
+
+WINBASEAPI WINBOOL WINAPI FindNextStreamW(
+  HANDLE hFindStream,
+  LPVOID lpFindStreamData
+);
+
+typedef VOID (WINAPI *PFLS_CALLBACK_FUNCTION)(
+  PVOID lpFlsData
+);
+
+WINBASEAPI DWORD WINAPI FlsAlloc(
+  PFLS_CALLBACK_FUNCTION lpCallback
+);
+
+WINBASEAPI WINBOOL WINAPI FlsFree(
+  DWORD dwFlsIndex
+);
+
+WINBASEAPI PVOID WINAPI FlsGetValue(
+  DWORD dwFlsIndex
+);
+
+WINBASEAPI WINBOOL WINAPI FlsSetValue(
+  DWORD dwFlsIndex,
+  PVOID lpFlsData
+);
+
+WINBASEAPI VOID WINAPI FlushProcessWriteBuffers(void);
+
+VOID WINAPI FreeLibraryWhenCallbackReturns(
+  PTP_CALLBACK_INSTANCE pci,
+  HMODULE mod
+);
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 
 WINBASEAPI UINT WINAPI EnumSystemFirmwareTables(
   DWORD FirmwareTableProviderSignature,

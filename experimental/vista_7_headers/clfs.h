@@ -1,6 +1,6 @@
 #ifndef _INC_CLFS
 #define _INC_CLFS
-#include <_mingw.h>
+#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
 
 typedef enum  {

@@ -110,5 +110,23 @@ WINBOOL WINAPI ReadNextLogRecord(
   LPOVERLAPPED pOverlapped
 );
 
+WINBOOL WINAPI FlushLogBuffers(
+  PVOID pvMarshal,
+  LPOVERLAPPED pOverlapped
+);
+
+WINBOOL WINAPI FlushLogToLsn(
+  PVOID pvMarshalContext,
+  PCLFS_LSN plsnFlush,
+  PCLFS_LSN plsnLastFlushed,
+  LPOVERLAPPED pOverlapped
+);
+
+WINBOOL WINAPI FreeReservedLog(
+  PVOID pvMarshal,
+  ULONG cReservedRecords,
+  PLONGLONG pcbAdjustment
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_CLFSW32*/

@@ -1,6 +1,6 @@
 #ifndef _INC_PLA
 #define _INC_PLA
-
+#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
 
 typedef enum _AutoPathFormat {
@@ -31,6 +31,21 @@ typedef enum _CommitMode {
   plaFlushTrace              = 0x0020,
   plaValidateOnly            = 0x1000 
 } CommitMode;
+
+typedef enum _FileFormat {
+  plaCommaSeparated   = 0,
+  plaTabSeparated     = 1,
+  plaSql              = 2,
+  plaBinary           = 3 
+} FileFormat;
+
+typedef enum _FolderActionSteps {
+  plaCreateCab      = 0x01,
+  plaDeleteData     = 0x02,
+  plaSendCab        = 0x04,
+  plaDeleteCab      = 0x08,
+  plaDeleteReport   = 0x10 
+} FolderActionSteps;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_PLA*/
