@@ -12,4 +12,9 @@ HINSTANCE WINAPI LoadMUILibrary(
   LANGID LangID
 );
 
+WINBOOL WINAPI GetUILanguageFallbackList(
+  PWSTR pFallbackList,
+  ULONG cchFallbackList,
+  PULONG pcchFallbackListOut
+);
 #endif /*_INC_MUILOAD*/

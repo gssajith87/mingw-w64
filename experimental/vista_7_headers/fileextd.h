@@ -116,5 +116,12 @@ typedef struct _FILE_STREAM_INFO {
   WCHAR         StreamName[1];
 } FILE_STREAM_INFO, *PFILE_STREAM_INFO;
 
+WINBASEAPI WINBOOL WINAPI GetFileInformationByHandleEx(
+  HANDLE hFile,
+  FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
+  LPVOID lpFileInformation,
+  DWORD dwBufferSize
+);
+
 #endif /*(_WIN32_WINNT < 0x0600)*/
 #endif /*_INC_FILEEXTD*/

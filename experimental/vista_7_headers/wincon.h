@@ -312,6 +312,33 @@ typedef struct _CONSOLE_SCREEN_BUFFER_INFOEX {
   COLORREF   ColorTable[16];
 } CONSOLE_SCREEN_BUFFER_INFOEX, *PCONSOLE_SCREEN_BUFFER_INFOEX;
 
+WINBOOL WINAPI GetConsoleHistoryInfo(
+  PCONSOLE_HISTORY_INFO lpConsoleHistoryInfo
+);
+
+#define GetConsoleOriginalTitle __MINGW_NAME_AW(GetConsoleOriginalTitle)
+
+DWORD WINAPI GetConsoleOriginalTitleA(
+  LPSTR lpConsoleTitle,
+  DWORD nSize
+);
+
+DWORD WINAPI GetConsoleOriginalTitleW(
+  LPWSTR lpConsoleTitle,
+  DWORD nSize
+);
+
+WINBOOL WINAPI GetConsoleScreenBufferInfoEx(
+  HANDLE hConsoleOutput,
+  PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx
+);
+
+WINBOOL WINAPI GetCurrentConsoleFontEx(
+  HANDLE hConsoleOutput,
+  WINBOOL bMaximumWindow,
+  PCONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 
 #ifdef __cplusplus

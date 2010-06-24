@@ -1426,6 +1426,12 @@ typedef struct _FILESHARE_CHANGE_LIST {
   FILESHARE_CHANGE ChangeEntry[];
 } FILESHARE_CHANGE_LIST, *PFILESHARE_CHANGE_LIST;
 
+DWORD WINAPI GetClusterResourceDependencyExpression(
+  HRESOURCE hResource,
+  LPWSTR lpszDependencyExpression,
+  LPDWORD lpcchDependencyExpression
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 
 #ifdef __cplusplus

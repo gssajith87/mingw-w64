@@ -1510,6 +1510,103 @@ HRESULT ReportJobProcessingProgress(
   EPrintXPSJobProgress jobProgress
 );
 
+typedef struct _CORE_PRINTER_DRIVERA {
+  GUID      CoreDriverGUID;
+  FILETIME  ftDriverDate;
+  DWORDLONG dwlDriverVersion;
+  CHAR      szPackageID[MAX_PATH];
+} CORE_PRINTER_DRIVERA, *PCORE_PRINTER_DRIVERA;
+
+typedef struct _CORE_PRINTER_DRIVERW {
+  GUID      CoreDriverGUID;
+  FILETIME  ftDriverDate;
+  DWORDLONG dwlDriverVersion;
+  WCHAR     szPackageID[MAX_PATH];
+} CORE_PRINTER_DRIVERW, *PCORE_PRINTER_DRIVERW;
+
+__MINGW_TYPEDEF_AW(CORE_PRINTER_DRIVER)
+__MINGW_TYPEDEF_AW(PCORE_PRINTER_DRIVER)
+#define GetCorePrinterDrivers __MINGW_NAME_AW(GetCorePrinterDrivers)
+#define GetPrinterDriver2 __MINGW_NAME_AW(GetPrinterDriver2)
+#define GetPrinterDriverPackagePath __MINGW_NAME_AW(GetPrinterDriverPackagePath)
+#define GetSpoolFileHandle __MINGW_NAME_AW(GetSpoolFileHandle)
+
+HRESULT WINAPI GetCorePrinterDriversA(
+  LPCSTR pszServer,
+  LPCSTR pszEnvironment,
+  LPCSTR pszzCoreDriverDependencies,
+  DWORD cCorePrinterDrivers,
+  PCORE_PRINTER_DRIVERA pCorePrinterDrivers
+);
+
+HRESULT WINAPI GetCorePrinterDriversW(
+  LPCWSTR pszServer,
+  LPCWSTR pszEnvironment,
+  LPCWSTR pszzCoreDriverDependencies,
+  DWORD cCorePrinterDrivers,
+  PCORE_PRINTER_DRIVERW pCorePrinterDrivers
+);
+
+/*Unsupported*/
+WINBOOL WINAPI GetPrinterDriver2A(
+  HWND hWnd,
+  HANDLE hPrinter,
+  LPSTR pEnvironment,
+  DWORD Level,
+  LPBYTE pDriverInfo,
+  DWORD cbBuf,
+  LPDWORD pcbNeeded
+);
+
+WINBOOL WINAPI GetPrinterDriver2W(
+  HWND hWnd,
+  HANDLE hPrinter,
+  LPWSTR pEnvironment,
+  DWORD Level,
+  LPBYTE pDriverInfo,
+  DWORD cbBuf,
+  LPDWORD pcbNeeded
+);
+
+HRESULT WINAPI GetPrinterDriverPackagePathA(
+  LPCSTR pszServer,
+  LPCSTR pszEnvironment,
+  LPCSTR pszLanguage,
+  LPCSTR pszPackageID,
+  LPSTR  pszDriverPackageCab,
+  DWORD  cchDriverPackageCab,
+  LPDWORD pcchRequiredSize
+);
+
+HRESULT WINAPI GetPrinterDriverPackagePathW(
+  LPCWSTR pszServer,
+  LPCWSTR pszEnvironment,
+  LPCWSTR pszLanguage,
+  LPCWSTR pszPackageID,
+  LPWSTR  pszDriverPackageCab,
+  DWORD   cchDriverPackageCab,
+  LPDWORD pcchRequiredSize
+);
+
+HANDLE WINAPI GetSpoolFileHandleA(
+  HANDLE hPrinter
+);
+
+HANDLE WINAPI GetSpoolFileHandleW(
+  HANDLE hPrinter
+);
+
+HANDLE WINAPI CommitSpoolData(
+  HANDLE hPrinter,
+  HANDLE hSpoolFile,
+  DWORD cbCommit
+);
+
+WINBOOL WINAPI CloseSpoolFileHandle(
+  HANDLE hPrinter,
+  HANDLE hSpoolFile
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus

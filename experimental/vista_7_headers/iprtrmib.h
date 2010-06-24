@@ -9,6 +9,7 @@
 #include <mprapi.h>
 #include <ipmib.h>
 #include <ipifcons.h>
+#include <udpmib.h>
 
 #define IPRTRMGR_PID 10000
 
@@ -737,6 +738,16 @@ typedef struct {
   PWCHAR pModuleName;
   PWCHAR pModulePath;
 } TCPIP_OWNER_MODULE_BASIC_INFO, *PTCPIP_OWNER_MODULE_BASIC_INFO;
+
+typedef enum UDP_TABLE_CLASS {
+  UDP_TABLE_BASIC,
+  UDP_TABLE_OWNER_PID,
+  UDP_TABLE_OWNER_MODULE 
+} UDP_TABLE_CLASS, *PUDP_TABLE_CLASS;
+
+typedef enum _TCPIP_OWNER_MODULE_INFO_CLASS {
+  TCPIP_OWNER_MODULE_INFO_BASIC 
+} TCPIP_OWNER_MODULE_INFO_CLASS, *PTCPIP_OWNER_MODULE_INFO_CLASS;
 
 #define MAX_MIB_OFFSET 8
 

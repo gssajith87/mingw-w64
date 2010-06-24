@@ -1,6 +1,6 @@
 #ifndef _INC_ISCSIDSC
 #define _INC_ISCSIDSC
-
+#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
 
   typedef PVOID ISCSI_UNIQUE_SESSION_ID;
@@ -47,47 +47,21 @@
     WINBOOL ISCSI_SECURITY_FLAG_VALID:1;
   } ISCSI_SECURITY_FLAGS;*/
 
-#ifdef UNICODE
-#define AddIScsiConnection AddIScsiConnectionW
-#define AddIScsiSendTargetPortal AddIScsiSendTargetPortalW
-#define ISCSI_TARGET_PORTAL ISCSI_TARGET_PORTALW
-#define PISCSI_TARGET_PORTAL PISCSI_TARGET_PORTALW
-#define ISCSI_TARGET_MAPPING ISCSI_TARGET_MAPPINGW
-#define PISCSI_TARGET_MAPPING PISCSI_TARGET_MAPPINGW
-#define AddIScsiStaticTarget AddIScsiStaticTargetW
-#define ISCSI_TARGET_PORTAL_GROUP ISCSI_TARGET_PORTAL_GROUPW
-#define PISCSI_TARGET_PORTAL_GROUP PISCSI_TARGET_PORTAL_GROUPW
-#define RemoveIScsiStaticTarget RemoveIScsiStaticTargetW
-#define AddISNSServer AddISNSServerW
-#define AddPersistentiScsiDevice AddPersistentiScsiDeviceW
-#define RemoveIScsiPersistentTarget RemoveIScsiPersistentTargetW
-#define RemovePersistentIScsiDevice RemovePersistentIScsiDeviceW
-#define ReportPersistentiScsiDevices ReportPersistentiScsiDevicesW
-#define PERSISTENT_ISCSI_LOGIN_INFO PERSISTENT_ISCSI_LOGIN_INFOW
-#define AddRadiusServer AddRadiusServerW
-#define RemoveRadiusServer RemoveRadiusServerW
-#else
-#define AddIScsiConnection AddIScsiConnectionA
-#define AddIScsiSendTargetPortal AddIScsiSendTargetPortalA
-#define ISCSI_TARGET_PORTAL ISCSI_TARGET_PORTALA
-#define PISCSI_TARGET_PORTAL PISCSI_TARGET_PORTALA
-#define ISCSI_TARGET_MAPPING ISCSI_TARGET_MAPPINGA
-#define PISCSI_TARGET_MAPPING PISCSI_TARGET_MAPPINGA
-#define AddIScsiStaticTarget AddIScsiStaticTargetA
-#define ISCSI_TARGET_PORTAL_GROUP ISCSI_TARGET_PORTAL_GROUPA
-#define PISCSI_TARGET_PORTAL_GROUP PISCSI_TARGET_PORTAL_GROUPA
-#define RemoveIScsiStaticTarget RemoveIScsiStaticTargetA
-#define AddISNSServer AddISNSServerA
-#define AddPersistentiScsiDevice AddPersistentiScsiDeviceA
-#define RemoveIScsiPersistentTarget RemoveIScsiPersistentTargetA
-#define RemovePersistentIScsiDevice RemovePersistentIScsiDeviceA
-#define PERSISTENT_ISCSI_LOGIN_INFO PERSISTENT_ISCSI_LOGIN_INFOA
-#define AddRadiusServer AddRadiusServerA
-#define RemoveRadiusServer RemoveRadiusServerA
-#endif
+#define AddIScsiConnection __MINGW_NAME_AW(AddIScsiConnection)
+#define AddIScsiSendTargetPortal __MINGW_NAME_AW(AddIScsiSendTargetPortal)
+#define AddIScsiStaticTarget __MINGW_NAME_AW(AddIScsiStaticTarget)
+#define RemoveIScsiStaticTarget __MINGW_NAME_AW(RemoveIScsiStaticTarget)
+#define AddISNSServer __MINGW_NAME_AW(AddISNSServer)
+#define AddPersistentiScsiDevice __MINGW_NAME_AW(AddPersistentiScsiDevice)
+#define RemoveIScsiPersistentTarget __MINGW_NAME_AW(RemoveIScsiPersistentTarget)
+#define RemovePersistentIScsiDevice __MINGW_NAME_AW(RemovePersistentIScsiDevice)
+#define PERSISTENT_ISCSI_LOGIN_INFO __MINGW_NAME_AW(PERSISTENT_ISCSI_LOGIN_INFO)
+#define AddRadiusServer __MINGW_NAME_AW(AddRadiusServer)
+#define RemoveRadiusServer __MINGW_NAME_AW(RemoveRadiusServer)
 
 #define MAX_ISCSI_PORTAL_NAME_LEN 256
 #define MAX_ISCSI_PORTAL_ADDRESS_LEN 256
+#define MAX_ISCSI_HBANAME_LEN 256
 
 #define ISCSI_SECURITY_FLAG_TUNNEL_MODE_PREFERRED     (0x1UL<<25)
 #define ISCSI_SECURITY_FLAG_TRANSPORT_MODE_PREFERRED  (0x1UL<<26)
@@ -100,6 +74,26 @@
 typedef DWORD ISCSI_LOGIN_OPTIONS_INFO_SPECIFIED;
 typedef DWORD ISCSI_LOGIN_FLAGS;
 typedef DWORD ISCSI_SECURITY_FLAGS;
+
+typedef enum _TARGET_INFORMATION_CLASS {
+  ProtocolType,
+  TargetAlias,
+  DiscoveryMechanism,
+  PortalGroups,
+  PersistentTargetMappings,
+  InitiatorName,
+  TargetFlags,
+  LoginOptions 
+} TARGET_INFORMATION_CLASS;
+
+typedef enum _TARGETPROTOCOLTYPE {
+  ISCSI_TCP_PROTOCOL_TYPE 
+ 
+} TARGETPROTOCOLTYPE;
+
+typedef enum _IKE_AUTHENTICATION_METHOD {
+  IKE_AUTHENTICATION_PRESHARED_KEY_METHOD    = 1 
+} IKE_AUTHENTICATION_METHOD, *PIKE_AUTHENTICATION_METHOD
 
   typedef struct _ISCSI_LOGIN_OPTIONS {
     ULONG                              Version;
@@ -129,10 +123,20 @@ typedef struct _ISCSI_TARGET_PORTALW {
   USHORT Socket;
 } ISCSI_TARGET_PORTALW, *PISCSI_TARGET_PORTALW;
 
+typedef struct _ISCSI_TARGET_PORTAL_GROUPA {
+  ULONG               Count;
+  ISCSI_TARGET_PORTALA Portals[1];
+} ISCSI_TARGET_PORTAL_GROUPA, *PISCSI_TARGET_PORTAL_GROUPA;
+
+typedef struct _ISCSI_TARGET_PORTAL_GROUPW {
+  ULONG               Count;
+  ISCSI_TARGET_PORTALW Portals[1];
+} ISCSI_TARGET_PORTAL_GROUPW, *PISCSI_TARGET_PORTAL_GROUPW;
+
 typedef struct _ISCSI_TARGET_MAPPINGA {
-  CHAR                   InitiatorName[MAX_ISCSI_HBANAME_LEN];
-  CHAR                   TargetName[MAX_ISCSI_NAME_LEN];
-  CHAR                   OSDeviceName[MAX_PATH];
+  CHAR                    InitiatorName[MAX_ISCSI_HBANAME_LEN];
+  CHAR                    TargetName[MAX_ISCSI_NAME_LEN];
+  CHAR                    OSDeviceName[MAX_PATH];
   ISCSI_UNIQUE_SESSION_ID SessionId;
   ULONG                   OSBusNumber;
   ULONG                   OSTargetNumber;
@@ -150,16 +154,6 @@ typedef struct _ISCSI_TARGET_MAPPINGW {
   ULONG                   LUNCount;
   PSCSI_LUN_LIST          LUNList;
 } ISCSI_TARGET_MAPPINGW, *PISCSI_TARGET_MAPPINGW;
-
-typedef struct _ISCSI_TARGET_PORTAL_GROUPA {
-  ULONG               Count;
-  ISCSI_TARGET_PORTALA Portals[1];
-} ISCSI_TARGET_PORTAL_GROUPA, *PISCSI_TARGET_PORTAL_GROUPA;
-
-typedef struct _ISCSI_TARGET_PORTAL_GROUPW {
-  ULONG               Count;
-  ISCSI_TARGET_PORTALW Portals[1];
-} ISCSI_TARGET_PORTAL_GROUPW, *PISCSI_TARGET_PORTAL_GROUPW;
 
 typedef struct _PERSISTENT_ISCSI_LOGIN_INFOA {
   CHAR                   TargetName[MAX_ISCSI_NAME_LEN];
@@ -182,6 +176,83 @@ typedef struct _PERSISTENT_ISCSI_LOGIN_INFOW {
   PISCSI_TARGET_MAPPINGW Mappings;
   ISCSI_LOGIN_OPTIONS    LoginOptions;
 } PERSISTENT_ISCSI_LOGIN_INFOW, *PPERSISTENT_ISCSI_LOGIN_INFOW;
+
+typedef LPVOID IKE_IDENTIFICATION_PAYLOAD_TYPE; /*Unknown type*/
+
+typedef struct _IKE_AUTHENTICATION_PRESHARED_KEY {
+  ISCSI_SECURITY_FLAGS            SecurityFlags;
+  IKE_IDENTIFICATION_PAYLOAD_TYPE IdType;
+  ULONG                           IdLengthInBytes;
+  PUCHAR                          Id;
+  ULONG                           KeyLengthInBytes;
+  PUCHAR                          Key;
+} IKE_AUTHENTICATION_PRESHARED_KEY, *PIKE_AUTHENTICATION_PRESHARED_KEY;
+
+typedef struct _IKE_AUTHENTICATION_INFORMATION {
+  IKE_AUTHENTICATION_METHOD AuthMethod;
+  union DUMMYUNIONNAME {
+    IKE_AUTHENTICATION_PRESHARED_KEY PsKey;
+  } ;
+} IKE_AUTHENTICATION_INFORMATION, *PIKE_AUTHENTICATION_INFORMATION;
+
+typedef LPVOID ISCSI_UNIQUE_CONNECTION_ID;
+
+typedef struct _ISCSI_CONNECTION_INFOA {
+  ISCSI_UNIQUE_CONNECTION_ID ConnectionId;
+  CHAR                       InitiatorAddress;
+  CHAR                       TargetAddress;
+  USHORT                     InitiatorSocket;
+  USHORT                     TargetSocket;
+  UCHAR                      CID[2];
+} ISCSI_CONNECTION_INFOA, *PISCSI_CONNECTION_INFOA;
+
+typedef struct _ISCSI_CONNECTION_INFO {
+  ISCSI_UNIQUE_CONNECTION_ID ConnectionId;
+  TCHAR                      InitiatorAddress;
+  TCHAR                      TargetAddress;
+  USHORT                     InitiatorSocket;
+  USHORT                     TargetSocket;
+  UCHAR                      CID[2];
+} ISCSI_CONNECTION_INFOW, *PISCSI_CONNECTION_INFOW;
+
+typedef struct _ISCSI_SESSION_INFOA {
+  ISCSI_UNIQUE_SESSION_ID SessionId;
+  CHAR                    InitiatorName;
+  CHAR                    TargetName;
+  CHAR                    TargetNodeName;
+  UCHAR                   ISID[6];
+  UCHAR                   TSID[2];
+  ULONG                   ConnectionCount;
+  PISCSI_CONNECTION_INFOA Connections;
+} ISCSI_SESSION_INFOA, *PISCSI_SESSION_INFOA;
+
+typedef struct _ISCSI_SESSION_INFO {
+  ISCSI_UNIQUE_SESSION_ID SessionId;
+  WCHAR                   InitiatorName;
+  WCHAR                   TargetName;
+  WCHAR                   TargetNodeName;
+  UCHAR                   ISID[6];
+  UCHAR                   TSID[2];
+  ULONG                   ConnectionCount;
+  PISCSI_CONNECTION_INFOW Connections;
+} ISCSI_SESSION_INFOW, *PISCSI_SESSION_INFOW;
+
+typedef struct _ISCSI_VERSION_INFO {
+  ULONG MajorVersion;
+  ULONG MinorVersion;
+  ULONG BuildNumber;
+} ISCSI_VERSION_INFO, *PISCSI_VERSION_INFO;
+
+__MINGW_TYPEDEF_AW(ISCSI_CONNECTION_INFO)
+__MINGW_TYPEDEF_AW(PISCSI_CONNECTION_INFO)
+__MINGW_TYPEDEF_AW(ISCSI_SESSION_INFO)
+__MINGW_TYPEDEF_AW(PISCSI_SESSION_INFO)
+__MINGW_TYPEDEF_AW(ISCSI_TARGET_PORTAL_GROUP)
+__MINGW_TYPEDEF_AW(PISCSI_TARGET_PORTAL_GROUP)
+__MINGW_TYPEDEF_AW(ISCSI_TARGET_PORTAL)
+__MINGW_TYPEDEF_AW(PISCSI_TARGET_PORTAL)
+__MINGW_TYPEDEF_AW(ISCSI_TARGET_MAPPING)
+__MINGW_TYPEDEF_AW(PISCSI_TARGET_MAPPING)
 
   HRESULT WINAPI AddIScsiConnectionA(PISCSI_UNIQUE_SESSION_ID UniqueSessionId,PVOID Reserved,ULONG InitiatorPortNumber,PISCSI_TARGET_PORTALA TargetPortal,ISCSI_SECURITY_FLAGS SecurityFlags,PSCSI_LOGIN_OPTIONS LoginOptions,ULONG KeySize,PCHAR Key,PISCSI_UNIQUE_CONNECTION_ID ConnectionId);
   HRESULT WINAPI AddIScsiConnectionW(PISCSI_UNIQUE_SESSION_ID UniqueSessionId,PVOID Reserved,ULONG InitiatorPortNumber,PISCSI_TARGET_PORTALW TargetPortal,ISCSI_SECURITY_FLAGS SecurityFlags,PSCSI_LOGIN_OPTIONS LoginOptions,ULONG KeySize,PCHAR Key,PISCSI_UNIQUE_CONNECTION_ID ConnectionId);
@@ -224,11 +295,90 @@ typedef struct _PERSISTENT_ISCSI_LOGIN_INFOW {
 
   HRESULT WINAPI ReportIScsiPersistentLogins(ULONG *Count,PPERSISTENT_ISCSI_LOGIN_INFO PersistentLoginInfo,PULONG BufferSizeInBytes);
 
-HRESULT WINAPI SendScsiInquiry(PISCSI_UNIQUE_SESSION_ID *UniqueSessionId,ULONGLONG Lun,UCHAR EvpdCmddt,UCHAR PageCode,PUCHAR *ScsiStatus,PULONG *ReponseSize,PUCHAR ReponseBuffer,PULONG *SenseSize,PUCHAR SenseBuffer);
+  HRESULT WINAPI SendScsiInquiry(PISCSI_UNIQUE_SESSION_ID *UniqueSessionId,ULONGLONG Lun,UCHAR EvpdCmddt,UCHAR PageCode,PUCHAR *ScsiStatus,PULONG *ReponseSize,PUCHAR ReponseBuffer,PULONG *SenseSize,PUCHAR SenseBuffer);
 
   HRESULT WINAPI SendScsiReadCapacity(PISCSI_UNIQUE_SESSION_ID UniqueSessionId,ULONGLONG Lun,PUCHAR *ScsiStatus,PULONG *ResponseSize,PUCHAR ResponseBuffer,PULONG *SenseSize,PUCHAR SenseBuffer);
 
   HRESULT WINAPI SendScsiReportLuns(PISCSI_UNIQUE_SESSION_ID UniqueSessionId,PUCHAR *ScsiStatus,PULONG *ResponseSize,PUCHAR ResponseBuffer,PULONG *SenseSize,PUCHAR SenseBuffer);
+
+typedef struct _ISCSI_DEVICE_ON_SESSION {
+  TCHAR                 InitiatorName[MAX_ISCSI_HBANAME_LEN];
+  TCHAR                 TargetName[MAX_ISCSI_NAME_LEN + 1];
+  SCSI_ADDRESS          ScsiAddress;
+  GUID                  DeviceInterfaceType;
+  TCHAR                 DeviceInterfaceName[MAX_PATH];
+  TCHAR                 LegacyName[MAX_PATH];
+  STORAGE_DEVICE_NUMBER StorageDeviceNumber;
+  DWORD                 DeviceInstance;
+} ISCSI_DEVICE_ON_SESSION, *PISCSI_DEVICE_ON_SESSION;
+
+HRESULT WINAPI GetDevicesForiSCSISession(
+  PISCSI_UNIQUE_SESSION_ID UniqueSessionId,
+  ULONG *DeviceCount,
+  PISCSI_DEVICE_ON_SESSION Devices
+);
+
+#define GetIScsiIKEInfo __MINGW_NAME_AW(GetIScsiIKEInfo)
+
+HRESULT WINAPI GetIScsiIKEInfoA(
+  PCHAR InitiatorName,
+  ULONG PortNumber,
+  PULONG Reserved,
+  PIKE_AUTHENTICATION_INFORMATION *AuthInfo
+);
+
+HRESULT WINAPI GetIScsiIKEInfoW(
+  PWCHAR InitiatorName,
+  ULONG PortNumber,
+  PULONG Reserved,
+  PIKE_AUTHENTICATION_INFORMATION *AuthInfo
+);
+
+#define GetIScsiInitiatorNodeName __MINGW_NAME_AW(GetIScsiInitiatorNodeName)
+
+HRESULT WINAPI GetIScsiInitiatorNodeNameA(
+    PCHAR InitiatorNodeName
+);
+
+HRESULT WINAPI GetIScsiInitiatorNodeNameW(
+    PWCHAR InitiatorNodeName
+);
+
+#define GetIScsiSessionList __MINGW_NAME_AW(GetIScsiSessionList)
+
+HRESULT WINAPI GetIScsiSessionListA(
+  ULONG *BufferSize,
+  ULONG *SessionCount,
+  PISCSI_SESSION_INFOA SessionInfo
+);
+
+HRESULT WINAPI GetIScsiSessionListW(
+  ULONG *BufferSize,
+  ULONG *SessionCount,
+  PISCSI_SESSION_INFOW SessionInfo
+);
+
+#define GetIScsiTargetInformation __MINGW_NAME_AW(GetIScsiTargetInformation)
+
+HRESULT WINAPI GetIScsiTargetInformationA(
+  PCHAR  TargetName,
+  PCHAR  DiscoveryMechanism,
+  TARGET_INFORMATION_CLASS InfoClass,
+  PULONG BufferSize,
+  PVOID Buffer
+);
+
+HRESULT WINAPI GetIScsiTargetInformationW(
+  PWCHAR TargetName,
+  PWCHAR DiscoveryMechanism,
+  TARGET_INFORMATION_CLASS InfoClass,
+  PULONG BufferSize,
+  PVOID Buffer
+);
+
+HRESULT WINAPI GetIScsiVersionInformation(
+    PISCSI_VERSION_INFO VersionInfo
+);
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif

@@ -5,6 +5,7 @@
  */
 #ifndef _MSTCPIP_
 #define _MSTCPIP_
+#include <_mingw_unicode.h>
 
 struct tcp_keepalive {
   u_long onoff;
@@ -28,5 +29,38 @@ struct tcp_keepalive {
 #define RCVALL_ON 1
 #define RCVALL_SOCKETLEVELONLY 2
 
+#if (_WIN32_WINNT >= 0x0600)
+#define RtlIpv6AddressToString __MINGW_NAME_AW(RtlIpv6AddressToString)
+#define RtlIpv6AddressToStringEx __MINGW_NAME_AW(RtlIpv6AddressToStringEx)
+
+LPWSTR NTAPI RtlIpv6AddressToString(
+  const IN6_ADDR *Addr,
+  LPSTR S
+);
+
+LPSTR NTAPI RtlIpv6AddressToString(
+  const IN6_ADDR *Addr,
+  LPWSTR S
+);
+
+LONG NTAPI RtlIpv6AddressToStringExA(
+  const IN6_ADDR *Address,
+  ULONG ScopeId,
+  USHORT Port,
+  LPSTR AddressString,
+  PULONG AddressStringLength
+);
+
+LONG NTAPI RtlIpv6AddressToStringExW(
+  const IN6_ADDR *Address,
+  ULONG ScopeId,
+  USHORT Port,
+  LPWSTR AddressString,
+  PULONG AddressStringLength
+);
+
+
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /* _MSTCPIP_ */
 

@@ -13,5 +13,29 @@ typedef union _SOCKADDR_INET {
   ADDRESS_FAMILY si_family;
 } SOCKADDR_INET, *PSOCKADDR_INET;
 
+typedef enum _MULTICAST_MODE_TYPE {
+  MCAST_INCLUDE   = 0,
+  MCAST_EXCLUDE 
+} MULTICAST_MODE_TYPE;
+
+typedef struct group_filter {
+  ULONG               gf_interface;
+  SOCKADDR_STORAGE    gf_group;
+  MULTICAST_MODE_TYPE gf_fmode;
+  ULONG               gf_numsrc;
+  SOCKADDR_STORAGE    gf_slist[1];
+} GROUP_FILTER, *PGROUP_FILTER;
+
+typedef struct group_req {
+  ULONG            gr_interface;
+  SOCKADDR_STORAGE gr_group;
+} GROUP_REQ, *PGROUP_REQ;
+
+typedef struct group_source_req {
+  ULONG            gsr_interface;
+  SOCKADDR_STORAGE gsr_group;
+  SOCKADDR_STORAGE gsr_source;
+} GROUP_SOURCE_REQ, *PGROUP_SOURCE_REQ;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WS2IPDEF*/

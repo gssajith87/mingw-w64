@@ -173,10 +173,29 @@ typedef struct _TCP_ESTATS_SYN_OPTS_ROS_v0 {
   ULONG   MssSent;
 } TCP_ESTATS_SYN_OPTS_ROS_v0, *PTCP_ESTATS_SYN_OPTS_ROS_v0;
 
-typedef struct {
+typedef struct _TCPIP_OWNER_MODULE_BASIC_INFO {
   PWCHAR pModuleName;
   PWCHAR pModulePath;
 } TCPIP_OWNER_MODULE_BASIC_INFO, *PTCPIP_OWNER_MODULE_BASIC_INFO;
+
+typedef enum _TCP_ESTATS_TYPE {
+  TcpConnectionEstatsSynOpts,
+  TcpConnectionEstatsData,
+  TcpConnectionEstatsSndCong,
+  TcpConnectionEstatsPath,
+  TcpConnectionEstatsSendBuff,
+  TcpConnectionEstatsRec,
+  TcpConnectionEstatsObsRec,
+  TcpConnectionEstatsBandwidth,
+  TcpConnectionEstatsFineRtt,
+  TcpConnectionEstatsMaximum 
+} TCP_ESTATS_TYPE;
+
+typedef enum _TCP_BOOLEAN_OPTIONAL {
+  TcpBoolOptDisabled    = 0,
+  TcpBoolOptEnabled     = 1,
+  TcpBoolOptUnchanged   = -1 
+} TCP_BOOLEAN_OPTIONAL;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_TCPESTATS*/

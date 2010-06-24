@@ -128,5 +128,55 @@ WINBOOL WINAPI FreeReservedLog(
   PLONGLONG pcbAdjustment
 );
 
+WINBOOL WINAPI GetLogContainerName(
+  HANDLE hLog,
+  CLFS_CONTAINER_ID cidLogicalContainer,
+  LPCWSTR pwstrContainerName,
+  ULONG cLenContainerName,
+  PULONG pcActualLenContainerName
+);
+
+WINBOOL WINAPI GetLogFileInformation(
+  HANDLE hLog,
+  PCLFS_INFORMATION pinfoBuffer,
+  PULONG cbBuffer
+);
+
+typedef LPVOID CLFS_IOSTATS_CLASS;
+
+WINBOOL WINAPI GetLogIoStatistics(
+  HANDLE hLog,
+  PVOID pvStatsBuffer,
+  ULONG cbStatsBuffer,
+  CLFS_IOSTATS_CLASS eStatsClass,
+  PULONG pcbStatsWritten
+);
+
+WINBOOL WINAPI GetNextLogArchiveExtent(
+  CLFS_LOG_ARCHIVE_CONTEXT pvArchiveContext,
+  CLFS_ARCHIVE_DESCRIPTOR rgadExtent[],
+  ULONG cDescriptors,
+  PULONG pcDescriptorsReturned
+);
+
+WINBOOL WINAPI PrepareLogArchive(
+  HANDLE hLog,
+  PWSTR pszBaseLogFileName,
+  ULONG cLen,
+  const PCLFS_LSN plsnLow,
+  const PCLFS_LSN plsnHigh,
+  PULONG pcActualLength,
+  PULONGLONG poffBaseLogFileData,
+  PULONGLONG pcbBaseLogFileLength,
+  PCLFS_LSN plsnBase,
+  PCLFS_LSN plsnLast,
+  PCLFS_LSN plsnCurrentArchiveTail,
+  PCLFS_LOG_ARCHIVE_CONTEXT ppvArchiveContext
+);
+
+WINBOOL WINAPI TerminateLogArchive(
+  CLFS_LOG_ARCHIVE_CONTEXT pvArchiveContext
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_CLFSW32*/

@@ -119,8 +119,19 @@ extern "C" {
   WINBOOL WINAPI EnumPageFilesA (PENUM_PAGE_FILE_CALLBACKA pCallBackRoutine,LPVOID pContext);
   DWORD WINAPI GetProcessImageFileNameA(HANDLE hProcess,LPSTR lpImageFileName,DWORD nSize);
   DWORD WINAPI GetProcessImageFileNameW(HANDLE hProcess,LPWSTR lpImageFileName,DWORD nSize);
+  
+typedef struct _PSAPI_WS_WATCH_INFORMATION_EX {
+  PSAPI_WS_WATCH_INFORMATION BasicInfo;
+  ULONG_PTR                  FaultingThreadId;
+  ULONG_PTR                  Flags;
+} PSAPI_WS_WATCH_INFORMATION_EX, *PPSAPI_WS_WATCH_INFORMATION_EX;
 
-#if (_WIN32_WINNT >= 0x0600)
+WINBOOL WINAPI GetWsChangesEx(
+  HANDLE hProcess,
+  PPSAPI_WS_WATCH_INFORMATION_EX lpWatchInfoEx,
+  DWORD cb
+);
+
 WINBOOL WINAPI EnumProcessModulesEx(
   HANDLE hProcess,
   HMODULE *lphModule,
@@ -128,7 +139,6 @@ WINBOOL WINAPI EnumProcessModulesEx(
   LPDWORD lpcbNeeded,
   DWORD dwFilterFlag
 );
-#endif /* (_WIN32_WINNT >= 0x0600) */
 
 #ifdef __cplusplus
 }

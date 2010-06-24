@@ -4,6 +4,11 @@
 #if (_WIN32_WINNT >= 0x0600)
 typedef LPVOID SimilarityFileIndexT;
 
+typedef enum _GeneratorParametersType {
+  RDCGENTYPE_Unused      = 0,
+  RDCGENTYPE_FilterMax   = 1 
+} GeneratorParametersType;
+
 typedef struct _FindSimilarFileIndexResults {
   SimilarityFileIndexT m_FileIndex;
   unsigned             m_MatchCount;

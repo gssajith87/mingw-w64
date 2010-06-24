@@ -1231,11 +1231,11 @@ extern "C" {
   WINBASEAPI DWORD WINAPI GetLongPathNameW(LPCWSTR lpszShortPath,LPWSTR lpszLongPath,DWORD cchBuffer);
   WINBASEAPI WINBOOL WINAPI GetProcessAffinityMask(HANDLE hProcess,PDWORD_PTR lpProcessAffinityMask,PDWORD_PTR lpSystemAffinityMask);
   WINBASEAPI WINBOOL WINAPI SetProcessAffinityMask(HANDLE hProcess,DWORD_PTR dwProcessAffinityMask);
-#if (_WIN32_WINNT >= 0x0600)
-  /* available in Vista SP1 and higher */ 
+
+  /* available in XP SP3, Vista SP1 and higher */ 
   WINBASEAPI WINBOOL WINAPI GetProcessDEPPolicy (HANDLE hProcess,LPDWORD lpFlags,PBOOL lpPermanent);
   WINBASEAPI WINBOOL WINAPI SetProcessDEPPolicy (DWORD dwFlags);
-#endif
+
   WINBASEAPI WINBOOL WINAPI GetProcessHandleCount(HANDLE hProcess,PDWORD pdwHandleCount);
   WINBASEAPI WINBOOL WINAPI GetProcessTimes(HANDLE hProcess,LPFILETIME lpCreationTime,LPFILETIME lpExitTime,LPFILETIME lpKernelTime,LPFILETIME lpUserTime);
   WINBASEAPI WINBOOL WINAPI GetProcessIoCounters(HANDLE hProcess,PIO_COUNTERS lpIoCounters);
@@ -1884,8 +1884,7 @@ extern "C" {
   WINBASEAPI HRSRC WINAPI FindResourceExA(HMODULE hModule,LPCSTR lpType,LPCSTR lpName,WORD wLanguage);
   WINBASEAPI HRSRC WINAPI FindResourceExW(HMODULE hModule,LPCWSTR lpType,LPCWSTR lpName,WORD wLanguage);
 
-#if (_WIN32_WINNT >= 0x0600)
-  /* available in Vista SP1 and higher */ 
+  /* available in XP SP3, Vista SP1 and higher */ 
   typedef enum _DEP_SYSTEM_POLICY_TYPE {
     AlwaysOff = 0,
     AlwaysOn = 1,
@@ -1893,7 +1892,6 @@ extern "C" {
     OptOut = 3
   } DEP_SYSTEM_POLICY_TYPE;
   WINBASEAPI DEP_SYSTEM_POLICY_TYPE WINAPI GetSystemDEPPolicy (void);
-#endif
 
 #define ENUMRESTYPEPROC __MINGW_NAME_AW(ENUMRESTYPEPROC)
 #define ENUMRESNAMEPROC __MINGW_NAME_AW(ENUMRESNAMEPROC)
@@ -3205,6 +3203,10 @@ typedef enum _PRIORITY_HINT {
   MaximumIoPriorityHintType 
 } PRIORITY_HINT;
 
+typedef enum _STREAM_INFO_LEVELS {
+  FindStreamInfoStandard 
+} STREAM_INFO_LEVELS;
+
 typedef struct _FILE_IO_PRIORITY_HINT_INFO {
   PRIORITY_HINT PriorityHint;
 } FILE_IO_PRIORITY_HINT_INFO, *PFILE_IO_PRIORITY_HINT_INFO;
@@ -3236,6 +3238,18 @@ typedef struct _FILE_STREAM_INFO {
   LARGE_INTEGER StreamAllocationSize;
   WCHAR         StreamName[1];
 } FILE_STREAM_INFO, *PFILE_STREAM_INFO;
+
+typedef struct _OVERLAPPED_ENTRY {
+  ULONG_PTR    lpCompletionKey;
+  LPOVERLAPPED lpOverlapped;
+  ULONG_PTR    Internal;
+  DWORD        dwNumberOfBytesTransferred;
+} OVERLAPPED_ENTRY, *LPOVERLAPPED_ENTRY;
+
+typedef struct _WIN32_FIND_STREAM_DATA {
+  LARGE_INTEGER StreamSize;
+  WCHAR         cStreamName[MAX_PATH + 36];
+} WIN32_FIND_STREAM_DATA, *PWIN32_FIND_STREAM_DATA;
 
 WINBASEAPI HANDLE WINAPI FindFirstFileNameTransactedW(
   LPCWSTR lpFileName,
@@ -3271,15 +3285,6 @@ WINBASEAPI HANDLE WINAPI FindFirstFileTransactedW(
   DWORD dwAdditionalFlags,
   HANDLE hTransaction
 );
-
-typedef enum _STREAM_INFO_LEVELS {
-  FindStreamInfoStandard 
-} STREAM_INFO_LEVELS;
-
-typedef struct _WIN32_FIND_STREAM_DATA {
-  LARGE_INTEGER StreamSize;
-  WCHAR         cStreamName[MAX_PATH + 36];
-} WIN32_FIND_STREAM_DATA, *PWIN32_FIND_STREAM_DATA;
 
 WINBASEAPI HANDLE WINAPI FindFirstStreamTransactedW(
   LPCWSTR lpFileName,
@@ -3330,25 +3335,440 @@ WINBASEAPI WINBOOL WINAPI FlsSetValue(
 
 WINBASEAPI VOID WINAPI FlushProcessWriteBuffers(void);
 
-VOID WINAPI FreeLibraryWhenCallbackReturns(
+WINBASEAPI VOID WINAPI FreeLibraryWhenCallbackReturns(
   PTP_CALLBACK_INSTANCE pci,
   HMODULE mod
 );
 
+WINBASEAPI HRESULT WINAPI GetApplicationRecoveryCallback(
+  HANDLE hProcess,
+  APPLICATION_RECOVERY_CALLBACK *pRecoveryCallback,
+  PVOID *ppvParameter,
+  DWORD dwPingInterval,
+  DWORD dwFlags
+);
+
+WINBASEAPI HRESULT WINAPI GetApplicationRestartSettings(
+  HANDLE hProcess,
+  PWSTR pwzCommandline,
+  PDWORD pcchSize,
+  PDWORD pdwFlags
+);
+
+#define RESTART_NO_CRASH 1
+#define RESTART_NO_HANG 2
+#define RESTART_NO_PATCH 4
+#define RESTART_NO_REBOOT 8
+
+WINBASEAPI HRESULT WINAPI RegisterApplicationRestart(
+  PCWSTR pwzCommandline,
+  DWORD dwFlags
+);
+
+#define GetCompressedFileSizeTransacted __MINGW_NAME_AW(GetCompressedFileSizeTransacted)
+
+WINBASEAPI DWORD WINAPI GetCompressedFileSizeTransactedA(
+  LPCTSTR lpFileName,
+  LPDWORD lpFileSizeHigh,
+  HANDLE hTransaction
+);
+
+WINBASEAPI DWORD WINAPI GetCompressedFileSizeTransactedW(
+  LPCWSTR lpFileName,
+  LPDWORD lpFileSizeHigh,
+  HANDLE hTransaction
+);
+
+WINBASEAPI DWORD WINAPI GetDynamicTimeZoneInformation(
+  PDYNAMIC_TIME_ZONE_INFORMATION pTimeZoneInformation
+);
+
+WINBASEAPI UINT WINAPI GetErrorMode(void);
+
+#define GetFileAttributesTransacted __MINGW_NAME_AW(GetFileAttributesTransacted)
+
+WINBASEAPI WINBOOL WINAPI GetFileAttributesTransactedA(
+  LPCSTR lpFileName,
+  GET_FILEEX_INFO_LEVELS fInfoLevelId,
+  LPVOID lpFileInformation,
+  HANDLE hTransaction
+);
+
+WINBASEAPI WINBOOL WINAPI GetFileAttributesTransactedW(
+  LPCWSTR lpFileName,
+  GET_FILEEX_INFO_LEVELS fInfoLevelId,
+  LPVOID lpFileInformation,
+  HANDLE hTransaction
+);
+
+WINBASEAPI WINBOOL WINAPI GetFileBandwidthReservation(
+  HANDLE hFile,
+  LPDWORD lpPeriodMilliseconds,
+  LPDWORD lpBytesPerPeriod,
+  LPBOOL pDiscardable,
+  LPDWORD lpTransferSize,
+  LPDWORD lpNumOutstandingRequests
+);
+
+WINBASEAPI WINBOOL WINAPI GetFileInformationByHandleEx(
+  HANDLE hFile,
+  FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
+  LPVOID lpFileInformation,
+  DWORD dwBufferSize
+);
+
+#define GetFinalPathNameByHandle __MINGW_NAME_AW(GetFinalPathNameByHandle)
+
+WINABASEAPI DWORD WINAPI GetFinalPathNameByHandleA(
+  HANDLE hFile,
+  LPSTR lpszFilePath,
+  DWORD cchFilePath,
+  DWORD dwFlags
+);
+
+#define VOLUME_NAME_DOS 0x0
+#define VOLUME_NAME_GUID 0x1
+#define VOLUME_NAME_NONE 0x2
+#define VOLUME_NAME_NT 0x3
+
+#define FILE_NAME_NORMALIZED 0x0
+#define FILE_NAME_OPENED 0x8
+
+WINABASEAPI DWORD WINAPI GetFinalPathNameByHandleW(
+  HANDLE hFile,
+  LPWSTR lpszFilePath,
+  DWORD cchFilePath,
+  DWORD dwFlags
+);
+
+#define GetFullPathNameTransacted __MINGW_NAME_AW(GetFullPathNameTransacted)
+
+WINBASEAPI DWORD WINAPI GetFullPathNameTransactedA(
+  LPCSTR lpFileName,
+  DWORD nBufferLength,
+  LPSTR lpBuffer,
+  LPSTR *lpFilePart,
+  HANDLE hTransaction
+);
+
+WINBASEAPI DWORD WINAPI GetFullPathNameTransactedW(
+  LPCWSTR lpFileName,
+  DWORD nBufferLength,
+  LPWSTR lpBuffer,
+  LPWSTR *lpFilePart,
+  HANDLE hTransaction
+);
+
+#define GetLongPathNameTransacted __MINGW_NAME_AW(GetLongPathNameTransacted)
+
+WINBASEAPI DWORD WINAPI GetLongPathNameTransactedA(
+  LPCSTR lpszShortPath,
+  LPSTR  lpszLongPath,
+  DWORD  cchBuffer,
+  HANDLE hTransaction
+);
+
+WINBASEAPI DWORD WINAPI GetLongPathNameTransactedW(
+  LPCWTSTR lpszShortPath,
+  LPWSTR   lpszLongPath,
+  DWORD    cchBuffer,
+  HANDLE   hTransaction
+);
+
+#define GetNamedPipeClientComputerName __MINGW_NAME_AW(GetNamedPipeClientComputerName)
+
+WINBASEAPI WINBOOL WINAPI GetNamedPipeClientComputerNameA(
+  HANDLE Pipe,
+  LPSTR ClientComputerName,
+  ULONG ClientComputerNameLength
+);
+
+WINBASEAPI WINBOOL WINAPI GetNamedPipeClientComputerNameW(
+  HANDLE Pipe,
+  LPWSTR ClientComputerName,
+  ULONG ClientComputerNameLength
+);
+
+WINBASEAPI WINBOOL WINAPI GetNamedPipeClientProcessId(
+  HANDLE Pipe,
+  PULONG ClientProcessId
+);
+
+WINBASEAPI WINBOOL WINAPI GetNamedPipeClientSessionId(
+  HANDLE Pipe,
+  PULONG ClientSessionId
+);
+
+WINBASEAPI WINBOOL WINAPI GetNamedPipeServerProcessId(
+  HANDLE Pipe,
+  PULONG ServerProcessId
+);
+
+WINBASEAPI WINBOOL WINAPI GetNamedPipeServerSessionId(
+  HANDLE Pipe,
+  PULONG ServerSessionId
+);
+
+WINBASEAPI WINBOOL WINAPI GetNumaProximityNode(
+  ULONG ProximityId,
+  PUCHAR NodeNumber
+);
+
+WINBOOL WINAPI GetPhysicallyInstalledSystemMemory(
+  PULONGLONG TotalMemoryInKilobytes
+);
+
+WINBASEAPI WINBOOL WINAPI UpdateProcThreadAttribute(
+  LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList,
+  DWORD dwFlags,
+  DWORD_PTR Attribute,
+  PVOID lpValue,
+  SIZE_T cbSize,
+  PVOID lpPreviousValue,
+  PSIZE_T lpReturnSize
+);
+
+#define PRODUCT_BUSINESS 0x00000006
+#define PRODUCT_BUSINESS_N 0x00000010
+#define PRODUCT_CLUSTER_SERVER 0x00000012
+#define PRODUCT_DATACENTER_SERVER 0x00000008
+#define PRODUCT_DATACENTER_SERVER_CORE 0x0000000C
+#define PRODUCT_DATACENTER_SERVER_CORE_V 0x00000027
+#define PRODUCT_DATACENTER_SERVER_V 0x00000025
+#define PRODUCT_ENTERPRISE 0x00000004
+#define PRODUCT_ENTERPRISE_E 0x00000046
+#define PRODUCT_ENTERPRISE_N 0x0000001B
+#define PRODUCT_ENTERPRISE_SERVER 0x0000000A
+#define PRODUCT_ENTERPRISE_SERVER_CORE 0x0000000E
+#define PRODUCT_ENTERPRISE_SERVER_CORE_V 0x00000029
+#define PRODUCT_ENTERPRISE_SERVER_IA64 0x0000000F
+#define PRODUCT_ENTERPRISE_SERVER_V 0x00000026
+#define PRODUCT_HOME_BASIC 0x00000002
+#define PRODUCT_HOME_BASIC_E 0x00000043
+#define PRODUCT_HOME_BASIC_N 0x00000005
+#define PRODUCT_HOME_PREMIUM 0x00000003
+#define PRODUCT_HOME_PREMIUM_E 0x00000044
+#define PRODUCT_HOME_PREMIUM_N 0x0000001A
+#define PRODUCT_HYPERV 0x0000002A
+#define PRODUCT_MEDIUMBUSINESS_SERVER_MANAGEMENT 0x0000001E
+#define PRODUCT_MEDIUMBUSINESS_SERVER_MESSAGING 0x00000020
+#define PRODUCT_MEDIUMBUSINESS_SERVER_SECURITY 0x0000001F
+#define PRODUCT_PROFESSIONAL 0x00000030
+#define PRODUCT_PROFESSIONAL_E 0x00000045
+#define PRODUCT_PROFESSIONAL_N 0x00000031
+#define PRODUCT_SERVER_FOR_SMALLBUSINESS 0x00000018
+#define PRODUCT_SERVER_FOR_SMALLBUSINESS_V 0x00000023
+#define PRODUCT_SERVER_FOUNDATION 0x00000021
+#define PRODUCT_SMALLBUSINESS_SERVER 0x00000009
+#define PRODUCT_SOLUTION_EMBEDDEDSERVER 0x00000038
+#define PRODUCT_STANDARD_SERVER 0x00000007
+#define PRODUCT_STANDARD_SERVER_CORE 0x0000000D
+#define PRODUCT_STANDARD_SERVER_CORE_V 0x00000028
+#define PRODUCT_STANDARD_SERVER_V 0x00000024
+#define PRODUCT_STARTER 0x0000000B
+#define PRODUCT_STARTER_E 0x00000042
+#define PRODUCT_STARTER_N 0x0000002F
+#define PRODUCT_STORAGE_ENTERPRISE_SERVER 0x00000017
+#define PRODUCT_STORAGE_EXPRESS_SERVER 0x00000014
+#define PRODUCT_STORAGE_STANDARD_SERVER 0x00000015
+#define PRODUCT_STORAGE_WORKGROUP_SERVER 0x00000016
+#define PRODUCT_UNDEFINED 0x00000000
+#define PRODUCT_ULTIMATE 0x00000001
+#define PRODUCT_ULTIMATE_E 0x00000047
+#define PRODUCT_ULTIMATE_N 0x0000001C
+#define PRODUCT_WEB_SERVER 0x00000011
+#define PRODUCT_WEB_SERVER_CORE 0x0000001D
+#define PRODUCT_UNLICENSED 0xABCDABCD
+
+WINBASEAPI WINBOOL WINAPI GetProductInfo(
+  DWORD dwOSMajorVersion,
+  DWORD dwOSMinorVersion,
+  DWORD dwSpMajorVersion,
+  DWORD dwSpMinorVersion,
+  PDWORD pdwReturnedProductType
+);
+
+WINBASEAPI WINBOOL WINAPI GetQueuedCompletionStatusEx(
+  HANDLE CompletionPort,
+  LPOVERLAPPED_ENTRY lpCompletionPortEntries,
+  ULONG ulCount,
+  PULONG ulNumEntriesRemoved,
+  DWORD dwMilliseconds,
+  WINBOOL fAlertable
+);
+
+WINBASEAPI WINBOOL WINAPI GetSystemRegistryQuota(
+  PDWORD pdwQuotaAllowed,
+  PDWORD pdwQuotaUsed
+);
+
+WINBASEAPI WINBOOL WINAPI GetSystemTimes(
+  LPFILETIME lpIdleTime,
+  LPFILETIME lpKernelTime,
+  LPFILETIME lpUserTime
+);
+
+WINBASEAPI ULONGLONG WINAPI GetTickCount64(void);
+
+WINBASEAPI WINBOOL WINAPI GetTimeZoneInformationForYear(
+  USHORT wYear,
+  PDYNAMIC_TIME_ZONE_INFORMATION pdtzi,
+  LPTIME_ZONE_INFORMATION ptzi
+);
+
+WINBASEAPI WINBOOL WINAPI GetVolumeInformationByHandleW(
+  HANDLE hFile,
+  LPWSTR lpVolumeNameBuffer,
+  DWORD nVolumeNameSize,
+  LPDWORD lpVolumeSerialNumber,
+  LPDWORD lpMaximumComponentLength,
+  LPDWORD lpFileSystemFlags,
+  LPWSTR lpFileSystemNameBuffer,
+  DWORD nFileSystemNameSize
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
-WINBASEAPI UINT WINAPI EnumSystemFirmwareTables(
-  DWORD FirmwareTableProviderSignature,
-  PVOID pFirmwareTableBuffer,
-  DWORD BufferSize
+#if (_WIN32_WINNT >= 0x0601)
+WINBASEAPI VOID WINAPI GetCurrentProcessorNumberEx(
+  PPROCESSOR_NUMBER ProcNumber
 );
 
-WINBASEAPI UINT WINAPI GetSystemFirmwareTable(
-  DWORD FirmwareTableProviderSignature,
-  DWORD FirmwareTableID,
-  PVOID pFirmwareTableBuffer,
-  DWORD BufferSize
+WINBASEAPI WINBOOL WINAPI GetLogicalProcessorInformationEx(
+  LOGICAL_PROCESSOR_RELATIONSHIP RelationshipType,
+  PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX Buffer,
+  PDWORD ReturnedLength
 );
+
+WINBASEAPI WINBOOL WINAPI GetNumaAvailableMemoryNodeEx(
+  USHORT Node,
+  PULONGLONG AvailableBytes
+);
+
+WINBASEAPI WINBOOL WINAPI GetNumaNodeProcessorMaskEx(
+  USHORT Node,
+  PGROUP_AFFINITY ProcessorMask
+);
+
+WINBASEAPI WINBOOL WINAPI GetNumaProcessorNodeEx(
+  PPROCESSOR_NUMBER Processor,
+  PUSHORT NodeNumber
+);
+
+WINBASEAPI WINBOOL WINAPI GetNumaProximityNodeEx(
+  ULONG ProximityId,
+  PUSHORT NodeNumber
+);
+
+WINBASEAPI HANDLE WINAPI CreateRemoteThreadEx(
+  HANDLE hProcess,
+  LPSECURITY_ATTRIBUTES lpThreadAttributes,
+  SIZE_T dwStackSize,
+  LPTHREAD_START_ROUTINE lpStartAddress,
+  LPVOID lpParameter,
+  DWORD dwCreationFlags,
+  LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList,
+  LPDWORD lpThreadId
+);
+
+WINBASEAPI WINBOOL WINAPI QueryUnbiasedInterruptTime(
+  PULONGLONG UnbiasedTime
+);
+
+#ifdef _WIN64
+typedef struct _UMS_COMPLETION_LIST, *PUMS_COMPLETION_LIST;
+typedef struct _UMS_CONTEXT, *PUMS_CONTEXT;
+
+typedef enum _UMS_SCHEDULER_REASON {
+  UmsSchedulerStartup = 0,
+  UmsSchedulerThreadBlocked = 1,
+  UmsSchedulerThreadYield = 2
+} UMS_SCHEDULER_REASON;
+
+typedef VOID (*PUMS_SCHEDULER_ENTRY_POINT)(
+  UMS_SCHEDULER_REASON Reason,
+  ULONG_PTR ActivationPayload,
+  PVOID SchedulerParam
+);
+
+typedef enum _UMS_THREAD_INFO_CLASS {
+  UmsThreadInvalidInfoClass   = 0,
+  UmsThreadUserContext        = 1,
+  UmsThreadPriority           = 2,
+  UmsThreadAffinity           = 3,
+  UmsThreadTeb                = 4,
+  UmsThreadIsSuspended        = 5,
+  UmsThreadIsTerminated       = 6,
+  UmsThreadMaxInfoClass       = 7 
+} UMS_THREAD_INFO_CLASS, *PUMS_THREAD_INFO_CLASS;
+
+typedef struct _UMS_SCHEDULER_STARTUP_INFO {
+  ULONG                      UmsVersion;
+  PUMS_COMPLETION_LIST       CompletionList;
+  PUMS_SCHEDULER_ENTRY_POINT SchedulerProc;
+  PVOID                      SchedulerParam;
+} UMS_SCHEDULER_STARTUP_INFO, *PUMS_SCHEDULER_STARTUP_INFO;
+
+WINBASEAPI WINBOOL CreateUmsCompletionList(
+  PUMS_COMPLETION_LIST *UmsCompletionList
+);
+
+WINBASEAPI WINBOOL CreateUmsThreadContext(
+  PUMS_CONTEXT *lpUmsThread
+);
+
+WINBASEAPI WINBOOL EnterUmsSchedulingMode(
+  PUMS_SCHEDULER_STARTUP_INFO SchedulerStartupInfo
+);
+
+WINBASEAPI WINBOOL DequeueUmsCompletionListItems(
+  PUMS_COMPLETION_LIST UmsCompletionList,
+  DWORD WaitTimeOut,
+  PUMS_CONTEXT *UmsThreadList
+);
+
+WINBASEAPI WINBOOL GetUmsCompletionListEvent(
+  PUMS_COMPLETION_LIST UmsCompletionList,
+  PHANDLE UmsCompletionEvent
+);
+
+WINBASEAPI WINBOOL DeleteUmsCompletionList(
+  PUMS_COMPLETION_LIST UmsCompletionList
+);
+
+WINBASEAPI WINBOOL DeleteUmsThreadContext(
+  PUMS_CONTEXT UmsThread
+);
+
+WINBASEAPI WINBOOL QueryUmsThreadInformation(
+  PUMS_CONTEXT UmsThread,
+  UMS_THREAD_INFO_CLASS UmsThreadInfoClass,
+  PVOID UmsThreadInformation,
+  ULONG UmsThreadInformationLength,
+  PULONG ReturnLength
+);
+
+WINBASEAPI WINBOOL SetUmsThreadInformation(
+  PUMS_CONTEXT UmsThread,
+  UMS_THREAD_INFO_CLASS UmsThreadInfoClass,
+  PVOID UmsThreadInformation,
+  ULONG UmsThreadInformationLength
+);
+
+WINBASEAPI WINBOOL ExecuteUmsThread(
+  PUMS_CONTEXT UmsThread
+);
+
+WINBASEAPI WINBOOL UmsThreadYield(
+  PVOID SchedulerParam
+);
+
+WINBASEAPI PUMS_CONTEXT GetNextUmsListItem(
+  PUMS_CONTEXT UmsContext
+);
+
+#endif /*_WIN64*/
+#endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #ifdef __cplusplus
 }

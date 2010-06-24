@@ -6325,6 +6325,12 @@ typedef DWORD (WINAPI *PRTL_RUN_ONCE_INIT_FN)(PRTL_RUN_ONCE, PVOID, PVOID *);
     ACTCTX_RUN_LEVEL_REQUIRE_ADMIN,
     ACTCTX_RUN_LEVEL_NUMBERS
   } ACTCTX_REQUESTED_RUN_LEVEL, ACTCTX_REQUESTED_RUN_LEVEL_INFORMATION;
+  
+  typedef enum _TRANSACTION_OUTCOME {
+    TransactionOutcomeUndetermined,
+    TransactionOutcomeCommitted,
+    TransactionOutcomeAborted 
+  } TRANSACTION_OUTCOME;
 
   typedef unsigned long ULONG;
 
@@ -6340,6 +6346,82 @@ typedef DWORD (WINAPI *PRTL_RUN_ONCE_INIT_FN)(PRTL_RUN_ONCE, PVOID, PVOID *);
   );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
+#if (_WIN32_WINNT >= 0x0601)
+typedef enum _PROCESSOR_CACHE_TYPE {
+  CacheUnified,
+  CacheInstruction,
+  CacheData,
+  CacheTrace 
+} PROCESSOR_CACHE_TYPE;
+
+typedef struct _PROCESSOR_NUMBER {
+  WORD Group;
+  BYTE Number;
+  BYTE Reserved;
+} PROCESSOR_NUMBER, *PPROCESSOR_NUMBER;
+
+typedef struct _PROCESSOR_GROUP_INFO {
+  BYTE      MaximumProcessorCount;
+  BYTE      ActiveProcessorCount;
+  BYTE      Reserved[38];
+  KAFFINITY ActiveProcessorMask;
+} PROCESSOR_GROUP_INFO, *PPROCESSOR_GROUP_INFO;
+
+typedef struct _GROUP_RELATIONSHIP {
+  WORD                 MaximumGroupCount;
+  WORD                 ActiveGroupCount;
+  BYTE                 Reserved[20];
+  PROCESSOR_GROUP_INFO GroupInfo[];
+} GROUP_RELATIONSHIP, *PGROUP_RELATIONSHIP;
+
+typedef struct _GROUP_AFFINITY {
+  KAFFINITY Mask;
+  WORD      Group;
+  WORD      Reserved[3];
+} GROUP_AFFINITY, *PGROUP_AFFINITY;
+
+typedef struct _CACHE_RELATIONSHIP {
+  BYTE                 Level;
+  BYTE                 Associativity;
+  WORD                 LineSize;
+  DWORD                CacheSize;
+  PROCESSOR_CACHE_TYPE Type;
+  BYTE                 Reserved[20];
+  GROUP_AFFINITY       GroupMask;
+} CACHE_RELATIONSHIP, *PCACHE_RELATIONSHIP;
+
+typedef struct _NUMA_NODE_RELATIONSHIP {
+  DWORD          NodeNumber;
+  BYTE           Reserved[20];
+  GROUP_AFFINITY GroupMask;
+} NUMA_NODE_RELATIONSHIP, *PNUMA_NODE_RELATIONSHIP;
+
+typedef struct _PROCESSOR_RELATIONSHIP {
+  BYTE           Flags;
+  BYTE           Reserved[21];
+  WORD           GroupCount;
+  GROUP_AFFINITY GroupMask[];
+} PROCESSOR_RELATIONSHIP, *PPROCESSOR_RELATIONSHIP;
+
+typedef struct _SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX {
+  LOGICAL_PROCESSOR_RELATIONSHIP Relationship;
+  DWORD                          Size;
+  union DUMMYUNIONNAME {
+    PROCESSOR_RELATIONSHIP Processor;
+    NUMA_NODE_RELATIONSHIP NumaNode;
+    CACHE_RELATIONSHIP     Cache;
+    GROUP_RELATIONSHIP     Group;
+  } ;
+} SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, *PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;
+
+typedef struct _UMS_CREATE_THREAD_ATTRIBUTES {
+  DWORD UmsVersion;
+  PVOID UmsContext;
+  PVOID UmsCompletionList;
+} UMS_CREATE_THREAD_ATTRIBUTES, *PUMS_CREATE_THREAD_ATTRIBUTES;
+
+#endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #ifdef __cplusplus
   }

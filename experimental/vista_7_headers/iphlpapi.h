@@ -14,6 +14,9 @@ extern "C" {
 #include <ipexport.h>
 #include <iptypes.h>
 #include <netioapi.h>
+#include <tcpmib.h>
+#include <udpmib.h>
+#include <tcpestats.h>
 
 #if (_WIN32_WINNT == 0x502 && WINVER == 0x502)
 typedef enum _TCP_TABLE_CLASS {
@@ -96,6 +99,43 @@ typedef enum _TCP_TABLE_CLASS {
   DWORD WINAPI RestoreMediaSense(OVERLAPPED *pOverlapped,LPDWORD lpdwEnableCount);
   DWORD WINAPI GetIpErrorString(IP_STATUS ErrorCode,PWCHAR Buffer,PDWORD Size);
 
+DWORD WINAPI GetExtendedUdpTable(
+  PVOID pUdpTable,
+  PDWORD pdwSize,
+  WINBOOL bOrder,
+  ULONG ulAf,
+  UDP_TABLE_CLASS TableClass,
+  ULONG Reserved
+);
+
+DWORD WINAPI GetOwnerModuleFromTcp6Entry(
+  PMIB_TCP6ROW_OWNER_MODULE pTcpEntry,
+  TCPIP_OWNER_MODULE_INFO_CLASS Class,
+  PVOID Buffer,
+  PDWORD pdwSize
+);
+
+DWORD WINAPI GetOwnerModuleFromTcpEntry(
+  PMIB_TCPROW_OWNER_MODULE pTcpEntry,
+  TCPIP_OWNER_MODULE_INFO_CLASS Class,
+  PVOID Buffer,
+  PDWORD pdwSize
+);
+
+DWORD WINAPI GetOwnerModuleFromUdp6Entry(
+  PMIB_UDP6ROW_OWNER_MODULE pUdpEntry,
+  TCPIP_OWNER_MODULE_INFO_CLASS Class,
+  PVOID Buffer,
+  PDWORD pdwSize
+);
+
+DWORD WINAPI GetOwnerModuleFromUdpEntry(
+  PMIB_UDPROW_OWNER_MODULE pUdpEntry,
+  TCPIP_OWNER_MODULE_INFO_CLASS Class,
+  PVOID Buffer,
+  PDWORD pdwSize
+);
+
 #if (_WIN32_WINNT == 0x0502) /* Only with Win2003 SP1 and SP2 */
   WINBOOL WINAPI CancelSecurityHealthChangeNotify(LPOVERLAPPED notifyOverlapped);
 #endif /*(_WIN32_WINNT == 0x0502)*/
@@ -114,6 +154,77 @@ typedef struct _NET_ADDRESS_INFO {
     SOCKADDR     IpAddress;
   } ;
 } NET_ADDRESS_INFO, *PNET_ADDRESS_INFO;
+
+ULONG WINAPI GetPerTcp6ConnectionEStats(
+  PMIB_TCP6ROW Row,
+  TCP_ESTATS_TYPE EstatsType,
+  PUCHAR Rw,
+  ULONG RwVersion,
+  ULONG RwSize,
+  PUCHAR Ros,
+  ULONG RosVersion,
+  ULONG RosSize,
+  PUCHAR Rod,
+  ULONG RodVersion,
+  ULONG RodSize
+);
+
+ULONG WINAPI SetPerTcp6ConnectionEStats(
+  PMIB_TCP6ROW Row,
+  TCP_ESTATS_TYPE EstatsType,
+  PUCHAR Rw,
+  ULONG RwVersion,
+  ULONG RwSize,
+  ULONG Offset
+);
+
+ULONG WINAPI SetPerTcpConnectionEStats(
+    PMIB_TCPROW Row,
+    TCP_ESTATS_TYPE EstatsType,
+    PUCHAR Rw,
+    ULONG RwVersion,
+    ULONG RwSize,
+    ULONG Offset
+);
+
+ULONG WINAPI GetTcp6Table(
+  PMIB_TCP6TABLE TcpTable,
+  PULONG SizePointer,
+  WINBOOL Order
+);
+
+ULONG WINAPI GetPerTcpConnectionEStats(
+  PMIB_TCPROW Row,
+  TCP_ESTATS_TYPE EstatsType,
+  PUCHAR Rw,
+  ULONG RwVersion,
+  ULONG RwSize,
+  PUCHAR Ros,
+  ULONG RosVersion,
+  ULONG RosSize,
+  PUCHAR Rod,
+  ULONG RodVersion,
+  ULONG RodSize
+);
+
+ULONG WINAPI GetTcp6Table2(
+  PMIB_TCP6TABLE2 TcpTable,
+  PULONG SizePointer,
+  WINBOOL Order
+);
+
+ULONG WINAPI GetTcpTable2(
+  PMIB_TCPTABLE2 TcpTable,
+  PULONG SizePointer,
+  WINBOOL Order
+);
+
+ULONG WINAPI GetUdp6Table(
+  PMIB_UDP6TABLE Udp6Table,
+  PULONG SizePointer,
+  WINBOOL Order
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus
