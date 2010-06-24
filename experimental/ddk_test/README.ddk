@@ -40,8 +40,8 @@ svn://svn.reactos.org/reactos/trunk/reactos/include/dxsdk/
 
 The bugcodes.mc file is from
 svn://svn.reactos.org/reactos/trunk/reactos/include/reactos/mc/
-... revision 47767 and it was used for generating the bugcodes.h
-header using the wmc tool from wine-1.2-rc3.
+... revision 47837 and it was used for generating the bugcodes.h
+header using the wmc tool from wine-1.2-rc4.
 
 How to install this SDK
 -----------------------

@@ -1,10 +1,10 @@
-/* This file is generated with wmc version 1.2-rc3. Do not edit! */
+/* This file is generated with wmc version 1.2-rc4. Do not edit! */
 /* Source : bugcodes.mc */
 /* Cmdline: wmc bugcodes.mc */
-/* Date   : Sat Jun 12 18:23:40 2010 */
+/* Date   : Thu Jun 24 11:33:35 2010 */
 
-#ifndef __WMCGENERATED_4c13a67c_H
-#define __WMCGENERATED_4c13a67c_H
+#ifndef __WMCGENERATED_4c23428f_H
+#define __WMCGENERATED_4c23428f_H
 
 /* Severity codes */
 #define STATUS_SEVERITY_ERROR	0x3
@@ -609,6 +609,10 @@
 /* MessageId  : 0x000000c8 */
 /* Approximate msg: The processor's IRQL is not valid for the currently executing context. */
 #define IRQL_UNEXPECTED_VALUE	((ULONG)0x000000c8L)
+
+/* MessageId  : 0x000000ca */
+/* Approximate msg: PNP_DETECTED_FATAL_ERROR */
+#define PNP_DETECTED_FATAL_ERROR	((ULONG)0x000000caL)
 
 /* MessageId  : 0x000000cb */
 /* Approximate msg: DRIVER_LEFT_LOCKED_PAGES_IN_PROCESS */
