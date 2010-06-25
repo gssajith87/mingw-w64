@@ -3,8 +3,8 @@
 int main()
 {
   /* conj fully defined in 7.3.9.3 --- inverse sign of imagingary */
-  /* We don't define this as a conj function because that's recursive */
   
+  /* We don't define this as a CONJ behavior because that uses the conj function.  */
   DEFINE_TEST_FUNCTION(conj, 0);
   
   TEST_PROLOGUE

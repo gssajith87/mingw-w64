@@ -3,20 +3,21 @@
 
 int main()
 {
-  /* cacosh (conj (z)) = conj (cacosh (z)). */
-  DEFINE_TEST_FUNCTION(cacosh, FUNC_BEHAVIOR_CONJ);
+  /* Annex G.6.2.1
+     cacosh(conj(z)) = conj(cacosh(z)).
+     cacosh(±0 + i0) returns +0 + iπ /2.
+     cacosh(x + i ∞) returns +∞ + iπ /2, for finite x.
+     cacosh(x + iNaN) returns NaN + iNaN and optionally raises the ‘‘invalid’’ floating-point exception, for finite x.
+     cacosh(−∞ + iy) returns +∞ + iπ , for positive-signed finite y.
+     cacosh(+∞ + iy) returns +∞ + i0, for positive-signed finite y.
+     cacosh(−∞ + i ∞) returns +∞ + i3π /4.
+     cacosh(+∞ + i ∞) returns +∞ + iπ /4.
+     cacosh(±∞ + iNaN) returns +∞ + iNaN.
+     cacosh(NaN + iy) returns NaN + iNaN and optionally raises the ‘‘invalid’’ floating-point exception, for finite y.
+     cacosh(NaN + i ∞) returns +∞ + iNaN.
+     cacosh(NaN + iNaN) returns NaN + iNaN.  */
 
-  /* cacosh (+/-0 + i*0) = +0 + i*pi/2 */
-  /* cacosh (x + i*inf) = +inf + i*pi/2 for finite x */
-  /* cacosh (x + i*nan) = nan + i*nan for finite x (optional raise fpexception) */
-  /* cacosh (-inf + i*y) = +inf + i*pi for positive-signed finite y */
-  /* cacosh (+inf + i*y) = +inf + i*0  for positive-signed finite y */
-  /* cacosh (-inf + i*inf) = +inf + i*3*pi/4 */
-  /* cacosh (+inf + i*inf) = +inf + i*pi/4 */
-  /* cacosh (+/-inf + i*nan) = +inf + i*nan */
-  /* cacosh (nan + i*y) = nan + i*nan for all finite y (optional raise fpexception) */
-  /* cacosh (nan + i*inf) = +inf + i*nan */
-  /* cacosh (nan + i*nan) = nan + i*nan */
+  DEFINE_TEST_FUNCTION(cacosh, FUNC_BEHAVIOR_CONJ);
 
   TEST_PROLOGUE
 

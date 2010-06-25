@@ -2,12 +2,12 @@
 
 int main()
 {
-  /* Annex F.9.4.3 of the hypot function */
-  /* cabs (z) == hypot (__real__ z, __imag__ z); */
-  /* hypot (x, y) == hypot (x, -y), therefore is conjugate */
-  /* hypot (x, y) == hypot (y, x) */
-  /* hypot (x, +/-0) == fabs (x) */
-  /* hypot (+/-inf, y) == +inf, for all y (including NaN) */
+  /* Annex F.9.4.3 of the hypot function
+     cabs (z) == hypot (__real__ z, __imag__ z).
+     hypot (x, y) == hypot (x, -y), therefore is conjugate.
+     hypot (x, y) == hypot (y, x).
+     hypot (x, +/-0) == fabs (x).
+     hypot (+/-inf, y) == +inf, for all y (including NaN).  */
   
   DEFINE_REAL_TEST_FUNCTION(cabs, FUNC_BEHAVIOR_CONJ);
   
