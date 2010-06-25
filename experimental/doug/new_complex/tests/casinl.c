@@ -1,7 +1,2 @@
-#include <math.h>
-#include <complex.h>
-
-int main() {
-  return 0;
-}
-
+#define _NEW_COMPLEX_LDOUBLE 1
+#include "casin.c"
