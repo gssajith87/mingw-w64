@@ -4,6 +4,8 @@
 #include <rpc.h>
 #include <fwptypes.h>
 #include <fwpmtypes.h>
+#include <iketypes.h>
+#include <ipsectypes.h>
 #if (_WIN32_WINNT >= 0x0600)
 
 typedef void ( CALLBACK *FWPM_CALLOUT_CHANGE_CALLBACK0 )(
@@ -637,6 +639,60 @@ DWORD WINAPI FwpmTransactionBegin0(
 
 DWORD WINAPI FwpmTransactionCommit0(
   HANDLE engineHandle
+);
+
+DWORD WINAPI IkeextGetStatistics0(
+  HANDLE engineHandle,
+  IKEEXT_STATISTICS0 *ikeextStatistics
+);
+
+DWORD WINAPI IkeextSaDbGetSecurityInfo0(
+  HANDLE engineHandle,
+  SECURITY_INFORMATION securityInfo,
+  PSID *sidOwner,
+  PSID *sidGroup,
+  PACL *dacl,
+  PACL *sacl,
+  PSECURITY_DESCRIPTOR *securityDescriptor
+);
+
+DWORD WINAPI IkeextSaCreateEnumHandle0(
+  HANDLE engineHandle,
+  const IKEEXT_SA_ENUM_TEMPLATE0 *enumTemplate,
+  HANDLE *enumHandle
+);
+
+DWORD WINAPI IkeextSaDbSetSecurityInfo0(
+  HANDLE engineHandle,
+  SECURITY_INFORMATION securityInfo,
+  const SID *sidOwner,
+  const SID *sidGroup,
+  const ACL *dacl,
+  const ACL *sacl
+);
+
+DWORD WINAPI IkeextSaDeleteById0(
+  HANDLE engineHandle,
+  UINT64 id
+);
+
+DWORD WINAPI IkeextSaDestroyEnumHandle0(
+  HANDLE engineHandle,
+  HANDLE enumHandle
+);
+
+DWORD WINAPI IkeextSaEnum0(
+  HANDLE engineHandle,
+  HANDLE enumHandle,
+  UINT32 numEntriesRequested,
+  IKEEXT_SA_DETAILS0 ***entries,
+  UINT32 *numEntriesReturned
+);
+
+DWORD WINAPI IkeextSaGetById0(
+  HANDLE engineHandle,
+  UINT64 id,
+  IKEEXT_SA_DETAILS0 **sa
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

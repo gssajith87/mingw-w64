@@ -180,5 +180,10 @@ typedef struct IPSEC_TUNNEL_ENDPOINTS0_ {
   } ;
 } IPSEC_TUNNEL_ENDPOINTS0;
 
+typedef struct IPSEC_V4_UDP_ENCAPSULATION0_ {
+  UINT16 localUdpEncapPort;
+  UINT16 remoteUdpEncapPort;
+} IPSEC_V4_UDP_ENCAPSULATION0;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_IPSECTYPES*/

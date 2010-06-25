@@ -198,5 +198,129 @@ typedef struct IKEEXT_PROPOSAL0_ {
   UINT32                      quickModeLimit;
 } IKEEXT_PROPOSAL0;
 
+typedef struct IKEEXT_CERTIFICATE_CREDENTIAL0_ {
+  FWP_BYTE_BLOB subjectName;
+  FWP_BYTE_BLOB certHash;
+  UINT32        flags;
+} IKEEXT_CERTIFICATE_CREDENTIAL0;
+
+typedef struct IKEEXT_IP_VERSION_SPECIFIC_COMMON_STATISTICS0_ {
+  UINT32 totalSocketReceiveFailures;
+  UINT32 totalSocketSendFailures;
+} IKEEXT_IP_VERSION_SPECIFIC_COMMON_STATISTICS0;
+
+typedef struct IKEEXT_COMMON_STATISTICS0_ {
+  IKEEXT_IP_VERSION_SPECIFIC_COMMON_STATISTICS0 v4Statistics;
+  IKEEXT_IP_VERSION_SPECIFIC_COMMON_STATISTICS0 v6Statistics;
+  UINT32                                        totalPacketsReceived;
+  UINT32                                        totalInvalidPacketsReceived;
+  UINT32                                        currentQueuedWorkitems;
+} IKEEXT_COMMON_STATISTICS0;
+
+typedef UINT64 IKEEXT_COOKIE;
+
+typedef struct IKEEXT_COOKIE_PAIR0_ {
+  IKEEXT_COOKIE initiator;
+  IKEEXT_COOKIE responder;
+} IKEEXT_COOKIE_PAIR0;
+
+typedef struct IKEEXT_CREDENTIAL0_ {
+  IKEEXT_AUTHENTICATION_METHOD_TYPE        authenticationMethodType;
+  IKEEXT_AUTHENTICATION_IMPERSONATION_TYPE impersonationType;
+  union DUMMYUNIONNAME {
+    IKEEXT_PRESHARED_KEY_AUTHENTICATION0 *presharedKey;
+    IKEEXT_CERTIFICATE_CREDENTIAL0       *certificate;
+    IKEEXT_NAME_CREDENTIAL0              *name;
+    ;      // case(IKEEXT_ANONYMOUS)
+  } ;
+} IKEEXT_CREDENTIAL0;
+
+typedef struct IKEEXT_CREDENTIAL_PAIR0_ {
+  IKEEXT_CREDENTIAL0 localCredentials;
+  IKEEXT_CREDENTIAL0 peerCredentials;
+} IKEEXT_CREDENTIAL_PAIR0;
+
+typedef struct IKEEXT_CREDENTIALS0_ {
+  UINT32                  numCredentials;
+  IKEEXT_CREDENTIAL_PAIR0 *credentials;
+} IKEEXT_CREDENTIALS0;
+
+typedef struct IKEEXT_IP_VERSION_SPECIFIC_KEYMODULE_STATISTICS0_ {
+  UINT32 currentActiveMainModes;
+  UINT32 totalMainModesStarted;
+  UINT32 totalSuccessfulMainModes;
+  UINT32 totalFailedMainModes;
+  UINT32 totalResponderMainModes;
+  UINT32 currentNewResponderMainModes;
+  UINT32 currentActiveQuickModes;
+  UINT32 totalQuickModesStarted;
+  UINT32 totalSuccessfulQuickModes;
+  UINT32 totalFailedQuickModes;
+  UINT32 totalAcquires;
+  UINT32 totalReinitAcquires;
+  UINT32 currentActiveExtendedModes;
+  UINT32 totalExtendedModesStarted;
+  UINT32 totalSuccessfulExtendedModes;
+  UINT32 totalFailedExtendedModes;
+  UINT32 totalImpersonationExtendedModes;
+  UINT32 totalImpersonationMainModes;
+} IKEEXT_IP_VERSION_SPECIFIC_KEYMODULE_STATISTICS0;
+
+#define IERROR_IPSEC_IKE_NEG_STATUS_END (ERROR_IPSEC_IKE_NEG_STATUS_BEGIN - ERROR_IPSEC_IKE_NEG_STATUS_END) /* Should be 84 */
+
+typedef struct IKEEXT_KEYMODULE_STATISTICS0_ {
+  IKEEXT_IP_VERSION_SPECIFIC_KEYMODULE_STATISTICS0 v4Statistics;
+  IKEEXT_IP_VERSION_SPECIFIC_KEYMODULE_STATISTICS0 v6Statistics;
+  UINT32                                           errorFrequencyTable[IKEEXT_ERROR_CODE_COUNT];
+  UINT32                                           mainModeNegotiationTime;
+  UINT32                                           quickModeNegotiationTime;
+  UINT32                                           extendedModeNegotiationTime;
+} IKEEXT_KEYMODULE_STATISTICS0;
+
+typedef struct IKEEXT_NAME_CREDENTIAL0_ {
+  wchar_t *principalName;
+} IKEEXT_NAME_CREDENTIAL0;
+
+typedef struct IKEEXT_SA_DETAILS0_ {
+  UINT64                 saId;
+  IKEEXT_KEY_MODULE_TYPE keyModuleType;
+  FWP_IP_VERSION         ipVersion;
+  union SUMMYUNIONNAME {
+    IPSEC_V4_UDP_ENCAPSULATION0 *v4UdpEncapsulation;
+    ;      // case(FWP_IP_VERSION_V6)
+  } ;
+  IKEEXT_TRAFFIC0        ikeTraffic;
+  IKEEXT_PROPOSAL0       ikeProposal;
+  IKEEXT_COOKIE_PAIR0    cookiePair;
+  IKEEXT_CREDENTIALS0    ikeCredentials;
+  GUID                   ikePolicyKey;
+  UINT64                 virtualIfTunnelId;
+} IKEEXT_SA_DETAILS0;
+
+typedef struct IKEEXT_SA_ENUM_TEMPLATE0_ {
+  FWP_CONDITION_VALUE0 localSubNet;
+  FWP_CONDITION_VALUE0 remoteSubNet;
+  FWP_BYTE_BLOB        localMainModeCertHash;
+} IKEEXT_SA_ENUM_TEMPLATE0;
+
+typedef struct IKEEXT_STATISTICS0_ {
+  IKEEXT_KEYMODULE_STATISTICS0 ikeStatistics;
+  IKEEXT_KEYMODULE_STATISTICS0 authipStatistics;
+  IKEEXT_COMMON_STATISTICS0    commonStatistics;
+} IKEEXT_STATISTICS0;
+
+typedef struct IKEEXT_TRAFFIC0_ {
+  FWP_IP_VERSION ipVersion;
+  union DUMMYUNIONNAME1 {
+    UINT32 localV4Address;
+    UINT8  localV6Address[16];
+  } ;
+  union DUMMYUNIONNAME2 {
+    UINT32 remoteV4Address;
+    UINT8  remoteV6Address[16];
+  } ;
+  UINT64         authIpFilterId;
+} IKEEXT_TRAFFIC0;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_IKETYPES*/
