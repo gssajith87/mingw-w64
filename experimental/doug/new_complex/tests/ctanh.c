@@ -2,7 +2,7 @@
 
 int main() 
 {
-  /* Annex G 6.2.6
+  /* Annex G.6.2.6 The ctanh functions
      ctanh(conj(z)) = conj(ctanh(z))and ctanh is odd.
      ctanh(+0 + i0) returns +0 + i0.
      ctanh(x + i ∞) returns NaN + iNaN and raises the ‘‘invalid’’ floating-point exception, for finite x.
