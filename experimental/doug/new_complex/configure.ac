@@ -4,7 +4,7 @@
 AC_PREREQ([2.65])
 AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
 AC_CONFIG_AUX_DIR([build-aux])
-AC_CONFIG_SRCDIR([src/complex.h])
+AC_CONFIG_SRCDIR([src/complex_internal.h])
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([subdir-objects foreign parallel-tests color-tests silent-rules])

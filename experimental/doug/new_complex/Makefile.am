@@ -1,41 +1,20 @@
 AM_CPPFLAGS = -I $(srcdir)/src
+LDADD = libnewcomplex.a
 
-newcomplex_src =  \
-src/cabs.c        src/catanh.def.h  src/clog.def.h          src/creal.def.h \
-src/cabs.def.h    src/ccos.c        src/complex_internal.h  src/csin.c      \
-src/cacos.def.h   src/ccos.def.h    src/conj.c              src/csin.def.h  \
-src/cacosh.def.h  src/ccosh.def.h   src/conj.def.h          src/csinh.def.h \
-src/carg.c        src/cexp.c        src/cpow.c              src/csqrt.c     \
-src/carg.def.h    src/cexp.def.h    src/cpow.def.h          src/csqrt.def.h \
-src/casin.def.h   src/cimag.c       src/cproj.c             src/ctan.c      \
-src/casinh.def.h  src/cimag.def.h   src/cproj.def.h         src/ctan.def.h  \
-src/catan.def.h   src/clog.c        src/creal.c             src/ctanh.def.h
+src_newcomplex =  \
+src/cabs.c   src/cargf.c  src/ccosl.c  src/cimag.c   src/clogf.c  src/conjl.c  src/cproj.c   src/crealf.c  src/csinl.c   src/ctan.c  \
+src/cabsf.c  src/cargl.c  src/cexp.c   src/cimagf.c  src/clogl.c  src/cpow.c   src/cprojf.c  src/creall.c  src/csqrt.c   src/ctanf.c \
+src/cabsl.c  src/ccos.c   src/cexpf.c  src/cimagl.c  src/conj.c   src/cpowf.c  src/cprojl.c  src/csin.c    src/csqrtf.c  src/ctanl.c \
+src/carg.c   src/ccosf.c  src/cexpl.c  src/clog.c    src/conjf.c  src/cpowl.c  src/creal.c   src/csinf.c   src/csqrtl.c \
+\
+src/cabs.def.h    src/casin.def.h   src/ccos.def.h   src/clog.def.h          src/cproj.def.h  src/csqrt.def.h \
+src/cacos.def.h   src/casinh.def.h  src/ccosh.def.h  src/complex_internal.h  src/creal.def.h  src/ctan.def.h  \
+src/cacosh.def.h  src/catan.def.h   src/cexp.def.h   src/conj.def.h          src/csin.def.h   src/ctanh.def.h \
+src/carg.def.h    src/catanh.def.h  src/cimag.def.h  src/cpow.def.h          src/csinh.def.h
 
 lib_LIBRARIES = libnewcomplex.a
 
-libnewcomplex_a_SOURCES =
-# Add the objects from all the helper libraries instead of source files.
-libnewcomplex_a_LIBADD = \
-	$(src_libnewcomplexf_a_OBJECTS) \
-	$(src_libnewcomplexd_a_OBJECTS) \
-	$(src_libnewcomplexld_a_OBJECTS)
-libnewcomplex_a_DEPENDENCIES = $(newcomplex_libraries)
-
-# Helper libraries.
-newcomplex_libraries = \
-	src/libnewcomplexf.a \
-	src/libnewcomplexd.a \
-	src/libnewcomplexld.a
-noinst_LIBRARIES = $(newcomplex_libraries)
-
-src_libnewcomplexf_a_SOURCES = $(newcomplex_src) src/complex.def_f.h
-src_libnewcomplexf_a_CPPFLAGS = -D_NEWCOMPLEX_FLOAT $(AM_CPPFLAGS)
-
-src_libnewcomplexd_a_SOURCES = $(newcomplex_src) src/complex.def_d.h
-src_libnewcomplexd_a_CPPFLAGS = -D_NEWCOMPLEX_DOUBLE $(AM_CPPFLAGS)
-
-src_libnewcomplexld_a_SOURCES = $(newcomplex_src) src/complex.def_ld.h
-src_libnewcomplexld_a_CPPFLAGS = -D_NEWCOMPLEX_LDOUBLE $(AM_CPPFLAGS)
+libnewcomplex_a_SOURCES = $(src_newcomplex)
 
 newcomplex_tests = \
   tests/cabs \

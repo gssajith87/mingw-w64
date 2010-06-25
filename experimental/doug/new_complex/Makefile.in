@@ -34,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 check_PROGRAMS = $(am__EXEEXT_1)
 subdir = .
-DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
+DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(top_srcdir)/configure INSTALL build-aux/depcomp \
 	build-aux/install-sh build-aux/missing
@@ -70,7 +70,7 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)"
-LIBRARIES = $(lib_LIBRARIES) $(noinst_LIBRARIES)
+LIBRARIES = $(lib_LIBRARIES)
 AR = ar
 ARFLAGS = cru
 AM_V_AR = $(am__v_AR_$(V))
@@ -80,60 +80,24 @@ AM_V_at = $(am__v_at_$(V))
 am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
 am__v_at_0 = @
 libnewcomplex_a_AR = $(AR) $(ARFLAGS)
-am_libnewcomplex_a_OBJECTS =
-libnewcomplex_a_OBJECTS = $(am_libnewcomplex_a_OBJECTS)
-src_libnewcomplexd_a_AR = $(AR) $(ARFLAGS)
-src_libnewcomplexd_a_LIBADD =
+libnewcomplex_a_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-am__objects_1 = src/src_libnewcomplexd_a-cabs.$(OBJEXT) \
-	src/src_libnewcomplexd_a-ccos.$(OBJEXT) \
-	src/src_libnewcomplexd_a-csin.$(OBJEXT) \
-	src/src_libnewcomplexd_a-conj.$(OBJEXT) \
-	src/src_libnewcomplexd_a-carg.$(OBJEXT) \
-	src/src_libnewcomplexd_a-cexp.$(OBJEXT) \
-	src/src_libnewcomplexd_a-cpow.$(OBJEXT) \
-	src/src_libnewcomplexd_a-csqrt.$(OBJEXT) \
-	src/src_libnewcomplexd_a-cimag.$(OBJEXT) \
-	src/src_libnewcomplexd_a-cproj.$(OBJEXT) \
-	src/src_libnewcomplexd_a-ctan.$(OBJEXT) \
-	src/src_libnewcomplexd_a-clog.$(OBJEXT) \
-	src/src_libnewcomplexd_a-creal.$(OBJEXT)
-am_src_libnewcomplexd_a_OBJECTS = $(am__objects_1)
-src_libnewcomplexd_a_OBJECTS = $(am_src_libnewcomplexd_a_OBJECTS)
-src_libnewcomplexf_a_AR = $(AR) $(ARFLAGS)
-src_libnewcomplexf_a_LIBADD =
-am__objects_2 = src/src_libnewcomplexf_a-cabs.$(OBJEXT) \
-	src/src_libnewcomplexf_a-ccos.$(OBJEXT) \
-	src/src_libnewcomplexf_a-csin.$(OBJEXT) \
-	src/src_libnewcomplexf_a-conj.$(OBJEXT) \
-	src/src_libnewcomplexf_a-carg.$(OBJEXT) \
-	src/src_libnewcomplexf_a-cexp.$(OBJEXT) \
-	src/src_libnewcomplexf_a-cpow.$(OBJEXT) \
-	src/src_libnewcomplexf_a-csqrt.$(OBJEXT) \
-	src/src_libnewcomplexf_a-cimag.$(OBJEXT) \
-	src/src_libnewcomplexf_a-cproj.$(OBJEXT) \
-	src/src_libnewcomplexf_a-ctan.$(OBJEXT) \
-	src/src_libnewcomplexf_a-clog.$(OBJEXT) \
-	src/src_libnewcomplexf_a-creal.$(OBJEXT)
-am_src_libnewcomplexf_a_OBJECTS = $(am__objects_2)
-src_libnewcomplexf_a_OBJECTS = $(am_src_libnewcomplexf_a_OBJECTS)
-src_libnewcomplexld_a_AR = $(AR) $(ARFLAGS)
-src_libnewcomplexld_a_LIBADD =
-am__objects_3 = src/src_libnewcomplexld_a-cabs.$(OBJEXT) \
-	src/src_libnewcomplexld_a-ccos.$(OBJEXT) \
-	src/src_libnewcomplexld_a-csin.$(OBJEXT) \
-	src/src_libnewcomplexld_a-conj.$(OBJEXT) \
-	src/src_libnewcomplexld_a-carg.$(OBJEXT) \
-	src/src_libnewcomplexld_a-cexp.$(OBJEXT) \
-	src/src_libnewcomplexld_a-cpow.$(OBJEXT) \
-	src/src_libnewcomplexld_a-csqrt.$(OBJEXT) \
-	src/src_libnewcomplexld_a-cimag.$(OBJEXT) \
-	src/src_libnewcomplexld_a-cproj.$(OBJEXT) \
-	src/src_libnewcomplexld_a-ctan.$(OBJEXT) \
-	src/src_libnewcomplexld_a-clog.$(OBJEXT) \
-	src/src_libnewcomplexld_a-creal.$(OBJEXT)
-am_src_libnewcomplexld_a_OBJECTS = $(am__objects_3)
-src_libnewcomplexld_a_OBJECTS = $(am_src_libnewcomplexld_a_OBJECTS)
+am__objects_1 = src/cabs.$(OBJEXT) src/cargf.$(OBJEXT) \
+	src/ccosl.$(OBJEXT) src/cimag.$(OBJEXT) src/clogf.$(OBJEXT) \
+	src/conjl.$(OBJEXT) src/cproj.$(OBJEXT) src/crealf.$(OBJEXT) \
+	src/csinl.$(OBJEXT) src/ctan.$(OBJEXT) src/cabsf.$(OBJEXT) \
+	src/cargl.$(OBJEXT) src/cexp.$(OBJEXT) src/cimagf.$(OBJEXT) \
+	src/clogl.$(OBJEXT) src/cpow.$(OBJEXT) src/cprojf.$(OBJEXT) \
+	src/creall.$(OBJEXT) src/csqrt.$(OBJEXT) src/ctanf.$(OBJEXT) \
+	src/cabsl.$(OBJEXT) src/ccos.$(OBJEXT) src/cexpf.$(OBJEXT) \
+	src/cimagl.$(OBJEXT) src/conj.$(OBJEXT) src/cpowf.$(OBJEXT) \
+	src/cprojl.$(OBJEXT) src/csin.$(OBJEXT) src/csqrtf.$(OBJEXT) \
+	src/ctanl.$(OBJEXT) src/carg.$(OBJEXT) src/ccosf.$(OBJEXT) \
+	src/cexpl.$(OBJEXT) src/clog.$(OBJEXT) src/conjf.$(OBJEXT) \
+	src/cpowl.$(OBJEXT) src/creal.$(OBJEXT) src/csinf.$(OBJEXT) \
+	src/csqrtl.$(OBJEXT)
+am_libnewcomplex_a_OBJECTS = $(am__objects_1)
+libnewcomplex_a_OBJECTS = $(am_libnewcomplex_a_OBJECTS)
 am__EXEEXT_1 = tests/cabs$(EXEEXT) tests/cabsf$(EXEEXT) \
 	tests/cabsl$(EXEEXT) tests/cacos$(EXEEXT) \
 	tests/cacosf$(EXEEXT) tests/cacosh$(EXEEXT) \
@@ -166,208 +130,271 @@ am__EXEEXT_1 = tests/cabs$(EXEEXT) tests/cabsf$(EXEEXT) \
 tests_cabs_SOURCES = tests/cabs.c
 tests_cabs_OBJECTS = tests/cabs.$(OBJEXT)
 tests_cabs_LDADD = $(LDADD)
+tests_cabs_DEPENDENCIES = libnewcomplex.a
 tests_cabsf_SOURCES = tests/cabsf.c
 tests_cabsf_OBJECTS = tests/cabsf.$(OBJEXT)
 tests_cabsf_LDADD = $(LDADD)
+tests_cabsf_DEPENDENCIES = libnewcomplex.a
 tests_cabsl_SOURCES = tests/cabsl.c
 tests_cabsl_OBJECTS = tests/cabsl.$(OBJEXT)
 tests_cabsl_LDADD = $(LDADD)
+tests_cabsl_DEPENDENCIES = libnewcomplex.a
 tests_cacos_SOURCES = tests/cacos.c
 tests_cacos_OBJECTS = tests/cacos.$(OBJEXT)
 tests_cacos_LDADD = $(LDADD)
+tests_cacos_DEPENDENCIES = libnewcomplex.a
 tests_cacosf_SOURCES = tests/cacosf.c
 tests_cacosf_OBJECTS = tests/cacosf.$(OBJEXT)
 tests_cacosf_LDADD = $(LDADD)
+tests_cacosf_DEPENDENCIES = libnewcomplex.a
 tests_cacosh_SOURCES = tests/cacosh.c
 tests_cacosh_OBJECTS = tests/cacosh.$(OBJEXT)
 tests_cacosh_LDADD = $(LDADD)
+tests_cacosh_DEPENDENCIES = libnewcomplex.a
 tests_cacoshf_SOURCES = tests/cacoshf.c
 tests_cacoshf_OBJECTS = tests/cacoshf.$(OBJEXT)
 tests_cacoshf_LDADD = $(LDADD)
+tests_cacoshf_DEPENDENCIES = libnewcomplex.a
 tests_cacoshl_SOURCES = tests/cacoshl.c
 tests_cacoshl_OBJECTS = tests/cacoshl.$(OBJEXT)
 tests_cacoshl_LDADD = $(LDADD)
+tests_cacoshl_DEPENDENCIES = libnewcomplex.a
 tests_cacosl_SOURCES = tests/cacosl.c
 tests_cacosl_OBJECTS = tests/cacosl.$(OBJEXT)
 tests_cacosl_LDADD = $(LDADD)
+tests_cacosl_DEPENDENCIES = libnewcomplex.a
 tests_carg_SOURCES = tests/carg.c
 tests_carg_OBJECTS = tests/carg.$(OBJEXT)
 tests_carg_LDADD = $(LDADD)
+tests_carg_DEPENDENCIES = libnewcomplex.a
 tests_cargf_SOURCES = tests/cargf.c
 tests_cargf_OBJECTS = tests/cargf.$(OBJEXT)
 tests_cargf_LDADD = $(LDADD)
+tests_cargf_DEPENDENCIES = libnewcomplex.a
 tests_cargl_SOURCES = tests/cargl.c
 tests_cargl_OBJECTS = tests/cargl.$(OBJEXT)
 tests_cargl_LDADD = $(LDADD)
+tests_cargl_DEPENDENCIES = libnewcomplex.a
 tests_casin_SOURCES = tests/casin.c
 tests_casin_OBJECTS = tests/casin.$(OBJEXT)
 tests_casin_LDADD = $(LDADD)
+tests_casin_DEPENDENCIES = libnewcomplex.a
 tests_casinf_SOURCES = tests/casinf.c
 tests_casinf_OBJECTS = tests/casinf.$(OBJEXT)
 tests_casinf_LDADD = $(LDADD)
+tests_casinf_DEPENDENCIES = libnewcomplex.a
 tests_casinh_SOURCES = tests/casinh.c
 tests_casinh_OBJECTS = tests/casinh.$(OBJEXT)
 tests_casinh_LDADD = $(LDADD)
+tests_casinh_DEPENDENCIES = libnewcomplex.a
 tests_casinhf_SOURCES = tests/casinhf.c
 tests_casinhf_OBJECTS = tests/casinhf.$(OBJEXT)
 tests_casinhf_LDADD = $(LDADD)
+tests_casinhf_DEPENDENCIES = libnewcomplex.a
 tests_casinhl_SOURCES = tests/casinhl.c
 tests_casinhl_OBJECTS = tests/casinhl.$(OBJEXT)
 tests_casinhl_LDADD = $(LDADD)
+tests_casinhl_DEPENDENCIES = libnewcomplex.a
 tests_casinl_SOURCES = tests/casinl.c
 tests_casinl_OBJECTS = tests/casinl.$(OBJEXT)
 tests_casinl_LDADD = $(LDADD)
+tests_casinl_DEPENDENCIES = libnewcomplex.a
 tests_catan_SOURCES = tests/catan.c
 tests_catan_OBJECTS = tests/catan.$(OBJEXT)
 tests_catan_LDADD = $(LDADD)
+tests_catan_DEPENDENCIES = libnewcomplex.a
 tests_catanf_SOURCES = tests/catanf.c
 tests_catanf_OBJECTS = tests/catanf.$(OBJEXT)
 tests_catanf_LDADD = $(LDADD)
+tests_catanf_DEPENDENCIES = libnewcomplex.a
 tests_catanh_SOURCES = tests/catanh.c
 tests_catanh_OBJECTS = tests/catanh.$(OBJEXT)
 tests_catanh_LDADD = $(LDADD)
+tests_catanh_DEPENDENCIES = libnewcomplex.a
 tests_catanhf_SOURCES = tests/catanhf.c
 tests_catanhf_OBJECTS = tests/catanhf.$(OBJEXT)
 tests_catanhf_LDADD = $(LDADD)
+tests_catanhf_DEPENDENCIES = libnewcomplex.a
 tests_catanhl_SOURCES = tests/catanhl.c
 tests_catanhl_OBJECTS = tests/catanhl.$(OBJEXT)
 tests_catanhl_LDADD = $(LDADD)
+tests_catanhl_DEPENDENCIES = libnewcomplex.a
 tests_catanl_SOURCES = tests/catanl.c
 tests_catanl_OBJECTS = tests/catanl.$(OBJEXT)
 tests_catanl_LDADD = $(LDADD)
+tests_catanl_DEPENDENCIES = libnewcomplex.a
 tests_ccos_SOURCES = tests/ccos.c
 tests_ccos_OBJECTS = tests/ccos.$(OBJEXT)
 tests_ccos_LDADD = $(LDADD)
+tests_ccos_DEPENDENCIES = libnewcomplex.a
 tests_ccosf_SOURCES = tests/ccosf.c
 tests_ccosf_OBJECTS = tests/ccosf.$(OBJEXT)
 tests_ccosf_LDADD = $(LDADD)
+tests_ccosf_DEPENDENCIES = libnewcomplex.a
 tests_ccosh_SOURCES = tests/ccosh.c
 tests_ccosh_OBJECTS = tests/ccosh.$(OBJEXT)
 tests_ccosh_LDADD = $(LDADD)
+tests_ccosh_DEPENDENCIES = libnewcomplex.a
 tests_ccoshf_SOURCES = tests/ccoshf.c
 tests_ccoshf_OBJECTS = tests/ccoshf.$(OBJEXT)
 tests_ccoshf_LDADD = $(LDADD)
+tests_ccoshf_DEPENDENCIES = libnewcomplex.a
 tests_ccoshl_SOURCES = tests/ccoshl.c
 tests_ccoshl_OBJECTS = tests/ccoshl.$(OBJEXT)
 tests_ccoshl_LDADD = $(LDADD)
+tests_ccoshl_DEPENDENCIES = libnewcomplex.a
 tests_ccosl_SOURCES = tests/ccosl.c
 tests_ccosl_OBJECTS = tests/ccosl.$(OBJEXT)
 tests_ccosl_LDADD = $(LDADD)
+tests_ccosl_DEPENDENCIES = libnewcomplex.a
 tests_cexp_SOURCES = tests/cexp.c
 tests_cexp_OBJECTS = tests/cexp.$(OBJEXT)
 tests_cexp_LDADD = $(LDADD)
+tests_cexp_DEPENDENCIES = libnewcomplex.a
 tests_cexpf_SOURCES = tests/cexpf.c
 tests_cexpf_OBJECTS = tests/cexpf.$(OBJEXT)
 tests_cexpf_LDADD = $(LDADD)
+tests_cexpf_DEPENDENCIES = libnewcomplex.a
 tests_cexpl_SOURCES = tests/cexpl.c
 tests_cexpl_OBJECTS = tests/cexpl.$(OBJEXT)
 tests_cexpl_LDADD = $(LDADD)
+tests_cexpl_DEPENDENCIES = libnewcomplex.a
 tests_cimag_SOURCES = tests/cimag.c
 tests_cimag_OBJECTS = tests/cimag.$(OBJEXT)
 tests_cimag_LDADD = $(LDADD)
+tests_cimag_DEPENDENCIES = libnewcomplex.a
 tests_cimagf_SOURCES = tests/cimagf.c
 tests_cimagf_OBJECTS = tests/cimagf.$(OBJEXT)
 tests_cimagf_LDADD = $(LDADD)
+tests_cimagf_DEPENDENCIES = libnewcomplex.a
 tests_cimagl_SOURCES = tests/cimagl.c
 tests_cimagl_OBJECTS = tests/cimagl.$(OBJEXT)
 tests_cimagl_LDADD = $(LDADD)
+tests_cimagl_DEPENDENCIES = libnewcomplex.a
 tests_clog_SOURCES = tests/clog.c
 tests_clog_OBJECTS = tests/clog.$(OBJEXT)
 tests_clog_LDADD = $(LDADD)
+tests_clog_DEPENDENCIES = libnewcomplex.a
 tests_clogf_SOURCES = tests/clogf.c
 tests_clogf_OBJECTS = tests/clogf.$(OBJEXT)
 tests_clogf_LDADD = $(LDADD)
+tests_clogf_DEPENDENCIES = libnewcomplex.a
 tests_clogl_SOURCES = tests/clogl.c
 tests_clogl_OBJECTS = tests/clogl.$(OBJEXT)
 tests_clogl_LDADD = $(LDADD)
+tests_clogl_DEPENDENCIES = libnewcomplex.a
 tests_conj_SOURCES = tests/conj.c
 tests_conj_OBJECTS = tests/conj.$(OBJEXT)
 tests_conj_LDADD = $(LDADD)
+tests_conj_DEPENDENCIES = libnewcomplex.a
 tests_conjf_SOURCES = tests/conjf.c
 tests_conjf_OBJECTS = tests/conjf.$(OBJEXT)
 tests_conjf_LDADD = $(LDADD)
+tests_conjf_DEPENDENCIES = libnewcomplex.a
 tests_conjl_SOURCES = tests/conjl.c
 tests_conjl_OBJECTS = tests/conjl.$(OBJEXT)
 tests_conjl_LDADD = $(LDADD)
+tests_conjl_DEPENDENCIES = libnewcomplex.a
 tests_cpow_SOURCES = tests/cpow.c
 tests_cpow_OBJECTS = tests/cpow.$(OBJEXT)
 tests_cpow_LDADD = $(LDADD)
+tests_cpow_DEPENDENCIES = libnewcomplex.a
 tests_cpowf_SOURCES = tests/cpowf.c
 tests_cpowf_OBJECTS = tests/cpowf.$(OBJEXT)
 tests_cpowf_LDADD = $(LDADD)
+tests_cpowf_DEPENDENCIES = libnewcomplex.a
 tests_cpowl_SOURCES = tests/cpowl.c
 tests_cpowl_OBJECTS = tests/cpowl.$(OBJEXT)
 tests_cpowl_LDADD = $(LDADD)
+tests_cpowl_DEPENDENCIES = libnewcomplex.a
 tests_cproj_SOURCES = tests/cproj.c
 tests_cproj_OBJECTS = tests/cproj.$(OBJEXT)
 tests_cproj_LDADD = $(LDADD)
+tests_cproj_DEPENDENCIES = libnewcomplex.a
 tests_cprojf_SOURCES = tests/cprojf.c
 tests_cprojf_OBJECTS = tests/cprojf.$(OBJEXT)
 tests_cprojf_LDADD = $(LDADD)
+tests_cprojf_DEPENDENCIES = libnewcomplex.a
 tests_cprojl_SOURCES = tests/cprojl.c
 tests_cprojl_OBJECTS = tests/cprojl.$(OBJEXT)
 tests_cprojl_LDADD = $(LDADD)
+tests_cprojl_DEPENDENCIES = libnewcomplex.a
 tests_creal_SOURCES = tests/creal.c
 tests_creal_OBJECTS = tests/creal.$(OBJEXT)
 tests_creal_LDADD = $(LDADD)
+tests_creal_DEPENDENCIES = libnewcomplex.a
 tests_crealf_SOURCES = tests/crealf.c
 tests_crealf_OBJECTS = tests/crealf.$(OBJEXT)
 tests_crealf_LDADD = $(LDADD)
+tests_crealf_DEPENDENCIES = libnewcomplex.a
 tests_creall_SOURCES = tests/creall.c
 tests_creall_OBJECTS = tests/creall.$(OBJEXT)
 tests_creall_LDADD = $(LDADD)
+tests_creall_DEPENDENCIES = libnewcomplex.a
 tests_csin_SOURCES = tests/csin.c
 tests_csin_OBJECTS = tests/csin.$(OBJEXT)
 tests_csin_LDADD = $(LDADD)
+tests_csin_DEPENDENCIES = libnewcomplex.a
 tests_csinf_SOURCES = tests/csinf.c
 tests_csinf_OBJECTS = tests/csinf.$(OBJEXT)
 tests_csinf_LDADD = $(LDADD)
+tests_csinf_DEPENDENCIES = libnewcomplex.a
 tests_csinh_SOURCES = tests/csinh.c
 tests_csinh_OBJECTS = tests/csinh.$(OBJEXT)
 tests_csinh_LDADD = $(LDADD)
+tests_csinh_DEPENDENCIES = libnewcomplex.a
 tests_csinhf_SOURCES = tests/csinhf.c
 tests_csinhf_OBJECTS = tests/csinhf.$(OBJEXT)
 tests_csinhf_LDADD = $(LDADD)
+tests_csinhf_DEPENDENCIES = libnewcomplex.a
 tests_csinhl_SOURCES = tests/csinhl.c
 tests_csinhl_OBJECTS = tests/csinhl.$(OBJEXT)
 tests_csinhl_LDADD = $(LDADD)
+tests_csinhl_DEPENDENCIES = libnewcomplex.a
 tests_csinl_SOURCES = tests/csinl.c
 tests_csinl_OBJECTS = tests/csinl.$(OBJEXT)
 tests_csinl_LDADD = $(LDADD)
+tests_csinl_DEPENDENCIES = libnewcomplex.a
 tests_csqrt_SOURCES = tests/csqrt.c
 tests_csqrt_OBJECTS = tests/csqrt.$(OBJEXT)
 tests_csqrt_LDADD = $(LDADD)
+tests_csqrt_DEPENDENCIES = libnewcomplex.a
 tests_csqrtf_SOURCES = tests/csqrtf.c
 tests_csqrtf_OBJECTS = tests/csqrtf.$(OBJEXT)
 tests_csqrtf_LDADD = $(LDADD)
+tests_csqrtf_DEPENDENCIES = libnewcomplex.a
 tests_csqrtl_SOURCES = tests/csqrtl.c
 tests_csqrtl_OBJECTS = tests/csqrtl.$(OBJEXT)
 tests_csqrtl_LDADD = $(LDADD)
+tests_csqrtl_DEPENDENCIES = libnewcomplex.a
 tests_ctan_SOURCES = tests/ctan.c
 tests_ctan_OBJECTS = tests/ctan.$(OBJEXT)
 tests_ctan_LDADD = $(LDADD)
+tests_ctan_DEPENDENCIES = libnewcomplex.a
 tests_ctanf_SOURCES = tests/ctanf.c
 tests_ctanf_OBJECTS = tests/ctanf.$(OBJEXT)
 tests_ctanf_LDADD = $(LDADD)
+tests_ctanf_DEPENDENCIES = libnewcomplex.a
 tests_ctanh_SOURCES = tests/ctanh.c
 tests_ctanh_OBJECTS = tests/ctanh.$(OBJEXT)
 tests_ctanh_LDADD = $(LDADD)
+tests_ctanh_DEPENDENCIES = libnewcomplex.a
 tests_ctanhf_SOURCES = tests/ctanhf.c
 tests_ctanhf_OBJECTS = tests/ctanhf.$(OBJEXT)
 tests_ctanhf_LDADD = $(LDADD)
+tests_ctanhf_DEPENDENCIES = libnewcomplex.a
 tests_ctanhl_SOURCES = tests/ctanhl.c
 tests_ctanhl_OBJECTS = tests/ctanhl.$(OBJEXT)
 tests_ctanhl_LDADD = $(LDADD)
+tests_ctanhl_DEPENDENCIES = libnewcomplex.a
 tests_ctanl_SOURCES = tests/ctanl.c
 tests_ctanl_OBJECTS = tests/ctanl.$(OBJEXT)
 tests_ctanl_LDADD = $(LDADD)
+tests_ctanl_DEPENDENCIES = libnewcomplex.a
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
-AM_V_lt = $(am__v_lt_$(V))
-am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
-am__v_lt_0 = --silent
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_$(V))
@@ -381,9 +408,7 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(libnewcomplex_a_SOURCES) $(src_libnewcomplexd_a_SOURCES) \
-	$(src_libnewcomplexf_a_SOURCES) \
-	$(src_libnewcomplexld_a_SOURCES) tests/cabs.c tests/cabsf.c \
+SOURCES = $(libnewcomplex_a_SOURCES) tests/cabs.c tests/cabsf.c \
 	tests/cabsl.c tests/cacos.c tests/cacosf.c tests/cacosh.c \
 	tests/cacoshf.c tests/cacoshl.c tests/cacosl.c tests/carg.c \
 	tests/cargf.c tests/cargl.c tests/casin.c tests/casinf.c \
@@ -400,10 +425,7 @@ SOURCES = $(libnewcomplex_a_SOURCES) $(src_libnewcomplexd_a_SOURCES) \
 	tests/csinhf.c tests/csinhl.c tests/csinl.c tests/csqrt.c \
 	tests/csqrtf.c tests/csqrtl.c tests/ctan.c tests/ctanf.c \
 	tests/ctanh.c tests/ctanhf.c tests/ctanhl.c tests/ctanl.c
-DIST_SOURCES = $(libnewcomplex_a_SOURCES) \
-	$(src_libnewcomplexd_a_SOURCES) \
-	$(src_libnewcomplexf_a_SOURCES) \
-	$(src_libnewcomplexld_a_SOURCES) tests/cabs.c tests/cabsf.c \
+DIST_SOURCES = $(libnewcomplex_a_SOURCES) tests/cabs.c tests/cabsf.c \
 	tests/cabsl.c tests/cacos.c tests/cacosf.c tests/cacosh.c \
 	tests/cacoshf.c tests/cacoshl.c tests/cacosl.c tests/carg.c \
 	tests/cargf.c tests/cargl.c tests/casin.c tests/casinf.c \
@@ -583,40 +605,20 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I $(srcdir)/src
-newcomplex_src = \
-src/cabs.c        src/catanh.def.h  src/clog.def.h          src/creal.def.h \
-src/cabs.def.h    src/ccos.c        src/complex_internal.h  src/csin.c      \
-src/cacos.def.h   src/ccos.def.h    src/conj.c              src/csin.def.h  \
-src/cacosh.def.h  src/ccosh.def.h   src/conj.def.h          src/csinh.def.h \
-src/carg.c        src/cexp.c        src/cpow.c              src/csqrt.c     \
-src/carg.def.h    src/cexp.def.h    src/cpow.def.h          src/csqrt.def.h \
-src/casin.def.h   src/cimag.c       src/cproj.c             src/ctan.c      \
-src/casinh.def.h  src/cimag.def.h   src/cproj.def.h         src/ctan.def.h  \
-src/catan.def.h   src/clog.c        src/creal.c             src/ctanh.def.h
+LDADD = libnewcomplex.a
+src_newcomplex = \
+src/cabs.c   src/cargf.c  src/ccosl.c  src/cimag.c   src/clogf.c  src/conjl.c  src/cproj.c   src/crealf.c  src/csinl.c   src/ctan.c  \
+src/cabsf.c  src/cargl.c  src/cexp.c   src/cimagf.c  src/clogl.c  src/cpow.c   src/cprojf.c  src/creall.c  src/csqrt.c   src/ctanf.c \
+src/cabsl.c  src/ccos.c   src/cexpf.c  src/cimagl.c  src/conj.c   src/cpowf.c  src/cprojl.c  src/csin.c    src/csqrtf.c  src/ctanl.c \
+src/carg.c   src/ccosf.c  src/cexpl.c  src/clog.c    src/conjf.c  src/cpowl.c  src/creal.c   src/csinf.c   src/csqrtl.c \
+\
+src/cabs.def.h    src/casin.def.h   src/ccos.def.h   src/clog.def.h          src/cproj.def.h  src/csqrt.def.h \
+src/cacos.def.h   src/casinh.def.h  src/ccosh.def.h  src/complex_internal.h  src/creal.def.h  src/ctan.def.h  \
+src/cacosh.def.h  src/catan.def.h   src/cexp.def.h   src/conj.def.h          src/csin.def.h   src/ctanh.def.h \
+src/carg.def.h    src/catanh.def.h  src/cimag.def.h  src/cpow.def.h          src/csinh.def.h
 
 lib_LIBRARIES = libnewcomplex.a
-libnewcomplex_a_SOURCES = 
-# Add the objects from all the helper libraries instead of source files.
-libnewcomplex_a_LIBADD = \
-	$(src_libnewcomplexf_a_OBJECTS) \
-	$(src_libnewcomplexd_a_OBJECTS) \
-	$(src_libnewcomplexld_a_OBJECTS)
-
-libnewcomplex_a_DEPENDENCIES = $(newcomplex_libraries)
-
-# Helper libraries.
-newcomplex_libraries = \
-	src/libnewcomplexf.a \
-	src/libnewcomplexd.a \
-	src/libnewcomplexld.a
-
-noinst_LIBRARIES = $(newcomplex_libraries)
-src_libnewcomplexf_a_SOURCES = $(newcomplex_src) src/complex.def_f.h
-src_libnewcomplexf_a_CPPFLAGS = -D_NEWCOMPLEX_FLOAT $(AM_CPPFLAGS)
-src_libnewcomplexd_a_SOURCES = $(newcomplex_src) src/complex.def_d.h
-src_libnewcomplexd_a_CPPFLAGS = -D_NEWCOMPLEX_DOUBLE $(AM_CPPFLAGS)
-src_libnewcomplexld_a_SOURCES = $(newcomplex_src) src/complex.def_ld.h
-src_libnewcomplexld_a_CPPFLAGS = -D_NEWCOMPLEX_LDOUBLE $(AM_CPPFLAGS)
+libnewcomplex_a_SOURCES = $(src_newcomplex)
 newcomplex_tests = \
   tests/cabs \
   tests/cabsf \
@@ -774,109 +776,63 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
-
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-libnewcomplex.a: $(libnewcomplex_a_OBJECTS) $(libnewcomplex_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f libnewcomplex.a
-	$(AM_V_AR)$(libnewcomplex_a_AR) libnewcomplex.a $(libnewcomplex_a_OBJECTS) $(libnewcomplex_a_LIBADD)
-	$(AM_V_at)$(RANLIB) libnewcomplex.a
 src/$(am__dirstamp):
 	@$(MKDIR_P) src
 	@: > src/$(am__dirstamp)
 src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-cabs.$(OBJEXT): src/$(am__dirstamp) \
+src/cabs.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cargf.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/ccosl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cimag.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/clogf.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/conjl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cproj.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/crealf.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-ccos.$(OBJEXT): src/$(am__dirstamp) \
+src/csinl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/ctan.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cabsf.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cargl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cexp.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cimagf.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-csin.$(OBJEXT): src/$(am__dirstamp) \
+src/clogl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cpow.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cprojf.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-conj.$(OBJEXT): src/$(am__dirstamp) \
+src/creall.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-carg.$(OBJEXT): src/$(am__dirstamp) \
+src/csqrt.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/ctanf.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cabsl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/ccos.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cexpf.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cimagl.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-cexp.$(OBJEXT): src/$(am__dirstamp) \
+src/conj.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cpowf.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cprojl.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-cpow.$(OBJEXT): src/$(am__dirstamp) \
+src/csin.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/csqrtf.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-csqrt.$(OBJEXT): src/$(am__dirstamp) \
+src/ctanl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/carg.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/ccosf.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cexpl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/clog.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/conjf.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cpowl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/creal.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/csinf.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/csqrtl.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-cimag.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-cproj.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-ctan.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-clog.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexd_a-creal.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/libnewcomplexd.a: $(src_libnewcomplexd_a_OBJECTS) $(src_libnewcomplexd_a_DEPENDENCIES) src/$(am__dirstamp)
-	$(AM_V_at)-rm -f src/libnewcomplexd.a
-	$(AM_V_AR)$(src_libnewcomplexd_a_AR) src/libnewcomplexd.a $(src_libnewcomplexd_a_OBJECTS) $(src_libnewcomplexd_a_LIBADD)
-	$(AM_V_at)$(RANLIB) src/libnewcomplexd.a
-src/src_libnewcomplexf_a-cabs.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-ccos.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-csin.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-conj.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-carg.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-cexp.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-cpow.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-csqrt.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-cimag.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-cproj.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-ctan.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-clog.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexf_a-creal.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/libnewcomplexf.a: $(src_libnewcomplexf_a_OBJECTS) $(src_libnewcomplexf_a_DEPENDENCIES) src/$(am__dirstamp)
-	$(AM_V_at)-rm -f src/libnewcomplexf.a
-	$(AM_V_AR)$(src_libnewcomplexf_a_AR) src/libnewcomplexf.a $(src_libnewcomplexf_a_OBJECTS) $(src_libnewcomplexf_a_LIBADD)
-	$(AM_V_at)$(RANLIB) src/libnewcomplexf.a
-src/src_libnewcomplexld_a-cabs.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-ccos.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-csin.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-conj.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-carg.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-cexp.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-cpow.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-csqrt.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-cimag.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-cproj.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-ctan.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-clog.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_libnewcomplexld_a-creal.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/libnewcomplexld.a: $(src_libnewcomplexld_a_OBJECTS) $(src_libnewcomplexld_a_DEPENDENCIES) src/$(am__dirstamp)
-	$(AM_V_at)-rm -f src/libnewcomplexld.a
-	$(AM_V_AR)$(src_libnewcomplexld_a_AR) src/libnewcomplexld.a $(src_libnewcomplexld_a_OBJECTS) $(src_libnewcomplexld_a_LIBADD)
-	$(AM_V_at)$(RANLIB) src/libnewcomplexld.a
+libnewcomplex.a: $(libnewcomplex_a_OBJECTS) $(libnewcomplex_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libnewcomplex.a
+	$(AM_V_AR)$(libnewcomplex_a_AR) libnewcomplex.a $(libnewcomplex_a_OBJECTS) $(libnewcomplex_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libnewcomplex.a
 
 clean-checkPROGRAMS:
 	-test -z "$(check_PROGRAMS)" || rm -f $(check_PROGRAMS)
@@ -1219,45 +1175,45 @@ tests/ctanl$(EXEEXT): $(tests_ctanl_OBJECTS) $(tests_ctanl_DEPENDENCIES) tests/$
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-cabs.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-carg.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-ccos.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-cexp.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-cimag.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-clog.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-conj.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-cpow.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-cproj.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-creal.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-csin.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-csqrt.$(OBJEXT)
-	-rm -f src/src_libnewcomplexd_a-ctan.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-cabs.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-carg.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-ccos.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-cexp.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-cimag.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-clog.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-conj.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-cpow.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-cproj.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-creal.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-csin.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-csqrt.$(OBJEXT)
-	-rm -f src/src_libnewcomplexf_a-ctan.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-cabs.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-carg.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-ccos.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-cexp.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-cimag.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-clog.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-conj.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-cpow.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-cproj.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-creal.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-csin.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-csqrt.$(OBJEXT)
-	-rm -f src/src_libnewcomplexld_a-ctan.$(OBJEXT)
+	-rm -f src/cabs.$(OBJEXT)
+	-rm -f src/cabsf.$(OBJEXT)
+	-rm -f src/cabsl.$(OBJEXT)
+	-rm -f src/carg.$(OBJEXT)
+	-rm -f src/cargf.$(OBJEXT)
+	-rm -f src/cargl.$(OBJEXT)
+	-rm -f src/ccos.$(OBJEXT)
+	-rm -f src/ccosf.$(OBJEXT)
+	-rm -f src/ccosl.$(OBJEXT)
+	-rm -f src/cexp.$(OBJEXT)
+	-rm -f src/cexpf.$(OBJEXT)
+	-rm -f src/cexpl.$(OBJEXT)
+	-rm -f src/cimag.$(OBJEXT)
+	-rm -f src/cimagf.$(OBJEXT)
+	-rm -f src/cimagl.$(OBJEXT)
+	-rm -f src/clog.$(OBJEXT)
+	-rm -f src/clogf.$(OBJEXT)
+	-rm -f src/clogl.$(OBJEXT)
+	-rm -f src/conj.$(OBJEXT)
+	-rm -f src/conjf.$(OBJEXT)
+	-rm -f src/conjl.$(OBJEXT)
+	-rm -f src/cpow.$(OBJEXT)
+	-rm -f src/cpowf.$(OBJEXT)
+	-rm -f src/cpowl.$(OBJEXT)
+	-rm -f src/cproj.$(OBJEXT)
+	-rm -f src/cprojf.$(OBJEXT)
+	-rm -f src/cprojl.$(OBJEXT)
+	-rm -f src/creal.$(OBJEXT)
+	-rm -f src/crealf.$(OBJEXT)
+	-rm -f src/creall.$(OBJEXT)
+	-rm -f src/csin.$(OBJEXT)
+	-rm -f src/csinf.$(OBJEXT)
+	-rm -f src/csinl.$(OBJEXT)
+	-rm -f src/csqrt.$(OBJEXT)
+	-rm -f src/csqrtf.$(OBJEXT)
+	-rm -f src/csqrtl.$(OBJEXT)
+	-rm -f src/ctan.$(OBJEXT)
+	-rm -f src/ctanf.$(OBJEXT)
+	-rm -f src/ctanl.$(OBJEXT)
 	-rm -f tests/cabs.$(OBJEXT)
 	-rm -f tests/cabsf.$(OBJEXT)
 	-rm -f tests/cabsl.$(OBJEXT)
@@ -1328,45 +1284,45 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-cabs.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-carg.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-ccos.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-cexp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-cimag.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-clog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-conj.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-cpow.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-cproj.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-creal.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-csin.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-csqrt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexd_a-ctan.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-cabs.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-carg.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-ccos.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-cexp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-cimag.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-clog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-conj.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-cpow.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-cproj.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-creal.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-csin.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-csqrt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexf_a-ctan.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-cabs.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-carg.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-ccos.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-cexp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-cimag.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-clog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-conj.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-cpow.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-cproj.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-creal.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-csin.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-csqrt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libnewcomplexld_a-ctan.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cabs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cabsf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cabsl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/carg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cargf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cargl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ccos.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ccosf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ccosl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cexp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cexpf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cexpl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cimag.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cimagf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cimagl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/clog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/clogf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/clogl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/conj.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/conjf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/conjl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cpow.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cpowf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cpowl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cproj.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cprojf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cprojl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/creal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/crealf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/creall.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/csin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/csinf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/csinl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/csqrt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/csqrtf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/csqrtl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ctan.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ctanf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ctanl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cabs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cabsf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cabsl.Po@am__quote@
@@ -1451,630 +1407,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-src/src_libnewcomplexd_a-cabs.o: src/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-cabs.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-cabs.Tpo -c -o src/src_libnewcomplexd_a-cabs.o `test -f 'src/cabs.c' || echo '$(srcdir)/'`src/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-cabs.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-cabs.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cabs.c' object='src/src_libnewcomplexd_a-cabs.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-cabs.o `test -f 'src/cabs.c' || echo '$(srcdir)/'`src/cabs.c
-
-src/src_libnewcomplexd_a-cabs.obj: src/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-cabs.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-cabs.Tpo -c -o src/src_libnewcomplexd_a-cabs.obj `if test -f 'src/cabs.c'; then $(CYGPATH_W) 'src/cabs.c'; else $(CYGPATH_W) '$(srcdir)/src/cabs.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-cabs.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-cabs.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cabs.c' object='src/src_libnewcomplexd_a-cabs.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-cabs.obj `if test -f 'src/cabs.c'; then $(CYGPATH_W) 'src/cabs.c'; else $(CYGPATH_W) '$(srcdir)/src/cabs.c'; fi`
-
-src/src_libnewcomplexd_a-ccos.o: src/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-ccos.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-ccos.Tpo -c -o src/src_libnewcomplexd_a-ccos.o `test -f 'src/ccos.c' || echo '$(srcdir)/'`src/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-ccos.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-ccos.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ccos.c' object='src/src_libnewcomplexd_a-ccos.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-ccos.o `test -f 'src/ccos.c' || echo '$(srcdir)/'`src/ccos.c
-
-src/src_libnewcomplexd_a-ccos.obj: src/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-ccos.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-ccos.Tpo -c -o src/src_libnewcomplexd_a-ccos.obj `if test -f 'src/ccos.c'; then $(CYGPATH_W) 'src/ccos.c'; else $(CYGPATH_W) '$(srcdir)/src/ccos.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-ccos.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-ccos.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ccos.c' object='src/src_libnewcomplexd_a-ccos.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-ccos.obj `if test -f 'src/ccos.c'; then $(CYGPATH_W) 'src/ccos.c'; else $(CYGPATH_W) '$(srcdir)/src/ccos.c'; fi`
-
-src/src_libnewcomplexd_a-csin.o: src/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-csin.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-csin.Tpo -c -o src/src_libnewcomplexd_a-csin.o `test -f 'src/csin.c' || echo '$(srcdir)/'`src/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-csin.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-csin.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csin.c' object='src/src_libnewcomplexd_a-csin.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-csin.o `test -f 'src/csin.c' || echo '$(srcdir)/'`src/csin.c
-
-src/src_libnewcomplexd_a-csin.obj: src/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-csin.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-csin.Tpo -c -o src/src_libnewcomplexd_a-csin.obj `if test -f 'src/csin.c'; then $(CYGPATH_W) 'src/csin.c'; else $(CYGPATH_W) '$(srcdir)/src/csin.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-csin.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-csin.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csin.c' object='src/src_libnewcomplexd_a-csin.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-csin.obj `if test -f 'src/csin.c'; then $(CYGPATH_W) 'src/csin.c'; else $(CYGPATH_W) '$(srcdir)/src/csin.c'; fi`
-
-src/src_libnewcomplexd_a-conj.o: src/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-conj.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-conj.Tpo -c -o src/src_libnewcomplexd_a-conj.o `test -f 'src/conj.c' || echo '$(srcdir)/'`src/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-conj.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-conj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/conj.c' object='src/src_libnewcomplexd_a-conj.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-conj.o `test -f 'src/conj.c' || echo '$(srcdir)/'`src/conj.c
-
-src/src_libnewcomplexd_a-conj.obj: src/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-conj.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-conj.Tpo -c -o src/src_libnewcomplexd_a-conj.obj `if test -f 'src/conj.c'; then $(CYGPATH_W) 'src/conj.c'; else $(CYGPATH_W) '$(srcdir)/src/conj.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-conj.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-conj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/conj.c' object='src/src_libnewcomplexd_a-conj.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-conj.obj `if test -f 'src/conj.c'; then $(CYGPATH_W) 'src/conj.c'; else $(CYGPATH_W) '$(srcdir)/src/conj.c'; fi`
-
-src/src_libnewcomplexd_a-carg.o: src/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-carg.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-carg.Tpo -c -o src/src_libnewcomplexd_a-carg.o `test -f 'src/carg.c' || echo '$(srcdir)/'`src/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-carg.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-carg.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/carg.c' object='src/src_libnewcomplexd_a-carg.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-carg.o `test -f 'src/carg.c' || echo '$(srcdir)/'`src/carg.c
-
-src/src_libnewcomplexd_a-carg.obj: src/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-carg.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-carg.Tpo -c -o src/src_libnewcomplexd_a-carg.obj `if test -f 'src/carg.c'; then $(CYGPATH_W) 'src/carg.c'; else $(CYGPATH_W) '$(srcdir)/src/carg.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-carg.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-carg.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/carg.c' object='src/src_libnewcomplexd_a-carg.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-carg.obj `if test -f 'src/carg.c'; then $(CYGPATH_W) 'src/carg.c'; else $(CYGPATH_W) '$(srcdir)/src/carg.c'; fi`
-
-src/src_libnewcomplexd_a-cexp.o: src/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-cexp.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-cexp.Tpo -c -o src/src_libnewcomplexd_a-cexp.o `test -f 'src/cexp.c' || echo '$(srcdir)/'`src/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-cexp.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-cexp.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cexp.c' object='src/src_libnewcomplexd_a-cexp.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-cexp.o `test -f 'src/cexp.c' || echo '$(srcdir)/'`src/cexp.c
-
-src/src_libnewcomplexd_a-cexp.obj: src/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-cexp.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-cexp.Tpo -c -o src/src_libnewcomplexd_a-cexp.obj `if test -f 'src/cexp.c'; then $(CYGPATH_W) 'src/cexp.c'; else $(CYGPATH_W) '$(srcdir)/src/cexp.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-cexp.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-cexp.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cexp.c' object='src/src_libnewcomplexd_a-cexp.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-cexp.obj `if test -f 'src/cexp.c'; then $(CYGPATH_W) 'src/cexp.c'; else $(CYGPATH_W) '$(srcdir)/src/cexp.c'; fi`
-
-src/src_libnewcomplexd_a-cpow.o: src/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-cpow.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-cpow.Tpo -c -o src/src_libnewcomplexd_a-cpow.o `test -f 'src/cpow.c' || echo '$(srcdir)/'`src/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-cpow.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-cpow.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cpow.c' object='src/src_libnewcomplexd_a-cpow.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-cpow.o `test -f 'src/cpow.c' || echo '$(srcdir)/'`src/cpow.c
-
-src/src_libnewcomplexd_a-cpow.obj: src/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-cpow.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-cpow.Tpo -c -o src/src_libnewcomplexd_a-cpow.obj `if test -f 'src/cpow.c'; then $(CYGPATH_W) 'src/cpow.c'; else $(CYGPATH_W) '$(srcdir)/src/cpow.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-cpow.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-cpow.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cpow.c' object='src/src_libnewcomplexd_a-cpow.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-cpow.obj `if test -f 'src/cpow.c'; then $(CYGPATH_W) 'src/cpow.c'; else $(CYGPATH_W) '$(srcdir)/src/cpow.c'; fi`
-
-src/src_libnewcomplexd_a-csqrt.o: src/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-csqrt.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-csqrt.Tpo -c -o src/src_libnewcomplexd_a-csqrt.o `test -f 'src/csqrt.c' || echo '$(srcdir)/'`src/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-csqrt.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-csqrt.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csqrt.c' object='src/src_libnewcomplexd_a-csqrt.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-csqrt.o `test -f 'src/csqrt.c' || echo '$(srcdir)/'`src/csqrt.c
-
-src/src_libnewcomplexd_a-csqrt.obj: src/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-csqrt.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-csqrt.Tpo -c -o src/src_libnewcomplexd_a-csqrt.obj `if test -f 'src/csqrt.c'; then $(CYGPATH_W) 'src/csqrt.c'; else $(CYGPATH_W) '$(srcdir)/src/csqrt.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-csqrt.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-csqrt.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csqrt.c' object='src/src_libnewcomplexd_a-csqrt.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-csqrt.obj `if test -f 'src/csqrt.c'; then $(CYGPATH_W) 'src/csqrt.c'; else $(CYGPATH_W) '$(srcdir)/src/csqrt.c'; fi`
-
-src/src_libnewcomplexd_a-cimag.o: src/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-cimag.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-cimag.Tpo -c -o src/src_libnewcomplexd_a-cimag.o `test -f 'src/cimag.c' || echo '$(srcdir)/'`src/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-cimag.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-cimag.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cimag.c' object='src/src_libnewcomplexd_a-cimag.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-cimag.o `test -f 'src/cimag.c' || echo '$(srcdir)/'`src/cimag.c
-
-src/src_libnewcomplexd_a-cimag.obj: src/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-cimag.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-cimag.Tpo -c -o src/src_libnewcomplexd_a-cimag.obj `if test -f 'src/cimag.c'; then $(CYGPATH_W) 'src/cimag.c'; else $(CYGPATH_W) '$(srcdir)/src/cimag.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-cimag.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-cimag.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cimag.c' object='src/src_libnewcomplexd_a-cimag.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-cimag.obj `if test -f 'src/cimag.c'; then $(CYGPATH_W) 'src/cimag.c'; else $(CYGPATH_W) '$(srcdir)/src/cimag.c'; fi`
-
-src/src_libnewcomplexd_a-cproj.o: src/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-cproj.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-cproj.Tpo -c -o src/src_libnewcomplexd_a-cproj.o `test -f 'src/cproj.c' || echo '$(srcdir)/'`src/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-cproj.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-cproj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cproj.c' object='src/src_libnewcomplexd_a-cproj.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-cproj.o `test -f 'src/cproj.c' || echo '$(srcdir)/'`src/cproj.c
-
-src/src_libnewcomplexd_a-cproj.obj: src/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-cproj.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-cproj.Tpo -c -o src/src_libnewcomplexd_a-cproj.obj `if test -f 'src/cproj.c'; then $(CYGPATH_W) 'src/cproj.c'; else $(CYGPATH_W) '$(srcdir)/src/cproj.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-cproj.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-cproj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cproj.c' object='src/src_libnewcomplexd_a-cproj.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-cproj.obj `if test -f 'src/cproj.c'; then $(CYGPATH_W) 'src/cproj.c'; else $(CYGPATH_W) '$(srcdir)/src/cproj.c'; fi`
-
-src/src_libnewcomplexd_a-ctan.o: src/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-ctan.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-ctan.Tpo -c -o src/src_libnewcomplexd_a-ctan.o `test -f 'src/ctan.c' || echo '$(srcdir)/'`src/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-ctan.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-ctan.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ctan.c' object='src/src_libnewcomplexd_a-ctan.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-ctan.o `test -f 'src/ctan.c' || echo '$(srcdir)/'`src/ctan.c
-
-src/src_libnewcomplexd_a-ctan.obj: src/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-ctan.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-ctan.Tpo -c -o src/src_libnewcomplexd_a-ctan.obj `if test -f 'src/ctan.c'; then $(CYGPATH_W) 'src/ctan.c'; else $(CYGPATH_W) '$(srcdir)/src/ctan.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-ctan.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-ctan.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ctan.c' object='src/src_libnewcomplexd_a-ctan.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-ctan.obj `if test -f 'src/ctan.c'; then $(CYGPATH_W) 'src/ctan.c'; else $(CYGPATH_W) '$(srcdir)/src/ctan.c'; fi`
-
-src/src_libnewcomplexd_a-clog.o: src/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-clog.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-clog.Tpo -c -o src/src_libnewcomplexd_a-clog.o `test -f 'src/clog.c' || echo '$(srcdir)/'`src/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-clog.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-clog.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/clog.c' object='src/src_libnewcomplexd_a-clog.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-clog.o `test -f 'src/clog.c' || echo '$(srcdir)/'`src/clog.c
-
-src/src_libnewcomplexd_a-clog.obj: src/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-clog.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-clog.Tpo -c -o src/src_libnewcomplexd_a-clog.obj `if test -f 'src/clog.c'; then $(CYGPATH_W) 'src/clog.c'; else $(CYGPATH_W) '$(srcdir)/src/clog.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-clog.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-clog.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/clog.c' object='src/src_libnewcomplexd_a-clog.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-clog.obj `if test -f 'src/clog.c'; then $(CYGPATH_W) 'src/clog.c'; else $(CYGPATH_W) '$(srcdir)/src/clog.c'; fi`
-
-src/src_libnewcomplexd_a-creal.o: src/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-creal.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-creal.Tpo -c -o src/src_libnewcomplexd_a-creal.o `test -f 'src/creal.c' || echo '$(srcdir)/'`src/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-creal.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-creal.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/creal.c' object='src/src_libnewcomplexd_a-creal.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-creal.o `test -f 'src/creal.c' || echo '$(srcdir)/'`src/creal.c
-
-src/src_libnewcomplexd_a-creal.obj: src/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexd_a-creal.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexd_a-creal.Tpo -c -o src/src_libnewcomplexd_a-creal.obj `if test -f 'src/creal.c'; then $(CYGPATH_W) 'src/creal.c'; else $(CYGPATH_W) '$(srcdir)/src/creal.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexd_a-creal.Tpo src/$(DEPDIR)/src_libnewcomplexd_a-creal.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/creal.c' object='src/src_libnewcomplexd_a-creal.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexd_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexd_a-creal.obj `if test -f 'src/creal.c'; then $(CYGPATH_W) 'src/creal.c'; else $(CYGPATH_W) '$(srcdir)/src/creal.c'; fi`
-
-src/src_libnewcomplexf_a-cabs.o: src/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-cabs.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-cabs.Tpo -c -o src/src_libnewcomplexf_a-cabs.o `test -f 'src/cabs.c' || echo '$(srcdir)/'`src/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-cabs.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-cabs.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cabs.c' object='src/src_libnewcomplexf_a-cabs.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-cabs.o `test -f 'src/cabs.c' || echo '$(srcdir)/'`src/cabs.c
-
-src/src_libnewcomplexf_a-cabs.obj: src/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-cabs.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-cabs.Tpo -c -o src/src_libnewcomplexf_a-cabs.obj `if test -f 'src/cabs.c'; then $(CYGPATH_W) 'src/cabs.c'; else $(CYGPATH_W) '$(srcdir)/src/cabs.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-cabs.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-cabs.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cabs.c' object='src/src_libnewcomplexf_a-cabs.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-cabs.obj `if test -f 'src/cabs.c'; then $(CYGPATH_W) 'src/cabs.c'; else $(CYGPATH_W) '$(srcdir)/src/cabs.c'; fi`
-
-src/src_libnewcomplexf_a-ccos.o: src/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-ccos.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-ccos.Tpo -c -o src/src_libnewcomplexf_a-ccos.o `test -f 'src/ccos.c' || echo '$(srcdir)/'`src/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-ccos.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-ccos.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ccos.c' object='src/src_libnewcomplexf_a-ccos.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-ccos.o `test -f 'src/ccos.c' || echo '$(srcdir)/'`src/ccos.c
-
-src/src_libnewcomplexf_a-ccos.obj: src/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-ccos.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-ccos.Tpo -c -o src/src_libnewcomplexf_a-ccos.obj `if test -f 'src/ccos.c'; then $(CYGPATH_W) 'src/ccos.c'; else $(CYGPATH_W) '$(srcdir)/src/ccos.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-ccos.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-ccos.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ccos.c' object='src/src_libnewcomplexf_a-ccos.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-ccos.obj `if test -f 'src/ccos.c'; then $(CYGPATH_W) 'src/ccos.c'; else $(CYGPATH_W) '$(srcdir)/src/ccos.c'; fi`
-
-src/src_libnewcomplexf_a-csin.o: src/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-csin.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-csin.Tpo -c -o src/src_libnewcomplexf_a-csin.o `test -f 'src/csin.c' || echo '$(srcdir)/'`src/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-csin.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-csin.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csin.c' object='src/src_libnewcomplexf_a-csin.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-csin.o `test -f 'src/csin.c' || echo '$(srcdir)/'`src/csin.c
-
-src/src_libnewcomplexf_a-csin.obj: src/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-csin.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-csin.Tpo -c -o src/src_libnewcomplexf_a-csin.obj `if test -f 'src/csin.c'; then $(CYGPATH_W) 'src/csin.c'; else $(CYGPATH_W) '$(srcdir)/src/csin.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-csin.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-csin.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csin.c' object='src/src_libnewcomplexf_a-csin.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-csin.obj `if test -f 'src/csin.c'; then $(CYGPATH_W) 'src/csin.c'; else $(CYGPATH_W) '$(srcdir)/src/csin.c'; fi`
-
-src/src_libnewcomplexf_a-conj.o: src/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-conj.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-conj.Tpo -c -o src/src_libnewcomplexf_a-conj.o `test -f 'src/conj.c' || echo '$(srcdir)/'`src/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-conj.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-conj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/conj.c' object='src/src_libnewcomplexf_a-conj.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-conj.o `test -f 'src/conj.c' || echo '$(srcdir)/'`src/conj.c
-
-src/src_libnewcomplexf_a-conj.obj: src/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-conj.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-conj.Tpo -c -o src/src_libnewcomplexf_a-conj.obj `if test -f 'src/conj.c'; then $(CYGPATH_W) 'src/conj.c'; else $(CYGPATH_W) '$(srcdir)/src/conj.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-conj.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-conj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/conj.c' object='src/src_libnewcomplexf_a-conj.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-conj.obj `if test -f 'src/conj.c'; then $(CYGPATH_W) 'src/conj.c'; else $(CYGPATH_W) '$(srcdir)/src/conj.c'; fi`
-
-src/src_libnewcomplexf_a-carg.o: src/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-carg.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-carg.Tpo -c -o src/src_libnewcomplexf_a-carg.o `test -f 'src/carg.c' || echo '$(srcdir)/'`src/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-carg.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-carg.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/carg.c' object='src/src_libnewcomplexf_a-carg.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-carg.o `test -f 'src/carg.c' || echo '$(srcdir)/'`src/carg.c
-
-src/src_libnewcomplexf_a-carg.obj: src/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-carg.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-carg.Tpo -c -o src/src_libnewcomplexf_a-carg.obj `if test -f 'src/carg.c'; then $(CYGPATH_W) 'src/carg.c'; else $(CYGPATH_W) '$(srcdir)/src/carg.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-carg.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-carg.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/carg.c' object='src/src_libnewcomplexf_a-carg.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-carg.obj `if test -f 'src/carg.c'; then $(CYGPATH_W) 'src/carg.c'; else $(CYGPATH_W) '$(srcdir)/src/carg.c'; fi`
-
-src/src_libnewcomplexf_a-cexp.o: src/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-cexp.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-cexp.Tpo -c -o src/src_libnewcomplexf_a-cexp.o `test -f 'src/cexp.c' || echo '$(srcdir)/'`src/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-cexp.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-cexp.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cexp.c' object='src/src_libnewcomplexf_a-cexp.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-cexp.o `test -f 'src/cexp.c' || echo '$(srcdir)/'`src/cexp.c
-
-src/src_libnewcomplexf_a-cexp.obj: src/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-cexp.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-cexp.Tpo -c -o src/src_libnewcomplexf_a-cexp.obj `if test -f 'src/cexp.c'; then $(CYGPATH_W) 'src/cexp.c'; else $(CYGPATH_W) '$(srcdir)/src/cexp.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-cexp.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-cexp.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cexp.c' object='src/src_libnewcomplexf_a-cexp.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-cexp.obj `if test -f 'src/cexp.c'; then $(CYGPATH_W) 'src/cexp.c'; else $(CYGPATH_W) '$(srcdir)/src/cexp.c'; fi`
-
-src/src_libnewcomplexf_a-cpow.o: src/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-cpow.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-cpow.Tpo -c -o src/src_libnewcomplexf_a-cpow.o `test -f 'src/cpow.c' || echo '$(srcdir)/'`src/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-cpow.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-cpow.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cpow.c' object='src/src_libnewcomplexf_a-cpow.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-cpow.o `test -f 'src/cpow.c' || echo '$(srcdir)/'`src/cpow.c
-
-src/src_libnewcomplexf_a-cpow.obj: src/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-cpow.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-cpow.Tpo -c -o src/src_libnewcomplexf_a-cpow.obj `if test -f 'src/cpow.c'; then $(CYGPATH_W) 'src/cpow.c'; else $(CYGPATH_W) '$(srcdir)/src/cpow.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-cpow.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-cpow.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cpow.c' object='src/src_libnewcomplexf_a-cpow.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-cpow.obj `if test -f 'src/cpow.c'; then $(CYGPATH_W) 'src/cpow.c'; else $(CYGPATH_W) '$(srcdir)/src/cpow.c'; fi`
-
-src/src_libnewcomplexf_a-csqrt.o: src/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-csqrt.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-csqrt.Tpo -c -o src/src_libnewcomplexf_a-csqrt.o `test -f 'src/csqrt.c' || echo '$(srcdir)/'`src/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-csqrt.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-csqrt.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csqrt.c' object='src/src_libnewcomplexf_a-csqrt.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-csqrt.o `test -f 'src/csqrt.c' || echo '$(srcdir)/'`src/csqrt.c
-
-src/src_libnewcomplexf_a-csqrt.obj: src/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-csqrt.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-csqrt.Tpo -c -o src/src_libnewcomplexf_a-csqrt.obj `if test -f 'src/csqrt.c'; then $(CYGPATH_W) 'src/csqrt.c'; else $(CYGPATH_W) '$(srcdir)/src/csqrt.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-csqrt.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-csqrt.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csqrt.c' object='src/src_libnewcomplexf_a-csqrt.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-csqrt.obj `if test -f 'src/csqrt.c'; then $(CYGPATH_W) 'src/csqrt.c'; else $(CYGPATH_W) '$(srcdir)/src/csqrt.c'; fi`
-
-src/src_libnewcomplexf_a-cimag.o: src/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-cimag.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-cimag.Tpo -c -o src/src_libnewcomplexf_a-cimag.o `test -f 'src/cimag.c' || echo '$(srcdir)/'`src/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-cimag.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-cimag.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cimag.c' object='src/src_libnewcomplexf_a-cimag.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-cimag.o `test -f 'src/cimag.c' || echo '$(srcdir)/'`src/cimag.c
-
-src/src_libnewcomplexf_a-cimag.obj: src/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-cimag.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-cimag.Tpo -c -o src/src_libnewcomplexf_a-cimag.obj `if test -f 'src/cimag.c'; then $(CYGPATH_W) 'src/cimag.c'; else $(CYGPATH_W) '$(srcdir)/src/cimag.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-cimag.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-cimag.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cimag.c' object='src/src_libnewcomplexf_a-cimag.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-cimag.obj `if test -f 'src/cimag.c'; then $(CYGPATH_W) 'src/cimag.c'; else $(CYGPATH_W) '$(srcdir)/src/cimag.c'; fi`
-
-src/src_libnewcomplexf_a-cproj.o: src/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-cproj.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-cproj.Tpo -c -o src/src_libnewcomplexf_a-cproj.o `test -f 'src/cproj.c' || echo '$(srcdir)/'`src/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-cproj.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-cproj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cproj.c' object='src/src_libnewcomplexf_a-cproj.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-cproj.o `test -f 'src/cproj.c' || echo '$(srcdir)/'`src/cproj.c
-
-src/src_libnewcomplexf_a-cproj.obj: src/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-cproj.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-cproj.Tpo -c -o src/src_libnewcomplexf_a-cproj.obj `if test -f 'src/cproj.c'; then $(CYGPATH_W) 'src/cproj.c'; else $(CYGPATH_W) '$(srcdir)/src/cproj.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-cproj.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-cproj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cproj.c' object='src/src_libnewcomplexf_a-cproj.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-cproj.obj `if test -f 'src/cproj.c'; then $(CYGPATH_W) 'src/cproj.c'; else $(CYGPATH_W) '$(srcdir)/src/cproj.c'; fi`
-
-src/src_libnewcomplexf_a-ctan.o: src/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-ctan.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-ctan.Tpo -c -o src/src_libnewcomplexf_a-ctan.o `test -f 'src/ctan.c' || echo '$(srcdir)/'`src/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-ctan.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-ctan.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ctan.c' object='src/src_libnewcomplexf_a-ctan.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-ctan.o `test -f 'src/ctan.c' || echo '$(srcdir)/'`src/ctan.c
-
-src/src_libnewcomplexf_a-ctan.obj: src/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-ctan.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-ctan.Tpo -c -o src/src_libnewcomplexf_a-ctan.obj `if test -f 'src/ctan.c'; then $(CYGPATH_W) 'src/ctan.c'; else $(CYGPATH_W) '$(srcdir)/src/ctan.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-ctan.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-ctan.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ctan.c' object='src/src_libnewcomplexf_a-ctan.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-ctan.obj `if test -f 'src/ctan.c'; then $(CYGPATH_W) 'src/ctan.c'; else $(CYGPATH_W) '$(srcdir)/src/ctan.c'; fi`
-
-src/src_libnewcomplexf_a-clog.o: src/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-clog.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-clog.Tpo -c -o src/src_libnewcomplexf_a-clog.o `test -f 'src/clog.c' || echo '$(srcdir)/'`src/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-clog.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-clog.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/clog.c' object='src/src_libnewcomplexf_a-clog.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-clog.o `test -f 'src/clog.c' || echo '$(srcdir)/'`src/clog.c
-
-src/src_libnewcomplexf_a-clog.obj: src/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-clog.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-clog.Tpo -c -o src/src_libnewcomplexf_a-clog.obj `if test -f 'src/clog.c'; then $(CYGPATH_W) 'src/clog.c'; else $(CYGPATH_W) '$(srcdir)/src/clog.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-clog.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-clog.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/clog.c' object='src/src_libnewcomplexf_a-clog.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-clog.obj `if test -f 'src/clog.c'; then $(CYGPATH_W) 'src/clog.c'; else $(CYGPATH_W) '$(srcdir)/src/clog.c'; fi`
-
-src/src_libnewcomplexf_a-creal.o: src/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-creal.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-creal.Tpo -c -o src/src_libnewcomplexf_a-creal.o `test -f 'src/creal.c' || echo '$(srcdir)/'`src/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-creal.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-creal.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/creal.c' object='src/src_libnewcomplexf_a-creal.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-creal.o `test -f 'src/creal.c' || echo '$(srcdir)/'`src/creal.c
-
-src/src_libnewcomplexf_a-creal.obj: src/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexf_a-creal.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexf_a-creal.Tpo -c -o src/src_libnewcomplexf_a-creal.obj `if test -f 'src/creal.c'; then $(CYGPATH_W) 'src/creal.c'; else $(CYGPATH_W) '$(srcdir)/src/creal.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexf_a-creal.Tpo src/$(DEPDIR)/src_libnewcomplexf_a-creal.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/creal.c' object='src/src_libnewcomplexf_a-creal.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexf_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexf_a-creal.obj `if test -f 'src/creal.c'; then $(CYGPATH_W) 'src/creal.c'; else $(CYGPATH_W) '$(srcdir)/src/creal.c'; fi`
-
-src/src_libnewcomplexld_a-cabs.o: src/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-cabs.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-cabs.Tpo -c -o src/src_libnewcomplexld_a-cabs.o `test -f 'src/cabs.c' || echo '$(srcdir)/'`src/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-cabs.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-cabs.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cabs.c' object='src/src_libnewcomplexld_a-cabs.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-cabs.o `test -f 'src/cabs.c' || echo '$(srcdir)/'`src/cabs.c
-
-src/src_libnewcomplexld_a-cabs.obj: src/cabs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-cabs.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-cabs.Tpo -c -o src/src_libnewcomplexld_a-cabs.obj `if test -f 'src/cabs.c'; then $(CYGPATH_W) 'src/cabs.c'; else $(CYGPATH_W) '$(srcdir)/src/cabs.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-cabs.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-cabs.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cabs.c' object='src/src_libnewcomplexld_a-cabs.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-cabs.obj `if test -f 'src/cabs.c'; then $(CYGPATH_W) 'src/cabs.c'; else $(CYGPATH_W) '$(srcdir)/src/cabs.c'; fi`
-
-src/src_libnewcomplexld_a-ccos.o: src/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-ccos.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-ccos.Tpo -c -o src/src_libnewcomplexld_a-ccos.o `test -f 'src/ccos.c' || echo '$(srcdir)/'`src/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-ccos.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-ccos.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ccos.c' object='src/src_libnewcomplexld_a-ccos.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-ccos.o `test -f 'src/ccos.c' || echo '$(srcdir)/'`src/ccos.c
-
-src/src_libnewcomplexld_a-ccos.obj: src/ccos.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-ccos.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-ccos.Tpo -c -o src/src_libnewcomplexld_a-ccos.obj `if test -f 'src/ccos.c'; then $(CYGPATH_W) 'src/ccos.c'; else $(CYGPATH_W) '$(srcdir)/src/ccos.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-ccos.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-ccos.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ccos.c' object='src/src_libnewcomplexld_a-ccos.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-ccos.obj `if test -f 'src/ccos.c'; then $(CYGPATH_W) 'src/ccos.c'; else $(CYGPATH_W) '$(srcdir)/src/ccos.c'; fi`
-
-src/src_libnewcomplexld_a-csin.o: src/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-csin.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-csin.Tpo -c -o src/src_libnewcomplexld_a-csin.o `test -f 'src/csin.c' || echo '$(srcdir)/'`src/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-csin.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-csin.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csin.c' object='src/src_libnewcomplexld_a-csin.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-csin.o `test -f 'src/csin.c' || echo '$(srcdir)/'`src/csin.c
-
-src/src_libnewcomplexld_a-csin.obj: src/csin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-csin.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-csin.Tpo -c -o src/src_libnewcomplexld_a-csin.obj `if test -f 'src/csin.c'; then $(CYGPATH_W) 'src/csin.c'; else $(CYGPATH_W) '$(srcdir)/src/csin.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-csin.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-csin.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csin.c' object='src/src_libnewcomplexld_a-csin.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-csin.obj `if test -f 'src/csin.c'; then $(CYGPATH_W) 'src/csin.c'; else $(CYGPATH_W) '$(srcdir)/src/csin.c'; fi`
-
-src/src_libnewcomplexld_a-conj.o: src/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-conj.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-conj.Tpo -c -o src/src_libnewcomplexld_a-conj.o `test -f 'src/conj.c' || echo '$(srcdir)/'`src/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-conj.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-conj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/conj.c' object='src/src_libnewcomplexld_a-conj.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-conj.o `test -f 'src/conj.c' || echo '$(srcdir)/'`src/conj.c
-
-src/src_libnewcomplexld_a-conj.obj: src/conj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-conj.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-conj.Tpo -c -o src/src_libnewcomplexld_a-conj.obj `if test -f 'src/conj.c'; then $(CYGPATH_W) 'src/conj.c'; else $(CYGPATH_W) '$(srcdir)/src/conj.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-conj.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-conj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/conj.c' object='src/src_libnewcomplexld_a-conj.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-conj.obj `if test -f 'src/conj.c'; then $(CYGPATH_W) 'src/conj.c'; else $(CYGPATH_W) '$(srcdir)/src/conj.c'; fi`
-
-src/src_libnewcomplexld_a-carg.o: src/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-carg.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-carg.Tpo -c -o src/src_libnewcomplexld_a-carg.o `test -f 'src/carg.c' || echo '$(srcdir)/'`src/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-carg.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-carg.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/carg.c' object='src/src_libnewcomplexld_a-carg.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-carg.o `test -f 'src/carg.c' || echo '$(srcdir)/'`src/carg.c
-
-src/src_libnewcomplexld_a-carg.obj: src/carg.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-carg.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-carg.Tpo -c -o src/src_libnewcomplexld_a-carg.obj `if test -f 'src/carg.c'; then $(CYGPATH_W) 'src/carg.c'; else $(CYGPATH_W) '$(srcdir)/src/carg.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-carg.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-carg.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/carg.c' object='src/src_libnewcomplexld_a-carg.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-carg.obj `if test -f 'src/carg.c'; then $(CYGPATH_W) 'src/carg.c'; else $(CYGPATH_W) '$(srcdir)/src/carg.c'; fi`
-
-src/src_libnewcomplexld_a-cexp.o: src/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-cexp.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-cexp.Tpo -c -o src/src_libnewcomplexld_a-cexp.o `test -f 'src/cexp.c' || echo '$(srcdir)/'`src/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-cexp.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-cexp.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cexp.c' object='src/src_libnewcomplexld_a-cexp.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-cexp.o `test -f 'src/cexp.c' || echo '$(srcdir)/'`src/cexp.c
-
-src/src_libnewcomplexld_a-cexp.obj: src/cexp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-cexp.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-cexp.Tpo -c -o src/src_libnewcomplexld_a-cexp.obj `if test -f 'src/cexp.c'; then $(CYGPATH_W) 'src/cexp.c'; else $(CYGPATH_W) '$(srcdir)/src/cexp.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-cexp.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-cexp.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cexp.c' object='src/src_libnewcomplexld_a-cexp.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-cexp.obj `if test -f 'src/cexp.c'; then $(CYGPATH_W) 'src/cexp.c'; else $(CYGPATH_W) '$(srcdir)/src/cexp.c'; fi`
-
-src/src_libnewcomplexld_a-cpow.o: src/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-cpow.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-cpow.Tpo -c -o src/src_libnewcomplexld_a-cpow.o `test -f 'src/cpow.c' || echo '$(srcdir)/'`src/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-cpow.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-cpow.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cpow.c' object='src/src_libnewcomplexld_a-cpow.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-cpow.o `test -f 'src/cpow.c' || echo '$(srcdir)/'`src/cpow.c
-
-src/src_libnewcomplexld_a-cpow.obj: src/cpow.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-cpow.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-cpow.Tpo -c -o src/src_libnewcomplexld_a-cpow.obj `if test -f 'src/cpow.c'; then $(CYGPATH_W) 'src/cpow.c'; else $(CYGPATH_W) '$(srcdir)/src/cpow.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-cpow.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-cpow.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cpow.c' object='src/src_libnewcomplexld_a-cpow.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-cpow.obj `if test -f 'src/cpow.c'; then $(CYGPATH_W) 'src/cpow.c'; else $(CYGPATH_W) '$(srcdir)/src/cpow.c'; fi`
-
-src/src_libnewcomplexld_a-csqrt.o: src/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-csqrt.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-csqrt.Tpo -c -o src/src_libnewcomplexld_a-csqrt.o `test -f 'src/csqrt.c' || echo '$(srcdir)/'`src/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-csqrt.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-csqrt.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csqrt.c' object='src/src_libnewcomplexld_a-csqrt.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-csqrt.o `test -f 'src/csqrt.c' || echo '$(srcdir)/'`src/csqrt.c
-
-src/src_libnewcomplexld_a-csqrt.obj: src/csqrt.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-csqrt.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-csqrt.Tpo -c -o src/src_libnewcomplexld_a-csqrt.obj `if test -f 'src/csqrt.c'; then $(CYGPATH_W) 'src/csqrt.c'; else $(CYGPATH_W) '$(srcdir)/src/csqrt.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-csqrt.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-csqrt.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/csqrt.c' object='src/src_libnewcomplexld_a-csqrt.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-csqrt.obj `if test -f 'src/csqrt.c'; then $(CYGPATH_W) 'src/csqrt.c'; else $(CYGPATH_W) '$(srcdir)/src/csqrt.c'; fi`
-
-src/src_libnewcomplexld_a-cimag.o: src/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-cimag.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-cimag.Tpo -c -o src/src_libnewcomplexld_a-cimag.o `test -f 'src/cimag.c' || echo '$(srcdir)/'`src/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-cimag.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-cimag.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cimag.c' object='src/src_libnewcomplexld_a-cimag.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-cimag.o `test -f 'src/cimag.c' || echo '$(srcdir)/'`src/cimag.c
-
-src/src_libnewcomplexld_a-cimag.obj: src/cimag.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-cimag.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-cimag.Tpo -c -o src/src_libnewcomplexld_a-cimag.obj `if test -f 'src/cimag.c'; then $(CYGPATH_W) 'src/cimag.c'; else $(CYGPATH_W) '$(srcdir)/src/cimag.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-cimag.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-cimag.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cimag.c' object='src/src_libnewcomplexld_a-cimag.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-cimag.obj `if test -f 'src/cimag.c'; then $(CYGPATH_W) 'src/cimag.c'; else $(CYGPATH_W) '$(srcdir)/src/cimag.c'; fi`
-
-src/src_libnewcomplexld_a-cproj.o: src/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-cproj.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-cproj.Tpo -c -o src/src_libnewcomplexld_a-cproj.o `test -f 'src/cproj.c' || echo '$(srcdir)/'`src/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-cproj.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-cproj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cproj.c' object='src/src_libnewcomplexld_a-cproj.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-cproj.o `test -f 'src/cproj.c' || echo '$(srcdir)/'`src/cproj.c
-
-src/src_libnewcomplexld_a-cproj.obj: src/cproj.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-cproj.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-cproj.Tpo -c -o src/src_libnewcomplexld_a-cproj.obj `if test -f 'src/cproj.c'; then $(CYGPATH_W) 'src/cproj.c'; else $(CYGPATH_W) '$(srcdir)/src/cproj.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-cproj.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-cproj.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/cproj.c' object='src/src_libnewcomplexld_a-cproj.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-cproj.obj `if test -f 'src/cproj.c'; then $(CYGPATH_W) 'src/cproj.c'; else $(CYGPATH_W) '$(srcdir)/src/cproj.c'; fi`
-
-src/src_libnewcomplexld_a-ctan.o: src/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-ctan.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-ctan.Tpo -c -o src/src_libnewcomplexld_a-ctan.o `test -f 'src/ctan.c' || echo '$(srcdir)/'`src/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-ctan.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-ctan.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ctan.c' object='src/src_libnewcomplexld_a-ctan.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-ctan.o `test -f 'src/ctan.c' || echo '$(srcdir)/'`src/ctan.c
-
-src/src_libnewcomplexld_a-ctan.obj: src/ctan.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-ctan.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-ctan.Tpo -c -o src/src_libnewcomplexld_a-ctan.obj `if test -f 'src/ctan.c'; then $(CYGPATH_W) 'src/ctan.c'; else $(CYGPATH_W) '$(srcdir)/src/ctan.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-ctan.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-ctan.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ctan.c' object='src/src_libnewcomplexld_a-ctan.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-ctan.obj `if test -f 'src/ctan.c'; then $(CYGPATH_W) 'src/ctan.c'; else $(CYGPATH_W) '$(srcdir)/src/ctan.c'; fi`
-
-src/src_libnewcomplexld_a-clog.o: src/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-clog.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-clog.Tpo -c -o src/src_libnewcomplexld_a-clog.o `test -f 'src/clog.c' || echo '$(srcdir)/'`src/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-clog.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-clog.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/clog.c' object='src/src_libnewcomplexld_a-clog.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-clog.o `test -f 'src/clog.c' || echo '$(srcdir)/'`src/clog.c
-
-src/src_libnewcomplexld_a-clog.obj: src/clog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-clog.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-clog.Tpo -c -o src/src_libnewcomplexld_a-clog.obj `if test -f 'src/clog.c'; then $(CYGPATH_W) 'src/clog.c'; else $(CYGPATH_W) '$(srcdir)/src/clog.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-clog.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-clog.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/clog.c' object='src/src_libnewcomplexld_a-clog.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-clog.obj `if test -f 'src/clog.c'; then $(CYGPATH_W) 'src/clog.c'; else $(CYGPATH_W) '$(srcdir)/src/clog.c'; fi`
-
-src/src_libnewcomplexld_a-creal.o: src/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-creal.o -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-creal.Tpo -c -o src/src_libnewcomplexld_a-creal.o `test -f 'src/creal.c' || echo '$(srcdir)/'`src/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-creal.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-creal.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/creal.c' object='src/src_libnewcomplexld_a-creal.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-creal.o `test -f 'src/creal.c' || echo '$(srcdir)/'`src/creal.c
-
-src/src_libnewcomplexld_a-creal.obj: src/creal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/src_libnewcomplexld_a-creal.obj -MD -MP -MF src/$(DEPDIR)/src_libnewcomplexld_a-creal.Tpo -c -o src/src_libnewcomplexld_a-creal.obj `if test -f 'src/creal.c'; then $(CYGPATH_W) 'src/creal.c'; else $(CYGPATH_W) '$(srcdir)/src/creal.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_libnewcomplexld_a-creal.Tpo src/$(DEPDIR)/src_libnewcomplexld_a-creal.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/creal.c' object='src/src_libnewcomplexld_a-creal.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libnewcomplexld_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/src_libnewcomplexld_a-creal.obj `if test -f 'src/creal.c'; then $(CYGPATH_W) 'src/creal.c'; else $(CYGPATH_W) '$(srcdir)/src/creal.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -2609,7 +1941,7 @@ maintainer-clean-generic:
 clean: clean-am
 
 clean-am: clean-checkPROGRAMS clean-generic clean-libLIBRARIES \
-	clean-noinstLIBRARIES mostlyclean-am
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -2684,20 +2016,20 @@ uninstall-am: uninstall-libLIBRARIES
 
 .PHONY: CTAGS GTAGS all all-am am--refresh check check-TESTS check-am \
 	check-html clean clean-checkPROGRAMS clean-generic \
-	clean-libLIBRARIES clean-noinstLIBRARIES ctags dist dist-all \
-	dist-bzip2 dist-gzip dist-lzma dist-shar dist-tarZ dist-xz \
-	dist-zip distcheck distclean distclean-compile \
-	distclean-generic distclean-hdr distclean-tags distcleancheck \
-	distdir distuninstallcheck dvi dvi-am html html-am info \
-	info-am install install-am install-data install-data-am \
-	install-dvi install-dvi-am install-exec install-exec-am \
-	install-html install-html-am install-info install-info-am \
-	install-libLIBRARIES install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic pdf pdf-am ps ps-am recheck recheck-html \
-	tags uninstall uninstall-am uninstall-libLIBRARIES
+	clean-libLIBRARIES ctags dist dist-all dist-bzip2 dist-gzip \
+	dist-lzma dist-shar dist-tarZ dist-xz dist-zip distcheck \
+	distclean distclean-compile distclean-generic distclean-hdr \
+	distclean-tags distcleancheck distdir distuninstallcheck dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-libLIBRARIES install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
+	recheck recheck-html tags uninstall uninstall-am \
+	uninstall-libLIBRARIES
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
