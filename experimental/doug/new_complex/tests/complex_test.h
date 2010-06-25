@@ -99,8 +99,9 @@ __FLT_CMP (__FLT_TYPE expected, __FLT_TYPE in, int sign_dontcare)
   else
     {
       /* Either expected or in is an infinite */
-      bad = (isfinite (expected) != isfinite (in)) ||
-	    (sign_dontcare ? 0 : (signbit (expected) != signbit (in)));
+      bad = !isinf(expected) || !isinf(in);
+      if (!bad && !sign_dontcare)
+	bad =  signbit (expected) != signbit (in);
     }
 
   return bad;
@@ -113,7 +114,7 @@ __FLT_CCMP (complex __FLT_TYPE expected,
 	    int imag_sign_dontcare)
 {
   return (__FLT_CMP (__FLT_ABI(creal)(expected), __FLT_ABI(creal)(in), real_sign_dontcare) ||
-	  __FLT_CMP (__FLT_ABI(cimag)(expected), __FLT_ABI(cimag)(in), real_sign_dontcare));
+	  __FLT_CMP (__FLT_ABI(cimag)(expected), __FLT_ABI(cimag)(in), imag_sign_dontcare));
 }
 
 /* Runs comparison and (DEBUG) print error.
