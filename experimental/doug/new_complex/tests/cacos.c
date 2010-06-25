@@ -2,17 +2,17 @@
 
 int main()
 {
-  /* Annex G.6.1.1
+  /* Annex G.6.1.1 The cacos functions
      cacos (conj (z)) = conj (cacos (z)).
      cacos(±0 + i0) returns π /2 − i0.
      cacos(±0 + iNaN) returns π /2 + iNaN.
-     cacos(x + i ∞) returns π /2 − i ∞, for ﬁnite x.
+     cacos(x + i ∞) returns π /2 − i ∞, for finite x.
      cacos(x + iNaN) returns NaN + iNaN and optionally raises the ‘‘invalid’’ floating-point exception, for nonzero finite x.
      cacos(−∞ + iy) returns π − i ∞, for positive-signed finite y.
      cacos(+∞ + iy) returns +0 − i ∞, for positive-signed finite y.
      cacos(−∞ + i ∞) returns 3π /4 − i ∞.
      cacos(+∞ + i ∞) returns π /4 − i ∞.
-     cacos(±∞ + iNaN) returns NaN ± i ∞ (where the sign of the imaginary part of the result is unspeciﬁed).
+     cacos(±∞ + iNaN) returns NaN ± i ∞ (where the sign of the imaginary part of the result is unspecified).
      cacos(NaN + iy) returns NaN + iNaN and optionally raises the ‘‘invalid’’ floating-point exception, for finite y.
      cacos(NaN + i ∞) returns NaN − i ∞.
      cacos(NaN + iNaN) returns NaN + iNaN.  */

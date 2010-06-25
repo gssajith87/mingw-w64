@@ -3,7 +3,7 @@
 
 int main()
 {
-  /* Annex G.6.2.1
+  /* Annex G.6.2.1 The cacosh functions
      cacosh(conj(z)) = conj(cacosh(z)).
      cacosh(±0 + i0) returns +0 + iπ /2.
      cacosh(x + i ∞) returns +∞ + iπ /2, for finite x.
