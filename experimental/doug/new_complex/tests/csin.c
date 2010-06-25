@@ -1,4 +1,3 @@
-#include <math.h>
 #include "complex_test.h"
 
 int main()
