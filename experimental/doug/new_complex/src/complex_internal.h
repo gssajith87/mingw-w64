@@ -20,7 +20,7 @@
 #define M_PI_3_4  (M_PI - M_PI_4)
 #define M_PI_3_4l (M_PIl - M_PI_4l)
 
-#if defined(_NEWCOMPLEX_FLOAT)
+#if defined(_NEW_COMPLEX_FLOAT)
 # define __FLT_TYPE	float
 # define __FLT_ABI(N)	N##f
 # define __FLT_CST(N)	N##F
@@ -30,7 +30,7 @@
 # define __FLT_PI_2	M_PI_2
 # define __FLT_PI_4	M_PI_4
 # define __FLT_PI_3_4	M_PI_3_4
-#elif defined(_NEWCOMPLEX_DOUBLE)
+#elif defined(_NEW_COMPLEX_DOUBLE)
 # define __FLT_TYPE	double
 # define __FLT_ABI(N)	N
 # define __FLT_CST(N)	N
@@ -40,7 +40,7 @@
 # define __FLT_PI_2	M_PI_2
 # define __FLT_PI_4	M_PI_4
 # define __FLT_PI_3_4	M_PI_3_4
-#elif defined(_NEWCOMPLEX_LDOUBLE)
+#elif defined(_NEW_COMPLEX_LDOUBLE)
 # define __FLT_TYPE	long double
 # define __FLT_ABI(N)	N##l
 # define __FLT_CST(N)	N##L
