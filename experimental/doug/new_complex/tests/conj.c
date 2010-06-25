@@ -1,23 +1,33 @@
-#include <math.h>
-#include <complex.h>
-#include "compare_flt.c"
+#include "complex_test.h"
 
-/* conj: ctan (conj (z)) == conj (ctan (z)) */
+int main()
+{
+  /* conj fully defined in 7.3.9.3 --- inverse sign of imagingary */
+  /* We don't define this as a conj function because that's recursive */
+  
+  DEFINE_TEST_FUNCTION(conj, 0);
+  
+  TEST_PROLOGUE
+  /* only change sign of imaginary part */
+  DECLARE_TEST (__FLT_CST( 42.42), __FLT_CST( 42.42), __FLT_CST( 42.42), __FLT_CST(-42.42), 0, 0)
+  DECLARE_TEST (__FLT_CST( 42.42), __FLT_CST(-42.42), __FLT_CST( 42.42), __FLT_CST( 42.42), 0, 0)
+  DECLARE_TEST (__FLT_CST(-42.42), __FLT_CST( 42.42), __FLT_CST(-42.42), __FLT_CST(-42.42), 0, 0)
+  DECLARE_TEST (__FLT_CST(-42.42), __FLT_CST(-42.42), __FLT_CST(-42.42), __FLT_CST( 42.42), 0, 0)
+  DECLARE_TEST (__FLT_CST( 42.42), __FLT_CST( 0.0), __FLT_CST( 42.42), __FLT_CST(-0.0), 0, 0)
+  DECLARE_TEST (__FLT_CST( 42.42), __FLT_CST(-0.0), __FLT_CST( 42.42), __FLT_CST( 0.0), 0, 0)
+  DECLARE_TEST (__FLT_CST(-42.42), __FLT_CST( 0.0), __FLT_CST(-42.42), __FLT_CST(-0.0), 0, 0)
+  DECLARE_TEST (__FLT_CST(-42.42), __FLT_CST(-0.0), __FLT_CST(-42.42), __FLT_CST( 0.0), 0, 0)
+  DECLARE_TEST (__FLT_CST( 42.42),  INFINITY, __FLT_CST( 42.42), -INFINITY, 0, 0)
+  DECLARE_TEST (__FLT_CST( 42.42), -INFINITY, __FLT_CST( 42.42),  INFINITY, 0, 0)
+  DECLARE_TEST (__FLT_CST(-42.42),  INFINITY, __FLT_CST(-42.42), -INFINITY, 0, 0)
+  DECLARE_TEST (__FLT_CST(-42.42), -INFINITY, __FLT_CST(-42.42),  INFINITY, 0, 0)
+  DECLARE_TEST (__FLT_CST( 42.42),  __FLT_NAN, __FLT_CST( 42.42), -__FLT_NAN, 0, 0)
+  DECLARE_TEST (__FLT_CST( 42.42), -__FLT_NAN, __FLT_CST( 42.42),  __FLT_NAN, 0, 0)
+  DECLARE_TEST (__FLT_CST(-42.42),  __FLT_NAN, __FLT_CST(-42.42), -__FLT_NAN, 0, 0)
+  DECLARE_TEST (__FLT_CST(-42.42), -__FLT_NAN, __FLT_CST(-42.42),  __FLT_NAN, 0, 0)
 
-const complex double test[5] = {
-  1.5 + 4.0I,
-  1.0 - 2.0I,
-  0.0 + 0.0I,
-  -1.0 + 2.0I,
-  -1.5 - 4.0I
-};
+  TEST_EPILOGUE
 
-int main() {
-  int i;
-  for (i = 0; i < 5; i++) {
-    if (compare_cdbl (ctan (conj (test[i])), conj (ctan (test[i]))))
-      return 1;
-  } 
-  return 0;
+  return RUNTESTS;
 }
 
