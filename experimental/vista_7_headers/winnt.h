@@ -6348,12 +6348,6 @@ typedef DWORD (WINAPI *PRTL_RUN_ONCE_INIT_FN)(PRTL_RUN_ONCE, PVOID, PVOID *);
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #if (_WIN32_WINNT >= 0x0601)
-typedef enum _PROCESSOR_CACHE_TYPE {
-  CacheUnified,
-  CacheInstruction,
-  CacheData,
-  CacheTrace 
-} PROCESSOR_CACHE_TYPE;
 
 typedef struct _PROCESSOR_NUMBER {
   WORD Group;

@@ -786,7 +786,7 @@ typedef WINBOOL (CALLBACK *DATEFMT_ENUMPROCEXEX)(
   LPARAM lParam
 );
 
-WINBASEAPI WINBOOL int WINAPI EnumCalendarInfoExEx(
+WINBASEAPI WINBOOL WINAPI EnumCalendarInfoExEx(
   CALINFO_ENUMPROCEXEX pCalInfoEnumProcExEx,
   LPCWSTR lpLocaleName,
   CALID Calendar,
@@ -897,7 +897,7 @@ WINBASEAPI WINBOOL WINAPI GetFileMUIPath(
   PULONGLONG pululEnumerator
 );
 
-WINBASEPI int WINAPI GetLocaleInfoEx(
+WINBASEAPI int WINAPI GetLocaleInfoEx(
   LPCWSTR lpLocaleName,
   LCTYPE LCType,
   LPWSTR lpLCData,
@@ -925,7 +925,7 @@ WINBASEAPI int WINAPI GetNumberFormatEx(
   int cchNumber
 );
 
-WINBASSEAPI int WINAPI GetStringScripts(
+WINBASEAPI int WINAPI GetStringScripts(
   DWORD dwFlags,
   LPCWSTR lpString,
   int cchString,
