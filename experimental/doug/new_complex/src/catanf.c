@@ -2,5 +2,5 @@
 #define  _NEW_COMPLEX_FLOAT 1
 #include "complex_internal.h"
 
-#include "csinh.def.h"
-#include "csin.def.h"
+#include "catanh.def.h"
+#include "catan.def.h"

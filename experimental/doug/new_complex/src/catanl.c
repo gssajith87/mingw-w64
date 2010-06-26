@@ -2,5 +2,5 @@
 #define  _NEW_COMPLEX_LDOUBLE 1
 #include "complex_internal.h"
 
-#include "ctanh.def.h"
-#include "ctan.def.h"
+#include "catanh.def.h"
+#include "catan.def.h"

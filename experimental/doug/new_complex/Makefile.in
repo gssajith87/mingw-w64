@@ -95,7 +95,10 @@ am__objects_1 = src/cabs.$(OBJEXT) src/cargf.$(OBJEXT) \
 	src/ctanl.$(OBJEXT) src/carg.$(OBJEXT) src/ccosf.$(OBJEXT) \
 	src/cexpl.$(OBJEXT) src/clog.$(OBJEXT) src/conjf.$(OBJEXT) \
 	src/cpowl.$(OBJEXT) src/creal.$(OBJEXT) src/csinf.$(OBJEXT) \
-	src/csqrtl.$(OBJEXT)
+	src/csqrtl.$(OBJEXT) src/cacos.$(OBJEXT) src/cacosf.$(OBJEXT) \
+	src/cacosl.$(OBJEXT) src/casin.$(OBJEXT) src/casinf.$(OBJEXT) \
+	src/casinl.$(OBJEXT) src/catan.$(OBJEXT) src/catanf.$(OBJEXT) \
+	src/catanl.$(OBJEXT)
 am_libnewcomplex_a_OBJECTS = $(am__objects_1)
 libnewcomplex_a_OBJECTS = $(am_libnewcomplex_a_OBJECTS)
 am__EXEEXT_1 = tests/cabs$(EXEEXT) tests/cabsf$(EXEEXT) \
@@ -611,6 +614,7 @@ src/cabs.c   src/cargf.c  src/ccosl.c  src/cimag.c   src/clogf.c  src/conjl.c  s
 src/cabsf.c  src/cargl.c  src/cexp.c   src/cimagf.c  src/clogl.c  src/cpow.c   src/cprojf.c  src/creall.c  src/csqrt.c   src/ctanf.c \
 src/cabsl.c  src/ccos.c   src/cexpf.c  src/cimagl.c  src/conj.c   src/cpowf.c  src/cprojl.c  src/csin.c    src/csqrtf.c  src/ctanl.c \
 src/carg.c   src/ccosf.c  src/cexpl.c  src/clog.c    src/conjf.c  src/cpowl.c  src/creal.c   src/csinf.c   src/csqrtl.c \
+src/cacos.c  src/cacosf.c src/cacosl.c src/casin.c   src/casinf.c src/casinl.c src/catan.c   src/catanf.c  src/catanl.c \
 \
 src/cabs.def.h    src/casin.def.h   src/ccos.def.h   src/clog.def.h          src/cproj.def.h  src/csqrt.def.h \
 src/cacos.def.h   src/casinh.def.h  src/ccosh.def.h  src/complex_internal.h  src/creal.def.h  src/ctan.def.h  \
@@ -828,6 +832,21 @@ src/cpowl.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/creal.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/csinf.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/csqrtl.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/cacos.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/cacosf.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/cacosl.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/casin.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/casinf.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/casinl.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/catan.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/catanf.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/catanl.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 libnewcomplex.a: $(libnewcomplex_a_OBJECTS) $(libnewcomplex_a_DEPENDENCIES) 
 	$(AM_V_at)-rm -f libnewcomplex.a
@@ -1178,9 +1197,18 @@ mostlyclean-compile:
 	-rm -f src/cabs.$(OBJEXT)
 	-rm -f src/cabsf.$(OBJEXT)
 	-rm -f src/cabsl.$(OBJEXT)
+	-rm -f src/cacos.$(OBJEXT)
+	-rm -f src/cacosf.$(OBJEXT)
+	-rm -f src/cacosl.$(OBJEXT)
 	-rm -f src/carg.$(OBJEXT)
 	-rm -f src/cargf.$(OBJEXT)
 	-rm -f src/cargl.$(OBJEXT)
+	-rm -f src/casin.$(OBJEXT)
+	-rm -f src/casinf.$(OBJEXT)
+	-rm -f src/casinl.$(OBJEXT)
+	-rm -f src/catan.$(OBJEXT)
+	-rm -f src/catanf.$(OBJEXT)
+	-rm -f src/catanl.$(OBJEXT)
 	-rm -f src/ccos.$(OBJEXT)
 	-rm -f src/ccosf.$(OBJEXT)
 	-rm -f src/ccosl.$(OBJEXT)
@@ -1287,9 +1315,18 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cabs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cabsf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cabsl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cacos.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cacosf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cacosl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/carg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cargf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cargl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/casin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/casinf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/casinl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/catan.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/catanf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/catanl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ccos.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ccosf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ccosl.Po@am__quote@
