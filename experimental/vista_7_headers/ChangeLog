@@ -1,4 +1,14 @@
-2010-06-23  Ozkan Sezer <sezeroz@gmail.com>
+2010-06-25  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* ks.h, ksmedia.h, ksproxy.h, ksuuids.h: Re-format.
+
+2010-06-23  Doug Semler  <dougsemler@gmail.com>
+
+	* GL/gl.h: Use APIENTRY instead of WINAPI.
+	* GL/glaux.h: Likewise.
+	* GL/glu.h: Likewise.
+
+2010-06-23  Ozkan Sezer  <sezeroz@gmail.com>
 
 	* mmsystem.h (MAKEFOURCC): Changed ifdef guard from __MAKEFOURCC__DEFINED__
 	to simply MAKEFOURCC.
