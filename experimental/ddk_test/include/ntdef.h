@@ -355,8 +355,10 @@ typedef LONG HRESULT;
 #endif
 
 /* 64-bit types */
+#define _ULONGLONG_
 __GNU_EXTENSION typedef __int64 LONGLONG, *PLONGLONG;
 __GNU_EXTENSION typedef unsigned __int64 ULONGLONG, *PULONGLONG;
+#define _DWORDLONG_
 typedef ULONGLONG DWORDLONG, *PDWORDLONG;
 
 /* Update Sequence Number */
