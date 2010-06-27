@@ -3567,6 +3567,41 @@ WINBASEAPI WINBOOL WINAPI GetVolumeInformationByHandleW(
   DWORD nFileSystemNameSize
 );
 
+WINBASEAPI VOID WINAPI LeaveCriticalSectionWhenCallbackReturns(
+  PTP_CALLBACK_INSTANCE pci,
+  PCRITICAL_SECTION pcs
+);
+
+WINBASEAPI LPVOID WINAPI MapViewOfFileExNuma(
+  HANDLE hFileMappingObject,
+  DWORD dwDesiredAccess,
+  DWORD dwFileOffsetHigh,
+  DWORD dwFileOffsetLow,
+  SIZE_T dwNumberOfBytesToMap,
+  LPVOID lpBaseAddress,
+  DWORD nndPreferred
+);
+
+#define MoveFileTransacted __MINGW_NAME_AW(MoveFileTransacted)
+
+WINBOOL WINAPI MoveFileTransactedA(
+  LPCSTR lpExistingFileName,
+  LPCSTR lpNewFileName,
+  LPPROGRESS_ROUTINE lpProgressRoutine,
+  LPVOID lpData,
+  DWORD dwFlags,
+  HANDLE hTransaction
+);
+
+WINBOOL WINAPI MoveFileTransactedW(
+  LPCWSTR lpExistingFileName,
+  LPCWSTR lpNewFileName,
+  LPPROGRESS_ROUTINE lpProgressRoutine,
+  LPVOID lpData,
+  DWORD dwFlags,
+  HANDLE hTransaction
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #if (_WIN32_WINNT >= 0x0601)

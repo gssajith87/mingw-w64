@@ -992,6 +992,30 @@ WINBASEAPI WINBOOL WINAPI GetUserPreferredUILanguages(
   PULONG pcchLanguagesBuffer
 );
 
+WINBASEAPI int WINAPI LCIDToLocaleName(
+  LCID Locale,
+  LPWSTR lpName,
+  int cchName,
+  DWORD dwFlags
+);
+
+WINBASEAPI int WINAPI LCMapStringEx(
+  LPCWSTR lpLocaleName,
+  DWORD dwMapFlags,
+  LPCWSTR lpSrcStr,
+  int cchSrc,
+  LPWSTR lpDestStr,
+  int cchDest,
+  LPNLSVERSIONINFO lpVersionInformation,
+  LPVOID lpReserved,
+  LPARAM lParam
+);
+
+WINBASEAPI LCID WINAPI LocaleNameToLCID(
+  LPCWSTR lpName,
+  DWORD dwFlags
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif
 

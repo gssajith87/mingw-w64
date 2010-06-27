@@ -13,6 +13,10 @@
 extern "C" {
 #endif
 
+#ifndef CALLBACK
+#define CALLBACK WINAPI
+#endif
+
 #define RRAS_SERVICE_NAME TEXT("RemoteAccess")
 
 #define PID_IPX 0x0000002B
@@ -506,9 +510,6 @@ extern "C" {
   WINBOOL WINAPI MprAdminAcceptNewConnection(RAS_CONNECTION_0 *pRasConnection0,RAS_CONNECTION_1 *pRasConnection1);
   WINBOOL WINAPI MprAdminAcceptNewConnection2(RAS_CONNECTION_0 *pRasConnection0,RAS_CONNECTION_1 *pRasConnection1,RAS_CONNECTION_2 *pRasConnection2);
   WINBOOL WINAPI MprAdminAcceptNewLink (RAS_PORT_0 *pRasPort0,RAS_PORT_1 *pRasPort1);
-#if (_WIN32_WINNT >= 0x0600)
-  WINBOOL WINAPI MprAdminAcceptReauthentication(RAS_CONNECTION_0 *pRasConnection0,RAS_CONNECTION_1 *pRasConnection1,RAS_CONNECTION_2 *pRasConnection2,RAS_CONNECTION_3 *pRasConnection3);
-#endif
   VOID WINAPI MprAdminConnectionHangupNotification(RAS_CONNECTION_0 *pRasConnection0,RAS_CONNECTION_1 *pRasConnection1);
   VOID WINAPI MprAdminConnectionHangupNotification2(RAS_CONNECTION_0 *pRasConnection0,RAS_CONNECTION_1 *pRasConnection1,RAS_CONNECTION_2 *pRasConnection2);
   DWORD WINAPI MprAdminConnectionRemoveQuarantine(HANDLE hRasServer,HANDLE hRasConnection,WINBOOL fIsIpAddress);
@@ -615,6 +616,114 @@ extern "C" {
 
 #define MprInfoBlockExists(h,t) (MprInfoBlockFind((h),(t),NULL,NULL,NULL)==NO_ERROR)
 
+#if (_WIN32_WINNT >= 0x0600)
+typedef enum _RAS_QUARANTINE_STATE {
+  RAS_QUAR_STATE_NORMAL,
+  RAS_QUAR_STATE_QUARANTINE,
+  RAS_QUAR_STATE_PROBATION,
+  RAS_QUAR_STATE_NOT_CAPABLE     
+} RAS_QUARANTINE_STATE;
+
+typedef struct _MPR_FILTER_0 {
+  WINBOOL fEnabled;
+} MPR_FILTER_0, *PMPR_FILTER_0;
+
+typedef struct _MPR_SERVER_2 {
+  DWORD dwNumPptpPorts;
+  DWORD dwPptpPortFlags;
+  DWORD dwNumL2tpPorts;
+  DWORD dwL2tpPortFlags;
+  DWORD dwNumSstpPorts;
+  DWORD dwSstpPortFlags;
+} MPR_SERVER_2, *PMPR_SERVER_2;
+
+typedef struct _PPP_IPV6CP_INFO {
+  DWORD dwVersion;
+  DWORD dwSize;
+  DWORD dwError;
+  BYTE  bInterfaceIdentifier[8];
+  BYTE  bRemoteInterfaceIdentifier[8];
+  DWORD dwOptions;
+  DWORD dwRemoteOptions;
+  BYTE  bPrefix[8];
+  DWORD dwPrefixLength;
+} PPP_IPV6_CP_INFO, *PPPP_IPV6_CP_INFO;
+
+typedef struct _PPP_INFO_3 {
+  PPP_NBFCP_INFO   nbf;
+  PPP_IPCP_INFO2   ip;
+  PPP_IPV6_CP_INFO ipv6;
+  PPP_CCP_INFO     ccp;
+  PPP_LCP_INFO     lcp;
+} PPP_INFO_3;
+
+typedef struct _RAS_CONNECTION_3 {
+  DWORD                 dwVersion;
+  DWORD                 dwSize;
+  HANDLE                hConnection;
+  WCHAR                 wszUserName[UNLEN + 1];
+  ROUTER_INTERFACE_TYPE dwInterfaceType;
+  GUID                  guid;
+  PPP_INFO_3            PppInfo3;
+  RAS_QUARANTINE_STATE  rasQuarState;
+  FILETIME              timer;
+} RAS_CONNECTION_3, *PRAS_CONNECTION_3;
+
+WINBOOL CALLBACK MprAdminAcceptNewConnection3(
+  RAS_CONNECTION_0 *pRasConnection0,
+  RAS_CONNECTION_1 *pRasConnection1,
+  RAS_CONNECTION_2 *pRasConnection2,
+  RAS_CONNECTION_3 *pRasConnection3
+);
+
+WINBOOL CALLBACK MprAdminAcceptReauthentication(
+  RAS_CONNECTION_0 *pRasConnection0,
+  RAS_CONNECTION_1 *pRasConnection1,
+  RAS_CONNECTION_2 *pRasConnection2,
+  RAS_CONNECTION_3 *pRasConnection3
+);
+
+void CALLBACK MprAdminConnectionHangupNotification3(
+  RAS_CONNECTION_0 *pRasConnection0,
+  RAS_CONNECTION_1 *pRasConnection1,
+  RAS_CONNECTION_2 *pRasConnection2,
+  RAS_CONNECTION_3 *pRasConnection3
+);
+
+DWORD MprAdminConnectionRemoveQuarantine(
+  HANDLE  hRasServer,
+  HANDLE  hRasConnection,
+  WINBOOL fIsIpAddress
+);
+
+DWORD CALLBACK MprAdminGetIpv6AddressForUser(
+  WCHAR *lpwszUserName,
+  WCHAR *lpwszPortName,
+  in6_addr *lpdwIpv6Address,
+  WINBOOL *bNotifyRelease
+);
+
+DWORD CALLBACK MprAdminReleaseIpv6AddressForUser(
+  WCHAR *lpwszUserName,
+  WCHAR *lpwszPortName,
+  in6_addr *lpdwIpv6Address
+);
+
+DWORD WINAPI MprConfigFilterGetInfo(
+  HANDLE hMprConfig,
+  DWORD dwLevel,
+  DWORD dwTransportId,
+  LPBYTE lpBuffer
+);
+
+DWORD WINAPI MprConfigFilterSetInfo(
+  HANDLE hMprConfig,
+  DWORD dwLevel,
+  DWORD dwTransportId,
+  LPBYTE lpBuffer
+);
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 #ifdef __cplusplus
 }
 #endif

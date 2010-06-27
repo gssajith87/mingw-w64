@@ -957,6 +957,11 @@ extern "C" {
   typedef enum _KERB_LOGON_SUBMIT_TYPE {
     KerbInteractiveLogon = 2,KerbSmartCardLogon = 6,KerbWorkstationUnlockLogon = 7,KerbSmartCardUnlockLogon = 8,KerbProxyLogon = 9,
     KerbTicketLogon = 10,KerbTicketUnlockLogon = 11,KerbS4ULogon = 12
+#ifdef (_WIN32_WINNT >= 0x0600)
+   ,KerbCertificateLogon         = 13,
+    KerbCertificateS4ULogon      = 14,
+    KerbCertificateUnlockLogon   = 15 
+#endif
   } KERB_LOGON_SUBMIT_TYPE,*PKERB_LOGON_SUBMIT_TYPE;
 
   typedef struct _KERB_INTERACTIVE_LOGON {
@@ -1335,6 +1340,37 @@ extern "C" {
     PSID  *UserSidArray;
   } POLICY_AUDIT_SID_ARRAY, *PPOLICY_AUDIT_SID_ARRAY;
 
+  typedef struct _KERB_CERTIFICATE_LOGON {
+    KERB_LOGON_SUBMIT_TYPE MessageType;
+    UNICODE_STRING         DomainName;
+    UNICODE_STRING         UserName;
+    UNICODE_STRING         Pin;
+    ULONG                  Flags;
+    ULONG                  CspDataLength;
+    PUCHAR                 CspData;
+  } KERB_CERTIFICATE_LOGON, *PKERB_CERTIFICATE_LOGON;
+
+  typedef struct _KERB_CERTIFICATE_UNLOCK_LOGON {
+    KERB_CERTIFICATE_LOGON Logon;
+    LUID                   LogonId;
+  } KERB_CERTIFICATE_UNLOCK_LOGON, *PKERB_CERTIFICATE_UNLOCK_LOGON;
+
+  typedef struct _KERB_SMARTCARD_CSP_INFO {
+    DWORD dwCspInfoLen;
+    DWORD MessageType;
+    union DUMMYUNIONNAME1 {
+      PVOID   ContextInformation;
+      ULONG64 SpaceHolderForWow64;
+    } ;
+    DWORD flags;
+    DWORD KeySpec;
+    ULONG nCardNameOffset;
+    ULONG nReaderNameOffset;
+    ULONG nContainerNameOffset;
+    ULONG nCSPNameOffset;
+    TCHAR bBuffer;
+  } KERB_SMARTCARD_CSP_INFO, *PKERB_SMARTCARD_CSP_INFO;
+
   BOOLEAN WINAPI AuditComputeEffectivePolicyBySid(
     const PSID pSid,
     const GUID *pSubCategoryGuids,
@@ -1403,13 +1439,8 @@ extern "C" {
     PSECURITY_DESCRIPTOR *ppSecurityDescriptor
   );
 
-#ifdef UNICODE
-#define AuditLookupSubCategoryName AuditLookupSubCategoryNameW
-#define AuditLookupCategoryName AuditLookupCategoryNameW
-#else
-#define AuditLookupSubCategoryName AuditLookupSubCategoryNameA
-#define AuditLookupCategoryName AuditLookupCategoryNameA
-#endif
+#define AuditLookupSubCategoryName __MINGW_NAME_AW(AuditLookupSubCategoryName)
+#define AuditLookupCategoryName __MINGW_NAME_AW(AuditLookupCategoryName)
 
   BOOLEAN WINAPI AuditLookupSubCategoryNameA(
     const GUID *pAuditSubCategoryGuid,

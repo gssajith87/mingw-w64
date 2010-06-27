@@ -103,6 +103,17 @@ typedef struct _MFFOLDDOWN_MATRIX {
   LONG   Coeff[64];
 } MFFOLDDOWN_MATRIX;
 
+typedef struct _MT_CUSTOM_VIDEO_PRIMARIES {
+  float fRx;
+  float fRy;
+  float fGx;
+  float fGy;
+  float fBx;
+  float fBy;
+  float fWx;
+  float fWy;
+} MT_CUSTOM_VIDEO_PRIMARIES;
+
 typedef void (*MFPERIODICCALLBACK )(IUnknown *pContext);
 typedef LPVOID MFWORKITEM_KEY;
 

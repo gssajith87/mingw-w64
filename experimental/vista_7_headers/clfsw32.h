@@ -178,5 +178,23 @@ WINBOOL WINAPI TerminateLogArchive(
   CLFS_LOG_ARCHIVE_CONTEXT pvArchiveContext
 );
 
+ULONG WINAPI LsnBlockOffset(
+  const CLFS_LSN *plsn
+);
+
+CLFS_CONTAINER_ID WINAPI LsnContainer(
+  const CLFS_LSN *plsn
+);
+
+CLFS_LSN WINAPI LsnCreate(
+  CLFS_CONTAINER_ID cidContainer,
+  ULONG offBlock,
+  ULONG cRecord
+);
+
+ULONG WINAPI LsnRecordSequence(
+  const CLFS_LSN *plsn
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_CLFSW32*/

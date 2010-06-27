@@ -243,6 +243,22 @@ typedef struct _ISCSI_VERSION_INFO {
   ULONG BuildNumber;
 } ISCSI_VERSION_INFO, *PISCSI_VERSION_INFO;
 
+typedef struct _ISCSI_LOGIN_OPTIONS {
+  ULONG                              Version;
+  ISCSI_LOGIN_OPTIONS_INFO_SPECIFIED InformationSpecified;
+  ISCSI_LOGIN_FLAGS                  LoginFlags;
+  ISCSI_AUTH_TYPES                   AuthType;
+  ISCSI_DIGEST_TYPES                 HeaderDigest;
+  ISCSI_DIGEST_TYPES                 DataDigest;
+  ULONG                              MaximumConnections;
+  ULONG                              DefaultTime2Wait;
+  ULONG                              DefaultTime2Retain;
+  ULONG                              UsernameLength;
+  ULONG                              PasswordLength;
+  PUCHAR                             Username;
+  PUCHAR                             Password;
+} ISCSI_LOGIN_OPTIONS, *PISCSI_LOGIN_OPTIONS;
+
 __MINGW_TYPEDEF_AW(ISCSI_CONNECTION_INFO)
 __MINGW_TYPEDEF_AW(PISCSI_CONNECTION_INFO)
 __MINGW_TYPEDEF_AW(ISCSI_SESSION_INFO)
@@ -378,6 +394,42 @@ HRESULT WINAPI GetIScsiTargetInformationW(
 
 HRESULT WINAPI GetIScsiVersionInformation(
     PISCSI_VERSION_INFO VersionInfo
+);
+
+HRESULT WINAPI LoginIScsiTargetA(
+  PCHAR TargetName,
+  BOOLEAN IsInformationalSession,
+  PTCHAR InitiatorName,
+  ULONG InitiatorPortNumber,
+  PISCSI_TARGET_PORTAL TargetPortal,
+  ISCSI_SECURITY_FLAGS SecurityFlags,
+  PISCSI_TARGET_MAPPING Mappings,
+  PISCSI_LOGIN_OPTIONS LoginOptions,
+  ULONG KeySize,
+  PCHAR Key,
+  BOOLEAN IsPersistent,
+  PISCSI_UNIQUE_SESSION_ID UniqueSessionId,
+  PISCSI_UNIQUE_CONNECTION_ID UniqueConnectionId
+);
+
+HRESULT WINAPI LoginIScsiTargetA(
+  PWCHAR TargetName,
+  BOOLEAN IsInformationalSession,
+  PTCHAR InitiatorName,
+  ULONG InitiatorPortNumber,
+  PISCSI_TARGET_PORTAL TargetPortal,
+  ISCSI_SECURITY_FLAGS SecurityFlags,
+  PISCSI_TARGET_MAPPING Mappings,
+  PISCSI_LOGIN_OPTIONS LoginOptions,
+  ULONG KeySize,
+  PCHAR Key,
+  BOOLEAN IsPersistent,
+  PISCSI_UNIQUE_SESSION_ID UniqueSessionId,
+  PISCSI_UNIQUE_CONNECTION_ID UniqueConnectionId
+);
+
+HRESULT WINAPI LogoutIScsiTarget(
+  PISCSI_UNIQUE_SESSION_ID UniqueSessionId
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

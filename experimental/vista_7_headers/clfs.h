@@ -49,7 +49,7 @@ typedef enum _CLFS_CONTAINER_STATE {
   ClfsContainerPendingArchive,
   ClfsContainerPendingArchiveAndDelete
 } CLFS_CONTAINER_STATE;
-typedef LPVOID CLFS_CONTAINER_ID;
+typedef DWORD CLFS_CONTAINER_ID;
 
 /* Goes in wdm.h */
 typedef struct _CLFS_CONTAINER_INFORMATION {
@@ -128,6 +128,25 @@ typedef struct _CLFS_WRITE_ENTRY {
   PVOID Buffer;
   ULONG ByteLength;
 } CLFS_WRITE_ENTRY, *PCLFS_WRITE_ENTRY;
+
+WINBOOL WINAPI LsnEqual(
+  const CLFS_LSN *plsn1,
+  const CLFS_LSN *plsn2
+);
+
+WINBOOL WINAPI LsnGreater(
+  const CLFS_LSN *plsn1,
+  const CLFS_LSN *plsn2
+);
+
+WINBOOL WINAPI LsnLess(
+  const CLFS_LSN *plsn1,
+  const CLFS_LSN *plsn2
+);
+
+WINBOOL WINAPI LsnNull(
+  const CLFS_LSN *plsn
+);
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_CLFS*/

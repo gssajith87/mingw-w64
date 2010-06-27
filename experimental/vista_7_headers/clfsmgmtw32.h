@@ -43,6 +43,10 @@ WINBOOL WINAPI ReadLogNotification(
   LPOVERLAPPED lpOverlapped
 );
 
+WINBOOL WINAPI LogTailAdvanceFailure(
+  HANDLE hLog,
+  DWORD dwReason
+);
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_CLFSMGMTW32*/
