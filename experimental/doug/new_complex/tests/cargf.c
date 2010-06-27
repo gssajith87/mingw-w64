@@ -1,7 +1,2 @@
-#include <math.h>
-#include <complex.h>
-
-int main() {
-  return 77;
-}
-
+#define _NEW_COMPLEX_FLOAT 1
+#include "carg.c"

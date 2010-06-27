@@ -403,6 +403,7 @@ runtests (const struct test_func_desc *testfunc,
  * Declare default test functions to be used by test programs.
  */
 _DEFINE_DEFAULT_TEST_FUNCTION_REAL (cabs, FUNC_BEHAVIOR_CONJ);
+_DEFINE_DEFAULT_TEST_FUNCTION_REAL (carg, 0);
 _DEFINE_DEFAULT_TEST_FUNCTION (cacos, FUNC_BEHAVIOR_CONJ);
 _DEFINE_DEFAULT_TEST_FUNCTION (cacosh, FUNC_BEHAVIOR_CONJ);
 _DEFINE_DEFAULT_TEST_FUNCTION (casin, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_ODD);
