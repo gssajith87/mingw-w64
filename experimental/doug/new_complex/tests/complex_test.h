@@ -1,6 +1,8 @@
+/* Testsuite functions for the complex functions of C99.  */
 #ifndef _NEWCOMPLEX_TEST_H
 #define _NEWCOMPLEX_TEST_H
 
+/* Support printing of long doubles.  */
 #define __USE_MINGW_ANSI_STDIO 1
 #include <stdio.h>
 #include <math.h>
@@ -14,6 +16,7 @@
 /* Grab the internals for things like __FLT_PI, etc.  */
 #include "complex_internal.h"
 
+/* Declare comparisons etc.  */
 #if defined(_NEW_COMPLEX_DOUBLE)
 # define __FLT_CMP	compare_dbl
 # define __FLT_CCMP	compare_cdbl
@@ -167,10 +170,9 @@ error_check_test (const struct test_func_desc *fdesc,
 }
 
 /* Tests of conjugates, function should satisfy
-   func (conj (z)) = conj (func (z)).  We test this two ways.  The first
-   way is that the func (conj (z)) should return the conj of the expected,
-   since expected is the expected result of func (z).  The second test
-   actually confirms the equality.  */
+   func (conj (z)) = conj (func (z)).  func (conj (z)) should return
+   the conj of the expected, since expected is the expected result of
+   func (z).  */
 static int
 conjugate_tests (const struct test_func_desc *fdesc,
 		 int testindex,
@@ -187,22 +189,12 @@ conjugate_tests (const struct test_func_desc *fdesc,
 
   ret |= error_check_test (fdesc, "Congugate of expected", testindex, ctest, cexpected,
 			  real_sign_dontcare, imag_sign_dontcare);
-
-#if NOTYET
-  /* Conjugate test 2: verify result of func (conj (z)) is conj (func (z)) */
-  ctest =    __FLT_ABI(conj) (test);
-  cexpected = __FLT_ABI(conj) (fdesc->test (test));
-  ret |= error_check_test (fdesc, "Congugate of result", testindex, ctest, cexpected,
-			  real_sign_dontcare, imag_sign_dontcare);
-#endif
   return ret;
 }
 
 /* Tests of odd functions, function should satisfy
-   func (-z) = -func (z).  We test this two ways.  The first
-   way is that func (-z) should result in the -expected result, since
-   expected is the expected result of func (z).  The second test confirms
-   the equality.  */
+   func (-z) = -func (z).  func (-z) should result in the -expected result,
+   since expected is the expected result of func (z).  */
 static int
 odd_tests (const struct test_func_desc *fdesc,
 	   int testindex,
@@ -217,32 +209,19 @@ odd_tests (const struct test_func_desc *fdesc,
   __FLT_TYPE complex ctest =    -test;
   __FLT_TYPE complex cexpected = -expected;
 
-  ret |= error_check_test (fdesc, "Oddness of expected", testindex, ctest, cexpected,
+  ret |= error_check_test (fdesc, "Oddness", testindex, ctest, cexpected,
 			  real_sign_dontcare, imag_sign_dontcare);
 
   /* Need to do conjugate of the odd values as well */
   ret |= conjugate_tests(fdesc, testindex, ctest, cexpected, real_sign_dontcare,
 			imag_sign_dontcare);
 
-#if NOTYET
-  /* Oddness test 2: verify result of func (-z) is -func (z) */
-  ctest =    -test;
-  cexpected = -(fdesc->test (test));
-  ret |= error_check_test (fdesc, "Oddness of returns", testindex, ctest, cexpected,
-			  real_sign_dontcare, imag_sign_dontcare);
-
-  /* Need to do conjugate of the odd values as well */
-  ret |= conjugate_tests(fdesc, testindex, ctest, cexpected, real_sign_dontcare,
-			imag_sign_dontcare);
-#endif
   return ret;
 }
 
 /* Tests of even functions, function should satisfy
-   func (-z) = func (z).  We test this two ways.  The first
-   way is that func (-z) should result in the expected result, since
-   expected is the expected result of func (z).  The second test confirms
-   the equality.  */
+   func (-z) = func (z).  func (-z) should result in the expected result,
+   since expected is the expected result of func (z).  */
 static int
 even_tests (const struct test_func_desc *fdesc,
 	   int testindex,
@@ -257,25 +236,12 @@ even_tests (const struct test_func_desc *fdesc,
   __FLT_TYPE complex ctest =    -test;
   __FLT_TYPE complex cexpected = expected;
 
-  ret |= error_check_test (fdesc, "Evenness of expected", testindex, ctest, cexpected,
+  ret |= error_check_test (fdesc, "Evenness", testindex, ctest, cexpected,
 			  real_sign_dontcare, imag_sign_dontcare);
 
   /* Need to do conjugate of the even values as well */
   ret |= conjugate_tests(fdesc, testindex, ctest, cexpected, real_sign_dontcare,
 			imag_sign_dontcare);
-
-#if NOTYET
-  /* Evenness test 2: verify result of func (-z) is func (z) */
-  ctest =    -test;
-  cexpected = fdesc->test (test);
-
-  ret |= error_check_test (fdesc, "Evenness of returns", testindex, ctest, cexpected,
-			  real_sign_dontcare, imag_sign_dontcare);
-
-  /* Need to do conjugate of the even values as well */
-  ret |= conjugate_tests(fdesc, testindex, ctest, cexpected, real_sign_dontcare,
-			imag_sign_dontcare);
-#endif
   return ret;
 }
 
@@ -326,32 +292,133 @@ runtests (const struct test_func_desc *testfunc,
 #define __FLT_STRING(x) #x
 #define __FLT_STRINGIFY(x) __FLT_STRING(x)
 
-/* Define that can be used by the test to actually define the function under test.  */
-#define DEFINE_TEST_FUNCTION(funcname, behavior)	\
-  struct test_func_desc testfunc =			\
-  {							\
-    __FLT_STRINGIFY(__FLT_ABI(funcname)),		\
-    __FLT_ABI(funcname),				\
-    NULL,						\
-    behavior						\
+/**
+ * Defines the test function with a variable name to pass to RUN_TESTS.
+ * varname is the varname to use.
+ * funcame is the function to test.
+ * behavior is the flags of how the function behaves.
+ */
+#define DEFINE_TEST_FUNCTION(varname, funcname, behavior)	\
+  struct test_func_desc varname =				\
+  {								\
+    __FLT_STRINGIFY(__FLT_ABI(funcname)),			\
+    __FLT_ABI(funcname),					\
+    NULL,							\
+    behavior							\
   }
 
-#define DEFINE_REAL_TEST_FUNCTION(funcname, behavior)	\
-  struct test_func_desc testfunc =			\
-  {							\
-    __FLT_STRINGIFY(__FLT_ABI(funcname)),		\
-    NULL,						\
-    __FLT_ABI(funcname),				\
-    behavior						\
+/**
+ * Defines the test function with a variable name to pass to RUN_TESTS.
+ * This version is for functions that return a real value.
+ * varname is the varname to use.
+ * funcame is the function to test.
+ * behavior is the flags of how the function behaves.
+ */
+#define DEFINE_TEST_FUNCTION_REAL(varname, funcname, behavior)	\
+  struct test_func_desc varname =					\
+  {									\
+    __FLT_STRINGIFY(__FLT_ABI(funcname)),				\
+    NULL,								\
+    __FLT_ABI(funcname),						\
+    behavior								\
   }
+
 
 /* Do not use semicolons with these macros.  */
-#define TEST_PROLOGUE const struct complex_test testarray[] = {
-#define DECLARE_TEST(input_r, input_i, expected_r, expected_i, real_sign_dontcare, imag_sign_dontcare)	\
-  { input_r, input_i, expected_r, expected_i, real_sign_dontcare, imag_sign_dontcare },
-#define TEST_EPILOGUE };
 
-/* Actually run the tests */
-#define RUNTESTS runtests(&testfunc, testarray, (sizeof (testarray) / sizeof (*testarray)));
+/**
+ * Starts a declaration of tests, with a variable name.
+ */
+#define TESTS_START(v) const struct complex_test v[] = {
+
+/**
+ * Starts a declaration of tests, with a default variable name, for use with
+ * RUN_DEFAULT_TESTS.
+ */
+#define DEFAULT_TESTS_START TESTS_START(_default_tests)
+
+/**
+ * Macro to fill a complex_test structure with values while inside a
+ * TESTS block.
+ */
+#define DEFINE_TEST(input_r, input_i, expected_r, expected_i, real_sign_dontcare, imag_sign_dontcare)	\
+  { input_r, input_i, expected_r, expected_i, real_sign_dontcare, imag_sign_dontcare },
+
+/**
+ * Closes a test block opened with the TESTS_START macros.
+ */
+#define TESTS_END };
+
+/**
+ * Runs the tests specified in testarray using the specified test function
+ * definition.
+ * testfunc is the function definition specification defined by one of the
+ * DEFINE_TEST_FUNCTION macros.
+ * testarray is the test array defined by a TESTS_START macro.
+ */
+#define RUN_TESTS(testfunc, testarray) \
+  (runtests(&testfunc, testarray, (sizeof (testarray) / sizeof (*testarray))))
+
+/**
+ * Runs the tests specified in testarray using the test function
+ * definition declared with DEFINE_DEFAULT_TEST_FUNCTION macros.
+ * funcname is the function name passed to the DEFAULT_TEST_FUNCTION* macro.
+ * testarray is the test array defined by the TESTS_START macro.
+ */
+#define RUN_FUNCTION_TESTS(funcname, testarray) \
+  RUN_TESTS(_test_##funcname, testarray)
+
+/**
+ * Runs the tests specified by DEFAULT_TESTS testarray using the test function
+ * definition declared with DEFINE_DEFAULT_TEST_FUNCTION macros.
+ * funcname is the function name passed to the DEFAULT_TEST_FUNCTION* macro.
+ */
+#define RUN_DEFAULT_TESTS(funcname) \
+  RUN_TESTS(_test_##funcname, _default_tests)
+
+/**
+ * Default test functions available.
+ */
+
+/**
+ * Defines a test function with a default variable name for use with the
+ * RUN_DEFAULT_TESTS macro.
+ * funcname is the function family to test.
+ * behavior is the function's behavior.
+ */
+#define _DEFINE_DEFAULT_TEST_FUNCTION(funcname, behavior) \
+	DEFINE_TEST_FUNCTION(_test_##funcname, funcname, behavior)
+
+/**
+ * Defines a test function with a default variable name for use with the
+ * RUN_DEFAULT_TESTS macro.  This version is for functions that return
+ * a real value.
+ * funcname is the function family to test.
+ * behavior is the function's behavior.
+ */
+#define _DEFINE_DEFAULT_TEST_FUNCTION_REAL(funcname, behavior) \
+	DEFINE_TEST_FUNCTION_REAL(_test_##funcname, funcname, behavior)
+
+/**
+ * Declare default test functions to be used by test programs.
+ */
+_DEFINE_DEFAULT_TEST_FUNCTION_REAL (cabs, FUNC_BEHAVIOR_CONJ);
+_DEFINE_DEFAULT_TEST_FUNCTION (cacos, FUNC_BEHAVIOR_CONJ);
+_DEFINE_DEFAULT_TEST_FUNCTION (cacosh, FUNC_BEHAVIOR_CONJ);
+_DEFINE_DEFAULT_TEST_FUNCTION (casin, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_ODD);
+_DEFINE_DEFAULT_TEST_FUNCTION (casinh, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_ODD);
+_DEFINE_DEFAULT_TEST_FUNCTION (catan, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_ODD);
+_DEFINE_DEFAULT_TEST_FUNCTION (catanh, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_ODD);
+_DEFINE_DEFAULT_TEST_FUNCTION (ccos, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_EVEN);
+_DEFINE_DEFAULT_TEST_FUNCTION (ccosh, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_EVEN);
+_DEFINE_DEFAULT_TEST_FUNCTION (cexp, FUNC_BEHAVIOR_CONJ);
+_DEFINE_DEFAULT_TEST_FUNCTION (clog, FUNC_BEHAVIOR_CONJ);
+/* We don't define this as a CONJ behavior because that uses the conj function.  */
+_DEFINE_DEFAULT_TEST_FUNCTION (conj, 0);
+_DEFINE_DEFAULT_TEST_FUNCTION (csin, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_ODD);
+_DEFINE_DEFAULT_TEST_FUNCTION (csinh, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_ODD);
+_DEFINE_DEFAULT_TEST_FUNCTION (csqrt, FUNC_BEHAVIOR_CONJ);
+_DEFINE_DEFAULT_TEST_FUNCTION (ctan, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_ODD);
+_DEFINE_DEFAULT_TEST_FUNCTION (ctanh, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_ODD);
 
 #endif  /* _NEWCOMPLEX_TEST_H */
