@@ -21,7 +21,7 @@
  *
  */
   
-int main()
+int __FLT_ABI(test_function_carg) ()
 {
   /* These tests return a real -- expected imaginary is ignored.  */
   /* Note to self - reverse input for correct expected, since the imaginary value

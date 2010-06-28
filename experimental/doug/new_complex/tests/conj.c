@@ -6,7 +6,7 @@
  * actually under test, so we manually define the tests).
  */
 
-int main()
+int __FLT_ABI(test_function_conj) ()
 {
   DEFAULT_TESTS_START
 

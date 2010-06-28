@@ -17,7 +17,7 @@
  * ccosh(NaN + iNaN) returns NaN + iNaN.
  */
 
-int main()
+int __FLT_ABI(test_function_ccosh) ()
 {
   /* cos (42.42) positive, sin(42.42) negative */
   DEFAULT_TESTS_START

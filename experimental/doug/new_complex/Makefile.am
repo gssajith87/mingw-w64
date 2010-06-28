@@ -1,5 +1,12 @@
+
 AM_CPPFLAGS = -I $(srcdir)/src
-LDADD = libnewcomplex.a
+
+# set for later use by +=
+LDADD =
+lib_LIBRARIES =
+check_LIBRARIES =
+check_PROGRAMS = 
+TESTS =
 
 src_newcomplex =  \
 src/cabs.c   src/cargf.c  src/ccosl.c  src/cimag.c   src/clogf.c  src/conjl.c  src/cproj.c   src/crealf.c  src/csinl.c   src/ctan.c  \
@@ -13,77 +20,20 @@ src/cacos.def.h   src/casinh.def.h  src/ccosh.def.h  src/complex_internal.h  src
 src/cacosh.def.h  src/catan.def.h   src/cexp.def.h   src/conj.def.h          src/csin.def.h   src/ctanh.def.h \
 src/carg.def.h    src/catanh.def.h  src/cimag.def.h  src/cpow.def.h          src/csinh.def.h
 
-lib_LIBRARIES = libnewcomplex.a
+# it is ok to add the lib64/libnewcomplex.a and lib32/libnewcomplex.a on the same command line.
+# The linker will choose the correct one while linking.
+if LIB64
+LDADD += lib64/libnewcomplex.a
+lib_LIBRARIES += lib64/libnewcomplex.a
+lib64_libnewcomplex_a_SOURCES = $(src_newcomplex)
+lib64_libnewcomplex_a_CPPFLAGS = -m64 $(AM_CPPFLAGS)
+endif
 
-libnewcomplex_a_SOURCES = $(src_newcomplex)
+if LIB32
+LDADD += lib32/libnewcomplex.a
+lib_LIBRARIES += lib32/libnewcomplex.a
+lib32_libnewcomplex_a_SOURCES = $(src_newcomplex)
+lib32_libnewcomplex_a_CPPFLAGS = -m32 $(AM_CPPFLAGS)
+endif
 
-newcomplex_tests = \
-  tests/cabs \
-  tests/cabsf \
-  tests/cabsl \
-  tests/cacos \
-  tests/cacosf \
-  tests/cacosh \
-  tests/cacoshf \
-  tests/cacoshl \
-  tests/cacosl \
-  tests/carg \
-  tests/cargf \
-  tests/cargl \
-  tests/casin \
-  tests/casinf \
-  tests/casinh \
-  tests/casinhf \
-  tests/casinhl \
-  tests/casinl \
-  tests/catan \
-  tests/catanf \
-  tests/catanh \
-  tests/catanhf \
-  tests/catanhl \
-  tests/catanl \
-  tests/ccos \
-  tests/ccosf \
-  tests/ccosh \
-  tests/ccoshf \
-  tests/ccoshl \
-  tests/ccosl \
-  tests/cexp \
-  tests/cexpf \
-  tests/cexpl \
-  tests/cimag \
-  tests/cimagf \
-  tests/cimagl \
-  tests/clog \
-  tests/clogf \
-  tests/clogl \
-  tests/conj \
-  tests/conjf \
-  tests/conjl \
-  tests/cpow \
-  tests/cpowf \
-  tests/cpowl \
-  tests/cproj \
-  tests/cprojf \
-  tests/cprojl \
-  tests/creal \
-  tests/crealf \
-  tests/creall \
-  tests/csin \
-  tests/csinf \
-  tests/csinh \
-  tests/csinhf \
-  tests/csinhl \
-  tests/csinl \
-  tests/csqrt \
-  tests/csqrtf \
-  tests/csqrtl \
-  tests/ctan \
-  tests/ctanf \
-  tests/ctanh \
-  tests/ctanhf \
-  tests/ctanhl \
-  tests/ctanl 
-
-TESTS = $(check_PROGRAMS)
-check_PROGRAMS = $(newcomplex_tests)
+include tests/complex_tests.am

@@ -21,6 +21,10 @@ AC_PROG_RANLIB
 
 # Checks for library functions.
 
+# fake out configure for testing
+AM_CONDITIONAL([LIB32], [true])
+AM_CONDITIONAL([LIB64], [true])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 

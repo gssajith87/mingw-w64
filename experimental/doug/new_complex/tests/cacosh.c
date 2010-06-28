@@ -16,7 +16,7 @@
  * cacosh(NaN + iNaN) returns NaN + iNaN.
  */
 
-int main()
+int __FLT_ABI(test_function_cacosh) ()
 {
   DEFAULT_TESTS_START
 

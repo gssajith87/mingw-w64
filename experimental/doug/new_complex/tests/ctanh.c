@@ -14,7 +14,7 @@
  * ctanh(NaN + iNaN) returns NaN + iNaN.
  */
 
-int main() 
+int __FLT_ABI(test_function_ctanh) () 
 {
   /* sin(2*42.42) is negative */
   DEFAULT_TESTS_START
@@ -37,9 +37,9 @@ int main()
   /* sin(0) = +0.0  sin(PI) = +0.0 sin(2PI) = +0.0 */
   TESTS_START(pis)
 
-  DEFINE_TEST (INFINITY, __FLT_CST(0.0), __FLT_CST(1.0), __FLT_CST(0.0) * __FLT_ABI(sin) (__FLT_CST(2.0) * __FLT_CST(0.0)), 0, 0)
-  DEFINE_TEST (INFINITY,     __FLT_PI_2, __FLT_CST(1.0), __FLT_CST(0.0) * __FLT_ABI(sin) (__FLT_CST(2.0) * __FLT_PI_2)    , 0, 0)
-  DEFINE_TEST (INFINITY,       __FLT_PI, __FLT_CST(1.0), __FLT_CST(0.0) * __FLT_ABI(sin) (__FLT_CST(2.0) * __FLT_PI),       0, 0)
+  DEFINE_TEST (INFINITY, __FLT_CST(0.0), __FLT_CST(1.0), __FLT_CST(0.0) * __FLT_ABI(sin) (__FLT_CST(0.0)),           0, 0)
+  DEFINE_TEST (INFINITY,     __FLT_PI_2, __FLT_CST(1.0), __FLT_CST(0.0) * __FLT_ABI(sin) (__FLT_CST(4.0) * __FLT_ABI(atan) (__FLT_CST(1.0))), 0, 0)
+  DEFINE_TEST (INFINITY,       __FLT_PI, __FLT_CST(1.0), __FLT_CST(0.0) * __FLT_ABI(sin) (__FLT_CST(8.0) * __FLT_ABI(atan) (__FLT_CST(1.0))), 0, 0)
 
   TESTS_END
 

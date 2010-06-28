@@ -1,7 +1,7 @@
-#include <math.h>
-#include <complex.h>
+#include "complex_test.h"
 
-int main() {
+int __FLT_ABI(test_function_cproj) ()
+{
   return 77;
 }
 

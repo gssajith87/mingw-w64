@@ -1,0 +1,706 @@
+# This testsuite automake fragment is meant to be included
+# by the main automake Makefile.am
+
+# Complex library check sources.
+check_complex_lib_sources = \
+  tests/complex_test.h \
+  tests/cabs.c \
+  tests/cacos.c \
+  tests/cacosh.c \
+  tests/carg.c \
+  tests/casin.c \
+  tests/casinh.c \
+  tests/catan.c \
+  tests/catanh.c \
+  tests/ccos.c \
+  tests/ccosh.c \
+  tests/cexp.c \
+  tests/cimag.c \
+  tests/clog.c \
+  tests/conj.c \
+  tests/cpow.c \
+  tests/cproj.c \
+  tests/creal.c \
+  tests/csin.c \
+  tests/csinh.c \
+  tests/csqrt.c \
+  tests/ctan.c \
+  tests/ctanh.c
+
+# 32 bit tests.
+if LIB32
+# Complex library support libs.
+check_LIBRARIES += \
+  tests32/libnewcomplextestsf.a \
+  tests32/libnewcomplextests.a \
+  tests32/libnewcomplextestsld.a
+# Build the programs during make check.
+check_PROGRAMS += $(newcomplex_tests32)
+# They are also tests.
+TESTS += $(newcomplex_tests32)
+
+tests32_libnewcomplextestsf_a_CPPFLAGS= -m32 -D_NEW_COMPLEX_FLOAT=1 $(AM_CPPFLAGS)
+tests32_libnewcomplextestsf_a_SOURCES = $(check_complex_lib_sources)
+tests32_libnewcomplextests_a_CPPFLAGS= -m32 -D_NEW_COMPLEX_DOUBLE=1 $(AM_CPPFLAGS)
+tests32_libnewcomplextests_a_SOURCES = $(check_complex_lib_sources)
+tests32_libnewcomplextestsld_a_CPPFLAGS= -m32 -D_NEW_COMPLEX_LDOUBLE=1 $(AM_CPPFLAGS)
+tests32_libnewcomplextestsld_a_SOURCES = $(check_complex_lib_sources)
+
+# Complex library actual test programs.
+newcomplex_tests32 = \
+  tests32/cabs   tests32/cabsf   tests32/cabsld   \
+  tests32/cacos  tests32/cacosf  tests32/cacosld  \
+  tests32/cacosh tests32/cacoshf tests32/cacoshld \
+  tests32/carg   tests32/cargf   tests32/cargld   \
+  tests32/casin  tests32/casinf  tests32/casinld  \
+  tests32/casinh tests32/casinhf tests32/casinhld \
+  tests32/catan  tests32/catanf  tests32/catanld  \
+  tests32/catanh tests32/catanhf tests32/catanhld \
+  tests32/ccos   tests32/ccosf   tests32/ccosld   \
+  tests32/ccosh  tests32/ccoshf  tests32/ccoshld  \
+  tests32/cexp   tests32/cexpf   tests32/cexpld   \
+  tests32/cimag  tests32/cimagf  tests32/cimagld  \
+  tests32/clog   tests32/clogf   tests32/clogld   \
+  tests32/conj   tests32/conjf   tests32/conjld   \
+  tests32/cpow   tests32/cpowf   tests32/cpowld   \
+  tests32/cproj  tests32/cprojf  tests32/cprojld  \
+  tests32/creal  tests32/crealf  tests32/crealld  \
+  tests32/csin   tests32/csinf   tests32/csinld   \
+  tests32/csinh  tests32/csinhf  tests32/csinhld  \
+  tests32/csqrt  tests32/csqrtf  tests32/csqrtld  \
+  tests32/ctan   tests32/ctanf   tests32/ctanld   \
+  tests32/ctanh  tests32/ctanhf  tests32/ctanhld
+
+# Each test program is built with main.c, with two defines,
+#   TESTFUNC is the function being tested (so that it can grab it from the
+#   support library).
+#   _NEW_COMPLEX_{FLOAT,DOUBLE,LDOUBLE) tells which ABI being tested.
+# In addition, we use the LDADD for each program to link the appropriate
+# support library for the ABI being tested.
+tests32_cabsf_SOURCES = tests/main.c
+tests32_cabsf_CPPFLAGS = -m32 -DTESTFUNC=cabs -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_cabsf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cabsf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_cabs_SOURCES = tests/main.c
+tests32_cabs_CPPFLAGS = -m32 -DTESTFUNC=cabs -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_cabs_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cabs_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_cabsld_SOURCES = tests/main.c
+tests32_cabsld_CPPFLAGS = -m32 -DTESTFUNC=cabs -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_cabsld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cabsld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_cacosf_SOURCES = tests/main.c
+tests32_cacosf_CPPFLAGS = -m32 -DTESTFUNC=cacos -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_cacosf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cacosf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_cacos_SOURCES = tests/main.c
+tests32_cacos_CPPFLAGS = -m32 -DTESTFUNC=cacos -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_cacos_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cacos_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_cacosld_SOURCES = tests/main.c
+tests32_cacosld_CPPFLAGS = -m32 -DTESTFUNC=cacos -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_cacosld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cacosld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_cacoshf_SOURCES = tests/main.c
+tests32_cacoshf_CPPFLAGS = -m32 -DTESTFUNC=cacosh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_cacoshf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cacoshf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_cacosh_SOURCES = tests/main.c
+tests32_cacosh_CPPFLAGS = -m32 -DTESTFUNC=cacosh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_cacosh_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cacosh_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_cacoshld_SOURCES = tests/main.c
+tests32_cacoshld_CPPFLAGS = -m32 -DTESTFUNC=cacosh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_cacoshld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cacoshld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_cargf_SOURCES = tests/main.c
+tests32_cargf_CPPFLAGS = -m32 -DTESTFUNC=carg -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_cargf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cargf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_carg_SOURCES = tests/main.c
+tests32_carg_CPPFLAGS = -m32 -DTESTFUNC=carg -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_carg_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_carg_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_cargld_SOURCES = tests/main.c
+tests32_cargld_CPPFLAGS = -m32 -DTESTFUNC=carg -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_cargld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cargld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_casinf_SOURCES = tests/main.c
+tests32_casinf_CPPFLAGS = -m32 -DTESTFUNC=casin -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_casinf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_casinf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_casin_SOURCES = tests/main.c
+tests32_casin_CPPFLAGS = -m32 -DTESTFUNC=casin -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_casin_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_casin_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_casinld_SOURCES = tests/main.c
+tests32_casinld_CPPFLAGS = -m32 -DTESTFUNC=casin -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_casinld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_casinld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_casinhf_SOURCES = tests/main.c
+tests32_casinhf_CPPFLAGS = -m32 -DTESTFUNC=casinh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_casinhf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_casinhf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_casinh_SOURCES = tests/main.c
+tests32_casinh_CPPFLAGS = -m32 -DTESTFUNC=casinh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_casinh_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_casinh_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_casinhld_SOURCES = tests/main.c
+tests32_casinhld_CPPFLAGS = -m32 -DTESTFUNC=casinh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_casinhld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_casinhld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_catanf_SOURCES = tests/main.c
+tests32_catanf_CPPFLAGS = -m32 -DTESTFUNC=catan -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_catanf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_catanf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_catan_SOURCES = tests/main.c
+tests32_catan_CPPFLAGS = -m32 -DTESTFUNC=catan -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_catan_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_catan_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_catanld_SOURCES = tests/main.c
+tests32_catanld_CPPFLAGS = -m32 -DTESTFUNC=catan -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_catanld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_catanld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_catanhf_SOURCES = tests/main.c
+tests32_catanhf_CPPFLAGS = -m32 -DTESTFUNC=catanh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_catanhf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_catanhf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_catanh_SOURCES = tests/main.c
+tests32_catanh_CPPFLAGS = -m32 -DTESTFUNC=catanh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_catanh_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_catanh_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_catanhld_SOURCES = tests/main.c
+tests32_catanhld_CPPFLAGS = -m32 -DTESTFUNC=catanh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_catanhld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_catanhld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_ccosf_SOURCES = tests/main.c
+tests32_ccosf_CPPFLAGS = -m32 -DTESTFUNC=ccos -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_ccosf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ccosf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_ccos_SOURCES = tests/main.c
+tests32_ccos_CPPFLAGS = -m32 -DTESTFUNC=ccos -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_ccos_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ccos_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_ccosld_SOURCES = tests/main.c
+tests32_ccosld_CPPFLAGS = -m32 -DTESTFUNC=ccos -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_ccosld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ccosld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_ccoshf_SOURCES = tests/main.c
+tests32_ccoshf_CPPFLAGS = -m32 -DTESTFUNC=ccosh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_ccoshf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ccoshf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_ccosh_SOURCES = tests/main.c
+tests32_ccosh_CPPFLAGS = -m32 -DTESTFUNC=ccosh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_ccosh_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ccosh_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_ccoshld_SOURCES = tests/main.c
+tests32_ccoshld_CPPFLAGS = -m32 -DTESTFUNC=ccosh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_ccoshld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ccoshld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_cexpf_SOURCES = tests/main.c
+tests32_cexpf_CPPFLAGS = -m32 -DTESTFUNC=cexp -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_cexpf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cexpf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_cexp_SOURCES = tests/main.c
+tests32_cexp_CPPFLAGS = -m32 -DTESTFUNC=cexp -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_cexp_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cexp_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_cexpld_SOURCES = tests/main.c
+tests32_cexpld_CPPFLAGS = -m32 -DTESTFUNC=cexp -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_cexpld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cexpld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_cimagf_SOURCES = tests/main.c
+tests32_cimagf_CPPFLAGS = -m32 -DTESTFUNC=cimag -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_cimagf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cimagf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_cimag_SOURCES = tests/main.c
+tests32_cimag_CPPFLAGS = -m32 -DTESTFUNC=cimag -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_cimag_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cimag_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_cimagld_SOURCES = tests/main.c
+tests32_cimagld_CPPFLAGS = -m32 -DTESTFUNC=cimag -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_cimagld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cimagld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_clogf_SOURCES = tests/main.c
+tests32_clogf_CPPFLAGS = -m32 -DTESTFUNC=clog -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_clogf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_clogf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_clog_SOURCES = tests/main.c
+tests32_clog_CPPFLAGS = -m32 -DTESTFUNC=clog -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_clog_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_clog_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_clogld_SOURCES = tests/main.c
+tests32_clogld_CPPFLAGS = -m32 -DTESTFUNC=clog -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_clogld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_clogld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_conjf_SOURCES = tests/main.c
+tests32_conjf_CPPFLAGS = -m32 -DTESTFUNC=conj -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_conjf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_conjf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_conj_SOURCES = tests/main.c
+tests32_conj_CPPFLAGS = -m32 -DTESTFUNC=conj -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_conj_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_conj_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_conjld_SOURCES = tests/main.c
+tests32_conjld_CPPFLAGS = -m32 -DTESTFUNC=conj -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_conjld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_conjld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_cpowf_SOURCES = tests/main.c
+tests32_cpowf_CPPFLAGS = -m32 -DTESTFUNC=cpow -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_cpowf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cpowf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_cpow_SOURCES = tests/main.c
+tests32_cpow_CPPFLAGS = -m32 -DTESTFUNC=cpow -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_cpow_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cpow_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_cpowld_SOURCES = tests/main.c
+tests32_cpowld_CPPFLAGS = -m32 -DTESTFUNC=cpow -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_cpowld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cpowld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_cprojf_SOURCES = tests/main.c
+tests32_cprojf_CPPFLAGS = -m32 -DTESTFUNC=cproj -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_cprojf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cprojf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_cproj_SOURCES = tests/main.c
+tests32_cproj_CPPFLAGS = -m32 -DTESTFUNC=cproj -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_cproj_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cproj_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_cprojld_SOURCES = tests/main.c
+tests32_cprojld_CPPFLAGS = -m32 -DTESTFUNC=cproj -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_cprojld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_cprojld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_crealf_SOURCES = tests/main.c
+tests32_crealf_CPPFLAGS = -m32 -DTESTFUNC=creal -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_crealf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_crealf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_creal_SOURCES = tests/main.c
+tests32_creal_CPPFLAGS = -m32 -DTESTFUNC=creal -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_creal_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_creal_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_crealld_SOURCES = tests/main.c
+tests32_crealld_CPPFLAGS = -m32 -DTESTFUNC=creal -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_crealld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_crealld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_csinf_SOURCES = tests/main.c
+tests32_csinf_CPPFLAGS = -m32 -DTESTFUNC=csin -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_csinf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_csinf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_csin_SOURCES = tests/main.c
+tests32_csin_CPPFLAGS = -m32 -DTESTFUNC=csin -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_csin_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_csin_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_csinld_SOURCES = tests/main.c
+tests32_csinld_CPPFLAGS = -m32 -DTESTFUNC=csin -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_csinld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_csinld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_csinhf_SOURCES = tests/main.c
+tests32_csinhf_CPPFLAGS = -m32 -DTESTFUNC=csinh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_csinhf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_csinhf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_csinh_SOURCES = tests/main.c
+tests32_csinh_CPPFLAGS = -m32 -DTESTFUNC=csinh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_csinh_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_csinh_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_csinhld_SOURCES = tests/main.c
+tests32_csinhld_CPPFLAGS = -m32 -DTESTFUNC=csinh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_csinhld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_csinhld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_csqrtf_SOURCES = tests/main.c
+tests32_csqrtf_CPPFLAGS = -m32 -DTESTFUNC=csqrt -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_csqrtf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_csqrtf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_csqrt_SOURCES = tests/main.c
+tests32_csqrt_CPPFLAGS = -m32 -DTESTFUNC=csqrt -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_csqrt_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_csqrt_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_csqrtld_SOURCES = tests/main.c
+tests32_csqrtld_CPPFLAGS = -m32 -DTESTFUNC=csqrt -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_csqrtld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_csqrtld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_ctanf_SOURCES = tests/main.c
+tests32_ctanf_CPPFLAGS = -m32 -DTESTFUNC=ctan -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_ctanf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ctanf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_ctan_SOURCES = tests/main.c
+tests32_ctan_CPPFLAGS = -m32 -DTESTFUNC=ctan -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_ctan_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ctan_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_ctanld_SOURCES = tests/main.c
+tests32_ctanld_CPPFLAGS = -m32 -DTESTFUNC=ctan -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_ctanld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ctanld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+tests32_ctanhf_SOURCES = tests/main.c
+tests32_ctanhf_CPPFLAGS = -m32 -DTESTFUNC=ctanh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests32_ctanhf_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ctanhf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
+tests32_ctanh_SOURCES = tests/main.c
+tests32_ctanh_CPPFLAGS = -m32 -DTESTFUNC=ctanh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests32_ctanh_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ctanh_LDADD = tests32/libnewcomplextests.a $(LDADD)
+tests32_ctanhld_SOURCES = tests/main.c
+tests32_ctanhld_CPPFLAGS = -m32 -DTESTFUNC=ctanh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests32_ctanhld_LDFLAGS = -m32 $(AM_LDFLAGS)
+tests32_ctanhld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
+
+endif LIB32
+
+# 64 bit tests.
+if LIB64
+# Complex library support libs.
+check_LIBRARIES += \
+  tests64/libnewcomplextestsf.a \
+  tests64/libnewcomplextests.a \
+  tests64/libnewcomplextestsld.a
+# Build the programs during make check.
+check_PROGRAMS += $(newcomplex_tests64)
+# They are also tests.
+TESTS += $(newcomplex_tests64)
+
+tests64_libnewcomplextestsf_a_CPPFLAGS= -m64 -D_NEW_COMPLEX_FLOAT=1 $(AM_CPPFLAGS)
+tests64_libnewcomplextestsf_a_SOURCES = $(check_complex_lib_sources)
+tests64_libnewcomplextests_a_CPPFLAGS= -m64 -D_NEW_COMPLEX_DOUBLE=1 $(AM_CPPFLAGS)
+tests64_libnewcomplextests_a_SOURCES = $(check_complex_lib_sources)
+tests64_libnewcomplextestsld_a_CPPFLAGS= -m64 -D_NEW_COMPLEX_LDOUBLE=1 $(AM_CPPFLAGS)
+tests64_libnewcomplextestsld_a_SOURCES = $(check_complex_lib_sources)
+
+# Complex library actual test programs.
+newcomplex_tests64 = \
+  tests64/cabs   tests64/cabsf   tests64/cabsld   \
+  tests64/cacos  tests64/cacosf  tests64/cacosld  \
+  tests64/cacosh tests64/cacoshf tests64/cacoshld \
+  tests64/carg   tests64/cargf   tests64/cargld   \
+  tests64/casin  tests64/casinf  tests64/casinld  \
+  tests64/casinh tests64/casinhf tests64/casinhld \
+  tests64/catan  tests64/catanf  tests64/catanld  \
+  tests64/catanh tests64/catanhf tests64/catanhld \
+  tests64/ccos   tests64/ccosf   tests64/ccosld   \
+  tests64/ccosh  tests64/ccoshf  tests64/ccoshld  \
+  tests64/cexp   tests64/cexpf   tests64/cexpld   \
+  tests64/cimag  tests64/cimagf  tests64/cimagld  \
+  tests64/clog   tests64/clogf   tests64/clogld   \
+  tests64/conj   tests64/conjf   tests64/conjld   \
+  tests64/cpow   tests64/cpowf   tests64/cpowld   \
+  tests64/cproj  tests64/cprojf  tests64/cprojld  \
+  tests64/creal  tests64/crealf  tests64/crealld  \
+  tests64/csin   tests64/csinf   tests64/csinld   \
+  tests64/csinh  tests64/csinhf  tests64/csinhld  \
+  tests64/csqrt  tests64/csqrtf  tests64/csqrtld  \
+  tests64/ctan   tests64/ctanf   tests64/ctanld   \
+  tests64/ctanh  tests64/ctanhf  tests64/ctanhld
+
+# Each test program is built with main.c, with two defines,
+#   TESTFUNC is the function being tested (so that it can grab it from the
+#   support library).
+#   _NEW_COMPLEX_{FLOAT,DOUBLE,LDOUBLE) tells which ABI being tested.
+# In addition, we use the LDADD for each program to link the appropriate
+# support library for the ABI being tested.
+tests64_cabsf_SOURCES = tests/main.c
+tests64_cabsf_CPPFLAGS = -m64 -DTESTFUNC=cabs -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_cabsf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cabsf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_cabs_SOURCES = tests/main.c
+tests64_cabs_CPPFLAGS = -m64 -DTESTFUNC=cabs -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_cabs_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cabs_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_cabsld_SOURCES = tests/main.c
+tests64_cabsld_CPPFLAGS = -m64 -DTESTFUNC=cabs -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_cabsld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cabsld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_cacosf_SOURCES = tests/main.c
+tests64_cacosf_CPPFLAGS = -m64 -DTESTFUNC=cacos -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_cacosf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cacosf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_cacos_SOURCES = tests/main.c
+tests64_cacos_CPPFLAGS = -m64 -DTESTFUNC=cacos -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_cacos_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cacos_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_cacosld_SOURCES = tests/main.c
+tests64_cacosld_CPPFLAGS = -m64 -DTESTFUNC=cacos -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_cacosld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cacosld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_cacoshf_SOURCES = tests/main.c
+tests64_cacoshf_CPPFLAGS = -m64 -DTESTFUNC=cacosh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_cacoshf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cacoshf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_cacosh_SOURCES = tests/main.c
+tests64_cacosh_CPPFLAGS = -m64 -DTESTFUNC=cacosh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_cacosh_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cacosh_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_cacoshld_SOURCES = tests/main.c
+tests64_cacoshld_CPPFLAGS = -m64 -DTESTFUNC=cacosh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_cacoshld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cacoshld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_cargf_SOURCES = tests/main.c
+tests64_cargf_CPPFLAGS = -m64 -DTESTFUNC=carg -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_cargf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cargf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_carg_SOURCES = tests/main.c
+tests64_carg_CPPFLAGS = -m64 -DTESTFUNC=carg -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_carg_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_carg_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_cargld_SOURCES = tests/main.c
+tests64_cargld_CPPFLAGS = -m64 -DTESTFUNC=carg -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_cargld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cargld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_casinf_SOURCES = tests/main.c
+tests64_casinf_CPPFLAGS = -m64 -DTESTFUNC=casin -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_casinf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_casinf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_casin_SOURCES = tests/main.c
+tests64_casin_CPPFLAGS = -m64 -DTESTFUNC=casin -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_casin_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_casin_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_casinld_SOURCES = tests/main.c
+tests64_casinld_CPPFLAGS = -m64 -DTESTFUNC=casin -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_casinld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_casinld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_casinhf_SOURCES = tests/main.c
+tests64_casinhf_CPPFLAGS = -m64 -DTESTFUNC=casinh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_casinhf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_casinhf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_casinh_SOURCES = tests/main.c
+tests64_casinh_CPPFLAGS = -m64 -DTESTFUNC=casinh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_casinh_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_casinh_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_casinhld_SOURCES = tests/main.c
+tests64_casinhld_CPPFLAGS = -m64 -DTESTFUNC=casinh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_casinhld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_casinhld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_catanf_SOURCES = tests/main.c
+tests64_catanf_CPPFLAGS = -m64 -DTESTFUNC=catan -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_catanf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_catanf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_catan_SOURCES = tests/main.c
+tests64_catan_CPPFLAGS = -m64 -DTESTFUNC=catan -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_catan_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_catan_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_catanld_SOURCES = tests/main.c
+tests64_catanld_CPPFLAGS = -m64 -DTESTFUNC=catan -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_catanld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_catanld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_catanhf_SOURCES = tests/main.c
+tests64_catanhf_CPPFLAGS = -m64 -DTESTFUNC=catanh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_catanhf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_catanhf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_catanh_SOURCES = tests/main.c
+tests64_catanh_CPPFLAGS = -m64 -DTESTFUNC=catanh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_catanh_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_catanh_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_catanhld_SOURCES = tests/main.c
+tests64_catanhld_CPPFLAGS = -m64 -DTESTFUNC=catanh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_catanhld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_catanhld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_ccosf_SOURCES = tests/main.c
+tests64_ccosf_CPPFLAGS = -m64 -DTESTFUNC=ccos -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_ccosf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ccosf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_ccos_SOURCES = tests/main.c
+tests64_ccos_CPPFLAGS = -m64 -DTESTFUNC=ccos -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_ccos_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ccos_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_ccosld_SOURCES = tests/main.c
+tests64_ccosld_CPPFLAGS = -m64 -DTESTFUNC=ccos -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_ccosld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ccosld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_ccoshf_SOURCES = tests/main.c
+tests64_ccoshf_CPPFLAGS = -m64 -DTESTFUNC=ccosh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_ccoshf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ccoshf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_ccosh_SOURCES = tests/main.c
+tests64_ccosh_CPPFLAGS = -m64 -DTESTFUNC=ccosh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_ccosh_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ccosh_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_ccoshld_SOURCES = tests/main.c
+tests64_ccoshld_CPPFLAGS = -m64 -DTESTFUNC=ccosh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_ccoshld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ccoshld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_cexpf_SOURCES = tests/main.c
+tests64_cexpf_CPPFLAGS = -m64 -DTESTFUNC=cexp -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_cexpf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cexpf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_cexp_SOURCES = tests/main.c
+tests64_cexp_CPPFLAGS = -m64 -DTESTFUNC=cexp -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_cexp_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cexp_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_cexpld_SOURCES = tests/main.c
+tests64_cexpld_CPPFLAGS = -m64 -DTESTFUNC=cexp -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_cexpld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cexpld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_cimagf_SOURCES = tests/main.c
+tests64_cimagf_CPPFLAGS = -m64 -DTESTFUNC=cimag -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_cimagf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cimagf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_cimag_SOURCES = tests/main.c
+tests64_cimag_CPPFLAGS = -m64 -DTESTFUNC=cimag -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_cimag_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cimag_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_cimagld_SOURCES = tests/main.c
+tests64_cimagld_CPPFLAGS = -m64 -DTESTFUNC=cimag -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_cimagld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cimagld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_clogf_SOURCES = tests/main.c
+tests64_clogf_CPPFLAGS = -m64 -DTESTFUNC=clog -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_clogf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_clogf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_clog_SOURCES = tests/main.c
+tests64_clog_CPPFLAGS = -m64 -DTESTFUNC=clog -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_clog_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_clog_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_clogld_SOURCES = tests/main.c
+tests64_clogld_CPPFLAGS = -m64 -DTESTFUNC=clog -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_clogld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_clogld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_conjf_SOURCES = tests/main.c
+tests64_conjf_CPPFLAGS = -m64 -DTESTFUNC=conj -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_conjf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_conjf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_conj_SOURCES = tests/main.c
+tests64_conj_CPPFLAGS = -m64 -DTESTFUNC=conj -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_conj_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_conj_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_conjld_SOURCES = tests/main.c
+tests64_conjld_CPPFLAGS = -m64 -DTESTFUNC=conj -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_conjld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_conjld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_cpowf_SOURCES = tests/main.c
+tests64_cpowf_CPPFLAGS = -m64 -DTESTFUNC=cpow -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_cpowf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cpowf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_cpow_SOURCES = tests/main.c
+tests64_cpow_CPPFLAGS = -m64 -DTESTFUNC=cpow -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_cpow_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cpow_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_cpowld_SOURCES = tests/main.c
+tests64_cpowld_CPPFLAGS = -m64 -DTESTFUNC=cpow -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_cpowld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cpowld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_cprojf_SOURCES = tests/main.c
+tests64_cprojf_CPPFLAGS = -m64 -DTESTFUNC=cproj -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_cprojf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cprojf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_cproj_SOURCES = tests/main.c
+tests64_cproj_CPPFLAGS = -m64 -DTESTFUNC=cproj -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_cproj_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cproj_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_cprojld_SOURCES = tests/main.c
+tests64_cprojld_CPPFLAGS = -m64 -DTESTFUNC=cproj -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_cprojld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_cprojld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_crealf_SOURCES = tests/main.c
+tests64_crealf_CPPFLAGS = -m64 -DTESTFUNC=creal -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_crealf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_crealf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_creal_SOURCES = tests/main.c
+tests64_creal_CPPFLAGS = -m64 -DTESTFUNC=creal -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_creal_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_creal_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_crealld_SOURCES = tests/main.c
+tests64_crealld_CPPFLAGS = -m64 -DTESTFUNC=creal -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_crealld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_crealld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_csinf_SOURCES = tests/main.c
+tests64_csinf_CPPFLAGS = -m64 -DTESTFUNC=csin -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_csinf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_csinf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_csin_SOURCES = tests/main.c
+tests64_csin_CPPFLAGS = -m64 -DTESTFUNC=csin -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_csin_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_csin_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_csinld_SOURCES = tests/main.c
+tests64_csinld_CPPFLAGS = -m64 -DTESTFUNC=csin -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_csinld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_csinld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_csinhf_SOURCES = tests/main.c
+tests64_csinhf_CPPFLAGS = -m64 -DTESTFUNC=csinh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_csinhf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_csinhf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_csinh_SOURCES = tests/main.c
+tests64_csinh_CPPFLAGS = -m64 -DTESTFUNC=csinh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_csinh_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_csinh_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_csinhld_SOURCES = tests/main.c
+tests64_csinhld_CPPFLAGS = -m64 -DTESTFUNC=csinh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_csinhld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_csinhld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_csqrtf_SOURCES = tests/main.c
+tests64_csqrtf_CPPFLAGS = -m64 -DTESTFUNC=csqrt -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_csqrtf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_csqrtf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_csqrt_SOURCES = tests/main.c
+tests64_csqrt_CPPFLAGS = -m64 -DTESTFUNC=csqrt -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_csqrt_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_csqrt_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_csqrtld_SOURCES = tests/main.c
+tests64_csqrtld_CPPFLAGS = -m64 -DTESTFUNC=csqrt -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_csqrtld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_csqrtld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_ctanf_SOURCES = tests/main.c
+tests64_ctanf_CPPFLAGS = -m64 -DTESTFUNC=ctan -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_ctanf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ctanf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_ctan_SOURCES = tests/main.c
+tests64_ctan_CPPFLAGS = -m64 -DTESTFUNC=ctan -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_ctan_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ctan_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_ctanld_SOURCES = tests/main.c
+tests64_ctanld_CPPFLAGS = -m64 -DTESTFUNC=ctan -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_ctanld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ctanld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+tests64_ctanhf_SOURCES = tests/main.c
+tests64_ctanhf_CPPFLAGS = -m64 -DTESTFUNC=ctanh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+tests64_ctanhf_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ctanhf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
+tests64_ctanh_SOURCES = tests/main.c
+tests64_ctanh_CPPFLAGS = -m64 -DTESTFUNC=ctanh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+tests64_ctanh_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ctanh_LDADD = tests64/libnewcomplextests.a $(LDADD)
+tests64_ctanhld_SOURCES = tests/main.c
+tests64_ctanhld_CPPFLAGS = -m64 -DTESTFUNC=ctanh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+tests64_ctanhld_LDFLAGS = -m64 $(AM_LDFLAGS)
+tests64_ctanhld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
+
+endif LIB64
+
+# vi:ft=automake

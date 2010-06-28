@@ -9,7 +9,7 @@
  * hypot (+/-inf, y) == +inf, for all y (including NaN).
  */
   
-int main()
+int __FLT_ABI(test_function_cabs) ()
 {
   DEFAULT_TESTS_START
 

@@ -561,6 +561,10 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+LIB64_FALSE
+LIB64_TRUE
+LIB32_FALSE
+LIB32_TRUE
 RANLIB
 am__fastdepCC_FALSE
 am__fastdepCC_TRUE
@@ -3353,6 +3357,24 @@ fi
 
 # Checks for library functions.
 
+# fake out configure for testing
+ if true; then
+  LIB32_TRUE=
+  LIB32_FALSE='#'
+else
+  LIB32_TRUE='#'
+  LIB32_FALSE=
+fi
+
+ if true; then
+  LIB64_TRUE=
+  LIB64_FALSE='#'
+else
+  LIB64_TRUE='#'
+  LIB64_FALSE=
+fi
+
+
 ac_config_files="$ac_config_files Makefile"
 
 cat >confcache <<\_ACEOF
@@ -3466,6 +3488,14 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error "conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${LIB32_TRUE}" && test -z "${LIB32_FALSE}"; then
+  as_fn_error "conditional \"LIB32\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${LIB64_TRUE}" && test -z "${LIB64_FALSE}"; then
+  as_fn_error "conditional \"LIB64\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

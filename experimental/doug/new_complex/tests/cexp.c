@@ -18,7 +18,7 @@
  * cexp(NaN + iNaN) returns NaN + iNaN.
  */
 
-int main() 
+int __FLT_ABI(test_function_cexp) () 
 {
   /* cos(42.42) is positive, sin(42.42) is negative */
   /* cos(0), sin(0) positive. */

@@ -16,7 +16,7 @@
  * catanh(NaN + iNaN) returns NaN + iNaN.
  */
 
-int main() 
+int __FLT_ABI(test_function_catanh)() 
 {
   DEFAULT_TESTS_START
 

@@ -15,9 +15,9 @@
  * ctanh(NaN + iNaN) returns NaN + iNaN.
  */
 
-int main() 
+int __FLT_ABI(test_function_ctan) () 
 {
-  /* sin (42.42) is negative */
+  /* sin (2*42.42) is negative */
   DEFAULT_TESTS_START
 
   DEFINE_TEST (  __FLT_CST(0.0),   __FLT_CST(0.0),  __FLT_CST(0.0), __FLT_CST(0.0), 0, 0)
