@@ -2078,11 +2078,12 @@ check_complex_lib_sources = \
   testcases/complex/ctan.c \
   testcases/complex/ctanh.c
 
-@LIB32_TRUE@tests32_libnewcomplextestsf_a_CPPFLAGS = $(CPPFLAGS32) -D_NEW_COMPLEX_FLOAT=1 $(AM_CPPFLAGS)
+complex_inc = -I$(top_srcdir)/new_complex
+@LIB32_TRUE@tests32_libnewcomplextestsf_a_CPPFLAGS = $(CPPFLAGS32) -D_NEW_COMPLEX_FLOAT=1 $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_libnewcomplextestsf_a_SOURCES = $(check_complex_lib_sources)
-@LIB32_TRUE@tests32_libnewcomplextests_a_CPPFLAGS = $(CPPFLAGS32) -D_NEW_COMPLEX_DOUBLE=1 $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_libnewcomplextests_a_CPPFLAGS = $(CPPFLAGS32) -D_NEW_COMPLEX_DOUBLE=1 $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_libnewcomplextests_a_SOURCES = $(check_complex_lib_sources)
-@LIB32_TRUE@tests32_libnewcomplextestsld_a_CPPFLAGS = $(CPPFLAGS32) -D_NEW_COMPLEX_LDOUBLE=1 $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_libnewcomplextestsld_a_CPPFLAGS = $(CPPFLAGS32) -D_NEW_COMPLEX_LDOUBLE=1 $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_libnewcomplextestsld_a_SOURCES = $(check_complex_lib_sources)
 
 # Complex library actual test programs.
@@ -2118,274 +2119,274 @@ check_complex_lib_sources = \
 # In addition, we use the LDADD for each program to link the appropriate
 # support library for the ABI being tested.
 @LIB32_TRUE@tests32_cabsf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cabsf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cabs -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cabsf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cabs -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cabsf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cabsf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_cabs_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cabs_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cabs -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cabs_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cabs -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cabs_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cabs_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_cabsld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cabsld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cabs -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cabsld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cabs -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cabsld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cabsld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_cacosf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cacosf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacos -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cacosf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacos -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cacosf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cacosf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_cacos_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cacos_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacos -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cacos_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacos -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cacos_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cacos_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_cacosld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cacosld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacos -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cacosld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacos -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cacosld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cacosld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_cacoshf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cacoshf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacosh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cacoshf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacosh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cacoshf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cacoshf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_cacosh_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cacosh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacosh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cacosh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacosh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cacosh_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cacosh_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_cacoshld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cacoshld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacosh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cacoshld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cacosh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cacoshld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cacoshld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_cargf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cargf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=carg -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cargf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=carg -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cargf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cargf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_carg_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_carg_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=carg -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_carg_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=carg -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_carg_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_carg_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_cargld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cargld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=carg -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cargld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=carg -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cargld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cargld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_casinf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_casinf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casin -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_casinf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casin -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_casinf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_casinf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_casin_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_casin_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casin -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_casin_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casin -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_casin_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_casin_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_casinld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_casinld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casin -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_casinld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casin -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_casinld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_casinld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_casinhf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_casinhf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casinh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_casinhf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casinh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_casinhf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_casinhf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_casinh_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_casinh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casinh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_casinh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casinh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_casinh_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_casinh_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_casinhld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_casinhld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casinh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_casinhld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=casinh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_casinhld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_casinhld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_catanf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_catanf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catan -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_catanf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catan -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_catanf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_catanf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_catan_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_catan_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catan -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_catan_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catan -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_catan_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_catan_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_catanld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_catanld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catan -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_catanld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catan -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_catanld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_catanld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_catanhf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_catanhf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catanh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_catanhf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catanh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_catanhf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_catanhf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_catanh_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_catanh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catanh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_catanh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catanh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_catanh_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_catanh_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_catanhld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_catanhld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catanh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_catanhld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=catanh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_catanhld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_catanhld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_ccosf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ccosf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccos -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ccosf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccos -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ccosf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ccosf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_ccos_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ccos_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccos -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ccos_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccos -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ccos_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ccos_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_ccosld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ccosld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccos -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ccosld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccos -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ccosld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ccosld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_ccoshf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ccoshf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccosh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ccoshf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccosh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ccoshf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ccoshf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_ccosh_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ccosh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccosh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ccosh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccosh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ccosh_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ccosh_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_ccoshld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ccoshld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccosh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ccoshld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ccosh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ccoshld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ccoshld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_cexpf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cexpf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cexp -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cexpf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cexp -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cexpf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cexpf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_cexp_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cexp_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cexp -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cexp_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cexp -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cexp_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cexp_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_cexpld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cexpld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cexp -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cexpld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cexp -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cexpld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cexpld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_cimagf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cimagf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cimag -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cimagf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cimag -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cimagf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cimagf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_cimag_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cimag_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cimag -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cimag_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cimag -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cimag_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cimag_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_cimagld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cimagld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cimag -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cimagld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cimag -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cimagld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cimagld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_clogf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_clogf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=clog -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_clogf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=clog -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_clogf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_clogf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_clog_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_clog_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=clog -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_clog_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=clog -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_clog_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_clog_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_clogld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_clogld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=clog -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_clogld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=clog -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_clogld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_clogld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_conjf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_conjf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=conj -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_conjf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=conj -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_conjf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_conjf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_conj_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_conj_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=conj -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_conj_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=conj -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_conj_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_conj_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_conjld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_conjld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=conj -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_conjld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=conj -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_conjld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_conjld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_cpowf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cpowf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cpow -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cpowf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cpow -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cpowf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cpowf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_cpow_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cpow_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cpow -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cpow_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cpow -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cpow_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cpow_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_cpowld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cpowld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cpow -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cpowld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cpow -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cpowld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cpowld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_cprojf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cprojf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cproj -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cprojf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cproj -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cprojf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cprojf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_cproj_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cproj_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cproj -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cproj_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cproj -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cproj_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cproj_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_cprojld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_cprojld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cproj -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cprojld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cproj -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cprojld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cprojld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_crealf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_crealf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=creal -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_crealf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=creal -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_crealf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_crealf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_creal_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_creal_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=creal -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_creal_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=creal -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_creal_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_creal_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_crealld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_crealld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=creal -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_crealld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=creal -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_crealld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_crealld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_csinf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_csinf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csin -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_csinf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csin -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_csinf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_csinf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_csin_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_csin_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csin -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_csin_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csin -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_csin_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_csin_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_csinld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_csinld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csin -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_csinld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csin -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_csinld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_csinld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_csinhf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_csinhf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csinh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_csinhf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csinh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_csinhf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_csinhf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_csinh_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_csinh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csinh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_csinh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csinh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_csinh_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_csinh_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_csinhld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_csinhld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csinh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_csinhld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csinh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_csinhld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_csinhld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_csqrtf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_csqrtf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csqrt -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_csqrtf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csqrt -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_csqrtf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_csqrtf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_csqrt_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_csqrt_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csqrt -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_csqrt_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csqrt -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_csqrt_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_csqrt_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_csqrtld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_csqrtld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csqrt -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_csqrtld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csqrt -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_csqrtld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_csqrtld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_ctanf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ctanf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctan -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ctanf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctan -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ctanf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ctanf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_ctan_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ctan_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctan -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ctan_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctan -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ctan_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ctan_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_ctanld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ctanld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctan -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ctanld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctan -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ctanld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ctanld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
 @LIB32_TRUE@tests32_ctanhf_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ctanhf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctanh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ctanhf_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctanh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ctanhf_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ctanhf_LDADD = tests32/libnewcomplextestsf.a $(LDADD)
 @LIB32_TRUE@tests32_ctanh_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ctanh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctanh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ctanh_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctanh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ctanh_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ctanh_LDADD = tests32/libnewcomplextests.a $(LDADD)
 @LIB32_TRUE@tests32_ctanhld_SOURCES = testcases/complex/main.c
-@LIB32_TRUE@tests32_ctanhld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctanh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_ctanhld_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=ctanh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_ctanhld_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_ctanhld_LDADD = tests32/libnewcomplextestsld.a $(LDADD)
-@LIB64_TRUE@tests64_libnewcomplextestsf_a_CPPFLAGS = $(CPPFLAGS64) -D_NEW_COMPLEX_FLOAT=1 $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_libnewcomplextestsf_a_CPPFLAGS = $(CPPFLAGS64) -D_NEW_COMPLEX_FLOAT=1 $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_libnewcomplextestsf_a_SOURCES = $(check_complex_lib_sources)
-@LIB64_TRUE@tests64_libnewcomplextests_a_CPPFLAGS = $(CPPFLAGS64) -D_NEW_COMPLEX_DOUBLE=1 $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_libnewcomplextests_a_CPPFLAGS = $(CPPFLAGS64) -D_NEW_COMPLEX_DOUBLE=1 $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_libnewcomplextests_a_SOURCES = $(check_complex_lib_sources)
-@LIB64_TRUE@tests64_libnewcomplextestsld_a_CPPFLAGS = $(CPPFLAGS64) -D_NEW_COMPLEX_LDOUBLE=1 $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_libnewcomplextestsld_a_CPPFLAGS = $(CPPFLAGS64) -D_NEW_COMPLEX_LDOUBLE=1 $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_libnewcomplextestsld_a_SOURCES = $(check_complex_lib_sources)
 
 # Complex library actual test programs.
@@ -2421,267 +2422,267 @@ check_complex_lib_sources = \
 # In addition, we use the LDADD for each program to link the appropriate
 # support library for the ABI being tested.
 @LIB64_TRUE@tests64_cabsf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cabsf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cabs -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cabsf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cabs -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cabsf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cabsf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_cabs_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cabs_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cabs -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cabs_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cabs -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cabs_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cabs_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_cabsld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cabsld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cabs -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cabsld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cabs -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cabsld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cabsld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_cacosf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cacosf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacos -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cacosf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacos -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cacosf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cacosf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_cacos_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cacos_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacos -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cacos_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacos -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cacos_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cacos_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_cacosld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cacosld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacos -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cacosld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacos -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cacosld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cacosld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_cacoshf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cacoshf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacosh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cacoshf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacosh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cacoshf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cacoshf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_cacosh_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cacosh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacosh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cacosh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacosh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cacosh_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cacosh_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_cacoshld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cacoshld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacosh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cacoshld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cacosh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cacoshld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cacoshld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_cargf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cargf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=carg -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cargf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=carg -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cargf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cargf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_carg_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_carg_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=carg -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_carg_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=carg -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_carg_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_carg_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_cargld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cargld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=carg -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cargld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=carg -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cargld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cargld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_casinf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_casinf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casin -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_casinf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casin -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_casinf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_casinf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_casin_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_casin_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casin -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_casin_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casin -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_casin_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_casin_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_casinld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_casinld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casin -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_casinld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casin -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_casinld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_casinld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_casinhf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_casinhf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casinh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_casinhf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casinh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_casinhf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_casinhf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_casinh_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_casinh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casinh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_casinh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casinh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_casinh_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_casinh_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_casinhld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_casinhld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casinh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_casinhld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=casinh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_casinhld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_casinhld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_catanf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_catanf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catan -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_catanf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catan -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_catanf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_catanf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_catan_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_catan_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catan -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_catan_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catan -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_catan_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_catan_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_catanld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_catanld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catan -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_catanld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catan -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_catanld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_catanld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_catanhf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_catanhf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catanh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_catanhf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catanh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_catanhf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_catanhf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_catanh_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_catanh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catanh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_catanh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catanh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_catanh_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_catanh_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_catanhld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_catanhld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catanh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_catanhld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=catanh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_catanhld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_catanhld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_ccosf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ccosf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccos -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ccosf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccos -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ccosf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ccosf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_ccos_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ccos_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccos -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ccos_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccos -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ccos_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ccos_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_ccosld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ccosld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccos -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ccosld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccos -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ccosld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ccosld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_ccoshf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ccoshf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccosh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ccoshf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccosh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ccoshf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ccoshf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_ccosh_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ccosh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccosh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ccosh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccosh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ccosh_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ccosh_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_ccoshld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ccoshld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccosh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ccoshld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ccosh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ccoshld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ccoshld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_cexpf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cexpf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cexp -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cexpf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cexp -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cexpf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cexpf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_cexp_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cexp_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cexp -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cexp_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cexp -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cexp_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cexp_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_cexpld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cexpld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cexp -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cexpld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cexp -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cexpld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cexpld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_cimagf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cimagf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cimag -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cimagf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cimag -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cimagf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cimagf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_cimag_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cimag_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cimag -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cimag_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cimag -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cimag_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cimag_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_cimagld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cimagld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cimag -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cimagld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cimag -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cimagld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cimagld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_clogf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_clogf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=clog -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_clogf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=clog -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_clogf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_clogf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_clog_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_clog_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=clog -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_clog_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=clog -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_clog_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_clog_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_clogld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_clogld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=clog -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_clogld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=clog -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_clogld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_clogld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_conjf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_conjf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=conj -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_conjf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=conj -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_conjf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_conjf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_conj_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_conj_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=conj -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_conj_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=conj -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_conj_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_conj_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_conjld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_conjld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=conj -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_conjld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=conj -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_conjld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_conjld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_cpowf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cpowf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cpow -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cpowf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cpow -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cpowf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cpowf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_cpow_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cpow_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cpow -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cpow_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cpow -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cpow_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cpow_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_cpowld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cpowld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cpow -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cpowld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cpow -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cpowld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cpowld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_cprojf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cprojf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cproj -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cprojf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cproj -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cprojf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cprojf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_cproj_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cproj_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cproj -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cproj_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cproj -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cproj_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cproj_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_cprojld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_cprojld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cproj -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cprojld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cproj -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cprojld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cprojld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_crealf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_crealf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=creal -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_crealf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=creal -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_crealf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_crealf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_creal_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_creal_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=creal -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_creal_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=creal -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_creal_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_creal_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_crealld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_crealld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=creal -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_crealld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=creal -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_crealld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_crealld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_csinf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_csinf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csin -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_csinf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csin -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_csinf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_csinf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_csin_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_csin_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csin -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_csin_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csin -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_csin_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_csin_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_csinld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_csinld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csin -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_csinld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csin -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_csinld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_csinld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_csinhf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_csinhf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csinh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_csinhf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csinh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_csinhf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_csinhf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_csinh_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_csinh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csinh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_csinh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csinh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_csinh_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_csinh_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_csinhld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_csinhld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csinh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_csinhld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csinh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_csinhld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_csinhld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_csqrtf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_csqrtf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csqrt -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_csqrtf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csqrt -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_csqrtf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_csqrtf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_csqrt_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_csqrt_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csqrt -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_csqrt_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csqrt -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_csqrt_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_csqrt_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_csqrtld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_csqrtld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csqrt -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_csqrtld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csqrt -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_csqrtld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_csqrtld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_ctanf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ctanf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctan -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ctanf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctan -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ctanf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ctanf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_ctan_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ctan_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctan -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ctan_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctan -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ctan_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ctan_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_ctanld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ctanld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctan -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ctanld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctan -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ctanld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ctanld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 @LIB64_TRUE@tests64_ctanhf_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ctanhf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctanh -D_NEW_COMPLEX_FLOAT $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ctanhf_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctanh -D_NEW_COMPLEX_FLOAT $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ctanhf_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ctanhf_LDADD = tests64/libnewcomplextestsf.a $(LDADD)
 @LIB64_TRUE@tests64_ctanh_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ctanh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctanh -D_NEW_COMPLEX_DOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ctanh_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctanh -D_NEW_COMPLEX_DOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ctanh_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ctanh_LDADD = tests64/libnewcomplextests.a $(LDADD)
 @LIB64_TRUE@tests64_ctanhld_SOURCES = testcases/complex/main.c
-@LIB64_TRUE@tests64_ctanhld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctanh -D_NEW_COMPLEX_LDOUBLE $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_ctanhld_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=ctanh -D_NEW_COMPLEX_LDOUBLE $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_ctanhld_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_ctanhld_LDADD = tests64/libnewcomplextestsld.a $(LDADD)
 all: config.h
