@@ -227,6 +227,66 @@ extern "C" {
 
   INT WSAAPI NSPStartup(LPGUID lpProviderId,LPNSP_ROUTINE lpnspRoutines);
 
+#if (_WIN32_WINNT >= 0x0600)
+
+typedef int (WSAAPI *LPNSPV2CLEANUP)(
+  LPGUID lpProviderId,
+  LPVOID pvClientSessionArg
+);
+
+typedef int (WSAAPI *LPNSPV2CLIENTSESSIONRUNDOWN)(
+  LPGUID lpProviderId,
+  LPVOID pvClientSessionArg
+);
+
+typedef int (WSAAPI *LPNSPV2LOOKUPSERVICEBEGIN)(
+  LPGUID lpProviderId,
+  LPWSAQUERYSET2W lpqsRestrictions,
+  DWORD dwControlFlags,
+  LPVOID lpvClientSessionArg,
+  LPHANDLE lphLookup
+);
+
+typedef int (WSAAPI *LPNSPV2LOOKUPSERVICEEND)(
+  HANDLE hLookup
+);
+
+typedef int (WSAAPI *LPNSPV2LOOKUPSERVICENEXTEX)(
+  HANDLE hAsyncCall,
+  HANDLE hLookup,
+  DWORD dwControlFlags,
+  LPDWORD lpdwBufferLength,
+  LPWSAQUERYSET2W lpqsResults
+);
+
+typedef int (WSAAPI *LPNSPV2SETSERVICEEX)(
+  HANDLE hAsyncCall,
+  LPGUID lpProviderId,
+  LPWSAQUERYSET2W lpqsRegInfo,
+  WSAESETSERVICEOP essOperation,
+  DWORD dwControlFlags,
+  LPVOID lpvClientSessionArg
+);
+
+typedef int (WSAAPI *LPNSPV2STARTUP)(
+  LPGUID lpProviderId,
+  LPVOID *ppvClientSessionArg
+);
+
+typedef struct _NSPV2_ROUTINE {
+  DWORD                       cbSize;
+  DWORD                       dwMajorVersion;
+  DWORD                       dwMinorVersion;
+  LPNSPV2STARTUP              NSPv2Startup;
+  LPNSPV2CLEANUP              NSPv2Cleanup;
+  LPNSPV2LOOKUPSERVICEBEGIN   NSPv2LookupServiceBegin;
+  LPNSPV2LOOKUPSERVICENEXTEX  NSPv2LookupServiceNextEx;
+  LPNSPV2LOOKUPSERVICEEND     NSPv2LookupServiceEnd;
+  LPNSPV2SETSERVICEEX         NSPv2SetServiceEx;
+  LPNSPV2CLIENTSESSIONRUNDOWN NSPv2ClientSessionRundown;
+} NSPV2_ROUTINE, *PNSPV2_ROUTINE;
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif

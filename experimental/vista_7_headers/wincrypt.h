@@ -203,7 +203,11 @@ extern "C" {
 #define CALG_SHA_512 (ALG_CLASS_HASH | ALG_TYPE_ANY | ALG_SID_SHA_512)
 
   typedef ULONG_PTR HCRYPTPROV;
+#ifndef __HCRYPTKEY__
+#define __HCRYPTKEY__
+/* In ncrypt.h too */
   typedef ULONG_PTR HCRYPTKEY;
+#endif
   typedef ULONG_PTR HCRYPTHASH;
 
 #define CRYPT_VERIFYCONTEXT 0xF0000000
@@ -4359,6 +4363,12 @@ typedef struct _CERT_SERVER_OCSP_RESPONSE_CONTEXT {
   BYTE  *pbEncodedOcspResponse;
   DWORD cbEncodedOcspResponse;
 } CERT_SERVER_OCSP_RESPONSE_CONTEXT, *PCERT_SERVER_OCSP_RESPONSE_CONTEXT, *PCCERT_SERVER_OCSP_RESPONSE_CONTEXT;
+
+#ifndef __NCRYPT_KEY_HANDLE__
+#define __NCRYPT_KEY_HANDLE__
+/*in ncrypt.h too*/
+typedef LPVOID NCRYPT_KEY_HANDLE;
+#endif
 
 typedef struct _CMSG_CNG_CONTENT_DECRYPT_INFO {
   DWORD                      cbSize;

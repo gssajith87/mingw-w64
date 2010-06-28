@@ -10,6 +10,10 @@
 extern "C" {
 #endif
 
+#ifndef NET_API_FUNCTION
+#define NET_API_FUNCTION WINAPI
+#endif
+
 #define DFS_VOLUME_STATES 0xF
 
 #define DFS_VOLUME_STATE_OK 1
@@ -248,6 +252,77 @@ typedef struct _DFS_SUPPORTED_NAMESPACE_VERSION_INFO {
     ULONG                SdLengthReserved;
     PSECURITY_DESCRIPTOR pSecurityDescriptor;
   } DFS_INFO_150, *PDFS_INFO_150;
+
+NET_API_STATUS NET_API_FUNCTION NetDfsAddRootTarget(
+  LPWSTR pDfsPath,
+  LPWSTR pTargetPath,
+  ULONG MajorVersion,
+  LPWSTR pComment,
+  ULONG Flags
+);
+
+NET_API_STATUS WINAPI NetDfsGetFtContainerSecurity(
+  LPWSTR DomainName,
+  SECURITY_INFORMATION SecurityInformation,
+  PSECURITY_DESCRIPTOR *ppSecurityDescriptor,
+  LPDWORD lpcbSecurityDescriptor
+);
+
+NET_API_STATUS WINAPI NetDfsGetSecurity(
+  LPWSTR DfsEntryPath,
+  SECURITY_INFORMATION SecurityInformation,
+  PSECURITY_DESCRIPTOR *ppSecurityDescriptor,
+  LPDWORD lpcbSecurityDescriptor
+);
+
+NET_API_STATUS WINAPI NetDfsGetStdContainerSecurity(
+  LPWSTR MachineName,
+  SECURITY_INFORMATION SecurityInformation,
+  PSECURITY_DESCRIPTOR *ppSecurityDescriptor,
+  LPDWORD lpcbSecurityDescriptor
+);
+
+NET_API_STATUS NET_API_FUNCTION NetDfsGetSupportedNamespaceVersion(
+  DFS_NAMESPACE_VERSION_ORIGIN Origin,
+  PWSTR pName,
+  PDFS_SUPPORTED_NAMESPACE_VERSION_INFO *ppVersionInfo
+);
+
+NET_API_STATUS NetDfsMove(
+  LPWSTR Path,
+  LPWSTR NewPath,
+  ULONG Flags
+);
+
+NET_API_STATUS NET_API_FUNCTION NetDfsRemoveRootTarget(
+  LPWSTR pDfsPath,
+  LPWSTR pTargetPath,
+  ULONG Flags
+);
+
+NET_API_STATUS WINAPI NetDfsSetFtContainerSecurity(
+  LPWSTR DomainName,
+  SECURITY_INFORMATION SecurityInformation,
+  PSECURITY_DESCRIPTOR pSecurityDescriptor
+);
+
+NET_API_STATUS WINAPI NetDfsSetSecurity(
+  LPWSTR DfsEntryPath,
+  SECURITY_INFORMATION SecurityInformation,
+  PSECURITY_DESCRIPTOR pSecurityDescriptor
+);
+
+NET_API_STATUS WINAPI NetDfsSetStdContainerSecurity(
+  LPWSTR MachineName,
+  SECURITY_INFORMATION SecurityInformation,
+  PSECURITY_DESCRIPTOR pSecurityDescriptor
+);
+
+NET_API_STATUS WINAPI NetShareDelEx(
+  LMSTR servername,
+  DWORD level,
+  LPBYTE buf
+);
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 

@@ -540,5 +540,25 @@ NETIOAPI_API GetUnicastIpAddressTable(
   PMIB_UNICASTIPADDRESS_TABLE *Table
 );
 
+typedef LPVOID PIPINTERFACE_CHANGE_CALLBACK;
+
+NETIOAPI_API NotifyIpInterfaceChange(
+  ADDRESS_FAMILY Family,
+  PIPINTERFACE_CHANGE_CALLBACK Callback,
+  PVOID CallerContext,
+  BOOLEAN InitialNotification,
+  HANDLE *NotificationHandle
+);
+
+typedef LPVOID PIPFORWARD_CHANGE_CALLBACK;
+
+NETIOAPI_API NotifyRouteChange2(
+  ADDRESS_FAMILY Family,
+  PIPFORWARD_CHANGE_CALLBACK Callback,
+  PVOID CallerContext,
+  BOOLEAN InitialNotification,
+  HANDLE *NotificationHandle
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_NETIOAPI*/

@@ -329,6 +329,33 @@ extern "C" {
   WINADVAPI WINBOOL WINAPI UnlockServiceDatabase(SC_LOCK ScLock);
   
 #if (_WIN32_WINNT >= 0x0600)
+
+typedef VOID( CALLBACK * PFN_SC_NOTIFY_CALLBACK ) (
+  PVOID pParameter 
+);
+
+#define SERVICE_NOTIFY __MINGW_NAME_AW(SERVICE_NOTIFY)
+
+typedef struct _SERVICE_NOTIFYA {
+  DWORD                  dwVersion;
+  PFN_SC_NOTIFY_CALLBACK pfnNotifyCallback;
+  PVOID                  pContext;
+  DWORD                  dwNotificationStatus;
+  SERVICE_STATUS_PROCESS ServiceStatus;
+  DWORD                  dwNotificationTriggered;
+  LPSTR                  pszServiceNames;
+} SERVICE_NOTIFYA, *PSERVICE_NOTIFYA;
+
+typedef struct _SERVICE_NOTIFYW {
+  DWORD                  dwVersion;
+  PFN_SC_NOTIFY_CALLBACK pfnNotifyCallback;
+  PVOID                  pContext;
+  DWORD                  dwNotificationStatus;
+  SERVICE_STATUS_PROCESS ServiceStatus;
+  DWORD                  dwNotificationTriggered;
+  LPWSTR                 pszServiceNames;
+} SERVICE_NOTIFYW, *PSERVICE_NOTIFYW;
+
 #define ControlServiceEx __MINGW_NAME_AW(ControlServiceEx)
 
 WINADVAPI WINBOOL WINAPI ControlServiceExA(
@@ -344,6 +371,21 @@ WINADVAPI WINBOOL WINAPI ControlServiceExW(
   DWORD dwInfoLevel,
   PVOID pControlParams
 );
+
+#define NotifyServiceStatusChange __MINGW_NAME_AW(NotifyServiceStatusChange)
+
+DWORD WINAPI NotifyServiceStatusChangeA(
+  SC_HANDLE hService,
+  DWORD dwNotifyMask,
+  PSERVICE_NOTIFYA pNotifyBuffer
+);
+
+DWORD WINAPI NotifyServiceStatusChangeW(
+  SC_HANDLE hService,
+  DWORD dwNotifyMask,
+  PSERVICE_NOTIFYW pNotifyBuffer
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus

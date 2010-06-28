@@ -771,6 +771,15 @@ typedef unsigned int GROUP;
 #define LUP_FLUSHCACHE 0x1000
 #define LUP_FLUSHPREVIOUS 0x2000
 
+#define LUP_RETURN_PREFERRED_NAMES 0x10000
+#define LUP_ADDRCONFIG 0x100000
+#define LUP_DUAL_ADDR 0x200000
+
+#define LUP_SECURE 0x8000
+
+#define LUP_NON_AUTHORITATIVE 0x4000
+#define LUP_RES_RESERVICE 0x8000
+
 #define RESULT_IS_ALIAS 0x0001
 #define RESULT_IS_ADDED 0x0010
 #define RESULT_IS_CHANGED 0x0020
@@ -1073,6 +1082,42 @@ typedef unsigned int GROUP;
 #define WSAGETASYNCERROR(lParam) HIWORD(lParam)
 #define WSAGETSELECTEVENT(lParam) LOWORD(lParam)
 #define WSAGETSELECTERROR(lParam) HIWORD(lParam)
+
+#if (_WIN32_WINNT >= 0x0600)
+typedef struct _WSAQUERYSET2A {
+  DWORD         dwSize;
+  LPSTR         lpszServiceInstanceName;
+  LPWSAVERSION  lpVersion;
+  LPSTR         lpszComment;
+  DWORD         dwNameSpace;
+  LPGUID        lpNSProviderId;
+  LPSTR         lpszContext;
+  DWORD         dwNumberOfProtocols;
+  LPAFPROTOCOLS lpafpProtocols;
+  LPSTR         lpszQueryString;
+  DWORD         dwNumberOfCsAddrs;
+  LPCSADDR_INFO lpcsaBuffer;
+  DWORD         dwOutputFlags;
+  LPBLOB        lpBlob;
+} WSAQUERYSET2A, *PWSAQUERYSET2A, *LPWSAQUERYSET2A;
+
+typedef struct _WSAQUERYSET2W {
+  DWORD         dwSize;
+  LPWSTR        lpszServiceInstanceName;
+  LPWSAVERSION  lpVersion;
+  LPWSTR        lpszComment;
+  DWORD         dwNameSpace;
+  LPGUID        lpNSProviderId;
+  LPTSTR        lpszContext;
+  DWORD         dwNumberOfProtocols;
+  LPAFPROTOCOLS lpafpProtocols;
+  LPWSTR        lpszQueryString;
+  DWORD         dwNumberOfCsAddrs;
+  LPCSADDR_INFO lpcsaBuffer;
+  DWORD         dwOutputFlags;
+  LPBLOB        lpBlob;
+} WSAQUERYSET2W, *PWSAQUERYSET2W, *LPWSAQUERYSET2W;
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus
 }

@@ -142,6 +142,14 @@ DWORD WINAPI GetOwnerModuleFromUdpEntry(
 
 #if (_WIN32_WINNT >= 0x0600)
 #include <windns.h>
+
+typedef enum _NET_ADDRESS_FORMAT {
+  NET_ADDRESS_FORMAT_UNSPECIFIED   = 0,
+  NET_ADDRESS_DNS_NAME,
+  NET_ADDRESS_IPV4,
+  NET_ADDRESS_IPV6 
+} NET_ADDRESS_FORMAT;
+
 typedef struct _NET_ADDRESS_INFO {
   NET_ADDRESS_FORMAT Format;
   union DUMMYUNIONNAME {
@@ -223,6 +231,12 @@ ULONG WINAPI GetUdp6Table(
   PMIB_UDP6TABLE Udp6Table,
   PULONG SizePointer,
   WINBOOL Order
+);
+
+DWORD WINAPI NotifySecurityHealthChange(
+  PHANDLE pHandle,
+  LPOVERLAPPED pOverLapped,
+  PULONG SecurityHealthFlags
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

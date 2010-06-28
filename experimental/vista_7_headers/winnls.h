@@ -1016,6 +1016,14 @@ WINBASEAPI LCID WINAPI LocaleNameToLCID(
   DWORD dwFlags
 );
 
+WINBASEAPI int WINAPI NormalizeString(
+  NORM_FORM NormForm,
+  LPCWSTR lpSrcString,
+  int cwSrcLength,
+  LPWSTR lpDstString,
+  int cwDstLength
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif
 

@@ -68,6 +68,28 @@ typedef enum tagFailureCategory {
     extendedIsolationStateUnknown      = 3 
   } ExtendedIsolationState;
 
+  typedef enum tagRemoteConfigurationType {
+    remoteConfigTypeMachine      = 1,
+    remoteConfigTypeConfigBlob   = 2 
+  } RemoteConfigurationType;
+
+  typedef enum tagNapNotifyType {
+    napNotifyTypeUnknown        = 0,
+    napNotifyTypeServiceState   = 1,
+    napNotifyTypeQuarState      = 2 
+  } NapNotifyType;
+  
+  typedef enum _NAPI_PROVIDER_LEVEL {
+    ProviderLevel_None        = 0,
+    ProviderLevel_Secondary,
+    ProviderLevel_Primary 
+  } NAPI_PROVIDER_LEVEL;
+
+  typedef enum _NAPI_PROVIDER_TYPE {
+    ProviderType_Application   = 1,
+    ProviderType_Service 
+  } NAPI_PROVIDER_TYPE;
+
   typedef struct tagResultCodes {
     UINT16  count;
     HRESULT *results;
@@ -156,17 +178,21 @@ typedef enum tagFailureCategory {
     FailureCategory      failureCategory;
     FixupInfo            fixupInfo;
   }SystemHealthAgentState;
+  
+typedef struct _NAPI_DOMAIN_DESCRIPTION_BLOB {
+  DWORD AuthLevel;
+  DWORD cchDomainName;
+  DWORD OffsetNextDomainDescription;
+  DWORD OffsetThisDomainName;
+} NAPI_DOMAIN_DESCRIPTION_BLOB, *PNAPI_DOMAIN_DESCRIPTION_BLOB;
 
-  typedef enum tagRemoteConfigurationType {
-    remoteConfigTypeMachine      = 1,
-    remoteConfigTypeConfigBlob   = 2 
-  } RemoteConfigurationType;
-
-  typedef enum tagNapNotifyType {
-    napNotifyTypeUnknown        = 0,
-    napNotifyTypeServiceState   = 1,
-    napNotifyTypeQuarState      = 2 
-  } NapNotifyType;
+typedef struct _NAPI_PROVIDER_INSTALLATION_BLOB {
+  DWORD dwVersion;
+  DWORD dwProviderType;
+  DWORD fSupportsWildCard;
+  DWORD cDomains;
+  DWORD OffsetFirstDomain;
+} NAPI_PROVIDER_INSTALLATION_BLOB, *PNAPI_PROVIDER_INSTALLATION_BLOB;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif _INC_NAPTYPES
