@@ -7,6 +7,11 @@ lib_LIBRARIES =
 check_LIBRARIES =
 check_PROGRAMS = 
 TESTS =
+# Fake out the testsuite
+CPPFLAGS32 = -m32
+CPPFLAGS64 = -m64
+LDFLAGS32 = -m32
+LDFLAGS64 = -m64
 
 src_newcomplex =  \
 src/cabs.c   src/cargf.c  src/ccosl.c  src/cimag.c   src/clogf.c  src/conjl.c  src/cproj.c   src/crealf.c  src/csinl.c   src/ctan.c  \
@@ -26,14 +31,14 @@ if LIB64
 LDADD += lib64/libnewcomplex.a
 lib_LIBRARIES += lib64/libnewcomplex.a
 lib64_libnewcomplex_a_SOURCES = $(src_newcomplex)
-lib64_libnewcomplex_a_CPPFLAGS = -m64 $(AM_CPPFLAGS)
+lib64_libnewcomplex_a_CPPFLAGS = $(CPPFLAGS64) $(AM_CPPFLAGS)
 endif
 
 if LIB32
 LDADD += lib32/libnewcomplex.a
 lib_LIBRARIES += lib32/libnewcomplex.a
 lib32_libnewcomplex_a_SOURCES = $(src_newcomplex)
-lib32_libnewcomplex_a_CPPFLAGS = -m32 $(AM_CPPFLAGS)
+lib32_libnewcomplex_a_CPPFLAGS = $(CPPFLAGS32) $(AM_CPPFLAGS)
 endif
 
 include tests/complex_tests.am
