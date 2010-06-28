@@ -12,7 +12,7 @@ sources from the ReactOS project.
 
 The "ddk" directory is from the ReactOS repo
 svn://svn.reactos.org/reactos/trunk/reactos/include/ddk/
-... revision 47775.
+... revision 47852.
 
 The individual files
     atsmedia.h,
@@ -40,8 +40,8 @@ svn://svn.reactos.org/reactos/trunk/reactos/include/dxsdk/
 
 The bugcodes.mc file is from
 svn://svn.reactos.org/reactos/trunk/reactos/include/reactos/mc/
-... revision 47837 and it was used for generating the bugcodes.h
-header using the wmc tool from wine-1.2-rc4.
+... revision 47897 and it was used for generating the bugcodes.h
+header using the wmc tool from wine-1.2-rc5.
 
 How to install this SDK
 -----------------------

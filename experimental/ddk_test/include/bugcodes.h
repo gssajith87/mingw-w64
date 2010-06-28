@@ -1,10 +1,10 @@
-/* This file is generated with wmc version 1.2-rc4. Do not edit! */
+/* This file is generated with wmc version 1.2-rc5. Do not edit! */
 /* Source : bugcodes.mc */
 /* Cmdline: wmc bugcodes.mc */
-/* Date   : Thu Jun 24 11:33:35 2010 */
+/* Date   : Mon Jun 28 20:45:51 2010 */
 
-#ifndef __WMCGENERATED_4c23428f_H
-#define __WMCGENERATED_4c23428f_H
+#ifndef __WMCGENERATED_4c28fbfe_H
+#define __WMCGENERATED_4c28fbfe_H
 
 /* Severity codes */
 #define STATUS_SEVERITY_ERROR	0x3
@@ -29,6 +29,34 @@
 
 /*  message definitions */
 
+
+/* MessageId  : 0x4000007e */
+/* Approximate msg: ReactOS (R) Kernel Version %hs (Build %u%hs) */
+#define WINDOWS_NT_BANNER	((ULONG)0x4000007eL)
+
+/* MessageId  : 0x40000087 */
+/* Approximate msg: Service Pack */
+#define WINDOWS_NT_CSD_STRING	((ULONG)0x40000087L)
+
+/* MessageId  : 0x40000088 */
+/* Approximate msg: %u System Processor [%u MB Memory] %Z */
+#define WINDOWS_NT_INFO_STRING	((ULONG)0x40000088L)
+
+/* MessageId  : 0x40000089 */
+/* Approximate msg: MultiProcessor Kernel */
+#define WINDOWS_NT_MP_STRING	((ULONG)0x40000089L)
+
+/* MessageId  : 0x4000008a */
+/* Approximate msg: A kernel thread terminated while holding a mutex */
+#define THREAD_TERMINATE_HELD_MUTEX	((ULONG)0x4000008aL)
+
+/* MessageId  : 0x4000009d */
+/* Approximate msg: %u System Processors [%u MB Memory] %Z */
+#define WINDOWS_NT_INFO_STRING_PLURAL	((ULONG)0x4000009dL)
+
+/* MessageId  : 0x4000009f */
+/* Approximate msg: \n\nReactOS is free software, covered by the GNU General Public License, */
+#define REACTOS_COPYRIGHT_NOTICE	((ULONG)0x4000009fL)
 
 /* MessageId  : 0x8000007f */
 /* Approximate msg: A problem has been detected and ReactOS has been shut down to prevent damage */
@@ -526,13 +554,13 @@
 /* Approximate msg: Hardware malfunction */
 #define NMI_HARDWARE_FAILURE	((ULONG)0x00000080L)
 
-/* MessageId  : 0x0000008e */
-/* Approximate msg: KERNEL_MODE_EXCEPTION_NOT_HANDLED */
-#define KERNEL_MODE_EXCEPTION_NOT_HANDLED	((ULONG)0x0000008eL)
-
 /* MessageId  : 0x00000081 */
 /* Approximate msg: SPIN_LOCK_INIT_FAILURE */
 #define SPIN_LOCK_INIT_FAILURE	((ULONG)0x00000081L)
+
+/* MessageId  : 0x0000008e */
+/* Approximate msg: KERNEL_MODE_EXCEPTION_NOT_HANDLED */
+#define KERNEL_MODE_EXCEPTION_NOT_HANDLED	((ULONG)0x0000008eL)
 
 /* MessageId  : 0x0000008f */
 /* Approximate msg: PP0_INITIALIZATION_FAILED */
@@ -558,6 +586,10 @@
 /* Approximate msg: INTERNAL_POWER_ERROR */
 #define INTERNAL_POWER_ERROR	((ULONG)0x000000a0L)
 
+/* MessageId  : 0x000000a1 */
+/* Approximate msg: Inconsistency detected in the PCI Bus driver's internal structures. */
+#define PCI_BUS_DRIVER_INTERNAL	((ULONG)0x000000a1L)
+
 /* MessageId  : 0x000000a5 */
 /* Approximate msg: The BIOS in this system is not fully ACPI compliant.  Please contact your */
 #define ACPI_BIOS_ERROR	((ULONG)0x000000a5L)
@@ -575,11 +607,11 @@
 #define BOOTING_IN_SAFEMODE_DSREPAIR	((ULONG)0x400000aaL)
 
 /* MessageId  : 0x000000ac */
-/* Approximate msg: HAL_MEMORY_ALLOCATION */
+/* Approximate msg: Allocate from NonPaged Pool failed for a HAL critical allocation. */
 #define HAL_MEMORY_ALLOCATION	((ULONG)0x000000acL)
 
 /* MessageId  : 0x000000b4 */
-/* Approximate msg: VIDEO_DRIVER_INIT_FAILURE */
+/* Approximate msg: The video driver failed to initialize */
 #define VIDEO_DRIVER_INIT_FAILURE	((ULONG)0x000000b4L)
 
 /* MessageId  : 0x400000b7 */
@@ -587,11 +619,11 @@
 #define BOOTLOG_ENABLED	((ULONG)0x400000b7L)
 
 /* MessageId  : 0x000000b8 */
-/* Approximate msg: ATTEMPTED_SWITCH_FROM_DPC */
+/* Approximate msg: A wait operation, attach process, or yield was attempted from a DPC routine. */
 #define ATTEMPTED_SWITCH_FROM_DPC	((ULONG)0x000000b8L)
 
 /* MessageId  : 0x000000be */
-/* Approximate msg: ATTEMPTED_WRITE_TO_READONLY_MEMORY */
+/* Approximate msg: An attempt was made to write to read-only memory. */
 #define ATTEMPTED_WRITE_TO_READONLY_MEMORY	((ULONG)0x000000beL)
 
 /* MessageId  : 0x000000c2 */
@@ -611,7 +643,7 @@
 #define IRQL_UNEXPECTED_VALUE	((ULONG)0x000000c8L)
 
 /* MessageId  : 0x000000ca */
-/* Approximate msg: PNP_DETECTED_FATAL_ERROR */
+/* Approximate msg: Plug and Play detected an error most likely caused by a faulty driver. */
 #define PNP_DETECTED_FATAL_ERROR	((ULONG)0x000000caL)
 
 /* MessageId  : 0x000000cb */
@@ -631,15 +663,15 @@
 #define DRIVER_IRQL_NOT_LESS_OR_EQUAL	((ULONG)0x000000d1L)
 
 /* MessageId  : 0x000000d3 */
-/* Approximate msg: DRIVER_PORTION_MUST_BE_NONPAGED */
+/* Approximate msg: The driver mistakenly marked a part of it's image pageable instead of non-pageable. */
 #define DRIVER_PORTION_MUST_BE_NONPAGED	((ULONG)0x000000d3L)
 
 /* MessageId  : 0x000000d8 */
-/* Approximate msg: DRIVER_USED_EXCESSIVE_PTES */
+/* Approximate msg: The driver has used an excessive number of system PTEs. */
 #define DRIVER_USED_EXCESSIVE_PTES	((ULONG)0x000000d8L)
 
 /* MessageId  : 0x000000d4 */
-/* Approximate msg: SYSTEM_SCAN_AT_RAISED_IRQL_CAUGHT_IMPROPER_DRIVER_UNLOAD */
+/* Approximate msg: The driver unloaded without cancelling pending operations. */
 #define SYSTEM_SCAN_AT_RAISED_IRQL_CAUGHT_IMPROPER_DRIVER_UNLOAD	((ULONG)0x000000d4L)
 
 /* MessageId  : 0x000000e0 */
@@ -659,47 +691,15 @@
 #define RESOURCE_NOT_OWNED	((ULONG)0x000000e3L)
 
 /* MessageId  : 0x000000e4 */
-/* Approximate msg: WORKER_INVALID */
+/* Approximate msg: If Parameter1 == 0, an executive worker item was found in memory which */
 #define WORKER_INVALID	((ULONG)0x000000e4L)
 
 /* MessageId  : 0x000000e5 */
 /* Approximate msg: POWER_FAILURE_SIMULATE */
 #define POWER_FAILURE_SIMULATE	((ULONG)0x000000e5L)
 
-/* MessageId  : 0x000000fa */
-/* Approximate msg: IMPERSONATING_WORKER_THREAD */
-#define IMPERSONATING_WORKER_THREAD	((ULONG)0x000000faL)
-
-/* MessageId  : 0x4000007e */
-/* Approximate msg: ReactOS (R) Kernel Version %hs (Build %u%hs) */
-#define WINDOWS_NT_BANNER	((ULONG)0x4000007eL)
-
-/* MessageId  : 0x40000087 */
-/* Approximate msg: Service Pack */
-#define WINDOWS_NT_CSD_STRING	((ULONG)0x40000087L)
-
-/* MessageId  : 0x40000088 */
-/* Approximate msg: %u System Processor [%u MB Memory] %Z */
-#define WINDOWS_NT_INFO_STRING	((ULONG)0x40000088L)
-
-/* MessageId  : 0x40000089 */
-/* Approximate msg: MultiProcessor Kernel */
-#define WINDOWS_NT_MP_STRING	((ULONG)0x40000089L)
-
-/* MessageId  : 0x4000008a */
-/* Approximate msg: A kernel thread terminated while holding a mutex */
-#define THREAD_TERMINATE_HELD_MUTEX	((ULONG)0x4000008aL)
-
-/* MessageId  : 0x4000009d */
-/* Approximate msg: %u System Processors [%u MB Memory] %Z */
-#define WINDOWS_NT_INFO_STRING_PLURAL	((ULONG)0x4000009dL)
-
-/* MessageId  : 0x4000009f */
-/* Approximate msg: \n\nReactOS is free software, covered by the GNU General Public License, */
-#define REACTOS_COPYRIGHT_NOTICE	((ULONG)0x4000009fL)
-
 /* MessageId  : 0x000000e9 */
-/* Approximate msg: ACTIVE_EX_WORKER_THREAD_TERMINATION */
+/* Approximate msg: An executive worker thread is being terminated without having gone through the worker thread rundown code. */
 #define ACTIVE_EX_WORKER_THREAD_TERMINATION	((ULONG)0x000000e9L)
 
 /* MessageId  : 0x000000ea */
@@ -707,19 +707,27 @@
 #define THREAD_STUCK_IN_DEVICE_DRIVER	((ULONG)0x000000eaL)
 
 /* MessageId  : 0x000000ef */
-/* Approximate msg: CRITICAL_PROCESS_DIED */
+/* Approximate msg: The kernel attempted to ready a thread that was in an incorrect state such as terminated. */
 #define CRITICAL_PROCESS_DIED	((ULONG)0x000000efL)
 
 /* MessageId  : 0x000000f4 */
-/* Approximate msg: CRITICAL_OBJECT_TERMINATION */
+/* Approximate msg: A process or thread crucial to system operation has unexpectedly exited or been terminated. */
 #define CRITICAL_OBJECT_TERMINATION	((ULONG)0x000000f4L)
+
+/* MessageId  : 0x000000f6 */
+/* Approximate msg: The PCI driver has detected an error in a PCI device or BIOS being verified. */
+#define PCI_VERIFIER_DETECTED_VIOLATION	((ULONG)0x000000f6L)
 
 /* MessageId  : 0x000000f8 */
 /* Approximate msg: An initialization failure occurred while attempting to boot from the RAM disk. */
 #define RAMDISK_BOOT_INITIALIZATION_FAILED	((ULONG)0x000000f8L)
 
+/* MessageId  : 0x000000fa */
+/* Approximate msg: A worker thread is impersonating another process. The work item forgot to */
+#define IMPERSONATING_WORKER_THREAD	((ULONG)0x000000faL)
+
 /* MessageId  : 0x000000fc */
-/* Approximate msg: ATTEMPTED_EXECUTE_OF_NOEXECUTE_MEMORY */
+/* Approximate msg: An attempt was made to execute to non-executable memory. */
 #define ATTEMPTED_EXECUTE_OF_NOEXECUTE_MEMORY	((ULONG)0x000000fcL)
 
 /*  EOF */
