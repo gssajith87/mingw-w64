@@ -62,7 +62,7 @@ typedef struct _FILE_ID_DESCRIPTOR{
     LARGE_INTEGER FileId;
     GUID          ObjectId;
   } ;
-} FILE_ID_DESCRIPTOR;
+} FILE_ID_DESCRIPTOR, *LPFILE_ID_DESCRIPTOR;
 
 typedef enum _FILE_ID_TYPE {
   FileIdType,
@@ -121,6 +121,15 @@ WINBASEAPI WINBOOL WINAPI GetFileInformationByHandleEx(
   FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
   LPVOID lpFileInformation,
   DWORD dwBufferSize
+);
+
+WINBASEAPI HANDLE WINAPI OpenFileById(
+  HANDLE hFile,
+  LPFILE_ID_DESCRIPTOR lpFileID,
+  DWORD dwDesiredAccess,
+  DWORD dwShareMode,
+  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+  DWORD dwFlags
 );
 
 #endif /*(_WIN32_WINNT < 0x0600)*/

@@ -109,5 +109,34 @@ WINBOOL WINAPI GetTransactionManagerId(
   LPGUID TransactionManagerId
 );
 
+HANDLE WINAPI OpenEnlistment(
+  DWORD dwDesiredAccess,
+  HANDLE ResourceManagerHandle,
+  LPGUID EnlistmentId
+);
+
+HANDLE WINAPI OpenResourceManager(
+  DWORD dwDesiredAccess,
+  HANDLE TmHandle,
+  LPGUID RmGuid
+);
+
+HANDLE WINAPI OpenTransaction(
+  DWORD dwDesiredAccess,
+  LPGUID TransactionId
+);
+
+HANDLE WINAPI OpenTransactionManager(
+  LPWSTR LogFileName,
+  ACCESS_MASK DesiredAccess,
+  ULONG OpenOptions
+);
+
+HANDLE WINAPI OpenTransactionManagerById(
+  LPGUID TransactionManagerId,
+  ACCESS_MASK DesiredAccess,
+  ULONG OpenOptions
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_CLFSW32*/

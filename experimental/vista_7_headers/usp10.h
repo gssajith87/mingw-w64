@@ -17,6 +17,8 @@ extern "C" {
 #define USP_E_SCRIPT_NOT_IN_FONT MAKE_HRESULT(SEVERITY_ERROR,FACILITY_ITF,0x200)
 
   typedef void *SCRIPT_CACHE;
+  typedef ULONG OPEN_TYPE;
+  typedef OPEN_TYPE OPENTYPE_TAG;
 
   HRESULT WINAPI ScriptFreeCache(SCRIPT_CACHE *psc);
 
@@ -214,6 +216,12 @@ extern "C" {
 
   HRESULT WINAPI ScriptApplyDigitSubstitution(const SCRIPT_DIGITSUBSTITUTE *psds,SCRIPT_CONTROL *psc,SCRIPT_STATE *pss);
 
+#if (_WIN32_WINNT >= 0x0600)
+typedef struct opentype_feature_record {
+  OPENTYPE_TAG tagFeature;
+  LONG         lParameter;
+} OPENTYPE_FEATURE_RECORD;
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 #ifdef __cplusplus
 }
 #endif
