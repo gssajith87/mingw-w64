@@ -44,20 +44,21 @@
 
 #include "complex_test.h"
 
-/* Annex G.6 csin(z) = -i csinh (iz)
+/**
+ * Annex G.6 csin(z) = -i csinh (iz)
  * Reference: Annex G.6.2.5 The csinh functions
  * csinh(conj(z)) = conj(csinh(z)) and csinh is odd.
  * csinh(+0 + i0) returns +0 + i0.
- * csinh(+0 + i ∞) returns ±0 + iNaN (where the sign of the real part of the result is unspecified) and raises the ‘‘invalid’’ floating-point exception.
- * csinh(+0 + iNaN) returns ±0 + iNaN (where the sign of the real part of the result is unspecified).
- * csinh(x + i ∞) returns NaN + iNaN and raises the ‘‘invalid’’ floating-point exception, for positive finite x.
- * csinh(x + iNaN) returns NaN + iNaN and optionally raises the ‘‘invalid’’ floating-point exception, for finite nonzero x.
- * csinh(+∞ + i0) returns +∞ + i0.
- * csinh(+∞ + iy) returns +∞ cis(y), for positive finite y.
- * csinh(+∞ + i ∞) returns ±∞ + iNaN (where the sign of the real part of the result is unspecified) and raises the ‘‘invalid’’ floating-point exception.
- * csinh(+∞ + iNaN) returns ±∞ + iNaN (where the sign of the real part of the result is unspecified).
+ * csinh(+0 + i inf) returns +/-0 + iNaN (where the sign of the real part of the result is unspecified) and raises the invalid floating-point exception.
+ * csinh(+0 + iNaN) returns +/-0 + iNaN (where the sign of the real part of the result is unspecified).
+ * csinh(x + i inf) returns NaN + iNaN and raises the invalid floating-point exception, for positive finite x.
+ * csinh(x + iNaN) returns NaN + iNaN and optionally raises the invalid floating-point exception, for finite nonzero x.
+ * csinh(+inf + i0) returns +inf + i0.
+ * csinh(+inf + iy) returns +inf cis(y), for positive finite y.
+ * csinh(+inf + i inf) returns +/-inf + iNaN (where the sign of the real part of the result is unspecified) and raises the invalid floating-point exception.
+ * csinh(+inf + iNaN) returns +/-inf + iNaN (where the sign of the real part of the result is unspecified).
  * csinh(NaN + i0) returns NaN + i0.
- * csinh(NaN + iy) returns NaN + iNaN and optionally raises the ‘‘invalid’’ floating-point exception, for all nonzero numbers y.
+ * csinh(NaN + iy) returns NaN + iNaN and optionally raises the invalid floating-point exception, for all nonzero numbers y.
  * csinh(NaN + iNaN) returns NaN + iNaN.
  */
 

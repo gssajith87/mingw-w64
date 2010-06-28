@@ -47,21 +47,21 @@
 /**
  * Annex G, carg (z) == atan2 (__imag__ z, __real__ z).
  *
- * Annex F.9, Unless otherwise specified, where the symbol "±" occurs in both
+ * Annex F.9, Unless otherwise specified, where the symbol "+/-" occurs in both
  * an argument and the result, the result has the same sign as the argument.
  *
  * Annex F.9.1.4 The atan2 functions
- * atan2(±0, −0) returns ±π (footnote: no invalid or divide-by-zero exceptions)
- * atan2(±0, +0) returns ±0.
- * atan2(±0, x) returns ±π for x < 0.
- * atan2(±0, x) returns ±0 for x > 0.
- * atan2(y, ±0) returns −π /2 for y < 0.
- * atan2(y, ±0) returns π /2 for y > 0.
- * atan2(±y, −∞) returns ±π for finite y > 0.
- * atan2(±y, +∞) returns ±0 for finite y > 0.
- * atan2(±∞, x) returns ±π /2 for finite x.
- * atan2(±∞, −∞) returns ±3π /4.
- * atan2(±∞, +∞) returns ±π /4.
+ * atan2(+/-0, -0) returns +/-pi (footnote: no invalid or divide-by-zero exceptions)
+ * atan2(+/-0, +0) returns +/-0.
+ * atan2(+/-0, x) returns +/-pi for x < 0.
+ * atan2(+/-0, x) returns +/-0 for x > 0.
+ * atan2(y, +/-0) returns -pi /2 for y < 0.
+ * atan2(y, +/-0) returns pi /2 for y > 0.
+ * atan2(+/-y, -inf) returns +/-pi for finite y > 0.
+ * atan2(+/-y, +inf) returns +/-0 for finite y > 0.
+ * atan2(+/-inf, x) returns +/-pi /2 for finite x.
+ * atan2(+/-inf, -inf) returns +/-3pi /4.
+ * atan2(+/-inf, +inf) returns +/-pi /4.
  *
  */
   
