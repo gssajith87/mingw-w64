@@ -41,4 +41,4 @@ lib32_libnewcomplex_a_SOURCES = $(src_newcomplex)
 lib32_libnewcomplex_a_CPPFLAGS = $(CPPFLAGS32) $(AM_CPPFLAGS)
 endif
 
-include tests/complex_tests.am
+include testcases/complex/complex_tests.am
