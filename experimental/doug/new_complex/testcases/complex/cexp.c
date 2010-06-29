@@ -66,6 +66,8 @@ int __FLT_ABI(test_function_cexp) ()
 {
   /* cos(42.42) is positive, sin(42.42) is negative */
   /* cos(0), sin(0) positive. */
+  _DEFINE_DEFAULT_TEST_FUNCTION (cexp, FUNC_BEHAVIOR_CONJ);
+
   DEFAULT_TESTS_START
 
   DEFINE_TEST (  __FLT_CST( 0.0),   __FLT_CST(0.0),  __FLT_CST(1.0),  __FLT_CST(0.0), 0, 0)

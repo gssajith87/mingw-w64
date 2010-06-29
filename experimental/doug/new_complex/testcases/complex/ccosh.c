@@ -64,6 +64,8 @@
 int __FLT_ABI(test_function_ccosh) ()
 {
   /* cos (42.42) positive, sin(42.42) negative */
+  _DEFINE_DEFAULT_TEST_FUNCTION (ccosh, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_EVEN);
+
   DEFAULT_TESTS_START
 
   DEFINE_TEST ( __FLT_CST( 0.0),   __FLT_CST(0.0),__FLT_CST(1.0), __FLT_CST(0.0), 0, 0)

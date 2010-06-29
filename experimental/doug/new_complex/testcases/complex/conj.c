@@ -52,6 +52,9 @@
 
 int __FLT_ABI(test_function_conj) ()
 {
+  /* We don't define this as a CONJ behavior because that uses the conj function.  */
+  _DEFINE_DEFAULT_TEST_FUNCTION (conj, 0);
+
   DEFAULT_TESTS_START
 
   DEFINE_TEST (__FLT_CST( 42.42), __FLT_CST( 42.42), __FLT_CST( 42.42), __FLT_CST(-42.42), 0, 0)

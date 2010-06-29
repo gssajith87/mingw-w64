@@ -42,23 +42,22 @@
  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/* grab defines of __FLT_ABI */
-#if defined(_NEW_COMPLEX_FLOAT)
-# define __FLT_ABI(N)	N##f
-#elif defined(_NEW_COMPLEX_DOUBLE)
-# define __FLT_ABI(N)	N
-#elif defined(_NEW_COMPLEX_LDOUBLE)
-# define __FLT_ABI(N)	N##l
-#else
-# error "Unknown complex number type"
-#endif
+#define float_abifunc(first, second)       first##second##f
+#define double_abifunc(first, second)      first##second
+#define long_double_abifunc(first, second) first##second##l
 
-#define _abifunc(first, second) __FLT_ABI(first##second)
-#define _funcname(f)            _abifunc(test_function_, f)
+#define float_funcname(f)           float_abifunc(test_function_, f)
+#define double_funcname(f)          double_abifunc(test_function_, f)
+#define long_double_funcname(f)     long_double_abifunc(test_function_, f)
 
-extern int _funcname(TESTFUNC)();
+
+extern int float_funcname(TESTFUNC)();
+extern int double_funcname(TESTFUNC)();
+extern int long_double_funcname(TESTFUNC)();
 
 int main()
 {
-  return _funcname(TESTFUNC)();
+  return float_funcname(TESTFUNC) () |
+	 double_funcname(TESTFUNC) () |
+         long_double_funcname(TESTFUNC) ();
 }

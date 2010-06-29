@@ -62,6 +62,8 @@
 
 int __FLT_ABI(test_function_cacosh) ()
 {
+  _DEFINE_DEFAULT_TEST_FUNCTION (cacosh, FUNC_BEHAVIOR_CONJ);
+
   DEFAULT_TESTS_START
 
   DEFINE_TEST ( __FLT_CST( 0.0),   __FLT_CST(0.0), __FLT_CST(0.0),     __FLT_PI_2, 0, 0)

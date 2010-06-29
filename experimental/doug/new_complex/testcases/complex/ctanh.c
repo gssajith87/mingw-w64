@@ -61,6 +61,7 @@
 int __FLT_ABI(test_function_ctanh) () 
 {
   /* sin(2*42.42) is negative */
+  _DEFINE_DEFAULT_TEST_FUNCTION (ctanh, FUNC_BEHAVIOR_CONJ | FUNC_BEHAVIOR_ODD);
   DEFAULT_TESTS_START
 
   DEFINE_TEST (  __FLT_CST(0.0),   __FLT_CST(0.0), __FLT_CST(0.0),  __FLT_CST(0.0), 0, 0)

@@ -63,6 +63,8 @@
 
 int __FLT_ABI(test_function_clog) () 
 {
+  _DEFINE_DEFAULT_TEST_FUNCTION (clog, FUNC_BEHAVIOR_CONJ);
+
   DEFAULT_TESTS_START
 
   DEFINE_TEST (  __FLT_CST(-0.0),   __FLT_CST(0.0), -INFINITY,       __FLT_PI, 0, 0)

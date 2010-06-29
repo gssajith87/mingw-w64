@@ -55,6 +55,8 @@
   
 int __FLT_ABI(test_function_cabs) ()
 {
+  _DEFINE_DEFAULT_TEST_FUNCTION_REAL (cabs, FUNC_BEHAVIOR_CONJ);
+
   DEFAULT_TESTS_START
 
   DEFINE_TEST (__FLT_CST( 0.0), __FLT_CST(42.42), __FLT_CST(42.42), __FLT_NAN, 0, 0)

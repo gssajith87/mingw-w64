@@ -67,6 +67,8 @@
   
 int __FLT_ABI(test_function_carg) ()
 {
+  _DEFINE_DEFAULT_TEST_FUNCTION_REAL (carg, 0);
+
   /* These tests return a real -- expected imaginary is ignored.  */
   /* Note to self - reverse input for correct expected, since the imaginary value
      is the first to be passed to atan2.  */

@@ -60,6 +60,8 @@
 
 int __FLT_ABI(test_function_csqrt) () 
 {
+  _DEFINE_DEFAULT_TEST_FUNCTION (csqrt, FUNC_BEHAVIOR_CONJ);
+
   DEFAULT_TESTS_START
 
   DEFINE_TEST (  __FLT_CST( 0.0),   __FLT_CST(0.0), __FLT_CST(0.0), __FLT_CST(0.0), 0, 0)
