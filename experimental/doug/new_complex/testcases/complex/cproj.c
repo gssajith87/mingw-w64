@@ -44,8 +44,45 @@
 
 #include "complex_test.h"
 
+/**
+ * Section 7.3.9.4
+ * The cproj functions compute a projection of z onto the Riemann sphere: z projects to
+ * z except that all complex infinities (even those with one infinite part and one NaN part)
+ * project to positive inﬁnity on the real axis. If z has an infinite part, then cproj(z) is
+ * equivalent to
+ * INFINITY + I * copysign(0.0, cimag(z))
+ */
+
 int __FLT_ABI(test_function_cproj) ()
 {
-  return 77;
+  _DEFINE_DEFAULT_TEST_FUNCTION (cproj, 0);
+
+  DEFAULT_TESTS_START
+
+  DEFINE_TEST (       -INFINITY, -__FLT_CST(42.42),      INFINITY,     -__FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (        INFINITY, -__FLT_CST(42.42),      INFINITY,     -__FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (       -INFINITY,  __FLT_CST(42.42),      INFINITY,      __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (        INFINITY,  __FLT_CST(42.42),      INFINITY,      __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (       -INFINITY,         -INFINITY,      INFINITY,     -__FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (        INFINITY,         -INFINITY,      INFINITY,     -__FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (       -INFINITY,          INFINITY,      INFINITY,      __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (        INFINITY,          INFINITY,      INFINITY,      __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (       -INFINITY,        -__FLT_NAN,      INFINITY,     -__FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (        INFINITY,        -__FLT_NAN,      INFINITY,     -__FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (       -INFINITY,         __FLT_NAN,      INFINITY,      __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (        INFINITY,         __FLT_NAN,      INFINITY,      __FLT_CST(0.0), 0, 0)
+
+  DEFINE_TEST (      -__FLT_NAN,         -INFINITY,      INFINITY,     -__FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (       __FLT_NAN,         -INFINITY,      INFINITY,     -__FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (      -__FLT_NAN,          INFINITY,      INFINITY,      __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (       __FLT_NAN,          INFINITY,      INFINITY,      __FLT_CST(0.0), 0, 0)
+
+  DEFINE_TEST (       __FLT_NAN, -__FLT_CST(42.42),     __FLT_NAN,           __FLT_NAN, 0, 0)
+  DEFINE_TEST (       __FLT_NAN,  __FLT_CST(42.42),     __FLT_NAN,           __FLT_NAN, 0, 0)
+  DEFINE_TEST (       __FLT_NAN,         __FLT_NAN,     __FLT_NAN,           __FLT_NAN, 0, 0)
+
+  TESTS_END
+
+  return RUN_DEFAULT_TESTS(cproj);
 }
 
