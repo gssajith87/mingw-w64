@@ -7,6 +7,7 @@ lib_LIBRARIES =
 check_LIBRARIES =
 check_PROGRAMS = 
 TESTS =
+XFAIL_TESTS =
 # Fake out the testsuite
 CPPFLAGS32 = -m32
 CPPFLAGS64 = -m64

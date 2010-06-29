@@ -85,8 +85,11 @@ check_LIBRARIES += $(newcomplex_test_lib32)
 
 # Build the programs during make check.
 check_PROGRAMS += $(newcomplex_tests32)
-# They are also tests.
+
+# Declare the tests.
 TESTS += $(newcomplex_tests32)
+# Remove these when completed.
+XFAIL_TESTS += tests32/cproj
 
 tests32_libnewcomplextestsf_a_CPPFLAGS= $(CPPFLAGS32) -D_NEW_COMPLEX_FLOAT=1 $(complex_inc) $(AM_CPPFLAGS)
 tests32_libnewcomplextestsf_a_SOURCES = $(check_complex_lib_sources)
@@ -95,6 +98,9 @@ tests32_libnewcomplextests_a_SOURCES = $(check_complex_lib_sources)
 tests32_libnewcomplextestsld_a_CPPFLAGS= $(CPPFLAGS32) -D_NEW_COMPLEX_LDOUBLE=1 $(complex_inc) $(AM_CPPFLAGS)
 tests32_libnewcomplextestsld_a_SOURCES = $(check_complex_lib_sources)
 
+# Are these two necessary?
+#  tests32/cimag
+#  tests32/creal
 # Complex library actual test programs.
 newcomplex_tests32 = \
   tests32/cabs   \
@@ -108,12 +114,10 @@ newcomplex_tests32 = \
   tests32/ccos   \
   tests32/ccosh  \
   tests32/cexp   \
-  tests32/cimag  \
   tests32/clog   \
   tests32/conj   \
   tests32/cpow   \
   tests32/cproj  \
-  tests32/creal  \
   tests32/csin   \
   tests32/csinh  \
   tests32/csqrt  \
@@ -181,10 +185,10 @@ tests32_cexp_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cexp $(complex_inc) $(AM_CPPFLA
 tests32_cexp_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 tests32_cexp_LDADD = $(newcomplex_test_lib32) $(LDADD)
 
-tests32_cimag_SOURCES = testcases/complex/main.c
-tests32_cimag_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cimag $(complex_inc) $(AM_CPPFLAGS)
-tests32_cimag_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
-tests32_cimag_LDADD = $(newcomplex_test_lib32) $(LDADD)
+# tests32_cimag_SOURCES = testcases/complex/main.c
+# tests32_cimag_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cimag $(complex_inc) $(AM_CPPFLAGS)
+# tests32_cimag_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
+# tests32_cimag_LDADD = $(newcomplex_test_lib32) $(LDADD)
 
 tests32_clog_SOURCES = testcases/complex/main.c
 tests32_clog_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=clog $(complex_inc) $(AM_CPPFLAGS)
@@ -206,10 +210,10 @@ tests32_cproj_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cproj $(complex_inc) $(AM_CPPF
 tests32_cproj_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 tests32_cproj_LDADD = $(newcomplex_test_lib32) $(LDADD)
 
-tests32_creal_SOURCES = testcases/complex/main.c
-tests32_creal_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=creal $(complex_inc) $(AM_CPPFLAGS)
-tests32_creal_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
-tests32_creal_LDADD = $(newcomplex_test_lib32) $(LDADD)
+# tests32_creal_SOURCES = testcases/complex/main.c
+# tests32_creal_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=creal $(complex_inc) $(AM_CPPFLAGS)
+# tests32_creal_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
+# tests32_creal_LDADD = $(newcomplex_test_lib32) $(LDADD)
 
 tests32_csin_SOURCES = testcases/complex/main.c
 tests32_csin_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csin $(complex_inc) $(AM_CPPFLAGS)
@@ -252,8 +256,10 @@ check_LIBRARIES += $(newcomplex_test_lib64)
 
 # Build the programs during make check.
 check_PROGRAMS += $(newcomplex_tests64)
-# They are also tests.
+
+# Declare the tests.
 TESTS += $(newcomplex_tests64)
+XFAIL_TESTS += tests64/cproj
 
 tests64_libnewcomplextestsf_a_CPPFLAGS= $(CPPFLAGS64) -D_NEW_COMPLEX_FLOAT=1 $(complex_inc) $(AM_CPPFLAGS)
 tests64_libnewcomplextestsf_a_SOURCES = $(check_complex_lib_sources)
@@ -262,6 +268,9 @@ tests64_libnewcomplextests_a_SOURCES = $(check_complex_lib_sources)
 tests64_libnewcomplextestsld_a_CPPFLAGS= $(CPPFLAGS64) -D_NEW_COMPLEX_LDOUBLE=1 $(complex_inc) $(AM_CPPFLAGS)
 tests64_libnewcomplextestsld_a_SOURCES = $(check_complex_lib_sources)
 
+# Are these two necessary?
+#  tests64/cimag
+#  tests64/creal
 # Complex library actual test programs.
 newcomplex_tests64 = \
   tests64/cabs   \
@@ -275,12 +284,10 @@ newcomplex_tests64 = \
   tests64/ccos   \
   tests64/ccosh  \
   tests64/cexp   \
-  tests64/cimag  \
   tests64/clog   \
   tests64/conj   \
   tests64/cpow   \
   tests64/cproj  \
-  tests64/creal  \
   tests64/csin   \
   tests64/csinh  \
   tests64/csqrt  \
@@ -345,10 +352,10 @@ tests64_cexp_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cexp $(complex_inc) $(AM_CPPFLA
 tests64_cexp_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 tests64_cexp_LDADD = $(newcomplex_test_lib64) $(LDADD)
 
-tests64_cimag_SOURCES = testcases/complex/main.c
-tests64_cimag_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cimag $(complex_inc) $(AM_CPPFLAGS)
-tests64_cimag_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
-tests64_cimag_LDADD = $(newcomplex_test_lib64) $(LDADD)
+# tests64_cimag_SOURCES = testcases/complex/main.c
+# tests64_cimag_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cimag $(complex_inc) $(AM_CPPFLAGS)
+# tests64_cimag_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
+# tests64_cimag_LDADD = $(newcomplex_test_lib64) $(LDADD)
 
 tests64_clog_SOURCES = testcases/complex/main.c
 tests64_clog_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=clog $(complex_inc) $(AM_CPPFLAGS)
@@ -370,10 +377,10 @@ tests64_cproj_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cproj $(complex_inc) $(AM_CPPF
 tests64_cproj_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 tests64_cproj_LDADD = $(newcomplex_test_lib64) $(LDADD)
 
-tests64_creal_SOURCES = testcases/complex/main.c
-tests64_creal_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=creal $(complex_inc) $(AM_CPPFLAGS)
-tests64_creal_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
-tests64_creal_LDADD = $(newcomplex_test_lib64) $(LDADD)
+# tests64_creal_SOURCES = testcases/complex/main.c
+# tests64_creal_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=creal $(complex_inc) $(AM_CPPFLAGS)
+# tests64_creal_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
+# tests64_creal_LDADD = $(newcomplex_test_lib64) $(LDADD)
 
 tests64_csin_SOURCES = testcases/complex/main.c
 tests64_csin_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csin $(complex_inc) $(AM_CPPFLAGS)
