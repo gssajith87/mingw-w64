@@ -89,7 +89,7 @@ check_PROGRAMS += $(newcomplex_tests32)
 # Declare the tests.
 TESTS += $(newcomplex_tests32)
 # Remove these when completed.
-XFAIL_TESTS += tests32/cproj
+XFAIL_TESTS += 
 
 tests32_libnewcomplextestsf_a_CPPFLAGS= $(CPPFLAGS32) -D_NEW_COMPLEX_FLOAT=1 $(complex_inc) $(AM_CPPFLAGS)
 tests32_libnewcomplextestsf_a_SOURCES = $(check_complex_lib_sources)
@@ -259,7 +259,7 @@ check_PROGRAMS += $(newcomplex_tests64)
 
 # Declare the tests.
 TESTS += $(newcomplex_tests64)
-XFAIL_TESTS += tests64/cproj
+XFAIL_TESTS += 
 
 tests64_libnewcomplextestsf_a_CPPFLAGS= $(CPPFLAGS64) -D_NEW_COMPLEX_FLOAT=1 $(complex_inc) $(AM_CPPFLAGS)
 tests64_libnewcomplextestsf_a_SOURCES = $(check_complex_lib_sources)

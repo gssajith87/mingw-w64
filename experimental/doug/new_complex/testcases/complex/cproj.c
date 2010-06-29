@@ -77,9 +77,16 @@ int __FLT_ABI(test_function_cproj) ()
   DEFINE_TEST (      -__FLT_NAN,          INFINITY,      INFINITY,      __FLT_CST(0.0), 0, 0)
   DEFINE_TEST (       __FLT_NAN,          INFINITY,      INFINITY,      __FLT_CST(0.0), 0, 0)
 
-  DEFINE_TEST (       __FLT_NAN, -__FLT_CST(42.42),     __FLT_NAN,           __FLT_NAN, 0, 0)
-  DEFINE_TEST (       __FLT_NAN,  __FLT_CST(42.42),     __FLT_NAN,           __FLT_NAN, 0, 0)
-  DEFINE_TEST (       __FLT_NAN,         __FLT_NAN,     __FLT_NAN,           __FLT_NAN, 0, 0)
+  /* z projects to z */
+  DEFINE_TEST (-__FLT_CST(42.42), -__FLT_CST(42.42), -__FLT_CST(42.42), -__FLT_CST(42.42), 0, 0)
+  DEFINE_TEST (-__FLT_CST(42.42),  __FLT_CST(42.42), -__FLT_CST(42.42),  __FLT_CST(42.42), 0, 0)
+  DEFINE_TEST ( __FLT_CST(42.42), -__FLT_CST(42.42),  __FLT_CST(42.42), -__FLT_CST(42.42), 0, 0)
+  DEFINE_TEST ( __FLT_CST(42.42),  __FLT_CST(42.42),  __FLT_CST(42.42),  __FLT_CST(42.42), 0, 0)
+  DEFINE_TEST (        __FLT_NAN, -__FLT_CST(42.42),         __FLT_NAN, -__FLT_CST(42.42), 0, 0)
+  DEFINE_TEST (        __FLT_NAN,  __FLT_CST(42.42),         __FLT_NAN,  __FLT_CST(42.42), 0, 0)
+  DEFINE_TEST (-__FLT_CST(42.42),         __FLT_NAN, -__FLT_CST(42.42),         __FLT_NAN, 0, 0)
+  DEFINE_TEST ( __FLT_CST(42.42),         __FLT_NAN,  __FLT_CST(42.42),         __FLT_NAN, 0, 0)
+  DEFINE_TEST (       __FLT_NAN,         __FLT_NAN,     __FLT_NAN,         __FLT_NAN, 0, 0)
 
   TESTS_END
 

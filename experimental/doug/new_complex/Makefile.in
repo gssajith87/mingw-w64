@@ -79,7 +79,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 check_PROGRAMS = $(am__EXEEXT_2) $(am__EXEEXT_4)
 TESTS = $(am__EXEEXT_2) $(am__EXEEXT_4)
-XFAIL_TESTS = $(am__EXEEXT_5) $(am__EXEEXT_6)
+XFAIL_TESTS = $(am__EXEEXT_5) $(am__EXEEXT_5)
 
 # it is ok to add the lib64/libnewcomplex.a and lib32/libnewcomplex.a on the same command line.
 # The linker will choose the correct one while linking.
@@ -102,7 +102,7 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 # Declare the tests.
 @LIB32_TRUE@am__append_7 = $(newcomplex_tests32)
 # Remove these when completed.
-@LIB32_TRUE@am__append_8 = tests32/cproj
+@LIB32_TRUE@am__append_8 = 
 
 # Build the libraries
 @LIB64_TRUE@am__append_9 = $(newcomplex_test_lib64)
@@ -112,7 +112,7 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 
 # Declare the tests.
 @LIB64_TRUE@am__append_11 = $(newcomplex_tests64)
-@LIB64_TRUE@am__append_12 = tests64/cproj
+@LIB64_TRUE@am__append_12 = 
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -1038,8 +1038,7 @@ tst=$$dir$$f; log='$@'; __SAVED_TERM=$$TERM;		\
 $(TESTS_ENVIRONMENT)
 RECHECK_LOGS = $(TEST_LOGS)
 AM_RECURSIVE_TARGETS = check check-html recheck recheck-html
-@LIB32_TRUE@am__EXEEXT_5 = tests32/cproj$(EXEEXT)
-@LIB64_TRUE@am__EXEEXT_6 = tests64/cproj$(EXEEXT)
+am__EXEEXT_5 =
 TEST_SUITE_LOG = test-suite.log
 TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
 TEST_EXTENSIONS = @EXEEXT@ .test
