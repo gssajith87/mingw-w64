@@ -22,7 +22,7 @@ typedef struct _MIB_TCP6ROW {
 
 typedef struct _MIB_TCP6TABLE {
   DWORD       dwNumEntries;
-  MIB_TCP6ROW table[];
+  MIB_TCP6ROW table[ANY_SIZE];
 } MIB_TCP6TABLE, *PMIB_TCP6TABLE;
 
 typedef struct _MIB_TCP6ROW2 {
@@ -39,7 +39,7 @@ typedef struct _MIB_TCP6ROW2 {
 
 typedef struct _MIB_TCP6TABLE2 {
   DWORD        dwNumEntries;
-  MIB_TCP6ROW2 table[];
+  MIB_TCP6ROW2 table[ANY_SIZE];
 } MIB_TCP6TABLE2, *PMIB_TCP6TABLE2;
 
 typedef struct _MIB_TCPROW2 {
@@ -53,7 +53,7 @@ typedef struct _MIB_TCPROW2 {
 
 typedef struct _MIB_TCPTABLE2 {
   DWORD       dwNumEntries;
-  MIB_TCPROW2 table[];
+  MIB_TCPROW2 table[ANY_SIZE];
 } MIB_TCPTABLE2, *PMIB_TCPTABLE2;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

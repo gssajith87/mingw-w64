@@ -35,7 +35,7 @@ typedef struct _MIB_ANYCASTIPADDRESS_ROW {
 
 typedef struct _MIB_ANYCASTIPADDRESS_TABLE {
   ULONG                    NumEntries;
-  MIB_ANYCASTIPADDRESS_ROW Table[];
+  MIB_ANYCASTIPADDRESS_ROW Table[ANY_SIZE];
 } MIB_ANYCASTIPADDRESS_TABLE, *PMIB_ANYCASTIPADDRESS_TABLE;
 
 typedef struct _MIB_IPFORWARD_ROW2 {
@@ -78,12 +78,12 @@ typedef struct _MIB_IPNET_ROW2 {
 
 typedef struct _MIB_IPNET_TABLE2 {
   ULONG          NumEntries;
-  MIB_IPNET_ROW2 Table[];
+  MIB_IPNET_ROW2 Table[ANY_SIZE];
 } MIB_IPNET_TABLE2, *PMIB_IPNET_TABLE2;
 
 typedef struct _MIB_IPFORWARD_TABLE2 {
   ULONG              NumEntries;
-  MIB_IPFORWARD_ROW2 Table[];
+  MIB_IPFORWARD_ROW2 Table[ANY_SIZE];
 } MIB_IPFORWARD_TABLE2, *PMIB_IPFORWARD_TABLE2;
 
 typedef struct _IP_ADDRESS_PREFIX {
@@ -131,7 +131,7 @@ typedef struct _MIB_IPINTERFACE_ROW {
 
 typedef struct _MIB_IPINTERFACE_TABLE {
   ULONG               NumEntries;
-  MIB_IPINTERFACE_ROW Table[];
+  MIB_IPINTERFACE_ROW Table[ANY_SIZE];
 } MIB_IPINTERFACE_TABLE, *PMIB_IPINTERFACE_TABLE;
 
 typedef struct _MIB_UNICASTIPADDRESS_ROW {
@@ -151,7 +151,7 @@ typedef struct _MIB_UNICASTIPADDRESS_ROW {
 
 typedef struct _MIB_UNICASTIPADDRESS_TABLE {
   ULONG                    NumEntries;
-  MIB_UNICASTIPADDRESS_ROW Table[];
+  MIB_UNICASTIPADDRESS_ROW Table[ANY_SIZE];
 } MIB_UNICASTIPADDRESS_TABLE, *PMIB_UNICASTIPADDRESS_TABLE;
 
 typedef struct _MIB_IF_ROW2 {
@@ -209,7 +209,7 @@ typedef struct _MIB_IF_ROW2 {
 
 typedef struct _MIB_IF_TABLE2 {
   ULONG       NumEntries;
-  MIB_IF_ROW2 Table[];
+  MIB_IF_ROW2 Table[ANY_SIZE];
 } MIB_IF_TABLE2, *PMIB_IF_TABLE2;
 
 typedef struct _MIB_IFSTACK_ROW {
@@ -219,7 +219,7 @@ typedef struct _MIB_IFSTACK_ROW {
 
 typedef struct _MIB_IFSTACK_TABLE {
   ULONG           NumEntries;
-  MIB_IFSTACK_ROW Table[];
+  MIB_IFSTACK_ROW Table[ANY_SIZE];
 } MIB_IFSTACK_TABLE, *PMIB_IFSTACK_TABLE;
 
 typedef struct _MIB_INVERTEDIFSTACK_ROW {
@@ -229,7 +229,7 @@ typedef struct _MIB_INVERTEDIFSTACK_ROW {
 
 typedef struct _MIB_INVERTEDIFSTACK_TABLE {
   ULONG                   NumEntries;
-  MIB_INVERTEDIFSTACK_ROW Table[];
+  MIB_INVERTEDIFSTACK_ROW Table[ANY_SIZE];
 } MIB_INVERTEDIFSTACK_TABLE, *PMIB_INVERTEDIFSTACK_TABLE;
 
 typedef struct _MIB_IPPATH_ROW {
@@ -252,7 +252,7 @@ typedef struct _MIB_IPPATH_ROW {
 
 typedef struct _MIB_IPPATH_TABLE {
   ULONG          NumEntries;
-  MIB_IPPATH_ROW Table[];
+  MIB_IPPATH_ROW Table[ANY_SIZE];
 } MIB_IPPATH_TABLE, *PMIB_IPPATH_TABLE;
 
 typedef struct _MIB_MULTICASTIPADDRESS_ROW {
@@ -264,7 +264,7 @@ typedef struct _MIB_MULTICASTIPADDRESS_ROW {
 
 typedef struct _MIB_MULTICASTIPADDRESS_TABLE {
   ULONG                      NumEntries;
-  MIB_MULTICASTIPADDRESS_ROW Table[];
+  MIB_MULTICASTIPADDRESS_ROW Table[ANY_SIZE];
 } MIB_MULTICASTIPADDRESS_TABLE, *PMIB_MULTICASTIPADDRESS_TABLE;
 
 NETIOAPI_API CancelMibChangeNotify2(

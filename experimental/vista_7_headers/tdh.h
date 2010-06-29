@@ -44,7 +44,7 @@ typedef struct _EVENT_MAP_INFO {
     MAP_VALUETYPE MapEntryValueType;
     ULONG FormatStringOffset;
   };
-  EVENT_MAP_ENTRY MapEntryArray[];
+  EVENT_MAP_ENTRY MapEntryArray[ANYSIZE_ARRAY];
 } EVENT_MAP_INFO;
 
 typedef enum _PROPERTY_FLAGS {
@@ -120,7 +120,7 @@ typedef struct _TRACE_EVENT_INFO {
   ULONG               PropertyCount;
   ULONG               TopLevelPropertyCount;
   TEMPLATE_FLAGS      Flags;
-  EVENT_PROPERTY_INFO EventPropertyInfoArray[];
+  EVENT_PROPERTY_INFO EventPropertyInfoArray[ANYSIZE_ARRAY];
 } TRACE_EVENT_INFO;
 
 typedef struct _PROPERTY_DATA_DESCRIPTOR {
@@ -138,7 +138,7 @@ typedef struct _TRACE_PROVIDER_INFO {
 typedef struct _PROVIDER_ENUMERATION_INFO {
   ULONG               NumberOfProviders;
   ULONG               Padding;
-  TRACE_PROVIDER_INFO TraceProviderInfoArray[];
+  TRACE_PROVIDER_INFO TraceProviderInfoArray[ANYSIZE_ARRAY];
 } PROVIDER_ENUMERATION_INFO;
 
 typedef struct _PROVIDER_FIELD_INFO {
@@ -150,7 +150,7 @@ typedef struct _PROVIDER_FIELD_INFO {
 typedef struct _PROVIDER_FIELD_INFOARRAY {
   ULONG               NumberOfElements;
   EVENT_FIELD_TYPE    FieldType;
-  PROVIDER_FIELD_INFO FieldInfoArray[];
+  PROVIDER_FIELD_INFO FieldInfoArray[ANYSIZE_ARRAY];
 } PROVIDER_FIELD_INFOARRAY;
 
 #if (_WIN32_WINNT >= 0x0601)
