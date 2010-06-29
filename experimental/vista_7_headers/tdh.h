@@ -92,6 +92,14 @@ typedef enum _DECODING_SOURCE {
   DecodingSourceWPP       = 2 
 } DECODING_SOURCE;
 
+typedef enum _PROPERTY_FLAGS {
+  PropertyStruct             = 0x1,
+  PropertyParamLength        = 0x2,
+  PropertyParamCount         = 0x4,
+  PropertyWBEMXmlFragment    = 0x8,
+  PropertyParamFixedLength   = 0x10 
+} PROPERTY_FLAGS;
+
 typedef struct _TRACE_EVENT_INFO {
   GUID                ProviderGuid;
   GUID                EventGuid;
@@ -114,6 +122,36 @@ typedef struct _TRACE_EVENT_INFO {
   TEMPLATE_FLAGS      Flags;
   EVENT_PROPERTY_INFO EventPropertyInfoArray[];
 } TRACE_EVENT_INFO;
+
+typedef struct _PROPERTY_DATA_DESCRIPTOR {
+  ULONGLONG PropertyName;
+  ULONG     ArrayIndex;
+  ULONG     Reserved;
+} PROPERTY_DATA_DESCRIPTOR;
+
+typedef struct _TRACE_PROVIDER_INFO {
+  GUID  ProviderGuid;
+  ULONG SchemaSource;
+  ULONG ProviderNameOffset;
+} TRACE_PROVIDER_INFO;
+
+typedef struct _PROVIDER_ENUMERATION_INFO {
+  ULONG               NumberOfProviders;
+  ULONG               Padding;
+  TRACE_PROVIDER_INFO TraceProviderInfoArray[];
+} PROVIDER_ENUMERATION_INFO;
+
+typedef struct _PROVIDER_FIELD_INFO {
+  ULONG     NameOffset;
+  ULONG     DescriptionOffset;
+  ULONGLONG Value;
+} PROVIDER_FIELD_INFO;
+
+typedef struct _PROVIDER_FIELD_INFOARRAY {
+  ULONG               NumberOfElements;
+  EVENT_FIELD_TYPE    FieldType;
+  PROVIDER_FIELD_INFO FieldInfoArray[];
+} PROVIDER_FIELD_INFOARRAY;
 
 #if (_WIN32_WINNT >= 0x0601)
 typedef struct _PROVIDER_FILTER_INFO {

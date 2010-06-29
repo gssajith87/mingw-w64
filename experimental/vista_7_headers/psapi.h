@@ -140,6 +140,27 @@ WINBOOL WINAPI EnumProcessModulesEx(
   DWORD dwFilterFlag
 );
 
+#if (_WIN32_WINNT >= 0x0600)
+typedef union _PSAPI_WORKING_SET_EX_BLOCK {
+  ULONG_PTR Flags;
+  struct DUMMYSTRUCTNAME {
+    ULONG_PTR Valid  :1;
+    ULONG_PTR ShareCount  :3;
+    ULONG_PTR Win32Protection  :11;
+    ULONG_PTR Shared  :1;
+    ULONG_PTR Node  :6;
+    ULONG_PTR Locked  :1;
+    ULONG_PTR LargePage  :1;
+  } DUMMYSTRUCTNAME;
+} PSAPI_WORKING_SET_EX_BLOCK, *PPSAPI_WORKING_SET_EX_BLOCK;
+
+typedef struct _PSAPI_WORKING_SET_EX_INFORMATION {
+  PVOID                      VirtualAddress;
+  PSAPI_WORKING_SET_EX_BLOCK VirtualAttributes;
+} PSAPI_WORKING_SET_EX_INFORMATION, *PPSAPI_WORKING_SET_EX_INFORMATION;
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif

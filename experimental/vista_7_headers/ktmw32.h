@@ -138,5 +138,25 @@ HANDLE WINAPI OpenTransactionManagerById(
   ULONG OpenOptions
 );
 
+WINBOOL WINAPI PrepareComplete(
+  HANDLE EnlistmentHandle,
+  PLARGE_INTEGER TmVirtualClock
+);
+
+WINBOOL WINAPI PrepareEnlistment(
+  HANDLE EnlistmentHandle,
+  PLARGE_INTEGER TmVirtualClock
+);
+
+WINBOOL WINAPI PrePrepareComplete(
+  HANDLE EnlistmentHandle,
+  PLARGE_INTEGER TmVirtualClock
+);
+
+WINBOOL WINAPI PrePrepareEnlistment(
+  HANDLE EnlistmentHandle,
+  PLARGE_INTEGER TmVirtualClock
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
-#endif /*_INC_CLFSW32*/
+#endif /*_INC_KTMW32*/

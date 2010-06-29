@@ -4241,6 +4241,70 @@ typedef LPVOID HCERTCHAINENGINE;
 typedef LPVOID HCERTSTORE;
 typedef LPVOID HCERT_SERVER_OCSP_RESPONSE;
 
+typedef WINBOOL ( WINAPI *PFN_CERT_CREATE_CONTEXT_SORT_FUNC )(
+  DWORD cbTotalEncoded,
+  DWORD cbRemainEncoded,
+  DWORD cEntry,
+  void *pvSort
+);
+
+#define CRYPT_OID_EXPORT_PUBLIC_KEY_INFO_EX2_FUNC "CryptDllExportPublicKeyInfoEx2"
+
+typedef WINBOOL ( WINAPI *PFN_CRYPT_EXPORT_PUBLIC_KEY_INFO_EX2_FUNC )(
+  NCRYPT_KEY_HANDLE hNCryptKey,
+  DWORD dwCertEncodingType,
+  LPSTR pszPublicKeyObjId,
+  DWORD dwFlags,
+  void *pvAuxInfo,
+  PCERT_PUBLIC_KEY_INFO pInfo,
+  DWORD *pcbInfo
+);
+
+#define CRYPT_OID_EXTRACT_ENCODED_SIGNATURE_PARAMETERS_FUNC "CryptDllExtractEncodedSignatureParameters"
+
+typedef WINBOOL ( WINAPI *PFN_CRYPT_EXTRACT_ENCODED_SIGNATURE_PARAMETERS_FUNC )(
+  DWORD dwCertEncodingType,
+  PCRYPT_ALGORITHM_IDENTIFIER pSignatureAlgorithm,
+  void **ppvDecodedSignPara,
+  LPWSTR *ppwszCNGHashAlgid
+);
+
+typedef WINBOOL ( WINAPI *PFN_CRYPT_SIGN_AND_ENCODE_HASH_FUNC )(
+  NCRYPT_KEY_HANDLE hKey,
+  DWORD dwCertEncodingType,
+  PCRYPT_ALGORITHM_IDENTIFIER pSignatureAlgorithm,
+  void *pvDecodedSignPara,
+  LPCWSTR pwszCNGPubKeyAlgid,
+  LPCWSTR pwszCNGHashAlgid,
+  BYTE *pbComputedHash,
+  DWORD cbComputedHash,
+  BYTE *pbSignature,
+  DWORD *pcbSignature
+);
+
+typedef WINBOOL ( WINAPI *PFN_CRYPT_VERIFY_ENCODED_SIGNATURE_FUNC )(
+  DWORD dwCertEncodingType,
+  PCERT_PUBLIC_KEY_INFO pPubKeyInfo,
+  PCRYPT_ALGORITHM_IDENTIFIER pSignatureAlgorithm,
+  void *pvDecodedSignPara,
+  LPCWSTR pwszCNGPubKeyAlgid,
+  LPCWSTR pwszCNGHashAlgid,
+  BYTE *pbComputedHash,
+  DWORD cbComputedHash,
+  BYTE *pbSignature,
+  DWORD cbSignature
+);
+
+#define CRYPT_OID_IMPORT_PUBLIC_KEY_INFO_EX2_FUNC "CryptDllImportPublicKeyInfoEx2"
+
+typedef WINBOOL ( WINAPI *PFN_IMPORT_PUBLIC_KEY_INFO_EX2_FUNC )(
+  DWORD dwCertEncodingType,
+  PCERT_PUBLIC_KEY_INFO pInfo,
+  DWORD dwFlags,
+  void *pvAuxInfo,
+  BCRYPT_KEY_HANDLE *phKey
+);
+
 typedef struct _CERT_HASHED_URL {
   CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
   CRYPT_HASH_BLOB            Hash;

@@ -196,5 +196,20 @@ ULONG WINAPI LsnRecordSequence(
   const CLFS_LSN *plsn
 );
 
+WINBOOL WINAPI PrepareLogArchive(
+  HANDLE hLog,
+  PWSTR pszBaseLogFileName,
+  ULONG cLen,
+  const PCLFS_LSN plsnLow,
+  const PCLFS_LSN plsnHigh,
+  PULONG pcActualLength,
+  PULONGLONG poffBaseLogFileData,
+  PULONGLONG pcbBaseLogFileLength,
+  PCLFS_LSN plsnBase,
+  PCLFS_LSN plsnLast,
+  PCLFS_LSN plsnCurrentArchiveTail,
+  PCLFS_LOG_ARCHIVE_CONTEXT ppvArchiveContext
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_CLFSW32*/

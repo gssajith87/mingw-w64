@@ -146,6 +146,16 @@ extern "C" {
 #define DEVICEPOWER_SET_WAKEENABLED 0x00000001
 #define DEVICEPOWER_CLEAR_WAKEENABLED 0x00000002
 
+typedef enum _POWER_DATA_ACCESSOR {
+  ACCESS_AC_POWER_SETTING_INDEX   = 0,   // 0x0
+  ACCESS_DC_POWER_SETTING_INDEX   = 1,   // 0x1
+  ACCESS_SCHEME                   = 16,  // 0x10
+  ACCESS_SUBGROUP                 = 17,  // 0x11
+  ACCESS_INDIVIDUAL_SETTING       = 18,  // 0x12
+  ACCESS_ACTIVE_SCHEME            = 19,  // 0x13
+  ACCESS_CREATE_SCHEME            = 20   // 0x14
+} POWER_DATA_ACCESSOR, *PPOWER_DATA_ACCESSOR;
+
 BOOLEAN WINAPI DevicePowerClose(void);
 BOOLEAN WINAPI DevicePowerEnumDevices(
   ULONG QueryIndex,
@@ -163,6 +173,345 @@ DWORD WINAPI DevicePowerSetDeviceState(
   LPCWSTR DeviceDescription,
   ULONG SetFlags,
   PCVOID SetData
+);
+
+DWORD WINAPI PowerCanRestoreIndividualDefaultPowerScheme(
+  const GUID *SchemeGuid
+);
+
+DWORD WINAPI PowerCreatePossibleSetting(
+  HKEY RootSystemPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  ULONG PossibleSettingIndex
+);
+
+DWORD WINAPI PowerCreateSetting(
+  HKEY RootSystemPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid
+);
+
+DWORD WINAPI PowerDeleteScheme(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid
+);
+
+POWER_PLATFORM_ROLE WINAPI PowerDeterminePlatformRole(void);
+
+DWORD WINAPI PowerDuplicateScheme(
+  HKEY RootPowerKey,
+  const GUID *SourceSchemeGuid,
+  GUID **DestinationSchemeGuid
+);
+
+DWORD WINAPI PowerEnumerate(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  POWER_DATA_ACCESSOR AccessFlags,
+  ULONG Index,
+  UCHAR *Buffer,
+  DWORD *BufferSize
+);
+
+DWORD WINAPI PowerGetActiveScheme(
+  HKEY UserRootPowerKey,
+  GUID **ActivePolicyGuid
+);
+
+DWORD WINAPI PowerImportPowerScheme(
+  HKEY RootPowerKey,
+  LPCWSTR ImportFileNamePath,
+  GUID **DestinationSchemeGuid
+);
+
+DWORD WINAPI PowerReadACDefaultIndex(
+  HKEY RootPowerKey,
+  const GUID *SchemePersonalityGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  LPDWORD AcDefaultIndex
+);
+
+DWORD WINAPI PowerReadACValue(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  PULONG Type,
+  LPBYTE Buffer,
+  LPDWORD BufferSize
+);
+
+DWORD WINAPI PowerReadACValueIndex(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  LPDWORD AcValueIndex
+);
+
+DWORD WINAPI PowerReadDCDefaultIndex(
+  HKEY RootPowerKey,
+  const GUID *SchemePersonalityGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  LPDWORD DcDefaultIndex
+);
+
+DWORD WINAPI PowerReadDCValue(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  PULONG Type,
+  PUCHAR Buffer,
+  LPDWORD BufferSize
+);
+
+DWORD WINAPI PowerReadDCValueIndex(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  LPDWORD DcValueIndex
+);
+
+DWORD WINAPI PowerReadDescription(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  PUCHAR Buffer,
+  LPDWORD BufferSize
+);
+
+DWORD WINAPI PowerReadFriendlyName(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  PUCHAR Buffer,
+  LPDWORD BufferSize
+);
+
+DWORD WINAPI PowerReadIconResourceSpecifier(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  PUCHAR Buffer,
+  LPDWORD BufferSize
+);
+
+DWORD WINAPI PowerReadPossibleDescription(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  ULONG PossibleSettingIndex,
+  PUCHAR Buffer,
+  LPDWORD BufferSize
+);
+
+DWORD WINAPI PowerReadPossibleFriendlyName(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  ULONG PossibleSettingIndex,
+  PUCHAR Buffer,
+  LPDWORD BufferSize
+);
+
+DWORD WINAPI PowerReadPossibleValue(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  PULONG Type,
+  ULONG PossibleSettingIndex,
+  PUCHAR Buffer,
+  LPDWORD BufferSize
+);
+
+DWORD WINAPI PowerReadSettingAttributes(
+  const GUID *SubGroupGuid,
+  const GUID *PowerSettingGuid
+);
+
+DWORD WINAPI PowerReadValueIncrement(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  LPDWORD ValueIncrement
+);
+
+DWORD WINAPI PowerReadValueMax(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  LPDWORD ValueMaximum
+);
+
+DWORD WINAPI PowerReadValueMin(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  LPDWORD ValueMinimum
+);
+
+DWORD WINAPI PowerReadValueUnitsSpecifier(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  UCHAR *Buffer,
+  LPDWORD BufferSize
+);
+
+DWORD WINAPI PowerRemovePowerSetting(
+  const GUID *PowerSettingSubKeyGuid,
+  const GUID *PowerSettingGuid
+);
+
+DWORD WINAPI PowerReplaceDefaultPowerSchemes(void);
+
+DWORD WINAPI PowerRestoreDefaultPowerSchemes(void);
+
+DWORD WINAPI PowerRestoreIndividualDefaultPowerScheme(
+  const GUID *SchemeGuid
+);
+
+DWORD WINAPI PowerSetActiveScheme(
+  HKEY UserRootPowerKey,
+  const GUID *SchemeGuid
+);
+
+DWORD WINAPI PowerSettingAccessCheck(
+  POWER_DATA_ACCESSOR AccessFlags,
+  const GUID *PowerGuid
+);
+
+DWORD WINAPI PowerWriteACDefaultIndex(
+  HKEY RootSystemPowerKey,
+  const GUID *SchemePersonalityGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  DWORD DefaultAcIndex
+);
+
+DWORD WINAPI PowerWriteACValueIndex(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  DWORD AcValueIndex
+);
+
+DWORD WINAPI PowerWriteDCDefaultIndex(
+  HKEY RootSystemPowerKey,
+  const GUID *SchemePersonalityGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  DWORD DefaultDcIndex
+);
+
+DWORD WINAPI PowerWriteDCValueIndex(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  DWORD DcValueIndex
+);
+
+DWORD WINAPI PowerWriteDescription(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  UCHAR *Buffer,
+  DWORD BufferSize
+);
+
+DWORD WINAPI PowerWriteFriendlyName(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  UCHAR *Buffer,
+  DWORD BufferSize
+);
+
+DWORD WINAPI PowerWriteIconResourceSpecifier(
+  HKEY RootPowerKey,
+  const GUID *SchemeGuid,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  UCHAR *Buffer,
+  DWORD BufferSize
+);
+
+DWORD WINAPI PowerWritePossibleDescription(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  ULONG PossibleSettingIndex,
+  UCHAR *Buffer,
+  DWORD BufferSize
+);
+
+DWORD WINAPI PowerWritePossibleFriendlyName(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  ULONG PossibleSettingIndex,
+  UCHAR *Buffer,
+  DWORD BufferSize
+);
+
+DWORD WINAPI PowerWritePossibleValue(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  ULONG Type,
+  ULONG PossibleSettingIndex,
+  UCHAR *Buffer,
+  DWORD BufferSize
+);
+
+#define POWER_ATTRIBUTE_HIDE 1
+
+DWORD WINAPI PowerWriteSettingAttributes(
+  const GUID *SubGroupGuid,
+  const GUID *PowerSettingGuid,
+  DWORD Attributes
+);
+
+DWORD WINAPI PowerWriteValueIncrement(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  DWORD ValueIncrement
+);
+
+DWORD WINAPI PowerWriteValueMax(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  DWORD ValueMaximum
+);
+
+DWORD WINAPI PowerWriteValueMin(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  DWORD ValueMinimum
+);
+
+DWORD WINAPI PowerWriteValueUnitsSpecifier(
+  HKEY RootPowerKey,
+  const GUID *SubGroupOfPowerSettingsGuid,
+  const GUID *PowerSettingGuid,
+  UCHAR *Buffer,
+  DWORD BufferSize
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

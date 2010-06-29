@@ -47,5 +47,33 @@ typedef struct _GamutBoundaryDescription {
   GamutShell                           *pPossibleShell;
 } GamutBoundaryDescription;
 
+typedef struct _PrimaryJabColors {
+  JabColorF red;
+  JabColorF yellow;
+  JabColorF green;
+  JabColorF cyan;
+  JabColorF blue;
+  JabColorF magenta;
+  JabColorF black;
+  JabColorF white;
+} PrimaryJabColors;
+
+typedef struct _XYZColorF {
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+} XYZColorF;
+
+typedef struct _PrimaryXYZColors {
+  XYZColorF red;
+  XYZColorF yellow;
+  XYZColorF green;
+  XYZColorF cyan;
+  XYZColorF blue;
+  XYZColorF magenta;
+  XYZColorF black;
+  XYZColorF white;
+} PrimaryXYZColors;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WCSPLUGIN*/

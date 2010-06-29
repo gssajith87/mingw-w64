@@ -31,9 +31,6 @@ struct ip_msfilter {
 
 #define IP_MSFILTER_SIZE(numsrc) (sizeof(struct ip_msfilter)-sizeof(struct in_addr) + (numsrc)*sizeof(struct in_addr))
 
-#define MCAST_INCLUDE 0
-#define MCAST_EXCLUDE 1
-
 #define SIO_GET_INTERFACE_LIST _IOR('t',127,u_long)
 
 #define SIO_GET_INTERFACE_LIST_EX _IOR('t',126,u_long)
