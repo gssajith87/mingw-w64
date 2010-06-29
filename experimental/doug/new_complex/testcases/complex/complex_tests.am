@@ -69,7 +69,7 @@ check_complex_lib_sources = \
   testcases/complex/ctan.c \
   testcases/complex/ctanh.c
 
-complex_inc = -I$(top_srcdir)/new_complex
+complex_inc = -I$(top_srcdir)/complex
 
 # 32 bit tests.
 if LIB32
