@@ -3611,6 +3611,41 @@ WINBASEAPI HANDLE WINAPI OpenFileById(
   DWORD dwFlags
 );
 
+WINBASEAPI WINBOOL WINAPI QueryActCtxSettingsW(
+  DWORD dwFlags,
+  HANDLE hActCtx,
+  PCWSTR settingsNameSpace,
+  PCWSTR settingName,
+  PWSTR pvBuffer,
+  SIZE_T dwBuffer,
+  SIZE_T *pdwWrittenOrRequired
+);
+
+WINBASEAPI WINBOOL WINAPI QueryFullProcessImageNameA(
+  HANDLE hProcess,
+  DWORD dwFlags,
+  LPSTR lpExeName,
+  PDWORD lpdwSize
+);
+
+WINBASEAPI WINBOOL WINAPI QueryFullProcessImageNameW(
+  HANDLE hProcess,
+  DWORD dwFlags,
+  LPWSTR lpExeName,
+  PDWORD lpdwSize
+);
+#define QueryFullProcessImageName __MINGW_NAME_AW(QueryFullProcessImageName)
+
+WINBASEAPI WINBOOL WINAPI QueryProcessAffinityUpdateMode(
+  HANDLE ProcessHandle,
+  DWORD lpdwFlags
+);
+
+WINADVAPI VOID WINAPI QuerySecurityAccessMask(
+  SECURITY_INFORMATION SecurityInformation,
+  LPDWORD DesiredAccess
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #if (_WIN32_WINNT >= 0x0601)

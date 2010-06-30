@@ -211,5 +211,12 @@ WINBOOL WINAPI PrepareLogArchive(
   PCLFS_LOG_ARCHIVE_CONTEXT ppvArchiveContext
 );
 
+WINBOOL WINAPI QueryLogPolicy(
+  HANDLE hLog,
+  CLFS_MGMT_POLICY_TYPE ePolicyType,
+  PCLFS_MGMT_POLICY pPolicyBuffer,
+  PULONG pcbPolicyBuffer
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_CLFSW32*/
