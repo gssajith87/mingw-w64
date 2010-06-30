@@ -1,9 +1,41 @@
 #ifndef _INC_WCT
 #define _INC_WCT
-
+#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
 
 typedef LPVOID HWCT;
+
+typedef enum _WCT_OBJECT_TYPE {
+  WctCriticalSectionType,
+  WctSendMessageType,
+  WctMutexType,
+  WctAlpcType,
+  WctComType,
+  WctThreadWaitType,
+  WctProcessWaitType,
+  WctThreadType,
+  WctComActivationType,
+  WctUnknownType
+} WCT_OBJECT_TYPE;
+
+typedef enum _WCT_OBJECT_STATUS {
+  WctStatusNoAccess,
+  WctStatusRunning,
+  WctStatusBlocked,
+  WctStatusPidOnly,
+  WctStatusPidOnlyRpcss,
+  WctStatusOwned,
+  WctStatusNotOwned,
+  WctStatusAbandoned,
+  WctStatusUnknown,
+  WctStatusError
+} WCT_OBJECT_STATUS;
+
+/* According to http://msdn.microsoft.com/en-us/magazine/cc163395.aspx
+  RealObjectName has 0x8 offset and TimeOutLowPart has 0x108
+  WCT_OBJNAME_LENGTH assumed to be 50
+*/
+#define WCT_OBJNAME_LENGTH 50
 
 typedef struct _WAITCHAIN_NODE_INFO {
   WCT_OBJECT_TYPE   ObjectType;
@@ -42,6 +74,15 @@ WINBOOL WINAPI GetThreadWaitChain(
   LPDWORD NodeCount,
   PWAITCHAIN_NODE_INFO NodeInfoArray,
   LPBOOL IsCycle
+);
+
+/* Unknown Callbacks */
+typedef LPVOID (WINAPI *PCOGETCALLSTATE)();
+typedef LPVOID (WINAPI *PCOGETACTIVATIONSTATE)();
+
+VOID WINAPI RegisterWaitChainCOMCallback(
+  PCOGETCALLSTATE CallStateCallback,
+  PCOGETACTIVATIONSTATE ActivationStateCallback
 );
 
 #endif /* (_WIN32_WINNT >= 0x0600) */

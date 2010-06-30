@@ -158,5 +158,55 @@ WINBOOL WINAPI PrePrepareEnlistment(
   PLARGE_INTEGER TmVirtualClock
 );
 
+WINBOOL WINAPI ReadOnlyEnlistment(
+  HANDLE EnlistmentHandle,
+  PLARGE_INTEGER TmVirtualClock
+);
+
+WINBOOL WINAPI RecoverEnlistment(
+  HANDLE EnlistmentHandle,
+  PVOID EnlistmentKey
+);
+
+WINBOOL WINAPI RecoverResourceManager(
+  HANDLE ResourceManagerHandle
+);
+
+WINBOOL WINAPI RecoverTransactionManager(
+  HANDLE TransactionManagerHandle
+);
+
+WINBOOL WINAPI RenameTransactionManager(
+  LPWSTR LogFileName,
+  LPGUID ExistingTransactionManagerGuid
+);
+
+WINBOOL WINAPI RollbackComplete(
+  HANDLE EnlistmentHandle,
+  PLARGE_INTEGER TmVirtualClock
+);
+
+WINBOOL WINAPI RollbackEnlistment(
+  HANDLE EnlistmentHandle,
+  PLARGE_INTEGER TmVirtualClock
+);
+
+WINBOOL WINAPI RollbackTransaction(
+  HANDLE TransactionHandle
+);
+
+WINBOOL WINAPI RollbackTransactionAsync(
+  HANDLE TransactionHandle
+);
+
+WINBOOL RollforwardTransactionManager(
+  HANDLE TransactionManagerHandle,
+  PLARGE_INTEGER TmVirtualClock
+);
+
+WINBOOL WINAPI RollbackTransactionAsync(
+  HANDLE TransactionHandle
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_KTMW32*/

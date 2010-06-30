@@ -48,5 +48,16 @@ WINBOOL WINAPI LogTailAdvanceFailure(
   DWORD dwReason
 );
 
+WINBOOL WINAPI RegisterForLogWriteNotification(
+  HANDLE hLog,
+  ULONG cbThreshold,
+  WINBOOL fEnable
+);
+
+WINBOOL WINAPI RemoveLogPolicy(
+  HANDLE hLog,
+  CLFS_MANAGEMENT_POLICY_TYPE ePolicyType
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_CLFSMGMTW32*/

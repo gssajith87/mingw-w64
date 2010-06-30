@@ -973,6 +973,31 @@ extern "C" {
 #define RasFreeEapUserIdentity __MINGW_NAME_AW(RasFreeEapUserIdentity)
 #define RasDeleteSubEntry __MINGW_NAME_AW(RasDeleteSubEntry)
 
+#if (_WIN32_WINNT >= 0x0600)
+
+typedef struct _tagRasNapState {
+  DWORD          dwSize;
+  DWORD          dwFlags;
+  IsolationState isolationState;
+  ProbationTime  probationTime;
+} RASNAPSTATE, *LPRASNAPSTATE;
+
+typedef struct _RASPPPIPV6 {
+  DWORD dwSize;
+  DWORD dwError;
+  BYTE  bLocalInterfaceIdentifier[8];
+  BYTE  bPeerInterfaceIdentifier[8];
+  BYTE  bLocalCompressionProtocol[2];
+  BYTE  bPeerCompressionProtocol[2];
+} RASPPPIPV6, *LPRASPPPIPV6;
+
+DWORD rasgetnapstatus(
+  HRASCONN hRasConn,
+  LPRASNAPSTATE pNapState
+);
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif

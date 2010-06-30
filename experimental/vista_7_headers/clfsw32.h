@@ -218,5 +218,72 @@ WINBOOL WINAPI QueryLogPolicy(
   PULONG pcbPolicyBuffer
 );
 
+WINBOOL WINAPI ReadLogArchiveMetadata(
+  CLFS_LOG_ARCHIVE_CONTEXT pvArchiveContext,
+  ULONG cbOffset,
+  ULONG cbBytesToRead,
+  PBYTE pbReadBuffer,
+  PULONG pcbBytesRead
+);
+
+WINBOOL WINAPI ReadLogRestartArea(
+  PVOID pvMarshal,
+  PVOID *ppvRestartBuffer,
+  PULONG pcbRestartBuffer,
+  PCLFS_LSN plsn,
+  PVOID *ppvContext,
+  LPOVERLAPPED pOverlapped
+);
+
+WINBOOL WINAPI ReadPreviousLogRestartArea(
+  PVOID pvReadContext,
+  PVOID *ppvRestartBuffer,
+  PULONG pcbRestartBuffer,
+  PCLFS_LSN plsnRestart,
+  LPOVERLAPPED pOverlapped
+);
+
+WINBOOL WINAPI RemoveLogContainer(
+  HANDLE hLog,
+  LPWSTR pwszContainerPath,
+  WINBOOL fForce,
+  LPVOID pReserved
+);
+
+WINBOOL WINAPI RemoveLogContainerSet(
+  HANDLE hLog,
+  USHORT cContainers,
+  LPWSTR *rgwszContainerPath,
+  WINBOOL fForce,
+  LPVOID pReserved
+);
+
+WINBOOL WINAPI ReserveAndAppendLog(
+  PVOID pvMarshal,
+  PCLFS_WRITE_ENTRY rgWriteEntries,
+  ULONG cWriteEntries,
+  PCLFS_LSN plsnUndoNext,
+  PCLFS_LSN plsnPrevious,
+  ULONG cReserveRecords,
+  LONGLONG rgcbReservation[],
+  ULONG fFlags,
+  PCLFS_LSN plsn,
+  LPOVERLAPPED pOverlapped
+);
+
+WINBOOL WINAPI ReserveAndAppendLogAligned(
+  PVOID pvMarshal,
+  PCLFS_WRITE_ENTRY rgWriteEntries,
+  ULONG cWriteEntries,
+  ULONG cbEntryAlignment,
+  PCLFS_LSN plsnUndoNext,
+  PCLFS_LSN plsnPrevious,
+  ULONG cReserveRecords,
+  LONGLONG rgcbReservation[],
+  ULONG fFlags,
+  PCLFS_LSN plsn,
+  LPOVERLAPPED overlapped
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_CLFSW32*/

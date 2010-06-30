@@ -47,5 +47,10 @@ typedef enum _FolderActionSteps {
   plaDeleteReport   = 0x10 
 } FolderActionSteps;
 
+typedef enum _ResourcePolicy {
+  plaDeleteLargest   = 0,
+  plaDeleteOldest    = 1 
+} ResourcePolicy;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_PLA*/

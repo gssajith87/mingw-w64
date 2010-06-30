@@ -9,6 +9,7 @@
 typedef struct IMFAsyncCallback IMFAsyncCallback;
 typedef struct IMFMediaEvent IMFMediaEvent;
 typedef struct IMFPresentationDescriptor IMFPresentationDescriptor;
+typedef struct IPropertyStore IPropertyStore;
 typedef LPVOID MediaEventType;
 typedef struct PROPVARIANT *REFPROPVARIANT;
 __MINGW_EXTENSION typedef unsigned __int64 QWORD;
@@ -294,6 +295,28 @@ typedef struct _MFVIDEOFORMAT {
 #define MFBYTESTREAM_HAS_SLOW_SEEK              0x00000100
 #define MFBYTESTREAM_IS_PARTIALLY_DOWNLOADED    0x00000200
 #define MFBYTESTREAM_SHARE_WRITE                0x00000400
+
+#undef  INTERFACE
+#define INTERFACE IMFRemoteAsyncCallback
+DECLARE_INTERFACE_(IMFRemoteAsyncCallback,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFRemoteAsyncCallback methods */
+    STDMETHOD(Invoke)(THIS) PURE; /*Not used by applications.*/
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFRemoteAsyncCallback_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFRemoteAsyncCallback_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFRemoteAsyncCallback_Release(This) (This)->pVtbl->Release(This)
+#endif /*COBJMACROS*/
 
 #undef  INTERFACE
 #define INTERFACE IMFAsyncResult
@@ -1161,6 +1184,147 @@ HRESULT WINAPI MFDeserializeAttributesFromStream(IMFAttributes *pAttr,DWORD dwOp
 HRESULT WINAPI MFDeserializePresentationDescriptor(DWORD cbData,BYTE *pbData,IMFPresentationDescriptor **ppPD);
 HRESULT WINAPI MFGetAttribute2UINT32asUINT64(IMFAttributes *pAttributes,REFGUID guidKey,UINT32 *punHigh32,UINT32 *punLow32);
 HRESULT WINAPI MFSerializeAttributesToStream(IMFAttributes *pAttr,DWORD dwOptions,IStream *pStm);
+
+/*[call_as(BeginCreateObjectFromByteStream)]*/
+HRESULT WINAPI RemoteBeginCreateObjectFromByteStream(
+    IMFByteStream* pByteStream,
+    LPCWSTR pwszURL,
+    IPropertyStore *pProps,
+    DWORD dwFlags,
+    IMFRemoteAsyncCallback *pCallback
+);
+
+/*[call_as(BeginCreateObjectFromURL)]*/
+HRESULT WINAPI RemoteBeginCreateObjectFromURL(
+    LPCWSTR pwszURL,
+    DWORD dwFlags,
+    IPropertyStore *pProps,
+    IMFRemoteAsyncCallback *pCallback
+);
+
+/*[call_as(BeginEnableContent)]*/
+HRESULT WINAPI RemoteBeginEnableContent(
+    REFCLSID clsidType,
+    BYTE *pbData,
+    DWORD cbData,
+    IMFRemoteAsyncCallback *pCallback
+);
+
+/*[call_as(BeginGetEvent)]*/
+HRESULT WINAPI RemoteBeginGetEvent(
+    IMFRemoteAsyncCallback* pCallback
+);
+
+/*[call_as(BeginRegisterPlatformWorkQueueWithMMCSS)]*/
+HRESULT WINAPI RemoteBeginRegisterPlatformWorkQueueWithMMCSS(
+    DWORD dwPlatformWorkQueue,
+    LPCWSTR wszClass,
+    DWORD dwTaskId,
+    IMFRemoteAsyncCallback *pCallback
+);
+
+/*[call_as(BeginRegisterTopologyWorkQueuesWithMMCSS)]*/
+HRESULT WINAPI RemoteBeginRegisterTopologyWorkQueuesWithMMCSS(
+    IMFRemoteAsyncCallback *pCallback
+);
+
+/*[call_as(BeginUnregisterPlatformWorkQueueWithMMCSS)]*/
+HRESULT WINAPI RemoteBeginUnregisterPlatformWorkQueueWithMMCSS(
+    DWORD dwPlatformWorkQueue,
+    IMFRemoteAsyncCallback *pCallback
+);
+
+/*[call_as(BeginUnregisterTopologyWorkQueuesWithMMCSS)]*/
+HRESULT WINAPI RemoteBeginUnregisterTopologyWorkQueuesWithMMCSS(
+    IMFRemoteAsyncCallback *pCallback
+);
+
+/*[call_as(CreateObjectByCLSID)]*/
+HRESULT WINAPI RemoteCreateObjectByCLSID( 
+    REFCLSID clsid,
+    BYTE *pbData, 
+    DWORD cbData, 
+    REFIID riid,
+    void **ppv
+);
+
+/*[call_as(CreatePresentationDescriptor)]*/
+HRESULT WINAPI RemoteCreatePresentationDescriptor(
+    DWORD *pcbPD,
+    BYTE **pbPD,
+    IMFPresentationDescriptor **ppRemotePD
+);
+
+/*call_as(EndCreateObjectFromByteStream)]*/
+HRESULT WINAPI RemoteEndCreateObjectFromByteStream(
+    IUnknown *pResult,
+    MF_OBJECT_TYPE *pObjectType,
+    IUnknown **ppObject
+);
+
+/*[call_as(EndCreateObjectFromURL)]*/
+HRESULT WINAPI RemoteEndCreateObjectFromURL(
+    IUnknown *pResult,
+    MF_OBJECT_TYPE *pObjectType,
+    IUnknown **ppObject
+);
+
+/*[call_as(EndEnableContent)]*/
+HRESULT WINAPI RemoteEndEnableContent(
+    IUnknown *pResult
+);
+
+/*[call_as(EndGetEvent)]*/
+HRESULT WINAPI RemoteEndGetEvent(
+    IUnknown *pResult,
+    DWORD *pcbEvent,
+    BYTE **ppbEvent
+);
+
+/*[call_as(EndRegisterPlatformWorkQueueWithMMCSS)]*/
+HRESULT WINAPI RemoteEndRegisterPlatformWorkQueueWithMMCSS(
+    IUnknown *pResult,
+    DWORD *pdwTaskId
+);
+
+/*[call_as(EndRegisterTopologyWorkQueuesWithMMCSS)]*/
+HRESULT WINAPI RemoteEndRegisterTopologyWorkQueuesWithMMCSS(
+    IUnknown *pResult
+);
+
+/*[call_as(EndUnregisterPlatformWorkQueueWithMMCSS)]*/
+HRESULT WINAPI RemoteEndUnregisterPlatformWorkQueueWithMMCSS(
+    IUnknown *pResult
+);
+
+/*[call_as(EndUnregisterTopologyWorkQueuesWithMMCSS)]*/
+HRESULT WINAPI RemoteEndUnregisterTopologyWorkQueuesWithMMCSS(
+    IUnknown *pResult
+);
+
+/*[call_as(GetCurrentMediaType)]*/
+HRESULT WINAPI RemoteGetCurrentMediaType(
+    BYTE **ppbData,
+    DWORD *pcbData
+);
+
+/*[call_as(GetInputPrefType)]*/
+HRESULT WINAPI RemoteGetInputPrefType(
+    DWORD dwInputIndex,
+    DWORD *pcbData,
+    BYTE **ppbData
+);
+
+/*call_as(GetOutputPrefType)]*/
+HRESULT WINAPI RemoteGetOutputPrefType(
+    DWORD dwOutputIndex,
+    DWORD *pcbData,
+    BYTE **ppbData
+);
+
+/*[call_as(RequestSample)]*/
+HRESULT WINAPI RemoteRequestSample();
+
 #if (_WIN32_WINNT >= 0x0601)
 HRESULT WINAPI MFGetPluginControl(IMFPluginControl **ppPluginControl);
 #endif /*(_WIN32_WINNT >= 0x0601)*/

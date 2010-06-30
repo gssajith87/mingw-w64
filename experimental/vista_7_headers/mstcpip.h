@@ -59,7 +59,76 @@ LONG NTAPI RtlIpv6AddressToStringExW(
   PULONG AddressStringLength
 );
 
+#define RtlIpv4AddressToString __MINGW_NAME_AW(RtlIpv4AddressToString)
+LPTSTR NTAPI RtlIpv4AddressToStringA(
+  const IN_ADDR *Addr,
+  LPSTR S
+);
 
+LPTSTR NTAPI RtlIpv4AddressToStringW(
+  const IN_ADDR *Addr,
+  LPWSTR S
+);
+
+#define RtlIpv4AddressToStringEx __MINGW_NAME_AW(RtlIpv4AddressToStringEx)
+LONG NTAPI RtlIpv4AddressToStringExA(
+  const IN_ADDR *Address,
+  USHORT Port,
+  LPSTR AddressString,
+  PULONG AddressStringLength
+);
+
+LONG NTAPI RtlIpv4AddressToStringExW(
+  const IN_ADDR *Address,
+  USHORT Port,
+  LPWSTR AddressString,
+  PULONG AddressStringLength
+);
+
+#define RtlIpv4StringToAddress __MINGW_NAME_AW(RtlIpv4StringToAddress)
+LONG NTAPI RtlIpv4StringToAddressA(
+  PCSTR S,
+  BOOLEAN Strict,
+  LPSTR *Terminator,
+  IN_ADDR *Addr
+);
+
+LONG NTAPI RtlIpv4StringToAddressW(
+  PCWSTR S,
+  BOOLEAN Strict,
+  LPWSTR *Terminator,
+  IN_ADDR *Addr
+);
+
+#define RtlIpv4StringToAddressEx __MINGW_NAME_AW(RtlIpv4StringToAddressEx)
+LONG NTAPI RtlIpv4StringToAddressExA(
+  PCSTR AddressString,
+  BOOLEAN Strict,
+  IN_ADDR *Address,
+  PUSHORT Port
+);
+
+LONG NTAPI RtlIpv4StringToAddressExW(
+  PCWSTR AddressString,
+  BOOLEAN Strict,
+  IN_ADDR *Address,
+  PUSHORT Port
+);
+
+#define RtlIpv6StringToAddressEx __MINGW_NAME_AW(RtlIpv6StringToAddressEx)
+LONG NTAPI RtlIpv6StringToAddressExA(
+  PCSTR AddressString,
+  IN6_ADDR *Address,
+  PULONG ScopeId,
+  PUSHORT Port
+);
+
+LONG NTAPI RtlIpv6StringToAddressExW(
+  PCSTR AddressString,
+  IN6_ADDR *Address,
+  PULONG ScopeId,
+  PUSHORT Port
+);
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /* _MSTCPIP_ */

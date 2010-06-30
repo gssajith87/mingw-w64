@@ -3646,6 +3646,30 @@ WINADVAPI VOID WINAPI QuerySecurityAccessMask(
   LPDWORD DesiredAccess
 );
 
+WINADVAPI VOID WINAPI ReleaseMutexWhenCallbackReturns(
+  PTP_CALLBACK_INSTANCE pci,
+  HANDLE mut
+);
+
+#define RemoveDirectoryTransacted __MINGW_NAME_AW(RemoveDirectoryTransacted)
+
+WINBASEAPI WINBOOL WINAPI RemoveDirectoryTransactedA(
+  LPCSTR lpPathName,
+  HANDLE hTransaction
+);
+
+WINBASEAPI WINBOOL WINAPI RemoveDirectoryTransactedW(
+  LPCWSTR lpPathName,
+  HANDLE hTransaction
+);
+
+WINBASEAPI HANDLE WINAPI ReOpenFile(
+  HANDLE hOriginalFile,
+  DWORD dwDesiredAccess,
+  DWORD dwShareMode,
+  DWORD dwFlags
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #if (_WIN32_WINNT >= 0x0601)

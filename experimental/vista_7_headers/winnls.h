@@ -1024,6 +1024,11 @@ WINBASEAPI int WINAPI NormalizeString(
   int cwDstLength
 );
 
+WINBASEAPI WINBOOL WINAPI RtlIsValidLocaleName(
+  LPCWSTR LocaleName,
+  ULONG Flags
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif
 

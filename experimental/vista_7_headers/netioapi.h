@@ -560,5 +560,10 @@ NETIOAPI_API NotifyRouteChange2(
   HANDLE *NotificationHandle
 );
 
+NETIOAPI_API ResolveIpNetEntry2(
+  PMIB_IPNET_ROW2 Row,
+  const SOCKADDR_INET *SourceAddress
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_NETIOAPI*/

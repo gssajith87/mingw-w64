@@ -239,6 +239,12 @@ DWORD WINAPI NotifySecurityHealthChange(
   PULONG SecurityHealthFlags
 );
 
+ULONG WINAPI ResolveNeighbor(
+  SOCKADDR *NetworkAddress,
+  PVOID PhysicalAddress,
+  PULONG PhysicalAddressLength
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus

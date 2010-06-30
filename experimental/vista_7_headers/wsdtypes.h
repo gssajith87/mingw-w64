@@ -130,5 +130,99 @@ typedef struct _WSD_SOAP_FAULT {
   WSDXML_ELEMENT        *Detail;
 } WSD_SOAP_FAULT;
 
+typedef struct _REQUESTBODY_GetStatus {
+  WSDXML_ELEMENT *Any;
+} REQUESTBODY_GetStatus;
+
+typedef struct _WSD_DURATION {
+  WINBOOL isPositive;
+  ULONG year;
+  ULONG month;
+  ULONG day;
+  ULONG hour;
+  ULONG minute;
+  ULONG second;
+  ULONG millisecond;
+} WSD_DURATION;
+
+typedef struct _WSD_DATETIME {
+  WINBOOL isPositive;
+  ULONG year;
+  UCHAR month;
+  UCHAR day;
+  UCHAR hour;
+  UCHAR minute;
+  UCHAR second;
+  UINT  millisecond;
+  WINBOOL TZIsLocal;
+  WINBOOL TZIsPositive;
+  UCHAR TZHour;
+  UCHAR TZMinute;
+} WSD_DATETIME;
+
+typedef struct _WSD_EVENTING_EXPIRES {
+  WSD_DURATION *Duration;
+  WSD_DATETIME *DateTime;
+} WSD_EVENTING_EXPIRES;
+
+typedef struct _REQUESTBODY_Renew {
+  WSD_EVENTING_EXPIRES *Expires;
+  WSDXML_ELEMENT       *Any;
+} REQUESTBODY_Renew;
+
+typedef struct _WSD_EVENTING_DELIVERY_MODE {
+  const WCHAR *Mode;
+  void        *Data;
+} WSD_EVENTING_DELIVERY_MODE;
+
+typedef struct _WSD_EVENTING_FILTER {
+  const WCHAR *Dialect;
+  void        *Data;
+} WSD_EVENTING_FILTER;
+
+typedef struct _REQUESTBODY_Subscribe {
+  WSD_ENDPOINT_REFERENCE     *EndTo;
+  WSD_EVENTING_DELIVERY_MODE *Delivery;
+  WSD_EVENTING_EXPIRES       *Expires;
+  WSD_EVENTING_FILTER        *Filter;
+  WSDXML_ELEMENT             *Any;
+} REQUESTBODY_Subscribe;
+
+typedef struct _REQUESTBODY_Unsubscribe {
+  WSDXML_ELEMENT *any;
+} REQUESTBODY_Unsubscribe;
+
+typedef struct _WSD_METADATA_SECTION_LIST {
+  WSD_METADATA_SECTION_LIST *Next;
+  WSD_METADATA_SECTION      *Element;
+} WSD_METADATA_SECTION_LIST;
+
+typedef struct _RESPONSEBODY_GetMetadata {
+  WSD_METADATA_SECTION_LIST *Metadata;
+} RESPONSEBODY_GetMetadata;
+
+typedef struct _RESPONSEBODY_GetStatus {
+  WSD_EVENTING_EXPIRES *expires;
+  WSDXML_ELEMENT       *any;
+} RESPONSEBODY_GetStatus;
+
+typedef struct _RESPONSEBODY_Renew {
+  WSD_EVENTING_EXPIRES *expires;
+  WSDXML_ELEMENT       *Any;
+} RESPONSEBODY_Renew;
+
+typedef struct _RESPONSEBODY_Subscribe {
+  WSD_ENDPOINT_REFERENCE *SubscriptionManager;
+  WSD_EVENTING_EXPIRES   *expires;
+  WSDXML_ELEMENT         *Any;
+} RESPONSEBODY_Subscribe;
+
+typedef struct _RESPONSEBODY_SubscriptionEnd {
+  WSD_ENDPOINT_REFERENCE *SubscriptionManager;
+  const WCHAR            *Status;
+  WSD_LOCALIZED_STRING   *Reason;
+  WSDXML_ELEMENT         *Any;
+} RESPONSEBODY_SubscriptionEnd;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WSDTYPES*/

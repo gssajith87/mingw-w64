@@ -1,6 +1,7 @@
 #ifndef _INC_ISCSIDSC
 #define _INC_ISCSIDSC
 #include <windows.h>
+#include <ntddscsi.h>
 #if (_WIN32_WINNT >= 0x0600)
 
   typedef PVOID ISCSI_UNIQUE_SESSION_ID;
@@ -93,23 +94,23 @@ typedef enum _TARGETPROTOCOLTYPE {
 
 typedef enum _IKE_AUTHENTICATION_METHOD {
   IKE_AUTHENTICATION_PRESHARED_KEY_METHOD    = 1 
-} IKE_AUTHENTICATION_METHOD, *PIKE_AUTHENTICATION_METHOD
+} IKE_AUTHENTICATION_METHOD, *PIKE_AUTHENTICATION_METHOD;
 
-  typedef struct _ISCSI_LOGIN_OPTIONS {
-    ULONG                              Version;
-    ISCSI_LOGIN_OPTIONS_INFO_SPECIFIED InformationSpecified;
-    ISCSI_LOGIN_FLAGS                  LoginFlags;
-    ISCSI_AUTH_TYPES                   AuthType;
-    ISCSI_DIGEST_TYPES                 HeaderDigest;
-    ISCSI_DIGEST_TYPES                 DataDigest;
-    ULONG                              MaximumConnections;
-    ULONG                              DefaultTime2Wait;
-    ULONG                              DefaultTime2Retain;
-    ULONG                              UsernameLength;
-    ULONG                              PasswordLength;
-    PUCHAR                             Username;
-    PUCHAR                             Password;
-  } ISCSI_LOGIN_OPTIONS, *PISCSI_LOGIN_OPTIONS;
+typedef struct _ISCSI_LOGIN_OPTIONS {
+  ULONG                              Version;
+  ISCSI_LOGIN_OPTIONS_INFO_SPECIFIED InformationSpecified;
+  ISCSI_LOGIN_FLAGS                  LoginFlags;
+  ISCSI_AUTH_TYPES                   AuthType;
+  ISCSI_DIGEST_TYPES                 HeaderDigest;
+  ISCSI_DIGEST_TYPES                 DataDigest;
+  ULONG                              MaximumConnections;
+  ULONG                              DefaultTime2Wait;
+  ULONG                              DefaultTime2Retain;
+  ULONG                              UsernameLength;
+  ULONG                              PasswordLength;
+  PUCHAR                             Username;
+  PUCHAR                             Password;
+} ISCSI_LOGIN_OPTIONS, *PISCSI_LOGIN_OPTIONS, *PSCSI_LOGIN_OPTIONS, *PISCI_LOGIN_OPTIONS;
 
 typedef struct _ISCSI_TARGET_PORTALA {
   CHAR  SymbolicName[MAX_ISCSI_PORTAL_NAME_LEN];
@@ -132,6 +133,11 @@ typedef struct _ISCSI_TARGET_PORTAL_GROUPW {
   ULONG               Count;
   ISCSI_TARGET_PORTALW Portals[1];
 } ISCSI_TARGET_PORTAL_GROUPW, *PISCSI_TARGET_PORTAL_GROUPW;
+
+typedef struct _ISCSI_LUN_LIST {
+  ULONG     OSLUN;
+  ULONGLONG TargetLUN;
+} SCSI_LUN_LIST, *PSCSI_LUN_LIST;
 
 typedef struct _ISCSI_TARGET_MAPPINGA {
   CHAR                    InitiatorName[MAX_ISCSI_HBANAME_LEN];
@@ -243,21 +249,24 @@ typedef struct _ISCSI_VERSION_INFO {
   ULONG BuildNumber;
 } ISCSI_VERSION_INFO, *PISCSI_VERSION_INFO;
 
-typedef struct _ISCSI_LOGIN_OPTIONS {
-  ULONG                              Version;
-  ISCSI_LOGIN_OPTIONS_INFO_SPECIFIED InformationSpecified;
-  ISCSI_LOGIN_FLAGS                  LoginFlags;
-  ISCSI_AUTH_TYPES                   AuthType;
-  ISCSI_DIGEST_TYPES                 HeaderDigest;
-  ISCSI_DIGEST_TYPES                 DataDigest;
-  ULONG                              MaximumConnections;
-  ULONG                              DefaultTime2Wait;
-  ULONG                              DefaultTime2Retain;
-  ULONG                              UsernameLength;
-  ULONG                              PasswordLength;
-  PUCHAR                             Username;
-  PUCHAR                             Password;
-} ISCSI_LOGIN_OPTIONS, *PISCSI_LOGIN_OPTIONS;
+typedef struct _ISCSI_TARGET_PORTAL_INFOA {
+  CHAR   InitiatorName[MAX_ISCSI_HBANAME_LEN];
+  ULONG  InitiatorPortNumber;
+  CHAR   SymbolicName[MAX_ISCSI_PORTAL_NAME_LEN];
+  TCHAR  Address[MAX_ISCSI_PORTAL_ADDRESS_LEN];
+  USHORT Socket;
+} ISCSI_TARGET_PORTAL_INFOA, *PISCSI_TARGET_PORTAL_INFOA, PISCSI_TARGET_PORTAL_INFO_EXA;
+/*MS links PISCSI_TARGET_PORTAL_INFO_EX to PISCSI_TARGET_PORTAL_INFO, see:
+  http://msdn.microsoft.com/en-us/library/bb870838%28v=VS.85%29.aspx
+*/
+
+typedef struct _ISCSI_TARGET_PORTAL_INFOW {
+  WCHAR  InitiatorName[MAX_ISCSI_HBANAME_LEN];
+  ULONG  InitiatorPortNumber;
+  WCHAR  SymbolicName[MAX_ISCSI_PORTAL_NAME_LEN];
+  WCHAR  Address[MAX_ISCSI_PORTAL_ADDRESS_LEN];
+  USHORT Socket;
+} ISCSI_TARGET_PORTAL_INFOW, *PISCSI_TARGET_PORTAL_INFOW, PISCSI_TARGET_PORTAL_INFO_EXW;
 
 __MINGW_TYPEDEF_AW(ISCSI_CONNECTION_INFO)
 __MINGW_TYPEDEF_AW(PISCSI_CONNECTION_INFO)
@@ -269,6 +278,11 @@ __MINGW_TYPEDEF_AW(ISCSI_TARGET_PORTAL)
 __MINGW_TYPEDEF_AW(PISCSI_TARGET_PORTAL)
 __MINGW_TYPEDEF_AW(ISCSI_TARGET_MAPPING)
 __MINGW_TYPEDEF_AW(PISCSI_TARGET_MAPPING)
+__MINGW_TYPEDEF_AW(ISCSI_TARGET_PORTAL_INFO)
+__MINGW_TYPEDEF_AW(PISCSI_TARGET_PORTAL_INFO)
+__MINGW_TYPEDEF_AW(PISCSI_TARGET_PORTAL_INFO_EX)
+
+typedef DWORD ISCSI_TARGET_FLAGS; /*32bit, guessed*/
 
   HRESULT WINAPI AddIScsiConnectionA(PISCSI_UNIQUE_SESSION_ID UniqueSessionId,PVOID Reserved,ULONG InitiatorPortNumber,PISCSI_TARGET_PORTALA TargetPortal,ISCSI_SECURITY_FLAGS SecurityFlags,PSCSI_LOGIN_OPTIONS LoginOptions,ULONG KeySize,PCHAR Key,PISCSI_UNIQUE_CONNECTION_ID ConnectionId);
   HRESULT WINAPI AddIScsiConnectionW(PISCSI_UNIQUE_SESSION_ID UniqueSessionId,PVOID Reserved,ULONG InitiatorPortNumber,PISCSI_TARGET_PORTALW TargetPortal,ISCSI_SECURITY_FLAGS SecurityFlags,PSCSI_LOGIN_OPTIONS LoginOptions,ULONG KeySize,PCHAR Key,PISCSI_UNIQUE_CONNECTION_ID ConnectionId);
@@ -305,11 +319,6 @@ __MINGW_TYPEDEF_AW(PISCSI_TARGET_MAPPING)
   HRESULT WINAPI RemoveRadiusServerW(PWCHAR Address);
 
   HRESULT WINAPI SetupPersistentIScsiDevices(void);
-
-  HRESULT WINAPI ReportPersistentiScsiDevices(PULONG BufferSizeInChar,PCHAR Buffer);
-  HRESULT WINAPI ReportPersistentiScsiDevices(PULONG BufferSizeInChar,PWCHAR Buffer);
-
-  HRESULT WINAPI ReportIScsiPersistentLogins(ULONG *Count,PPERSISTENT_ISCSI_LOGIN_INFO PersistentLoginInfo,PULONG BufferSizeInBytes);
 
   HRESULT WINAPI SendScsiInquiry(PISCSI_UNIQUE_SESSION_ID *UniqueSessionId,ULONGLONG Lun,UCHAR EvpdCmddt,UCHAR PageCode,PUCHAR *ScsiStatus,PULONG *ReponseSize,PUCHAR ReponseBuffer,PULONG *SenseSize,PUCHAR SenseBuffer);
 
@@ -399,11 +408,11 @@ HRESULT WINAPI GetIScsiVersionInformation(
 HRESULT WINAPI LoginIScsiTargetA(
   PCHAR TargetName,
   BOOLEAN IsInformationalSession,
-  PTCHAR InitiatorName,
+  PCHAR InitiatorName,
   ULONG InitiatorPortNumber,
-  PISCSI_TARGET_PORTAL TargetPortal,
+  PISCSI_TARGET_PORTALA TargetPortal,
   ISCSI_SECURITY_FLAGS SecurityFlags,
-  PISCSI_TARGET_MAPPING Mappings,
+  PISCSI_TARGET_MAPPINGA Mappings,
   PISCSI_LOGIN_OPTIONS LoginOptions,
   ULONG KeySize,
   PCHAR Key,
@@ -412,14 +421,14 @@ HRESULT WINAPI LoginIScsiTargetA(
   PISCSI_UNIQUE_CONNECTION_ID UniqueConnectionId
 );
 
-HRESULT WINAPI LoginIScsiTargetA(
+HRESULT WINAPI LoginIScsiTargetW(
   PWCHAR TargetName,
   BOOLEAN IsInformationalSession,
-  PTCHAR InitiatorName,
+  PWCHAR InitiatorName,
   ULONG InitiatorPortNumber,
-  PISCSI_TARGET_PORTAL TargetPortal,
+  PISCSI_TARGET_PORTALW TargetPortal,
   ISCSI_SECURITY_FLAGS SecurityFlags,
-  PISCSI_TARGET_MAPPING Mappings,
+  PISCSI_TARGET_MAPPINGW Mappings,
   PISCSI_LOGIN_OPTIONS LoginOptions,
   ULONG KeySize,
   PCHAR Key,
@@ -431,6 +440,229 @@ HRESULT WINAPI LoginIScsiTargetA(
 HRESULT WINAPI LogoutIScsiTarget(
   PISCSI_UNIQUE_SESSION_ID UniqueSessionId
 );
+
+HRESULT WINAPI RefreshIScsiSendTargetPortalA(
+  PCHAR InitiatorInstance,
+  ULONG InitiatorPortNumber,
+  PISCSI_TARGET_PORTALA Portal
+);
+
+HRESULT WINAPI RefreshIScsiSendTargetPortalW(
+  PWCHAR InitiatorInstance,
+  ULONG InitiatorPortNumber,
+  PISCSI_TARGET_PORTALW Portal
+);
+
+#define RefreshIScsiSendTargetPortal __MINGW_NAME_AW(RefreshIScsiSendTargetPortal)
+
+HRESULT WINAPI RefreshISNSServerA(
+  PCHAR Address
+);
+
+HRESULT WINAPI RefreshISNSServerW(
+  PWCHAR Address
+);
+
+#define RefreshISNSServer __MINGW_NAME_AW(RefreshISNSServer)
+
+HRESULT WINAPI RemoveIScsiConnection(
+  PISCSI_UNIQUE_SESSION_ID UniqueSessionId,
+  PISCSI_UNIQUE_CONNECTION_ID UniqueConnectionId
+);
+
+HRESULT WINAPI RemoveIScsiPersistentTargetA(
+  PCHAR InitiatorInstance,
+  ULONG InitiatorPortNumber,
+  PCHAR TargetName,
+  PISCSI_TARGET_PORTALA Portal
+);
+
+HRESULT WINAPI RemoveIScsiPersistentTargetW(
+  PWCHAR InitiatorInstance,
+  ULONG InitiatorPortNumber,
+  PWCHAR TargetName,
+  PISCSI_TARGET_PORTALW Portal
+);
+
+#define RemoveIScsiPersistentTarget __MINGW_NAME_AW(RemoveIScsiPersistentTarget)
+
+HRESULT WINAPI RemoveIScsiSendTargetPortalA(
+  PCHAR InitiatorInstance,
+  ULONG InitiatorPortNumber,
+  PISCSI_TARGET_PORTALA Portal
+);
+
+HRESULT WINAPI RemoveIScsiSendTargetPortalW(
+  PWCHAR InitiatorInstance,
+  ULONG InitiatorPortNumber,
+  PISCSI_TARGET_PORTALW Portal
+);
+
+#define RemoveIScsiSendTargetPortal __MINGW_NAME_AW(RemoveIScsiSendTargetPortal)
+
+HRESULT WINAPI RemoveIScsiStaticTargetA(
+  PCHAR TargetName
+);
+
+HRESULT WINAPI RemoveIScsiStaticTargetW(
+  PWCHAR TargetName
+);
+#define RemoveIScsiStaticTarget __MINGW_NAME_AW(RemoveIScsiStaticTarget)
+
+HRESULT WINAPI RemoveISNSServerA(
+  PCHAR Address
+);
+
+HRESULT WINAPI RemoveISNSServerW(
+  PWCHAR Address
+);
+#define RemoveISNSServer __MINGW_NAME_AW(RemoveISNSServer)
+
+HRESULT WINAPI RemovePersistentIScsiDeviceA(
+  PCHAR VolumePath
+);
+
+HRESULT WINAPI RemovePersistentIScsiDeviceW(
+  PWCHAR VolumePath
+);
+#define RemovePersistentIScsiDevice __MINGW_NAME_AW(RemovePersistentIScsiDevice)
+
+HRESULT WINAPI RemoveRadiusServerA(
+  PCHAR Address
+);
+
+HRESULT WINAPI RemoveRadiusServerW(
+  PWCHAR Address
+);
+#define RemoveRadiusServer __MINGW_NAME_AW(RemoveRadiusServer)
+
+HRESULT WINAPI ReportIScsiInitiatorListA(
+  ULONG *BufferSize,
+  PCHAR Buffer
+);
+
+HRESULT WINAPI ReportIScsiInitiatorListW(
+  ULONG *BufferSize,
+  PWCHAR Buffer
+);
+
+HRESULT WINAPI ReportIScsiPersistentLoginsA(
+  ULONG *Count,
+  PPERSISTENT_ISCSI_LOGIN_INFOA PersistentLoginInfo,
+  PULONG BufferSizeInBytes
+);
+
+HRESULT WINAPI ReportIScsiPersistentLoginsW(
+  ULONG *Count,
+  PPERSISTENT_ISCSI_LOGIN_INFOW PersistentLoginInfo,
+  PULONG BufferSizeInBytes
+);
+#define ReportIScsiPersistentLogins __MINGW_NAME_AW(ReportIScsiPersistentLogins)
+
+HRESULT WINAPI ReportIScsiSendTargetPortalsA(
+  PULONG PortalCount,
+  PISCSI_TARGET_PORTAL_INFOA PortalInfo
+);
+
+HRESULT WINAPI ReportIScsiSendTargetPortalsW(
+  PULONG PortalCount,
+  PISCSI_TARGET_PORTAL_INFOA PortalInfo
+);
+
+#define ReportIScsiSendTargetPortals __MINGW_NAME_AW(ReportIScsiSendTargetPortals)
+
+HRESULT WINAPI ReportActiveIScsiTargetMappingsA(
+  PULONG BufferSize,
+  PULONG MappingCount,
+  PISCSI_TARGET_MAPPINGA Mappings
+);
+
+HRESULT WINAPI ReportActiveIScsiTargetMappingsW(
+  PULONG BufferSize,
+  PULONG MappingCount,
+  PISCSI_TARGET_MAPPINGW Mappings
+);
+#define ReportActiveIScsiTargetMappings __MINGW_NAME_AW(ReportActiveIScsiTargetMappings)
+
+HRESULT WINAPI ReportIScsiSendTargetPortalsExA(
+  PULONG PortalCount,
+  PULONG PortalInfoSize,
+  PISCSI_TARGET_PORTAL_INFO_EXA PortalInfo
+);
+
+HRESULT WINAPI ReportIScsiSendTargetPortalsExW(
+  PULONG PortalCount,
+  PULONG PortalInfoSize,
+  PISCSI_TARGET_PORTAL_INFO_EXW PortalInfo
+);
+
+#define ReportIScsiSendTargetPortalsEx __MINGW_NAME_AW(ReportIScsiSendTargetPortalsEx)
+
+HRESULT WINAPI ReportIScsiTargetPortalsA(
+  PCHAR  InitiatorName,
+  PCHAR  TargetName,
+  PUSHORT TargetPortalTag,
+  PULONG ElementCount,
+  PISCSI_TARGET_PORTALA Portals
+);
+
+HRESULT WINAPI ReportIScsiTargetPortalsW(
+  PWCHAR InitiatorName,
+  PWCHAR TargetName,
+  PUSHORT TargetPortalTag,
+  PULONG ElementCount,
+  PISCSI_TARGET_PORTALW Portals
+);
+
+#define ReportIScsiTargetPortals __MINGW_NAME_AW(ReportIScsiTargetPortals)
+
+HRESULT WINAPI ReportIScsiTargetsA(
+  BOOLEAN ForceUpdate,
+  PULONG BufferSize,
+  PCHAR  Buffer
+);
+
+HRESULT WINAPI ReportIScsiTargetsW(
+  BOOLEAN ForceUpdate,
+  PULONG BufferSize,
+  PWCHAR Buffer
+);
+#define ReportIScsiTargets __MINGW_NAME_AW(ReportIScsiTargets)
+
+HRESULT WINAPI ReportISNSServerListA(
+  PULONG BufferSizeInChar,
+  PCHAR  Buffer
+);
+
+HRESULT WINAPI ReportISNSServerListW(
+  PULONG BufferSizeInChar,
+  PWCHAR Buffer
+);
+
+#define ReportISNSServerList __MINGW_NAME_AW(ReportISNSServerList)
+
+HRESULT WINAPI ReportPersistentiScsiDevicesA(
+  PULONG BufferSizeInChar,
+  PCHAR  Buffer
+);
+
+HRESULT WINAPI ReportPersistentiScsiDevicesW(
+  PULONG BufferSizeInChar,
+  PWCHAR Buffer
+);
+
+#define ReportPersistentiScsiDevices __MINGW_NAME_AW(ReportPersistentiScsiDevices)
+
+HRESULT WINAPI ReportRadiusServerListA(
+  PULONG BufferSizeInChar,
+  PCHAR  Buffer
+);
+
+HRESULT WINAPI ReportRadiusServerListW(
+  PULONG BufferSizeInChar,
+  PCHAR  Buffer
+);
+#define ReportRadiusServerList __MINGW_NAME_AW(ReportRadiusServerList)
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif
