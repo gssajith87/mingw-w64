@@ -247,10 +247,10 @@
 #define FORCEINLINE __forceinline
 #elif (_MSC_VER)
 #define FORCEINLINE __inline
-#else
-#define FORCEINLINE static __inline__ __attribute__((always_inline))
+#else /* __GNUC__ */
+#define FORCEINLINE __inline__ __attribute__((always_inline))
 #endif
-#endif
+#endif /* FORCEINLINE */
 
 #ifndef DECLSPEC_NOINLINE
 #if (_MSC_VER >= 1300)
@@ -260,7 +260,7 @@
 #else
 #define DECLSPEC_NOINLINE
 #endif
-#endif
+#endif /* DECLSPEC_NOINLINE */
 
 #if !defined(_M_CEE_PURE)
 #define NTAPI_INLINE    NTAPI
