@@ -79,36 +79,36 @@ typedef VOID
   PVOID CallbackContext);
 
 #if (_WIN32_WINNT >= 0x0600)
-ULONG NTAPI EventRegister(
+ULONG EVNTAPI EventRegister(
   LPCGUID ProviderId,
   PENABLECALLBACK EnableCallback,
   PVOID CallbackContext,
   PREGHANDLE RegHandle
 );
 
-ULONG NTAPI EventUnregister(
+ULONG EVNTAPI EventUnregister(
   REGHANDLE RegHandle
 );
 
-Boolean NTAPI EventEnabled(
+Boolean EVNTAPI EventEnabled(
   REGHANDLE RegHandle,
   PCEVENT_DESCRIPTOR EventDescriptor
 );
 
-Boolean NTAPI EventProviderEnabled(
+Boolean EVNTAPI EventProviderEnabled(
   REGHANDLE RegHandle,
   UCHAR Level,
   ULONGLONG Keyword
 );
 
-ULONG NTAPI EventWrite(
+ULONG EVNTAPI EventWrite(
   REGHANDLE RegHandle,
   PCEVENT_DESCRIPTOR EventDescriptor,
   ULONG UserDataCount,
   PEVENT_DATA_DESCRIPTOR UserData
 );
 
-ULONG NTAPI EventWriteTransfer(
+ULONG EVNTAPI EventWriteTransfer(
   REGHANDLE RegHandle,
   PCEVENT_DESCRIPTOR EventDescriptor,
   LPCGUID ActivityId,
@@ -117,14 +117,14 @@ ULONG NTAPI EventWriteTransfer(
   PEVENT_DATA_DESCRIPTOR UserData
 );
 
-ULONG NTAPI EventWriteString(
+ULONG EVNTAPI EventWriteString(
   REGHANDLE RegHandle,
   UCHAR Level,
   ULONGLONG Keyword,
   PCWSTR String
 );
 
-ULONG NTAPI EventActivityIdControl(
+ULONG EVNTAPI EventActivityIdControl(
   ULONG ControlCode,
   LPGUID ActivityId
 );
