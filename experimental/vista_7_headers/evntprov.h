@@ -26,7 +26,6 @@ extern "C" {
 #include <guiddef.h>
 
 typedef ULONGLONG REGHANDLE, *PREGHANDLE;
-typedef struct _EVENT_FILTER_DESCRIPTOR *PEVENT_FILTER_DESCRIPTOR;
 
 typedef struct _EVENT_DESCRIPTOR {
   USHORT    Id;
