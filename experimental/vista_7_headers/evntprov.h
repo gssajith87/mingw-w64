@@ -1,6 +1,5 @@
-#ifndef _INC_EVNTPROV
-#define _INC_EVNTPROV
-#if (_WIN32_WINNT >= 0x0600)
+#ifndef _EVNTPROV_H_
+#define _EVNTPROV_H_
 
 #ifndef EVNTAPI
 #ifndef MIDL_PASS
@@ -327,5 +326,5 @@ EventDescOrKeyword(
 }
 #endif
 
-#endif /*(_WIN32_WINNT >= 0x0600)*/
-#endif /*_INC_EVNTPROV*/
+#endif /* _EVNTPROV_H_ */
+
