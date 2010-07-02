@@ -75,18 +75,20 @@ int __FLT_ABI(test_function_ctanh) ()
   DEFINE_TEST (       __FLT_NAN,         INFINITY,      __FLT_NAN,       __FLT_NAN, 0, 0)
   DEFINE_TEST (       __FLT_NAN,        __FLT_NAN,      __FLT_NAN,       __FLT_NAN, 0, 0)
 
-  TESTS_END
-
   /* these are some checks at boundary conditions of zeros with sin (2y).  */
   /* these are actually tested against the value returned by the sin function */
   /* sin(0) = +0.0  sin(PI) = +0.0 sin(2PI) = +0.0 */
-  TESTS_START(pis)
 
-  DEFINE_TEST (INFINITY, __FLT_CST(0.0), __FLT_CST(1.0), __FLT_CST(0.0) * __FLT_ABI(sin) (__FLT_CST(0.0)),           0, 0)
-  DEFINE_TEST (INFINITY,     __FLT_PI_2, __FLT_CST(1.0), __FLT_CST(0.0) * __FLT_ABI(sin) (__FLT_CST(4.0) * __FLT_ABI(atan) (__FLT_CST(1.0))), 0, 0)
-  DEFINE_TEST (INFINITY,       __FLT_PI, __FLT_CST(1.0), __FLT_CST(0.0) * __FLT_ABI(sin) (__FLT_CST(8.0) * __FLT_ABI(atan) (__FLT_CST(1.0))), 0, 0)
+  DEFINE_TEST (INFINITY, __FLT_CST(0.0), __FLT_CST(1.0),  __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (INFINITY,     __FLT_PI_4, __FLT_CST(1.0),  __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (INFINITY,     __FLT_PI_2, __FLT_CST(1.0),  __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (INFINITY,   __FLT_PI_3_4, __FLT_CST(1.0), -__FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (INFINITY,       __FLT_PI, __FLT_CST(1.0),  __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (INFINITY, __FLT_CST(3.0) * __FLT_PI_2, __FLT_CST(1.0), __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (INFINITY, __FLT_CST(4.0) * __FLT_PI_2, __FLT_CST(1.0), __FLT_CST(0.0), 0, 0)
+  DEFINE_TEST (INFINITY, __FLT_CST(5.0) * __FLT_PI_2, __FLT_CST(1.0), __FLT_CST(0.0), 0, 0)
 
   TESTS_END
 
-  return RUN_DEFAULT_TESTS(ctanh) | RUN_FUNCTION_TESTS(ctanh, pis);
+  return RUN_DEFAULT_TESTS(ctanh);
 }
