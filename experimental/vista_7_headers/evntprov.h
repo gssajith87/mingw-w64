@@ -25,22 +25,8 @@ extern "C" {
 #include <windows.h>
 #include <guiddef.h>
 
-#define EVENT_CONTROL_CODE_DISABLE_PROVIDER 0
-#define EVENT_CONTROL_CODE_ENABLE_PROVIDER 1
-#define EVENT_CONTROL_CODE_CAPTURE_STATE 2
-
 typedef ULONGLONG REGHANDLE, *PREGHANDLE;
 typedef struct _EVENT_FILTER_DESCRIPTOR *PEVENT_FILTER_DESCRIPTOR;
-
-typedef VOID
-(NTAPI *PENABLECALLBACK)(
-  LPCGUID SourceId,
-  ULONG IsEnabled,
-  UCHAR Level,
-  ULONGLONG MatchAnyKeyword,
-  ULONGLONG MatchAllKeyword,
-  PEVENT_FILTER_DESCRIPTOR FilterData,
-  PVOID CallbackContext);
 
 typedef struct _EVENT_DESCRIPTOR {
   USHORT    Id;
@@ -65,7 +51,6 @@ typedef struct _EVENT_FILTER_DESCRIPTOR {
   ULONG     Type;
 } EVENT_FILTER_DESCRIPTOR, *PEVENT_FILTER_DESCRIPTOR;
 
-#if (_WIN32_WINNT >= 0x0601)
 typedef struct _EVENT_FILTER_HEADER {
   USHORT    Id;
   UCHAR     Version;
@@ -75,29 +60,26 @@ typedef struct _EVENT_FILTER_HEADER {
   ULONG     NextOffset;
 } EVENT_FILTER_HEADER, *PEVENT_FILTER_HEADER;
 
-ULONG EVNTAPI EventWriteEx(
-  REGHANDLE RegHandle,
-  PCEVENT_DESCRIPTOR EventDescriptor,
-  ULONG64 Filter,
-  ULONG Flags,
-  LPCGUID ActivityId,
-  LPCGUID RelatedActivityId,
-  ULONG UserDataCount,
-  PEVENT_DATA_DESCRIPTOR UserData
-);
 
-#endif /*(_WIN32_WINNT >= 0x0601)*/
+#define WINEVENT_LEVEL_CRITICAL	1
+#define WINEVENT_LEVEL_ERROR	2
+#define WINEVENT_LEVEL_WARNING	3
+#define WINEVENT_LEVEL_INFO	4
+#define WINEVENT_LEVEL_VERBOSE	5
 
-void NTAPI EnableCallback(
+#ifndef _ETW_KM_ /* for wdm.h */
+
+typedef VOID
+(NTAPI *PENABLECALLBACK)(
   LPCGUID SourceId,
   ULONG IsEnabled,
   UCHAR Level,
   ULONGLONG MatchAnyKeyword,
-  ULONGLONG MatchAllKeywords,
+  ULONGLONG MatchAllKeyword,
   PEVENT_FILTER_DESCRIPTOR FilterData,
-  PVOID CallbackContext
-);
+  PVOID CallbackContext);
 
+#if (_WIN32_WINNT >= 0x0600)
 ULONG NTAPI EventRegister(
   LPCGUID ProviderId,
   PENABLECALLBACK EnableCallback,
@@ -105,20 +87,26 @@ ULONG NTAPI EventRegister(
   PREGHANDLE RegHandle
 );
 
+ULONG NTAPI EventUnregister(
+  REGHANDLE RegHandle
+);
+
+Boolean NTAPI EventEnabled(
+  REGHANDLE RegHandle,
+  PCEVENT_DESCRIPTOR EventDescriptor
+);
+
+Boolean NTAPI EventProviderEnabled(
+  REGHANDLE RegHandle,
+  UCHAR Level,
+  ULONGLONG Keyword
+);
+
 ULONG NTAPI EventWrite(
   REGHANDLE RegHandle,
   PCEVENT_DESCRIPTOR EventDescriptor,
   ULONG UserDataCount,
   PEVENT_DATA_DESCRIPTOR UserData
-);
-
-ULONG NTAPI EventUnregister(
-  REGHANDLE RegHandle
-);
-
-ULONG NTAPI EventActivityIdControl(
-  ULONG ControlCode,
-  LPGUID ActivityId
 );
 
 ULONG NTAPI EventWriteTransfer(
@@ -130,23 +118,6 @@ ULONG NTAPI EventWriteTransfer(
   PEVENT_DATA_DESCRIPTOR UserData
 );
 
-Boolean NTAPI EventEnabled(
-  REGHANDLE RegHandle,
-  PCEVENT_DESCRIPTOR EventDescriptor
-);
-
-#define WINEVENT_LEVEL_CRITICAL 1
-#define WINEVENT_LEVEL_ERROR 2
-#define WINEVENT_LEVEL_WARNING 3
-#define WINEVENT_LEVEL_INFO 4
-#define WINEVENT_LEVEL_VERBOSE 5
-
-Boolean NTAPI EventProviderEnabled(
-  REGHANDLE RegHandle,
-  UCHAR Level,
-  ULONGLONG Keyword
-);
-
 ULONG NTAPI EventWriteString(
   REGHANDLE RegHandle,
   UCHAR Level,
@@ -154,6 +125,26 @@ ULONG NTAPI EventWriteString(
   PCWSTR String
 );
 
+ULONG NTAPI EventActivityIdControl(
+  ULONG ControlCode,
+  LPGUID ActivityId
+);
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
+#if (_WIN32_WINNT >= 0x0601)
+ULONG EVNTAPI EventWriteEx(
+  REGHANDLE RegHandle,
+  PCEVENT_DESCRIPTOR EventDescriptor,
+  ULONG64 Filter,
+  ULONG Flags,
+  LPCGUID ActivityId,
+  LPCGUID RelatedActivityId,
+  ULONG UserDataCount,
+  PEVENT_DATA_DESCRIPTOR UserData
+);
+#endif /*(_WIN32_WINNT >= 0x0601)*/
+
+#endif /* _ETW_KM_ */
 
 FORCEINLINE
 VOID
