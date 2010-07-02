@@ -90,12 +90,12 @@ ULONG EVNTAPI EventUnregister(
   REGHANDLE RegHandle
 );
 
-Boolean EVNTAPI EventEnabled(
+BOOLEAN EVNTAPI EventEnabled(
   REGHANDLE RegHandle,
   PCEVENT_DESCRIPTOR EventDescriptor
 );
 
-Boolean EVNTAPI EventProviderEnabled(
+BOOLEAN EVNTAPI EventProviderEnabled(
   REGHANDLE RegHandle,
   UCHAR Level,
   ULONGLONG Keyword
