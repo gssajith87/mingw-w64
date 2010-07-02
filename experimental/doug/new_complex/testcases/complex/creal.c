@@ -44,7 +44,55 @@
 
 #include "complex_test.h"
 
-int __FLT_ABI(test_function_creal) () {
-  return 77;
-}
+/**
+ * Section 7.3.9.5 The creal functions.
+ * creal(z) returns the real part of z, as a real,
+ * where z = creal(z) + cimag(z) * I
+ *
+ * We'll check finite real, finite imag;
+ * finite real, infinite imag;
+ * infinite real finite imag;
+ * with NaNs.
+ */
+  
+int __FLT_ABI(test_function_creal) ()
+{
+  _DEFINE_DEFAULT_TEST_FUNCTION_REAL (creal, 0);
 
+  DEFAULT_TESTS_START
+
+  DEFINE_TEST (  -__FLT_CST(0.0), -__FLT_CST(42.42), -__FLT_CST(0.0), __FLT_NAN, 0, 0)
+  DEFINE_TEST (   __FLT_CST(0.0), -__FLT_CST(42.42),  __FLT_CST(0.0), __FLT_NAN, 0, 0)
+  DEFINE_TEST (  -__FLT_CST(0.0),  __FLT_CST(42.42), -__FLT_CST(0.0), __FLT_NAN, 0, 0)
+  DEFINE_TEST (   __FLT_CST(0.0),  __FLT_CST(42.42),  __FLT_CST(0.0), __FLT_NAN, 0, 0)
+
+  DEFINE_TEST (-__FLT_CST(42.42),         -INFINITY, -__FLT_CST(42.42), __FLT_NAN, 0, 0)
+  DEFINE_TEST ( __FLT_CST(42.42),         -INFINITY,  __FLT_CST(42.42), __FLT_NAN, 0, 0)
+  DEFINE_TEST (-__FLT_CST(42.42),          INFINITY, -__FLT_CST(42.42), __FLT_NAN, 0, 0)
+  DEFINE_TEST ( __FLT_CST(42.42),          INFINITY,  __FLT_CST(42.42), __FLT_NAN, 0, 0)
+  DEFINE_TEST (        -INFINITY, -__FLT_CST(42.42),         -INFINITY, __FLT_NAN, 0, 0)
+  DEFINE_TEST (         INFINITY, -__FLT_CST(42.42),          INFINITY, __FLT_NAN, 0, 0)
+  DEFINE_TEST (        -INFINITY,  __FLT_CST(42.42),         -INFINITY, __FLT_NAN, 0, 0)
+  DEFINE_TEST (         INFINITY,  __FLT_CST(42.42),          INFINITY, __FLT_NAN, 0, 0)
+
+  DEFINE_TEST (        -INFINITY,         -INFINITY,         -INFINITY, __FLT_NAN, 0, 0)
+  DEFINE_TEST (         INFINITY,         -INFINITY,          INFINITY, __FLT_NAN, 0, 0)
+  DEFINE_TEST (        -INFINITY,          INFINITY,         -INFINITY, __FLT_NAN, 0, 0)
+  DEFINE_TEST (         INFINITY,          INFINITY,          INFINITY, __FLT_NAN, 0, 0)
+
+  DEFINE_TEST (        __FLT_NAN, -__FLT_CST(42.42),         __FLT_NAN, __FLT_NAN, 0, 0)
+  DEFINE_TEST (        __FLT_NAN,  __FLT_CST(42.42),         __FLT_NAN, __FLT_NAN, 0, 0)
+  DEFINE_TEST (-__FLT_CST(42.42),         __FLT_NAN, -__FLT_CST(42.42), __FLT_NAN, 0, 0)
+  DEFINE_TEST ( __FLT_CST(42.42),         __FLT_NAN,  __FLT_CST(42.42), __FLT_NAN, 0, 0)
+
+  DEFINE_TEST (        __FLT_NAN,         -INFINITY,         __FLT_NAN, __FLT_NAN, 0, 0)
+  DEFINE_TEST (        __FLT_NAN,          INFINITY,         __FLT_NAN, __FLT_NAN, 0, 0)
+  DEFINE_TEST (        -INFINITY,         __FLT_NAN,         -INFINITY, __FLT_NAN, 0, 0)
+  DEFINE_TEST (         INFINITY,         __FLT_NAN,          INFINITY, __FLT_NAN, 0, 0)
+
+  DEFINE_TEST (        __FLT_NAN,         __FLT_NAN,         __FLT_NAN, __FLT_NAN, 0, 0)
+
+  TESTS_END
+
+  return RUN_DEFAULT_TESTS(creal);
+}
