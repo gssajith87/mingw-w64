@@ -59,6 +59,9 @@
 #
 # This testsuite automake fragment is meant to be included
 # by the main automake Makefile.am
+#
+# Due to automake limitations, references are relative to the top level,
+# and not the subdirectory in which this resides.
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -89,7 +92,7 @@ XFAIL_TESTS = $(am__EXEEXT_5) $(am__EXEEXT_5)
 @LIB32_TRUE@am__append_4 = lib32/libnewcomplex.a
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(srcdir)/testcases/complex/complex_tests.am \
+	$(srcdir)/testcases/complex/Makefile.am \
 	$(top_srcdir)/configure INSTALL build-aux/depcomp \
 	build-aux/install-sh build-aux/missing
 
@@ -542,7 +545,8 @@ am__objects_8 = testcases/complex/tests64_libnewcomplextestsld_a-cabs.$(OBJEXT) 
 @LIB64_TRUE@	$(am__objects_8)
 tests64_libnewcomplextestsld_a_OBJECTS =  \
 	$(am_tests64_libnewcomplextestsld_a_OBJECTS)
-@LIB32_TRUE@am__EXEEXT_1 = tests32/cabs$(EXEEXT) \
+@LIB32_TRUE@am__EXEEXT_1 = tests32/cimag$(EXEEXT) \
+@LIB32_TRUE@	tests32/creal$(EXEEXT) tests32/cabs$(EXEEXT) \
 @LIB32_TRUE@	tests32/cacos$(EXEEXT) tests32/cacosh$(EXEEXT) \
 @LIB32_TRUE@	tests32/carg$(EXEEXT) tests32/casin$(EXEEXT) \
 @LIB32_TRUE@	tests32/casinh$(EXEEXT) tests32/catan$(EXEEXT) \
@@ -554,7 +558,8 @@ tests64_libnewcomplextestsld_a_OBJECTS =  \
 @LIB32_TRUE@	tests32/csqrt$(EXEEXT) tests32/ctan$(EXEEXT) \
 @LIB32_TRUE@	tests32/ctanh$(EXEEXT)
 @LIB32_TRUE@am__EXEEXT_2 = $(am__EXEEXT_1)
-@LIB64_TRUE@am__EXEEXT_3 = tests64/cabs$(EXEEXT) \
+@LIB64_TRUE@am__EXEEXT_3 = tests64/cimag$(EXEEXT) \
+@LIB64_TRUE@	tests64/creal$(EXEEXT) tests64/cabs$(EXEEXT) \
 @LIB64_TRUE@	tests64/cacos$(EXEEXT) tests64/cacosh$(EXEEXT) \
 @LIB64_TRUE@	tests64/carg$(EXEEXT) tests64/casin$(EXEEXT) \
 @LIB64_TRUE@	tests64/casinh$(EXEEXT) tests64/catan$(EXEEXT) \
@@ -654,6 +659,14 @@ tests32_cexp_OBJECTS = $(am_tests32_cexp_OBJECTS)
 @LIB32_TRUE@	$(LDADD)
 tests32_cexp_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(tests32_cexp_LDFLAGS) $(LDFLAGS) -o $@
+am__tests32_cimag_SOURCES_DIST = testcases/complex/main.c
+@LIB32_TRUE@am_tests32_cimag_OBJECTS =  \
+@LIB32_TRUE@	testcases/complex/tests32_cimag-main.$(OBJEXT)
+tests32_cimag_OBJECTS = $(am_tests32_cimag_OBJECTS)
+@LIB32_TRUE@tests32_cimag_DEPENDENCIES = $(newcomplex_test_lib32) \
+@LIB32_TRUE@	$(LDADD)
+tests32_cimag_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(tests32_cimag_LDFLAGS) $(LDFLAGS) -o $@
 am__tests32_clog_SOURCES_DIST = testcases/complex/main.c
 @LIB32_TRUE@am_tests32_clog_OBJECTS =  \
 @LIB32_TRUE@	testcases/complex/tests32_clog-main.$(OBJEXT)
@@ -686,6 +699,14 @@ tests32_cproj_OBJECTS = $(am_tests32_cproj_OBJECTS)
 @LIB32_TRUE@	$(LDADD)
 tests32_cproj_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(tests32_cproj_LDFLAGS) $(LDFLAGS) -o $@
+am__tests32_creal_SOURCES_DIST = testcases/complex/main.c
+@LIB32_TRUE@am_tests32_creal_OBJECTS =  \
+@LIB32_TRUE@	testcases/complex/tests32_creal-main.$(OBJEXT)
+tests32_creal_OBJECTS = $(am_tests32_creal_OBJECTS)
+@LIB32_TRUE@tests32_creal_DEPENDENCIES = $(newcomplex_test_lib32) \
+@LIB32_TRUE@	$(LDADD)
+tests32_creal_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(tests32_creal_LDFLAGS) $(LDFLAGS) -o $@
 am__tests32_csin_SOURCES_DIST = testcases/complex/main.c
 @LIB32_TRUE@am_tests32_csin_OBJECTS =  \
 @LIB32_TRUE@	testcases/complex/tests32_csin-main.$(OBJEXT)
@@ -814,6 +835,14 @@ tests64_cexp_OBJECTS = $(am_tests64_cexp_OBJECTS)
 @LIB64_TRUE@	$(LDADD)
 tests64_cexp_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(tests64_cexp_LDFLAGS) $(LDFLAGS) -o $@
+am__tests64_cimag_SOURCES_DIST = testcases/complex/main.c
+@LIB64_TRUE@am_tests64_cimag_OBJECTS =  \
+@LIB64_TRUE@	testcases/complex/tests64_cimag-main.$(OBJEXT)
+tests64_cimag_OBJECTS = $(am_tests64_cimag_OBJECTS)
+@LIB64_TRUE@tests64_cimag_DEPENDENCIES = $(newcomplex_test_lib64) \
+@LIB64_TRUE@	$(LDADD)
+tests64_cimag_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(tests64_cimag_LDFLAGS) $(LDFLAGS) -o $@
 am__tests64_clog_SOURCES_DIST = testcases/complex/main.c
 @LIB64_TRUE@am_tests64_clog_OBJECTS =  \
 @LIB64_TRUE@	testcases/complex/tests64_clog-main.$(OBJEXT)
@@ -846,6 +875,14 @@ tests64_cproj_OBJECTS = $(am_tests64_cproj_OBJECTS)
 @LIB64_TRUE@	$(LDADD)
 tests64_cproj_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(tests64_cproj_LDFLAGS) $(LDFLAGS) -o $@
+am__tests64_creal_SOURCES_DIST = testcases/complex/main.c
+@LIB64_TRUE@am_tests64_creal_OBJECTS =  \
+@LIB64_TRUE@	testcases/complex/tests64_creal-main.$(OBJEXT)
+tests64_creal_OBJECTS = $(am_tests64_creal_OBJECTS)
+@LIB64_TRUE@tests64_creal_DEPENDENCIES = $(newcomplex_test_lib64) \
+@LIB64_TRUE@	$(LDADD)
+tests64_creal_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(tests64_creal_LDFLAGS) $(LDFLAGS) -o $@
 am__tests64_csin_SOURCES_DIST = testcases/complex/main.c
 @LIB64_TRUE@am_tests64_csin_OBJECTS =  \
 @LIB64_TRUE@	testcases/complex/tests64_csin-main.$(OBJEXT)
@@ -919,9 +956,10 @@ SOURCES = $(lib32_libnewcomplex_a_SOURCES) \
 	$(tests32_casin_SOURCES) $(tests32_casinh_SOURCES) \
 	$(tests32_catan_SOURCES) $(tests32_catanh_SOURCES) \
 	$(tests32_ccos_SOURCES) $(tests32_ccosh_SOURCES) \
-	$(tests32_cexp_SOURCES) $(tests32_clog_SOURCES) \
-	$(tests32_conj_SOURCES) $(tests32_cpow_SOURCES) \
-	$(tests32_cproj_SOURCES) $(tests32_csin_SOURCES) \
+	$(tests32_cexp_SOURCES) $(tests32_cimag_SOURCES) \
+	$(tests32_clog_SOURCES) $(tests32_conj_SOURCES) \
+	$(tests32_cpow_SOURCES) $(tests32_cproj_SOURCES) \
+	$(tests32_creal_SOURCES) $(tests32_csin_SOURCES) \
 	$(tests32_csinh_SOURCES) $(tests32_csqrt_SOURCES) \
 	$(tests32_ctan_SOURCES) $(tests32_ctanh_SOURCES) \
 	$(tests64_cabs_SOURCES) $(tests64_cacos_SOURCES) \
@@ -929,9 +967,10 @@ SOURCES = $(lib32_libnewcomplex_a_SOURCES) \
 	$(tests64_casin_SOURCES) $(tests64_casinh_SOURCES) \
 	$(tests64_catan_SOURCES) $(tests64_catanh_SOURCES) \
 	$(tests64_ccos_SOURCES) $(tests64_ccosh_SOURCES) \
-	$(tests64_cexp_SOURCES) $(tests64_clog_SOURCES) \
-	$(tests64_conj_SOURCES) $(tests64_cpow_SOURCES) \
-	$(tests64_cproj_SOURCES) $(tests64_csin_SOURCES) \
+	$(tests64_cexp_SOURCES) $(tests64_cimag_SOURCES) \
+	$(tests64_clog_SOURCES) $(tests64_conj_SOURCES) \
+	$(tests64_cpow_SOURCES) $(tests64_cproj_SOURCES) \
+	$(tests64_creal_SOURCES) $(tests64_csin_SOURCES) \
 	$(tests64_csinh_SOURCES) $(tests64_csqrt_SOURCES) \
 	$(tests64_ctan_SOURCES) $(tests64_ctanh_SOURCES)
 DIST_SOURCES = $(am__lib32_libnewcomplex_a_SOURCES_DIST) \
@@ -953,10 +992,12 @@ DIST_SOURCES = $(am__lib32_libnewcomplex_a_SOURCES_DIST) \
 	$(am__tests32_ccos_SOURCES_DIST) \
 	$(am__tests32_ccosh_SOURCES_DIST) \
 	$(am__tests32_cexp_SOURCES_DIST) \
+	$(am__tests32_cimag_SOURCES_DIST) \
 	$(am__tests32_clog_SOURCES_DIST) \
 	$(am__tests32_conj_SOURCES_DIST) \
 	$(am__tests32_cpow_SOURCES_DIST) \
 	$(am__tests32_cproj_SOURCES_DIST) \
+	$(am__tests32_creal_SOURCES_DIST) \
 	$(am__tests32_csin_SOURCES_DIST) \
 	$(am__tests32_csinh_SOURCES_DIST) \
 	$(am__tests32_csqrt_SOURCES_DIST) \
@@ -973,10 +1014,12 @@ DIST_SOURCES = $(am__lib32_libnewcomplex_a_SOURCES_DIST) \
 	$(am__tests64_ccos_SOURCES_DIST) \
 	$(am__tests64_ccosh_SOURCES_DIST) \
 	$(am__tests64_cexp_SOURCES_DIST) \
+	$(am__tests64_cimag_SOURCES_DIST) \
 	$(am__tests64_clog_SOURCES_DIST) \
 	$(am__tests64_conj_SOURCES_DIST) \
 	$(am__tests64_cpow_SOURCES_DIST) \
 	$(am__tests64_cproj_SOURCES_DIST) \
+	$(am__tests64_creal_SOURCES_DIST) \
 	$(am__tests64_csin_SOURCES_DIST) \
 	$(am__tests64_csinh_SOURCES_DIST) \
 	$(am__tests64_csqrt_SOURCES_DIST) \
@@ -1199,7 +1242,7 @@ check_complex_lib_sources = \
   testcases/complex/ctan.c \
   testcases/complex/ctanh.c
 
-complex_inc = -I$(top_srcdir)/new_complex
+complex_inc = -I$(top_srcdir)/complex
 
 # 32 bit tests.
 
@@ -1216,11 +1259,10 @@ complex_inc = -I$(top_srcdir)/new_complex
 @LIB32_TRUE@tests32_libnewcomplextestsld_a_CPPFLAGS = $(CPPFLAGS32) -D_NEW_COMPLEX_LDOUBLE=1 $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_libnewcomplextestsld_a_SOURCES = $(check_complex_lib_sources)
 
-# Are these two necessary?
-#  tests32/cimag
-#  tests32/creal
 # Complex library actual test programs.
 @LIB32_TRUE@newcomplex_tests32 = \
+@LIB32_TRUE@  tests32/cimag  \
+@LIB32_TRUE@  tests32/creal  \
 @LIB32_TRUE@  tests32/cabs   \
 @LIB32_TRUE@  tests32/cacos  \
 @LIB32_TRUE@  tests32/cacosh \
@@ -1243,12 +1285,9 @@ complex_inc = -I$(top_srcdir)/new_complex
 @LIB32_TRUE@  tests32/ctanh
 
 
-# Each test program is built with main.c, with two defines,
-#   TESTFUNC is the function being tested (so that it can grab it from the
-#   support library).
-#   _NEW_COMPLEX_{FLOAT,DOUBLE,LDOUBLE) tells which ABI being tested.
-# In addition, we use the LDADD for each program to link the appropriate
-# support library for the ABI being tested.
+# Each test program is built with main.c, with TESTFUNC defined as the function
+# the main test program calls all three abi versions of the function being
+# tested.
 @LIB32_TRUE@tests32_cabs_SOURCES = testcases/complex/main.c
 @LIB32_TRUE@tests32_cabs_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cabs $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cabs_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
@@ -1293,11 +1332,10 @@ complex_inc = -I$(top_srcdir)/new_complex
 @LIB32_TRUE@tests32_cexp_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cexp $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cexp_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cexp_LDADD = $(newcomplex_test_lib32) $(LDADD)
-
-# tests32_cimag_SOURCES = testcases/complex/main.c
-# tests32_cimag_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cimag $(complex_inc) $(AM_CPPFLAGS)
-# tests32_cimag_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
-# tests32_cimag_LDADD = $(newcomplex_test_lib32) $(LDADD)
+@LIB32_TRUE@tests32_cimag_SOURCES = testcases/complex/main.c
+@LIB32_TRUE@tests32_cimag_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cimag $(complex_inc) $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_cimag_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
+@LIB32_TRUE@tests32_cimag_LDADD = $(newcomplex_test_lib32) $(LDADD)
 @LIB32_TRUE@tests32_clog_SOURCES = testcases/complex/main.c
 @LIB32_TRUE@tests32_clog_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=clog $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_clog_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
@@ -1314,11 +1352,10 @@ complex_inc = -I$(top_srcdir)/new_complex
 @LIB32_TRUE@tests32_cproj_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=cproj $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_cproj_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
 @LIB32_TRUE@tests32_cproj_LDADD = $(newcomplex_test_lib32) $(LDADD)
-
-# tests32_creal_SOURCES = testcases/complex/main.c
-# tests32_creal_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=creal $(complex_inc) $(AM_CPPFLAGS)
-# tests32_creal_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
-# tests32_creal_LDADD = $(newcomplex_test_lib32) $(LDADD)
+@LIB32_TRUE@tests32_creal_SOURCES = testcases/complex/main.c
+@LIB32_TRUE@tests32_creal_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=creal $(complex_inc) $(AM_CPPFLAGS)
+@LIB32_TRUE@tests32_creal_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
+@LIB32_TRUE@tests32_creal_LDADD = $(newcomplex_test_lib32) $(LDADD)
 @LIB32_TRUE@tests32_csin_SOURCES = testcases/complex/main.c
 @LIB32_TRUE@tests32_csin_CPPFLAGS = $(CPPFLAGS32) -DTESTFUNC=csin $(complex_inc) $(AM_CPPFLAGS)
 @LIB32_TRUE@tests32_csin_LDFLAGS = $(LDFLAGS32) $(AM_LDFLAGS)
@@ -1355,11 +1392,10 @@ complex_inc = -I$(top_srcdir)/new_complex
 @LIB64_TRUE@tests64_libnewcomplextestsld_a_CPPFLAGS = $(CPPFLAGS64) -D_NEW_COMPLEX_LDOUBLE=1 $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_libnewcomplextestsld_a_SOURCES = $(check_complex_lib_sources)
 
-# Are these two necessary?
-#  tests64/cimag
-#  tests64/creal
 # Complex library actual test programs.
 @LIB64_TRUE@newcomplex_tests64 = \
+@LIB64_TRUE@  tests64/cimag  \
+@LIB64_TRUE@  tests64/creal  \
 @LIB64_TRUE@  tests64/cabs   \
 @LIB64_TRUE@  tests64/cacos  \
 @LIB64_TRUE@  tests64/cacosh \
@@ -1429,11 +1465,10 @@ complex_inc = -I$(top_srcdir)/new_complex
 @LIB64_TRUE@tests64_cexp_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cexp $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cexp_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cexp_LDADD = $(newcomplex_test_lib64) $(LDADD)
-
-# tests64_cimag_SOURCES = testcases/complex/main.c
-# tests64_cimag_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cimag $(complex_inc) $(AM_CPPFLAGS)
-# tests64_cimag_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
-# tests64_cimag_LDADD = $(newcomplex_test_lib64) $(LDADD)
+@LIB64_TRUE@tests64_cimag_SOURCES = testcases/complex/main.c
+@LIB64_TRUE@tests64_cimag_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cimag $(complex_inc) $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_cimag_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
+@LIB64_TRUE@tests64_cimag_LDADD = $(newcomplex_test_lib64) $(LDADD)
 @LIB64_TRUE@tests64_clog_SOURCES = testcases/complex/main.c
 @LIB64_TRUE@tests64_clog_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=clog $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_clog_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
@@ -1450,11 +1485,10 @@ complex_inc = -I$(top_srcdir)/new_complex
 @LIB64_TRUE@tests64_cproj_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=cproj $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_cproj_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
 @LIB64_TRUE@tests64_cproj_LDADD = $(newcomplex_test_lib64) $(LDADD)
-
-# tests64_creal_SOURCES = testcases/complex/main.c
-# tests64_creal_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=creal $(complex_inc) $(AM_CPPFLAGS)
-# tests64_creal_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
-# tests64_creal_LDADD = $(newcomplex_test_lib64) $(LDADD)
+@LIB64_TRUE@tests64_creal_SOURCES = testcases/complex/main.c
+@LIB64_TRUE@tests64_creal_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=creal $(complex_inc) $(AM_CPPFLAGS)
+@LIB64_TRUE@tests64_creal_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
+@LIB64_TRUE@tests64_creal_LDADD = $(newcomplex_test_lib64) $(LDADD)
 @LIB64_TRUE@tests64_csin_SOURCES = testcases/complex/main.c
 @LIB64_TRUE@tests64_csin_CPPFLAGS = $(CPPFLAGS64) -DTESTFUNC=csin $(complex_inc) $(AM_CPPFLAGS)
 @LIB64_TRUE@tests64_csin_LDFLAGS = $(LDFLAGS64) $(AM_LDFLAGS)
@@ -1482,7 +1516,7 @@ all: config.h
 .SUFFIXES: .c .html .log .o .obj .test .test$(EXEEXT)
 am--refresh:
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/testcases/complex/complex_tests.am $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/testcases/complex/Makefile.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -2279,6 +2313,12 @@ testcases/complex/tests32_cexp-main.$(OBJEXT):  \
 tests32/cexp$(EXEEXT): $(tests32_cexp_OBJECTS) $(tests32_cexp_DEPENDENCIES) tests32/$(am__dirstamp)
 	@rm -f tests32/cexp$(EXEEXT)
 	$(AM_V_CCLD)$(tests32_cexp_LINK) $(tests32_cexp_OBJECTS) $(tests32_cexp_LDADD) $(LIBS)
+testcases/complex/tests32_cimag-main.$(OBJEXT):  \
+	testcases/complex/$(am__dirstamp) \
+	testcases/complex/$(DEPDIR)/$(am__dirstamp)
+tests32/cimag$(EXEEXT): $(tests32_cimag_OBJECTS) $(tests32_cimag_DEPENDENCIES) tests32/$(am__dirstamp)
+	@rm -f tests32/cimag$(EXEEXT)
+	$(AM_V_CCLD)$(tests32_cimag_LINK) $(tests32_cimag_OBJECTS) $(tests32_cimag_LDADD) $(LIBS)
 testcases/complex/tests32_clog-main.$(OBJEXT):  \
 	testcases/complex/$(am__dirstamp) \
 	testcases/complex/$(DEPDIR)/$(am__dirstamp)
@@ -2303,6 +2343,12 @@ testcases/complex/tests32_cproj-main.$(OBJEXT):  \
 tests32/cproj$(EXEEXT): $(tests32_cproj_OBJECTS) $(tests32_cproj_DEPENDENCIES) tests32/$(am__dirstamp)
 	@rm -f tests32/cproj$(EXEEXT)
 	$(AM_V_CCLD)$(tests32_cproj_LINK) $(tests32_cproj_OBJECTS) $(tests32_cproj_LDADD) $(LIBS)
+testcases/complex/tests32_creal-main.$(OBJEXT):  \
+	testcases/complex/$(am__dirstamp) \
+	testcases/complex/$(DEPDIR)/$(am__dirstamp)
+tests32/creal$(EXEEXT): $(tests32_creal_OBJECTS) $(tests32_creal_DEPENDENCIES) tests32/$(am__dirstamp)
+	@rm -f tests32/creal$(EXEEXT)
+	$(AM_V_CCLD)$(tests32_creal_LINK) $(tests32_creal_OBJECTS) $(tests32_creal_LDADD) $(LIBS)
 testcases/complex/tests32_csin-main.$(OBJEXT):  \
 	testcases/complex/$(am__dirstamp) \
 	testcases/complex/$(DEPDIR)/$(am__dirstamp)
@@ -2399,6 +2445,12 @@ testcases/complex/tests64_cexp-main.$(OBJEXT):  \
 tests64/cexp$(EXEEXT): $(tests64_cexp_OBJECTS) $(tests64_cexp_DEPENDENCIES) tests64/$(am__dirstamp)
 	@rm -f tests64/cexp$(EXEEXT)
 	$(AM_V_CCLD)$(tests64_cexp_LINK) $(tests64_cexp_OBJECTS) $(tests64_cexp_LDADD) $(LIBS)
+testcases/complex/tests64_cimag-main.$(OBJEXT):  \
+	testcases/complex/$(am__dirstamp) \
+	testcases/complex/$(DEPDIR)/$(am__dirstamp)
+tests64/cimag$(EXEEXT): $(tests64_cimag_OBJECTS) $(tests64_cimag_DEPENDENCIES) tests64/$(am__dirstamp)
+	@rm -f tests64/cimag$(EXEEXT)
+	$(AM_V_CCLD)$(tests64_cimag_LINK) $(tests64_cimag_OBJECTS) $(tests64_cimag_LDADD) $(LIBS)
 testcases/complex/tests64_clog-main.$(OBJEXT):  \
 	testcases/complex/$(am__dirstamp) \
 	testcases/complex/$(DEPDIR)/$(am__dirstamp)
@@ -2423,6 +2475,12 @@ testcases/complex/tests64_cproj-main.$(OBJEXT):  \
 tests64/cproj$(EXEEXT): $(tests64_cproj_OBJECTS) $(tests64_cproj_DEPENDENCIES) tests64/$(am__dirstamp)
 	@rm -f tests64/cproj$(EXEEXT)
 	$(AM_V_CCLD)$(tests64_cproj_LINK) $(tests64_cproj_OBJECTS) $(tests64_cproj_LDADD) $(LIBS)
+testcases/complex/tests64_creal-main.$(OBJEXT):  \
+	testcases/complex/$(am__dirstamp) \
+	testcases/complex/$(DEPDIR)/$(am__dirstamp)
+tests64/creal$(EXEEXT): $(tests64_creal_OBJECTS) $(tests64_creal_DEPENDENCIES) tests64/$(am__dirstamp)
+	@rm -f tests64/creal$(EXEEXT)
+	$(AM_V_CCLD)$(tests64_creal_LINK) $(tests64_creal_OBJECTS) $(tests64_creal_LDADD) $(LIBS)
 testcases/complex/tests64_csin-main.$(OBJEXT):  \
 	testcases/complex/$(am__dirstamp) \
 	testcases/complex/$(DEPDIR)/$(am__dirstamp)
@@ -2563,10 +2621,12 @@ mostlyclean-compile:
 	-rm -f testcases/complex/tests32_ccos-main.$(OBJEXT)
 	-rm -f testcases/complex/tests32_ccosh-main.$(OBJEXT)
 	-rm -f testcases/complex/tests32_cexp-main.$(OBJEXT)
+	-rm -f testcases/complex/tests32_cimag-main.$(OBJEXT)
 	-rm -f testcases/complex/tests32_clog-main.$(OBJEXT)
 	-rm -f testcases/complex/tests32_conj-main.$(OBJEXT)
 	-rm -f testcases/complex/tests32_cpow-main.$(OBJEXT)
 	-rm -f testcases/complex/tests32_cproj-main.$(OBJEXT)
+	-rm -f testcases/complex/tests32_creal-main.$(OBJEXT)
 	-rm -f testcases/complex/tests32_csin-main.$(OBJEXT)
 	-rm -f testcases/complex/tests32_csinh-main.$(OBJEXT)
 	-rm -f testcases/complex/tests32_csqrt-main.$(OBJEXT)
@@ -2649,10 +2709,12 @@ mostlyclean-compile:
 	-rm -f testcases/complex/tests64_ccos-main.$(OBJEXT)
 	-rm -f testcases/complex/tests64_ccosh-main.$(OBJEXT)
 	-rm -f testcases/complex/tests64_cexp-main.$(OBJEXT)
+	-rm -f testcases/complex/tests64_cimag-main.$(OBJEXT)
 	-rm -f testcases/complex/tests64_clog-main.$(OBJEXT)
 	-rm -f testcases/complex/tests64_conj-main.$(OBJEXT)
 	-rm -f testcases/complex/tests64_cpow-main.$(OBJEXT)
 	-rm -f testcases/complex/tests64_cproj-main.$(OBJEXT)
+	-rm -f testcases/complex/tests64_creal-main.$(OBJEXT)
 	-rm -f testcases/complex/tests64_csin-main.$(OBJEXT)
 	-rm -f testcases/complex/tests64_csinh-main.$(OBJEXT)
 	-rm -f testcases/complex/tests64_csqrt-main.$(OBJEXT)
@@ -2835,10 +2897,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_ccos-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_ccosh-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_cexp-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_cimag-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_clog-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_conj-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_cpow-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_cproj-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_creal-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_csin-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_csinh-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests32_csqrt-main.Po@am__quote@
@@ -2921,10 +2985,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_ccos-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_ccosh-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_cexp-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_cimag-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_clog-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_conj-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_cpow-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_cproj-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_creal-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_csin-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_csinh-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@testcases/complex/$(DEPDIR)/tests64_csqrt-main.Po@am__quote@
@@ -6839,6 +6905,22 @@ testcases/complex/tests32_cexp-main.obj: testcases/complex/main.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_cexp_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests32_cexp-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
 
+testcases/complex/tests32_cimag-main.o: testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_cimag_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests32_cimag-main.o -MD -MP -MF testcases/complex/$(DEPDIR)/tests32_cimag-main.Tpo -c -o testcases/complex/tests32_cimag-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) testcases/complex/$(DEPDIR)/tests32_cimag-main.Tpo testcases/complex/$(DEPDIR)/tests32_cimag-main.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testcases/complex/main.c' object='testcases/complex/tests32_cimag-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_cimag_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests32_cimag-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
+
+testcases/complex/tests32_cimag-main.obj: testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_cimag_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests32_cimag-main.obj -MD -MP -MF testcases/complex/$(DEPDIR)/tests32_cimag-main.Tpo -c -o testcases/complex/tests32_cimag-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) testcases/complex/$(DEPDIR)/tests32_cimag-main.Tpo testcases/complex/$(DEPDIR)/tests32_cimag-main.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testcases/complex/main.c' object='testcases/complex/tests32_cimag-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_cimag_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests32_cimag-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
+
 testcases/complex/tests32_clog-main.o: testcases/complex/main.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_clog_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests32_clog-main.o -MD -MP -MF testcases/complex/$(DEPDIR)/tests32_clog-main.Tpo -c -o testcases/complex/tests32_clog-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) testcases/complex/$(DEPDIR)/tests32_clog-main.Tpo testcases/complex/$(DEPDIR)/tests32_clog-main.Po
@@ -6902,6 +6984,22 @@ testcases/complex/tests32_cproj-main.obj: testcases/complex/main.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testcases/complex/main.c' object='testcases/complex/tests32_cproj-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_cproj_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests32_cproj-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
+
+testcases/complex/tests32_creal-main.o: testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_creal_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests32_creal-main.o -MD -MP -MF testcases/complex/$(DEPDIR)/tests32_creal-main.Tpo -c -o testcases/complex/tests32_creal-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) testcases/complex/$(DEPDIR)/tests32_creal-main.Tpo testcases/complex/$(DEPDIR)/tests32_creal-main.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testcases/complex/main.c' object='testcases/complex/tests32_creal-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_creal_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests32_creal-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
+
+testcases/complex/tests32_creal-main.obj: testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_creal_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests32_creal-main.obj -MD -MP -MF testcases/complex/$(DEPDIR)/tests32_creal-main.Tpo -c -o testcases/complex/tests32_creal-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) testcases/complex/$(DEPDIR)/tests32_creal-main.Tpo testcases/complex/$(DEPDIR)/tests32_creal-main.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testcases/complex/main.c' object='testcases/complex/tests32_creal-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_creal_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests32_creal-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
 
 testcases/complex/tests32_csin-main.o: testcases/complex/main.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests32_csin_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests32_csin-main.o -MD -MP -MF testcases/complex/$(DEPDIR)/tests32_csin-main.Tpo -c -o testcases/complex/tests32_csin-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
@@ -7159,6 +7257,22 @@ testcases/complex/tests64_cexp-main.obj: testcases/complex/main.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_cexp_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests64_cexp-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
 
+testcases/complex/tests64_cimag-main.o: testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_cimag_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests64_cimag-main.o -MD -MP -MF testcases/complex/$(DEPDIR)/tests64_cimag-main.Tpo -c -o testcases/complex/tests64_cimag-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) testcases/complex/$(DEPDIR)/tests64_cimag-main.Tpo testcases/complex/$(DEPDIR)/tests64_cimag-main.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testcases/complex/main.c' object='testcases/complex/tests64_cimag-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_cimag_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests64_cimag-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
+
+testcases/complex/tests64_cimag-main.obj: testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_cimag_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests64_cimag-main.obj -MD -MP -MF testcases/complex/$(DEPDIR)/tests64_cimag-main.Tpo -c -o testcases/complex/tests64_cimag-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) testcases/complex/$(DEPDIR)/tests64_cimag-main.Tpo testcases/complex/$(DEPDIR)/tests64_cimag-main.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testcases/complex/main.c' object='testcases/complex/tests64_cimag-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_cimag_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests64_cimag-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
+
 testcases/complex/tests64_clog-main.o: testcases/complex/main.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_clog_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests64_clog-main.o -MD -MP -MF testcases/complex/$(DEPDIR)/tests64_clog-main.Tpo -c -o testcases/complex/tests64_clog-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) testcases/complex/$(DEPDIR)/tests64_clog-main.Tpo testcases/complex/$(DEPDIR)/tests64_clog-main.Po
@@ -7222,6 +7336,22 @@ testcases/complex/tests64_cproj-main.obj: testcases/complex/main.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testcases/complex/main.c' object='testcases/complex/tests64_cproj-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_cproj_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests64_cproj-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
+
+testcases/complex/tests64_creal-main.o: testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_creal_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests64_creal-main.o -MD -MP -MF testcases/complex/$(DEPDIR)/tests64_creal-main.Tpo -c -o testcases/complex/tests64_creal-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) testcases/complex/$(DEPDIR)/tests64_creal-main.Tpo testcases/complex/$(DEPDIR)/tests64_creal-main.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testcases/complex/main.c' object='testcases/complex/tests64_creal-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_creal_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests64_creal-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
+
+testcases/complex/tests64_creal-main.obj: testcases/complex/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_creal_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests64_creal-main.obj -MD -MP -MF testcases/complex/$(DEPDIR)/tests64_creal-main.Tpo -c -o testcases/complex/tests64_creal-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) testcases/complex/$(DEPDIR)/tests64_creal-main.Tpo testcases/complex/$(DEPDIR)/tests64_creal-main.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testcases/complex/main.c' object='testcases/complex/tests64_creal-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_creal_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testcases/complex/tests64_creal-main.obj `if test -f 'testcases/complex/main.c'; then $(CYGPATH_W) 'testcases/complex/main.c'; else $(CYGPATH_W) '$(srcdir)/testcases/complex/main.c'; fi`
 
 testcases/complex/tests64_csin-main.o: testcases/complex/main.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests64_csin_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testcases/complex/tests64_csin-main.o -MD -MP -MF testcases/complex/$(DEPDIR)/tests64_csin-main.Tpo -c -o testcases/complex/tests64_csin-main.o `test -f 'testcases/complex/main.c' || echo '$(srcdir)/'`testcases/complex/main.c
@@ -7507,6 +7637,10 @@ recheck recheck-html:
 	        else echo $$f; fi;					\
 	      done | tr '\012\015' '  '`;				\
 	$(MAKE) $(AM_MAKEFLAGS) $$target AM_MAKEFLAGS='$(AM_MAKEFLAGS) TEST_LOGS="'"$$list"'"'
+tests32/cimag.log: tests32/cimag$(EXEEXT)
+	@p='tests32/cimag$(EXEEXT)'; $(am__check_pre) $(LOG_COMPILE) "$$tst" $(am__check_post)
+tests32/creal.log: tests32/creal$(EXEEXT)
+	@p='tests32/creal$(EXEEXT)'; $(am__check_pre) $(LOG_COMPILE) "$$tst" $(am__check_post)
 tests32/cabs.log: tests32/cabs$(EXEEXT)
 	@p='tests32/cabs$(EXEEXT)'; $(am__check_pre) $(LOG_COMPILE) "$$tst" $(am__check_post)
 tests32/cacos.log: tests32/cacos$(EXEEXT)
@@ -7547,6 +7681,10 @@ tests32/ctan.log: tests32/ctan$(EXEEXT)
 	@p='tests32/ctan$(EXEEXT)'; $(am__check_pre) $(LOG_COMPILE) "$$tst" $(am__check_post)
 tests32/ctanh.log: tests32/ctanh$(EXEEXT)
 	@p='tests32/ctanh$(EXEEXT)'; $(am__check_pre) $(LOG_COMPILE) "$$tst" $(am__check_post)
+tests64/cimag.log: tests64/cimag$(EXEEXT)
+	@p='tests64/cimag$(EXEEXT)'; $(am__check_pre) $(LOG_COMPILE) "$$tst" $(am__check_post)
+tests64/creal.log: tests64/creal$(EXEEXT)
+	@p='tests64/creal$(EXEEXT)'; $(am__check_pre) $(LOG_COMPILE) "$$tst" $(am__check_post)
 tests64/cabs.log: tests64/cabs$(EXEEXT)
 	@p='tests64/cabs$(EXEEXT)'; $(am__check_pre) $(LOG_COMPILE) "$$tst" $(am__check_post)
 tests64/cacos.log: tests64/cacos$(EXEEXT)
@@ -7878,8 +8016,6 @@ uninstall-am: uninstall-libLIBRARIES
 	mostlyclean-generic pdf pdf-am ps ps-am recheck recheck-html \
 	tags uninstall uninstall-am uninstall-libLIBRARIES
 
-
-# vi:ft=automake
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
