@@ -52,5 +52,12 @@ typedef enum _ResourcePolicy {
   plaDeleteOldest    = 1 
 } ResourcePolicy;
 
+typedef enum _StreamMode {
+  plaFile        = 0x0001,
+  plaRealTime    = 0x0002,
+  plaBoth        = 0x0003,
+  plaBuffering   = 0x0004 
+} StreamMode;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_PLA*/

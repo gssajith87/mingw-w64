@@ -100,8 +100,6 @@ typedef struct _ClfsMgmtPolicyMaximumSize {
   ULONG Containers;
 } ClfsMgmtPolicyMaximumSize;
 
-Copy
-
 typedef struct _ClfsMgmtPolicyNewContainerExtension {
   ULONG ExtensionLengthInBytes;
   WCHAR ExtensionString[1];

@@ -3,6 +3,13 @@
 #include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
 
+typedef enum _StatusCode {
+  STATUS_NO_ERROR,
+  STATUS_UNSPECIFIED_FAILURE,
+  STATUS_NO_BINDING,
+  STATUS_NOPREFIX_AVAIL 
+} StatusCode;
+
 typedef struct _DHCPV6CAPI_CLASSID {
   ULONG  Flags;
   LPBYTE Data;

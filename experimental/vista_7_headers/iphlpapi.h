@@ -245,6 +245,11 @@ ULONG WINAPI ResolveNeighbor(
   PULONG PhysicalAddressLength
 );
 
+DWORD WINAPI SetIpStatisticsEx(
+  PMIB_IPSTATS pIpStats,
+  ULONG Family
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus

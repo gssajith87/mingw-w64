@@ -2828,6 +2828,7 @@ typedef struct _TP_CALLBACK_INSTANCE *PTP_CALLBACK_INSTANCE;
 typedef struct _TP_WIN32_IO_CALLBACK *PTP_WIN32_IO_CALLBACK;
 typedef struct _TP_CALLBACK_ENVIRON *PTP_CALLBACK_ENVIRON;
 typedef struct _TP_CLEANUP_GROUP *PTP_CLEANUP_GROUP;
+typedef struct _TP_CLEANUP_GROUP_CANCEL_CALLBACK *PTP_CLEANUP_GROUP_CANCEL_CALLBACK;
 typedef struct _TP_TIMER *PTP_TIMER;
 typedef struct _TP_WAIT *PTP_WAIT;
 typedef struct _TP_WORK *PTP_WORK;
@@ -3508,7 +3509,7 @@ WINBOOL WINAPI GetPhysicallyInstalledSystemMemory(
   PULONGLONG TotalMemoryInKilobytes
 );
 
-typedef LPVOID LPPROC_THREAD_ATTRIBUTE_LIST;
+typedef LPVOID PPROC_THREAD_ATTRIBUTE_LIST, LPPROC_THREAD_ATTRIBUTE_LIST;
 
 WINBASEAPI WINBOOL WINAPI UpdateProcThreadAttribute(
   LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList,
@@ -3669,6 +3670,149 @@ WINBASEAPI HANDLE WINAPI ReOpenFile(
   DWORD dwShareMode,
   DWORD dwFlags
 );
+
+WINBASEAPI WINBOOL WINAPI SetDynamicTimeZoneInformation(
+  const DYNAMIC_TIME_ZONE_INFORMATION *lpTimeZoneInformation
+);
+
+WINBASEAPI VOID WINAPI SetEventWhenCallbackReturns(
+  PTP_CALLBACK_INSTANCE pci,
+  HANDLE evt
+);
+
+WINBASEAPI WINBOOL WINAPI SetFileAttributesTransactedA(
+  LPCSTR lpFileName,
+  DWORD dwFileAttributes,
+  HANDLE hTransaction
+);
+
+WINBASEAPI WINBOOL WINAPI SetFileAttributesTransactedW(
+  LPCWSTR lpFileName,
+  DWORD dwFileAttributes,
+  HANDLE hTransaction
+);
+
+#define SetFileAttributesTransacted __MINGW_NAME_AW(SetFileAttributesTransacted)
+
+WINBASEAPI WINBOOL WINAPI SetFileBandwidthReservation(
+  HANDLE hFile,
+  DWORD nPeriodMilliseconds,
+  DWORD nBytesPerPeriod,
+  WINBOOL bDiscardable,
+  LPDWORD lpTransferSize,
+  LPDWORD lpNumOutstandingRequests
+);
+
+WINBASEAPI WINBOOL WINAPI SetFileCompletionNotificationModes(
+  HANDLE FileHandle,
+  UCHAR Flags
+);
+
+WINBASEAPI WINBOOL WINAPI SetFileInformationByHandle(
+  HANDLE hFile,
+  FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
+  LPVOID lpFileInformation,
+  DWORD dwBufferSize
+);
+
+WINBASEAPI WINBOOL WINAPI SetFileIoOverlappedRange(
+  HANDLE FileHandle,
+  PUCHAR OverlappedRangeStart,
+  ULONG Length
+);
+
+#define PROCESS_AFFINITY_ENABLE_AUTO_UPDATE 0x00000001UL
+
+WINBASEAPI WINBOOL WINAPI SetProcessAffinityUpdateMode(
+  HANDLE ProcessHandle,
+  DWORD dwFlags
+);
+
+#define QUOTA_LIMITS_HARDWS_MIN_DISABLE 0x00000002
+#define QUOTA_LIMITS_HARDWS_MIN_ENABLE 0x00000001
+#define QUOTA_LIMITS_HARDWS_MAX_DISABLE 0x00000008
+#define QUOTA_LIMITS_HARDWS_MAX_ENABLE 0x00000004
+
+WINBASEAPI WINBOOL WINAPI SetProcessWorkingSetSizeEx(
+  HANDLE hProcess,
+  SIZE_T dwMinimumWorkingSetSize,
+  SIZE_T dwMaximumWorkingSetSize,
+  DWORD Flags
+);
+
+WINADVAPI VOID WINAPI SetSecurityAccessMask(
+  SECURITY_INFORMATION SecurityInformation,
+  LPDWORD DesiredAccess
+);
+
+/* INLINE - http://msdn.microsoft.com/en-us/library/ms686255%28v=VS.85%29.aspx */
+VOID SetThreadpoolCallbackCleanupGroup(
+  PTP_CALLBACK_ENVIRON pcbe,
+  PTP_CLEANUP_GROUP ptpcg,
+  PTP_CLEANUP_GROUP_CANCEL_CALLBACK pfng
+);
+
+/* INLINE - http://msdn.microsoft.com/en-us/library/ms686258%28v=VS.85%29.aspx */
+VOID SetThreadpoolCallbackLibrary(
+  PTP_CALLBACK_ENVIRON pcbe,
+  PVOID mod
+);
+
+/* INLINE -  http://msdn.microsoft.com/en-us/library/ms686261%28v=VS.85%29.aspx */
+VOID SetThreadpoolCallbackPool(
+  PTP_CALLBACK_ENVIRON pcbe,
+  PTP_POOL ptpp
+);
+
+/* INLINE - http://msdn.microsoft.com/en-us/library/ms686263%28v=VS.85%29.aspx */
+VOID SetThreadpoolCallbackRunsLong(
+  PTP_CALLBACK_ENVIRON pcbe
+);
+
+WINBASEAPI VOID WINAPI SetThreadpoolThreadMaximum(
+  PTP_POOL ptpp,
+  DWORD cthrdMost
+);
+
+WINBASEAPI WINBOOL WINAPI SetThreadpoolThreadMinimum(
+  PTP_POOL ptpp,
+  DWORD cthrdMic
+);
+
+WINBASEAPI VOID WINAPI SetThreadpoolTimer(
+  PTP_TIMER pti,
+  PFILETIME pftDueTime,
+  DWORD msPeriod,
+  DWORD msWindowLength
+);
+
+WINBASEAPI VOID WINAPI SetThreadpoolWait(
+  PTP_WAIT pwa,
+  HANDLE h,
+  PFILETIME pftTimeout
+);
+
+typedef VOID (CALLBACK *PTP_SIMPLE_CALLBACK)(
+  PTP_CALLBACK_INSTANCE Instance,
+  PVOID Context
+);
+
+WINBASEAPI VOID WINAPI StartThreadpoolIo(
+  PTP_IO pio
+);
+
+typedef struct _STARTUPINFOEXA {
+  STARTUPINFOA                 StartupInfo;
+  PPROC_THREAD_ATTRIBUTE_LIST lpAttributeList;
+} STARTUPINFOEXA, *LPSTARTUPINFOEXA;
+
+typedef struct _STARTUPINFOEXAW {
+  STARTUPINFOW                 StartupInfo;
+  PPROC_THREAD_ATTRIBUTE_LIST lpAttributeList;
+} STARTUPINFOEXW, *LPSTARTUPINFOEXW;
+
+__MINGW_TYPEDEF_AW(STARTUPINFOEX)
+__MINGW_TYPEDEF_AW(LPSTARTUPINFOEX)
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 

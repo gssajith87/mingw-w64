@@ -5334,6 +5334,21 @@ HDESK WINAPI CreateDesktopExW(
   PVOID pvoid
 );
 
+WINBOOL WINAPI ShutdownBlockReasonCreate(
+  HWND hWnd,
+  LPCWSTR pwszReason
+);
+
+WINBOOL WINAPI ShutdownBlockReasonDestroy(
+  HWND hWnd
+);
+
+WINBOOL WINAPI ShutdownBlockReasonQuery(
+  HWND hWnd,
+  LPWSTR pwszBuff,
+  DWORD *pcchBuff
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #endif /* NOUSER */

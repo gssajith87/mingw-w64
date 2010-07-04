@@ -385,6 +385,56 @@ extern "C" {
   extern WINSCARDAPI LONG WINAPI GetOpenCardNameW(LPOPENCARDNAMEW);
   extern WINSCARDAPI LONG WINAPI SCardDlgExtendedError(void);
 
+#if (_WIN32_WINNT >= 0x0600)
+LONG WINAPI SCardGetTransmitCount(
+  SCARDHANDLE hCard,
+  LPDWORD pcTransmitCount
+);
+
+#define SCARD_W_CACHE_ITEM_NOT_FOUND 0x80100070
+#define SCARD_W_CACHE_ITEM_STALE 0x80100071
+
+LONG WINAPI SCardReadCacheA(
+  SCARDCONTEXT hContext,
+  UUID *CardIdentifier,
+  DWORD FreshnessCounter,
+  LPSTR LookupName,
+  PBYTE Data,
+  DWORD *DataLen
+);
+
+LONG WINAPI SCardReadCacheW(
+  SCARDCONTEXT hContext,
+  UUID *CardIdentifier,
+  DWORD FreshnessCounter,
+  LPWSTR LookupName,
+  PBYTE Data,
+  DWORD *DataLen
+);
+
+#define SCardReadCache __MINGW_NAME_AW(SCardReadCache)
+
+LONG WINAPI SCardWriteCacheA(
+  SCARDCONTEXT hContext,
+  UUID *CardIdentifier,
+  DWORD FreshnessCounter,
+  LPSTR LookupName,
+  PBYTE Data,
+  DWORD DataLen
+);
+
+LONG WINAPI SCardWriteCacheW(
+  SCARDCONTEXT hContext,
+  UUID *CardIdentifier,
+  DWORD FreshnessCounter,
+  LPWSTR LookupName,
+  PBYTE Data,
+  DWORD DataLen
+);
+
+#define SCardWriteCache __MINGW_NAME_AW(SCardWriteCache)
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 #ifdef __cplusplus
 }
 #endif

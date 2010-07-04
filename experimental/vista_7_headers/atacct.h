@@ -8,4 +8,10 @@ HRESULT GetNetScheduleAccountInformation(
   WCHAR wszAccount[]
 );
 
+HRESULT SetNetScheduleAccountInformation(
+  LPCWSTR pwszServerName,
+  LPCWSTR pwszAccount,
+  LPCWSTR pwszPassword
+);
+
 #endif /*_INC_ATACCT*/

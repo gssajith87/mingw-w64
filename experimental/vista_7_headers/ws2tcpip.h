@@ -382,6 +382,38 @@ int WSAAPI GetAddrInfoExW(LPCWSTR pName,LPCWSTR pServiceName,DWORD dwNameSpace,L
 void WSAAPI FreeAddrInfoExA(PADDRINFOEXA pAddrInfo);
 void WSAAPI FreeAddrInfoExW(PADDRINFOEXW pAddrInfo);
 
+int WSAAPI SetAddrInfoExA(
+  PCSTR pName,
+  PCSTR pServiceName,
+  SOCKET_ADDRESS *pAddresses,
+  DWORD dwAddressCount,
+  LPBLOB lpBlob,
+  DWORD dwFlags,
+  DWORD dwNameSpace,
+  LPGUID lpNspId,
+  struct timeval *timeout,
+  LPOVERLAPPED lpOverlapped,
+  LPLOOKUPSERVICE_COMPLETION_ROUTINE lpCompletionRoutine,
+  LPHANDLE lpNameHandle
+);
+
+int WSAAPI SetAddrInfoExW(
+  PCWSTR pName,
+  PCWSTR pServiceName,
+  SOCKET_ADDRESS *pAddresses,
+  DWORD dwAddressCount,
+  LPBLOB lpBlob,
+  DWORD dwFlags,
+  DWORD dwNameSpace,
+  LPGUID lpNspId,
+  struct timeval *timeout,
+  LPOVERLAPPED lpOverlapped,
+  LPLOOKUPSERVICE_COMPLETION_ROUTINE lpCompletionRoutine,
+  LPHANDLE lpNameHandle
+);
+
+#define SetAddrInfoEx __MINGW_NAME_AW(SetAddrInfoEx)
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus

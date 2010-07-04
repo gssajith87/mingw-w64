@@ -59,5 +59,11 @@ WINBOOL WINAPI RemoveLogPolicy(
   CLFS_MANAGEMENT_POLICY_TYPE ePolicyType
 );
 
+WINBOOL WINAPI SetLogFileSizeWithPolicy(
+  HANDLE hLog,
+  PULONGLONG pDesiredSize,
+  PULONGLONG pResultingSize
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_CLFSMGMTW32*/

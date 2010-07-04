@@ -16,5 +16,10 @@ typedef struct _CREDSSP_CRED {
   PVOID               pSpnegoCred;
 } CREDSSP_CRED, *PCREDSSP_CRED;
 
+typedef struct _SecPkgContext_ClientCreds {
+  ULONG  AuthBufferLen;
+  PUCHAR AuthBuffer;
+} SecPkgContext_ClientCreds, *PSecPkgContext_ClientCreds;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_CREDSSP*/

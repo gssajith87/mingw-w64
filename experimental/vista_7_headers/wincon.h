@@ -339,6 +339,21 @@ WINBOOL WINAPI GetCurrentConsoleFontEx(
   PCONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
 );
 
+WINBOOL WINAPI SetConsoleHistoryInfo(
+  PCONSOLE_HISTORY_INFO lpConsoleHistoryInfo
+);
+
+WINBOOL WINAPI SetConsoleScreenBufferInfoEx(
+  HANDLE hConsoleOutput,
+  PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx
+);
+
+WINBOOL WINAPI SetCurrentConsoleFontEx(
+  HANDLE hConsoleOutput,
+  WINBOOL bMaximumWindow,
+  PCONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 
 #ifdef __cplusplus

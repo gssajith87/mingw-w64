@@ -132,5 +132,12 @@ WINBASEAPI HANDLE WINAPI OpenFileById(
   DWORD dwFlags
 );
 
+WINBOOL WINAPI SetFileInformationByHandle(
+  HANDLE hFile,
+  FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
+  LPVOID lpFileInformation,
+  DWORD dwBufferSize
+);
+
 #endif /*(_WIN32_WINNT < 0x0600)*/
 #endif /*_INC_FILEEXTD*/

@@ -208,5 +208,19 @@ WINBOOL WINAPI RollbackTransactionAsync(
   HANDLE TransactionHandle
 );
 
+WINBOOL WINAPI SetEnlistmentRecoveryInformation(
+  HANDLE EnlistmentHandle,
+  ULONG BufferSize,
+  PVOID Buffer
+);
+
+WINBOOL WINAPI SetTransactionInformation(
+  HANDLE TransactionHandle,
+  DWORD IsolationLevel,
+  DWORD IsolationFlags,
+  DWORD Timeout,
+  LPWSTR Description
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_KTMW32*/

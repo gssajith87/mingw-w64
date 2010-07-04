@@ -285,5 +285,22 @@ WINBOOL WINAPI ReserveAndAppendLogAligned(
   LPOVERLAPPED overlapped
 );
 
+WINBOOL WINAPI SetEndOfLog(
+  HANDLE hLog,
+  PCLFS_LSN plsnEnd,
+  LPOVERLAPPED lpOverlapped
+);
+
+WINBOOL WINAPI SetLogArchiveMode(
+  HANDLE hLog,
+  CLFS_LOG_ARCHIVE_MODE eMode
+);
+
+WINBOOL WINAPI SetLogArchiveTail(
+  HANDLE hLog,
+  PCLFS_LSN plsnArchiveTail,
+  LPVOID pReserved
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_CLFSW32*/

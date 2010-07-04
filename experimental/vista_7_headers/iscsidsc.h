@@ -664,5 +664,82 @@ HRESULT WINAPI ReportRadiusServerListW(
 );
 #define ReportRadiusServerList __MINGW_NAME_AW(ReportRadiusServerList)
 
+HRESULT WINAPI SendScsiReadCapacity(
+  PISCSI_UNIQUE_SESSION_ID UniqueSessionId,
+  ULONGLONG Lun,
+  PUCHAR *ScsiStatus,
+  PULONG *ResponseSize,
+  PUCHAR ResponseBuffer,
+  PULONG *SenseSize,
+  PUCHAR SenseBuffer
+);
+
+HRESULT WINAPI SendScsiReportLuns(
+  PISCSI_UNIQUE_SESSION_ID UniqueSessionId,
+  PUCHAR *ScsiStatus,
+  PULONG *ResponseSize,
+  PUCHAR ResponseBuffer,
+  PULONG *SenseSize,
+  PUCHAR SenseBuffer
+);
+
+HRESULT WINAPI SendScsiInquiry(
+  PISCSI_UNIQUE_SESSION_ID *UniqueSessionId,
+  ULONGLONG Lun,
+  UCHAR EvpdCmddt,
+  UCHAR PageCode,
+  PUCHAR *ScsiStatus,
+  PULONG *ReponseSize,
+  PUCHAR ReponseBuffer,
+  PULONG *SenseSize,
+  PUCHAR SenseBuffer
+);
+
+HRESULT WINAPI SetIScsiGroupPresharedKey(
+  ULONG KeyLength,
+  PUCHAR Key,
+  BOOLEAN Persist
+);
+
+HRESULT WINAPI SetIScsiInitiatorCHAPSharedSecret(
+  ULONG SharedSecretLength,
+  PUCHAR SharedSecret
+);
+
+HRESULT WINAPI SetIScsiInitiatorNodeNameA(
+  PCHAR InitiatorNodeName
+);
+
+HRESULT WINAPI SetIScsiInitiatorNodeNameW(
+  PWCHAR InitiatorNodeName
+);
+
+#define SetIScsiInitiatorNodeName __MINGW_NAME_AW(SetIScsiInitiatorNodeName)
+
+HRESULT WINAPI SetIscsiInitiatorRADIUSSharedSecret(
+  ULONG SharedSecretLength,
+  PUCHAR SharedSecret
+);
+
+HRESULT WINAPI SetIScsiTunnelModeOuterAddressA(
+  PCHAR InitiatorName,
+  ULONG InitiatorPortNumber,
+  PCHAR DestinationAddress,
+  PCHAR OuterModeAddress,
+  BOOLEAN Persist
+);
+
+HRESULT WINAPI SetIScsiTunnelModeOuterAddressW(
+  PWCHAR InitiatorName,
+  ULONG  InitiatorPortNumber,
+  PWCHAR DestinationAddress,
+  PWCHAR OuterModeAddress,
+  BOOLEAN Persist
+);
+
+#define SetIScsiTunnelModeOuterAddress __MINGW_NAME_AW(SetIScsiTunnelModeOuterAddress)
+
+HRESULT WINAPI SetupPersistentIScsiDevices(void);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif

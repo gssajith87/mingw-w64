@@ -1650,6 +1650,18 @@ typedef struct _FILE_SET_DEFECT_MGMT_BUFFER {
   BOOLEAN Disable;
 } FILE_SET_DEFECT_MGMT_BUFFER, *PFILE_SET_DEFECT_MGMT_BUFFER;
 
+typedef enum _SHRINK_VOLUME_REQUEST_TYPES {
+  ShrinkPrepare,
+  ShrinkCommit,
+  ShrinkAbort
+} SHRINK_VOLUME_REQUEST_TYPES;
+
+typedef struct _SHRINK_VOLUME_INFORMATION {
+  SHRINK_VOLUME_REQUEST_TYPES ShrinkRequestType;
+  DWORDLONG                   Flags;
+  LONGLONG                    NewNumberOfSectors;
+} SHRINK_VOLUME_INFORMATION, *PSHRINK_VOLUME_INFORMATION;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #endif

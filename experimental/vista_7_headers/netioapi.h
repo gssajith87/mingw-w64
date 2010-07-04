@@ -565,5 +565,21 @@ NETIOAPI_API ResolveIpNetEntry2(
   const SOCKADDR_INET *SourceAddress
 );
 
+NETIOAPI_API SetIpForwardEntry2(
+  const MIB_IPFORWARD_ROW2 *Route
+);
+
+NETIOAPI_API SetIpInterfaceEntry(
+  PMIB_IPINTERFACE_ROW Row
+);
+
+NETIOAPI_API SetIpNetEntry2(
+  PMIB_IPNET_ROW2 Row
+);
+
+NETIOAPI_API SetUnicastIpAddressEntry(
+  const MIB_UNICASTIPADDRESS_ROW *Row
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_NETIOAPI*/
