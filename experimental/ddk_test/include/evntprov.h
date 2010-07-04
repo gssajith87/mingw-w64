@@ -18,7 +18,8 @@
  *
  */
 
-#pragma once
+#ifndef _EVNTPROV_H_
+#define _EVNTPROV_H_
 
 #ifndef EVNTAPI
 #ifndef MIDL_PASS
@@ -30,25 +31,31 @@
 #endif /* MIDL_PASS */
 #endif /* EVNTAPI */
 
+#ifndef FORCEINLINE
+#ifdef __GNUC__
+#define FORCEINLINE __attribute((always_inline))
+#endif /*__GNUC__*/
+#endif /*FORCEINLINE*/
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define EVENT_MIN_LEVEL                      (0)
-#define EVENT_MAX_LEVEL                      (0xff)
+#define EVENT_MIN_LEVEL				(0)
+#define EVENT_MAX_LEVEL				(0xff)
 
-#define EVENT_ACTIVITY_CTRL_GET_ID           (1)
-#define EVENT_ACTIVITY_CTRL_SET_ID           (2)
-#define EVENT_ACTIVITY_CTRL_CREATE_ID        (3)
-#define EVENT_ACTIVITY_CTRL_GET_SET_ID       (4)
-#define EVENT_ACTIVITY_CTRL_CREATE_SET_ID    (5)
+#define EVENT_ACTIVITY_CTRL_GET_ID		(1)
+#define EVENT_ACTIVITY_CTRL_SET_ID		(2)
+#define EVENT_ACTIVITY_CTRL_CREATE_ID		(3)
+#define EVENT_ACTIVITY_CTRL_GET_SET_ID		(4)
+#define EVENT_ACTIVITY_CTRL_CREATE_SET_ID	(5)
 
 typedef ULONGLONG REGHANDLE, *PREGHANDLE;
 
-#define MAX_EVENT_DATA_DESCRIPTORS           (128)
-#define MAX_EVENT_FILTER_DATA_SIZE           (1024)
+#define MAX_EVENT_DATA_DESCRIPTORS		(128)
+#define MAX_EVENT_FILTER_DATA_SIZE		(1024)
 
-#define EVENT_FILTER_TYPE_SCHEMATIZED        (0x80000000)
+#define EVENT_FILTER_TYPE_SCHEMATIZED		(0x80000000)
 
 typedef struct _EVENT_DATA_DESCRIPTOR {
   ULONGLONG Ptr;
@@ -82,7 +89,15 @@ typedef struct _EVENT_FILTER_HEADER {
   ULONG NextOffset;
 } EVENT_FILTER_HEADER, *PEVENT_FILTER_HEADER;
 
-#ifndef _ETW_KM_
+
+#define WINEVENT_LEVEL_CRITICAL	1
+#define WINEVENT_LEVEL_ERROR	2
+#define WINEVENT_LEVEL_WARNING	3
+#define WINEVENT_LEVEL_INFO	4
+#define WINEVENT_LEVEL_VERBOSE	5
+
+
+#ifndef _ETW_KM_ /* for wdm.h */
 
 typedef VOID
 (NTAPI *PENABLECALLBACK)(
@@ -169,7 +184,7 @@ EventWriteEx(
   IN PEVENT_DATA_DESCRIPTOR UserData OPTIONAL);
 #endif
 
-#endif // _ETW_KM_ 
+#endif /* _ETW_KM_ */
 
 FORCEINLINE
 VOID
@@ -352,4 +367,6 @@ EventDescOrKeyword(
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* _EVNTPROV_H_ */
 
