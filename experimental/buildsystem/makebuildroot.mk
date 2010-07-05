@@ -177,12 +177,12 @@ src/gmp.tar.bz2: \
 ########################################
 
 gmp-extract: \
-    src/gmp/.gmp.extract.marker
+    src/.gmp.extract.marker
 
-src/gmp/.gmp.extract.marker: \
+src/.gmp.extract.marker: \
     src/gmp.tar.bz2 \
-    src/gmp/src/.mkdir.marker
-	$(TAR) -C $(dir $@)/src --strip-components=1 -xjvf $<
+    src/gcc/gcc/src/gmp/.mkdir.marker
+	$(TAR) -C $(dir $@) --strip-components=1 -xjvf $<
 	@touch $@
 
 ########################################
@@ -201,12 +201,12 @@ src/mpfr.tar.bz2: \
 ########################################
 
 mpfr-extract: \
-    src/mpfr/.mpfr.extract.marker
+    src/.mpfr.extract.marker
 
-src/mpfr/.mpfr.extract.marker: \
+src/.mpfr.extract.marker: \
     src/mpfr.tar.bz2 \
-    src/mpfr/src/.mkdir.marker
-	$(TAR) -C $(dir $@)/src --strip-components=1 -xjvf $<
+    src/gcc/gcc/src/mpfr/.mkdir.marker
+	$(TAR) -C $(dir $@) --strip-components=1 -xjvf $<
 	@touch $@
 
 ########################################
@@ -225,12 +225,12 @@ src/mpc.tar.gz: \
 ########################################
 
 mpc-extract: \
-    src/mpc/.mpc.extract.marker
+    src/.mpc.extract.marker
 
-src/mpc/.mpc.extract.marker: \
+src/.mpc.extract.marker: \
     src/mpc.tar.gz \
-    src/mpc/src/.mkdir.marker
-	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
+    src/gcc/gcc/src/mpc/.mkdir.marker
+	$(TAR) -C $(dir $@) --strip-components=1 -xzvf $<
 	@touch $@
 
 ########################################
@@ -263,9 +263,9 @@ ifeq (,$(wildcard ${SRC_ARCHIVE}))
 ${SRC_ARCHIVE}: \
     src/binutils/.binutils.pull.marker \
     src/gcc/gcc/.gcc.pull.marker \
-    src/gmp/.gmp.extract.marker \
-    src/mpfr/.mpfr.extract.marker \
-    src/mpc/.mpc.extract.marker \
+    src/.gmp.extract.marker \
+    src/.mpfr.extract.marker \
+    src/.mpc.extract.marker \
     src/mingw/.mingw.pull.marker
 endif
 
@@ -394,132 +394,6 @@ endif
 	@touch $@
 
 ########################################
-# Configure GMP
-########################################
-gmp-configure: \
-    ${BUILD_DIR}/gmp/obj/.config.marker
-
-${BUILD_DIR}/gmp/obj/.config.marker: \
-    ${BUILD_DIR}/gmp/obj/.mkdir.marker \
-    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
-    ${BUILD_DIR}/root/.root.init.marker
-	cd $(dir $@) && \
-	../../../build/gmp/src/configure \
-	    $(or ${GCC_CONFIG_HOST_ARGS},--host=none-none-none) \
-	    --disable-shared \
-	    --prefix=${CURDIR}/${BUILD_DIR}/gmp/install
-	@touch $@
-
-########################################
-# Compile GMP
-########################################
-gmp-compile: \
-    ${BUILD_DIR}/gmp/obj/.compile.marker
-
-${BUILD_DIR}/gmp/obj/.compile.marker: \
-    ${BUILD_DIR}/gmp/obj/.config.marker
-	$(MAKE) -C $(dir $@)
-	@touch $@
-
-########################################
-# Install GMP
-########################################
-gmp-install: \
-    ${BUILD_DIR}/gmp/install/.install.marker
-
-${BUILD_DIR}/gmp/install/.install.marker: \
-    ${BUILD_DIR}/gmp/obj/.compile.marker \
-    ${BUILD_DIR}/gmp/install/.mkdir.marker
-	$(MAKE) -C ${BUILD_DIR}/gmp/obj install
-	@touch $@
-
-########################################
-# Configure MPFR
-########################################
-mpfr-configure: \
-    ${BUILD_DIR}/mpfr/obj/.config.marker
-
-${BUILD_DIR}/mpfr/obj/.config.marker: \
-    ${BUILD_DIR}/mpfr/obj/.mkdir.marker \
-    ${BUILD_DIR}/root/.root.init.marker \
-    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
-    ${BUILD_DIR}/gmp/install/.install.marker
-	cd $(dir $@) && \
-	../../../build/mpfr/src/configure \
-	    ${GCC_CONFIG_HOST_ARGS} \
-	    --disable-shared \
-	    --prefix=${CURDIR}/${BUILD_DIR}/mpfr/install \
-            --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install
-	@touch $@
-
-########################################
-# Compile MPFR
-########################################
-mpfr-compile: \
-    ${BUILD_DIR}/mpfr/obj/.compile.marker
-
-${BUILD_DIR}/mpfr/obj/.compile.marker: \
-    ${BUILD_DIR}/mpfr/obj/.config.marker
-	$(MAKE) -C $(dir $@)
-	@touch $@
-
-########################################
-# Install MPFR
-########################################
-mpfr-install: \
-    ${BUILD_DIR}/mpfr/install/.install.marker
-
-${BUILD_DIR}/mpfr/install/.install.marker: \
-    ${BUILD_DIR}/mpfr/obj/.compile.marker \
-    ${BUILD_DIR}/mpfr/install/.mkdir.marker
-	$(MAKE) -C ${BUILD_DIR}/mpfr/obj install
-	@touch $@
-
-########################################
-# Configure MPC
-########################################
-mpc-configure: \
-    ${BUILD_DIR}/mpc/obj/.config.marker
-
-${BUILD_DIR}/mpc/obj/.config.marker: \
-    ${BUILD_DIR}/mpc/obj/.mkdir.marker \
-    ${BUILD_DIR}/root/.root.init.marker \
-    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
-    ${BUILD_DIR}/gmp/install/.install.marker \
-    ${BUILD_DIR}/mpfr/install/.install.marker
-	cd $(dir $@) && \
-	../../../build/mpc/src/configure \
-	    ${GCC_CONFIG_HOST_ARGS} \
-            --enable-static --disable-shared \
-	    --prefix=${CURDIR}/${BUILD_DIR}/mpc/install \
-            --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
-            --with-mpfr=${CURDIR}/${BUILD_DIR}/mpfr/install
-	@touch $@
-
-########################################
-# Compile MPC
-########################################
-mpc-compile: \
-    ${BUILD_DIR}/mpc/obj/.compile.marker
-
-${BUILD_DIR}/mpc/obj/.compile.marker: \
-    ${BUILD_DIR}/mpc/obj/.config.marker
-	$(MAKE) -C $(dir $@)
-	@touch $@
-
-########################################
-# Install MPC
-########################################
-mpc-install: \
-    ${BUILD_DIR}/mpc/install/.install.marker
-
-${BUILD_DIR}/mpc/install/.install.marker: \
-    ${BUILD_DIR}/mpc/obj/.compile.marker \
-    ${BUILD_DIR}/mpc/install/.mkdir.marker
-	$(MAKE) -C ${BUILD_DIR}/mpc/obj install
-	@touch $@
-
-########################################
 # Configure GCC
 ########################################
 gcc-configure: \
@@ -533,9 +407,6 @@ endif
 ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/gcc/obj/.mkdir.marker \
     ${BUILD_DIR}/binutils/obj/.install.marker \
-    ${BUILD_DIR}/gmp/install/.install.marker \
-    ${BUILD_DIR}/mpfr/install/.install.marker \
-    ${BUILD_DIR}/mpc/install/.install.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
 	../../../build/gcc/gcc/configure \
@@ -543,9 +414,6 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
 	    ${GCC_CONFIG_HOST_ARGS} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
 	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
-            --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
-            --with-mpfr=${CURDIR}/${BUILD_DIR}/mpfr/install \
-            --with-mpc=${CURDIR}/${BUILD_DIR}/mpc/install \
 	    --enable-languages=all,obj-c++ \
 	    ${GCC_CONFIG_EXTRA_ARGS}
 	@touch $@
@@ -753,141 +621,6 @@ ${NATIVE_DIR}/binutils/obj/.install.marker: \
 	     TARGET_ARCH=${TARGET_ARCH} \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
-#########################################
-# Configure GMP
-########################################
-native-gmp-configure: \
-    ${NATIVE_DIR}/gmp/obj/.config.marker
-
-${NATIVE_DIR}/gmp/obj/.config.marker: \
-    ${BUILD_DIR}/gcc/obj/.install.marker \
-    ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
-    ${NATIVE_DIR}/gmp/obj/.mkdir.marker \
-    ${NATIVE_DIR}/root/.root.init.marker
-	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=${TARGET_ARCH} \
-	     TARGET_ARCH=${TARGET_ARCH} \
-	     BUILD_DIR=${NATIVE_DIR} $@
-
-########################################
-# Compile GMP
-########################################
-native-gmp-compile: \
-    ${NATIVE_DIR}/gmp/obj/.compile.marker
-
-${NATIVE_DIR}/gmp/obj/.compile.marker: \
-    ${NATIVE_DIR}/gmp/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=${TARGET_ARCH} \
-	     TARGET_ARCH=${TARGET_ARCH} \
-	     BUILD_DIR=${NATIVE_DIR} $@
-
-########################################
-# Install GMP
-########################################
-native-gmp-install: \
-    ${NATIVE_DIR}/gmp/install/.install.marker
-
-${NATIVE_DIR}/gmp/install/.install.marker: \
-    ${NATIVE_DIR}/gmp/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=${TARGET_ARCH} \
-	     TARGET_ARCH=${TARGET_ARCH} \
-	     BUILD_DIR=${NATIVE_DIR} $@
-
-########################################
-# Configure MPFR
-########################################
-native-mpfr-configure: \
-    ${NATIVE_DIR}/mpfr/obj/.config.marker
-
-${NATIVE_DIR}/mpfr/obj/.config.marker: \
-    ${BUILD_DIR}/gcc/obj/.install.marker \
-    ${NATIVE_DIR}/mingw-headers/obj/.install.marker\
-    ${NATIVE_DIR}/mpfr/obj/.mkdir.marker \
-    ${NATIVE_DIR}/gmp/install/.install.marker
-	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=${TARGET_ARCH} \
-	     TARGET_ARCH=${TARGET_ARCH} \
-	     BUILD_DIR=${NATIVE_DIR} $@
-
-########################################
-# Compile MPFR
-########################################
-native-mpfr-compile: \
-    ${NATIVE_DIR}/mpfr/obj/.compile.marker
-
-${NATIVE_DIR}/mpfr/obj/.compile.marker: \
-    ${NATIVE_DIR}/mpfr/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=${TARGET_ARCH} \
-	     TARGET_ARCH=${TARGET_ARCH} \
-	     BUILD_DIR=${NATIVE_DIR} $@
-
-########################################
-# Install MPFR
-########################################
-native-mpfr-install: \
-    ${NATIVE_DIR}/mpfr/install/.install.marker
-
-${NATIVE_DIR}/mpfr/install/.install.marker: \
-    ${NATIVE_DIR}/mpfr/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=${TARGET_ARCH} \
-	     TARGET_ARCH=${TARGET_ARCH} \
-	     BUILD_DIR=${NATIVE_DIR} $@
-
-########################################
-# Configure MPC
-########################################
-native-mpc-configure: \
-    ${NATIVE_DIR}/mpc/obj/.config.marker
-
-${NATIVE_DIR}/mpc/obj/.config.marker: \
-    ${BUILD_DIR}/gcc/obj/.install.marker \
-    ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
-    ${NATIVE_DIR}/mpc/obj/.mkdir.marker \
-    ${NATIVE_DIR}/mpfr/install/.install.marker
-	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=${TARGET_ARCH} \
-	     TARGET_ARCH=${TARGET_ARCH} \
-	     BUILD_DIR=${NATIVE_DIR} $@
-
-########################################
-# Compile MPC
-########################################
-native-mpc-compile: \
-    ${NATIVE_DIR}/mpc/obj/.compile.marker
-
-${NATIVE_DIR}/mpc/obj/.compile.marker: \
-    ${NATIVE_DIR}/mpc/obj/.config.marker
-	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=${TARGET_ARCH} \
-	     TARGET_ARCH=${TARGET_ARCH} \
-	     BUILD_DIR=${NATIVE_DIR} $@
-
-########################################
-# Install MPC
-########################################
-native-mpc-install: \
-    ${NATIVE_DIR}/mpc/install/.install.marker
-
-${NATIVE_DIR}/mpc/install/.install.marker: \
-    ${NATIVE_DIR}/mpc/obj/.compile.marker
-	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
-	     HOST_ARCH=${TARGET_ARCH} \
-	     TARGET_ARCH=${TARGET_ARCH} \
-	     BUILD_DIR=${NATIVE_DIR} $@
-
 ########################################
 # GCC cross compiling support - winsup
 ########################################
@@ -921,9 +654,6 @@ ${NATIVE_DIR}/gcc/obj/.config.marker: \
     ${NATIVE_DIR}/gcc/gcc/.winsup.marker \
     ${NATIVE_DIR}/gcc/obj/.mkdir.marker \
     ${NATIVE_DIR}/binutils/obj/.install.marker \
-    ${NATIVE_DIR}/gmp/install/.install.marker \
-    ${NATIVE_DIR}/mpfr/install/.install.marker \
-    ${NATIVE_DIR}/mpc/install/.install.marker \
     ${NATIVE_DIR}/root/.root.init.marker
 	PATH=$(realpath build/root/bin):$$PATH \
 	${MAKE} -f $(lastword ${MAKEFILE_LIST}) \
@@ -1051,15 +781,6 @@ TARGETS := \
   binutils-configure \
   binutils-compile \
   binutils-install \
-  gmp-configure \
-  gmp-compile \
-  gmp-install \
-  mpfr-configure \
-  mpfr-compile \
-  mpfr-install \
-  mpc-configure \
-  mpc-compile \
-  mpc-install \
   gcc-configure \
   gcc-bootstrap-compile \
   gcc-bootstrap-install \
@@ -1074,15 +795,6 @@ TARGETS := \
   native-binutils-configure \
   native-binutils-compile \
   native-binutils-install \
-  native-gmp-configure \
-  native-gmp-compile \
-  native-gmp-install \
-  native-mpfr-configure \
-  native-mpfr-compile \
-  native-mpfr-install \
-  native-mpc-configure \
-  native-mpc-compile \
-  native-mpc-install \
   native-gcc-configure \
   native-headers-configure \
   native-headers-install \
