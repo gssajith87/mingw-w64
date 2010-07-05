@@ -651,10 +651,10 @@ typedef struct _GROUP_AFFINITY {
 
 /* Multiplication and Shift Operations */
 #define Int32x32To64(a,b) ((LONGLONG)(a)*(LONGLONG)(b))
-#define UInt32x32To64(a,b) ((DWORDLONG)(a)*(DWORDLONG)(b))
-#define Int64ShllMod32(a,b) ((DWORDLONG)(a)<<(b))
+#define UInt32x32To64(a,b) ((ULONGLONG)(a)*(ULONGLONG)(b))
+#define Int64ShllMod32(a,b) ((ULONGLONG)(a)<<(b))
 #define Int64ShraMod32(a,b) ((LONGLONG)(a)>>(b))
-#define Int64ShrlMod32(a,b) ((DWORDLONG)(a)>>(b))
+#define Int64ShrlMod32(a,b) ((ULONGLONG)(a)>>(b))
 
 /* C_ASSERT Definition */
 #define C_ASSERT(expr) extern char (*c_assert(void)) [(expr) ? 1 : -1]
