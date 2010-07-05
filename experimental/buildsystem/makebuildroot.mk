@@ -186,18 +186,6 @@ src/gmp/.gmp.extract.marker: \
 	@touch $@
 
 ########################################
-# Execute autoconf for gmp
-########################################
-
-gmp-autoconf: \
-    src/gmp/src/configure
-
-src/gmp/src/configure: \
-    src/gmp/.gmp.extract.marker
-	cd $(dir $@) && \
-	autoconf
-
-########################################
 # Download mpfr
 ########################################
 
@@ -275,7 +263,7 @@ ifeq (,$(wildcard ${SRC_ARCHIVE}))
 ${SRC_ARCHIVE}: \
     src/binutils/.binutils.pull.marker \
     src/gcc/gcc/.gcc.pull.marker \
-    src/gmp/src/configure \
+    src/gmp/.gmp.extract.marker \
     src/mpfr/.mpfr.extract.marker \
     src/mpc/.mpc.extract.marker \
     src/mingw/.mingw.pull.marker
@@ -1053,7 +1041,6 @@ TARGETS := \
   gcc-pull \
   gmp-download \
   gmp-extract \
-  gmp-autoconf \
   mpfr-download \
   mpfr-extract \
   mpc-download \
