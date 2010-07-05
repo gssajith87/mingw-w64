@@ -151,11 +151,6 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                  patch -p0 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
-    self.addStep(Compile(name="gmp-autoconf",
-                         description=["gmp", "autoconf"],
-                         descriptionDone=["autoconf", "gmp"],
-                         command=["make", "-f", "mingw-makefile", "gmp-autoconf"],
-                         env={"GMP_VERSION": WithProperties("%(gmp_version)s")}))
 
     # download mpfr
     self.addStep(Compile(name="mpfr-download",
