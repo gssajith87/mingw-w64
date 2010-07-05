@@ -148,17 +148,17 @@ else
 endif # GCC revision
 
 gcc-pull: \
-    src/gcc/gcc/.gcc.pull.marker
+    src/gcc/.gcc.pull.marker
 
-src/gcc/gcc/.gcc.pull.marker: \
-    src/gcc/gcc/.mkdir.marker
+src/gcc/.gcc.pull.marker: \
+    src/gcc/.mkdir.marker
 	cd $(dir $@) && \
 	$(SVN) $(SVN_CO) --revision ${GCC_REVISION} \
-	       svn://gcc.gnu.org/svn/gcc/$(strip ${GCC_BRANCH})/ .
+	       svn://gcc.gnu.org/svn/gcc/$(strip ${GCC_BRANCH})/ src
 	@touch $@
 
   ifneq (,$(strip ${GCC_UPDATE}))
-.PHONY: src/gcc/gcc/.gcc.pull.marker
+.PHONY: src/gcc/.gcc.pull.marker
   endif
 
 ########################################
@@ -181,7 +181,7 @@ gmp-extract: \
 
 src/.gmp.extract.marker: \
     src/gmp.tar.bz2 \
-    src/gcc/gcc/src/gmp/.mkdir.marker
+    src/gcc/src/gmp/.mkdir.marker
 	$(TAR) -C $(dir $@) --strip-components=1 -xjvf $<
 	@touch $@
 
@@ -205,7 +205,7 @@ mpfr-extract: \
 
 src/.mpfr.extract.marker: \
     src/mpfr.tar.bz2 \
-    src/gcc/gcc/src/mpfr/.mkdir.marker
+    src/gcc/src/mpfr/.mkdir.marker
 	$(TAR) -C $(dir $@) --strip-components=1 -xjvf $<
 	@touch $@
 
@@ -229,7 +229,7 @@ mpc-extract: \
 
 src/.mpc.extract.marker: \
     src/mpc.tar.gz \
-    src/gcc/gcc/src/mpc/.mkdir.marker
+    src/gcc/src/mpc/.mkdir.marker
 	$(TAR) -C $(dir $@) --strip-components=1 -xzvf $<
 	@touch $@
 
@@ -262,7 +262,7 @@ src-archive:  ${SRC_ARCHIVE}
 ifeq (,$(wildcard ${SRC_ARCHIVE}))
 ${SRC_ARCHIVE}: \
     src/binutils/.binutils.pull.marker \
-    src/gcc/gcc/.gcc.pull.marker \
+    src/gcc/.gcc.pull.marker \
     src/.gmp.extract.marker \
     src/.mpfr.extract.marker \
     src/.mpc.extract.marker \
@@ -377,19 +377,19 @@ ${BUILD_DIR}/binutils/obj/.install.marker: \
 # GCC cross compiling support - winsup
 ########################################
 gcc-winsup: \
-    build/gcc/gcc/.winsup.marker
+    build/gcc/.winsup.marker
 
 build/gcc/gcc/.winsup.marker: \
     ${BUILD_DIR}/.extract.marker \
     ${BUILD_DIR}/root/.root.init.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
-	test -e build/gcc/gcc/winsup  || \
-	  junction build/gcc/gcc/winsup "${BUILD_DIR}/root"
-	test -e build/gcc/gcc/winsup
+	test -e build/gcc/src/insup  || \
+	  junction build/gcc/src/winsup "${BUILD_DIR}/root"
+	test -e build/gcc/src/winsup
 else
-	test -h build/gcc/gcc/winsup  || \
-	  ln -s "../../../${BUILD_DIR}/root" build/gcc/gcc/winsup
-	test -h build/gcc/gcc/winsup
+	test -h build/gcc/src/winsup  || \
+	  ln -s "../../../${BUILD_DIR}/root" build/gcc/src/winsup
+	test -h build/gcc/src/winsup
 endif
 	@touch $@
 
@@ -401,7 +401,7 @@ gcc-configure: \
 
 ifneq (,$(filter %-mingw32,${HOST_ARCH}))
 ${BUILD_DIR}/gcc/obj/.config.marker: \
-    ${BUILD_DIR}/gcc/gcc/.winsup.marker
+    ${BUILD_DIR}/gcc/src/.winsup.marker
 endif
 
 ${BUILD_DIR}/gcc/obj/.config.marker: \
@@ -409,7 +409,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/binutils/obj/.install.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
-	../../../build/gcc/gcc/configure \
+	../../../build/gcc/src/configure \
 	    --target=${TARGET_ARCH} \
 	    ${GCC_CONFIG_HOST_ARGS} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
@@ -625,22 +625,22 @@ ${NATIVE_DIR}/binutils/obj/.install.marker: \
 # GCC cross compiling support - winsup
 ########################################
 native-gcc-winsup: \
-    ${NATIVE_DIR}/gcc/gcc/.winsup.marker
+    ${NATIVE_DIR}/gcc/src/.winsup.marker
 
-${NATIVE_DIR}/gcc/gcc/.winsup.marker: \
+${NATIVE_DIR}/gcc/src/.winsup.marker: \
     build/.extract.marker \
-    ${NATIVE_DIR}/gcc/gcc/.mkdir.marker \
+    ${NATIVE_DIR}/gcc/src/.mkdir.marker \
     ${NATIVE_DIR}/root/.root.init.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
-	-test -e build/gcc/gcc/winsup  && \
-	  junction -d build/gcc/gcc/winsup
-	junction build/gcc/gcc/winsup "${NATIVE_DIR}/root"
-	test -e build/gcc/gcc/winsup
+	-test -e build/gcc/src/winsup  && \
+	  junction -d build/gcc/src/winsup
+	junction build/gcc/src/winsup "${NATIVE_DIR}/root"
+	test -e build/gcc/src/winsup
 else
-	-test -h build/gcc/gcc/winsup && \
-	  rm build/gcc/gcc/winsup
-	ln -s "../../../${NATIVE_DIR}/root" build/gcc/gcc/winsup
-	test -h build/gcc/gcc/winsup
+	-test -h build/gcc/src/winsup && \
+	  rm build/gcc/src/winsup
+	ln -s "../../../${NATIVE_DIR}/root" build/gcc/src/winsup
+	test -h build/gcc/src/winsup
 endif
 	@touch $@
 
@@ -651,7 +651,7 @@ native-gcc-configure: \
     ${NATIVE_DIR}/gcc/obj/.config.marker
 
 ${NATIVE_DIR}/gcc/obj/.config.marker: \
-    ${NATIVE_DIR}/gcc/gcc/.winsup.marker \
+    ${NATIVE_DIR}/gcc/src/.winsup.marker \
     ${NATIVE_DIR}/gcc/obj/.mkdir.marker \
     ${NATIVE_DIR}/binutils/obj/.install.marker \
     ${NATIVE_DIR}/root/.root.init.marker
