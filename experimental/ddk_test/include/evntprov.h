@@ -95,13 +95,14 @@ typedef struct _EVENT_FILTER_HEADER {
   ULONG     NextOffset;
 } EVENT_FILTER_HEADER, *PEVENT_FILTER_HEADER;
 
-
+/* FIXME: These WINEVENT_* macros are supposed to be defined in
+ * winmeta.h :
+ * http://msdn.microsoft.com/en-us/library/aa363742(VS.85).aspx */
 #define WINEVENT_LEVEL_CRITICAL	1
 #define WINEVENT_LEVEL_ERROR	2
 #define WINEVENT_LEVEL_WARNING	3
 #define WINEVENT_LEVEL_INFO	4
 #define WINEVENT_LEVEL_VERBOSE	5
-
 
 #ifndef _ETW_KM_ /* for wdm.h */
 
