@@ -127,6 +127,7 @@ ULONG EVNTAPI EventActivityIdControl(
   ULONG ControlCode,
   LPGUID ActivityId
 );
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #if (_WIN32_WINNT >= 0x0601)
@@ -147,9 +148,9 @@ ULONG EVNTAPI EventWriteEx(
 FORCEINLINE
 VOID
 EventDataDescCreate(
-  OUT PEVENT_DATA_DESCRIPTOR EventDataDescriptor,
-  IN const VOID* DataPtr,
-  IN ULONG DataSize)
+  PEVENT_DATA_DESCRIPTOR EventDataDescriptor,
+  const VOID* DataPtr,
+  ULONG DataSize)
 {
   EventDataDescriptor->Ptr = (ULONGLONG)(ULONG_PTR)DataPtr;
   EventDataDescriptor->Size = DataSize;
@@ -159,14 +160,14 @@ EventDataDescCreate(
 FORCEINLINE
 VOID
 EventDescCreate(
-  OUT PEVENT_DESCRIPTOR EventDescriptor,
-  IN USHORT Id,
-  IN UCHAR Version,
-  IN UCHAR Channel,
-  IN UCHAR Level,
-  IN USHORT Task,
-  IN UCHAR Opcode,
-  IN ULONGLONG Keyword)
+  PEVENT_DESCRIPTOR EventDescriptor,
+  USHORT Id,
+  UCHAR Version,
+  UCHAR Channel,
+  UCHAR Level,
+  USHORT Task,
+  UCHAR Opcode,
+  ULONGLONG Keyword)
 {
   EventDescriptor->Id = Id;
   EventDescriptor->Version = Version;
@@ -180,7 +181,7 @@ EventDescCreate(
 FORCEINLINE
 VOID
 EventDescZero(
-  OUT PEVENT_DESCRIPTOR EventDescriptor)
+  PEVENT_DESCRIPTOR EventDescriptor)
 {
   memset(EventDescriptor, 0, sizeof(EVENT_DESCRIPTOR));
 }
@@ -188,7 +189,7 @@ EventDescZero(
 FORCEINLINE
 USHORT
 EventDescGetId(
-  IN PCEVENT_DESCRIPTOR EventDescriptor)
+  PCEVENT_DESCRIPTOR EventDescriptor)
 {
   return (EventDescriptor->Id);
 }
@@ -196,7 +197,7 @@ EventDescGetId(
 FORCEINLINE
 UCHAR
 EventDescGetVersion(
-  IN PCEVENT_DESCRIPTOR EventDescriptor)
+  PCEVENT_DESCRIPTOR EventDescriptor)
 {
   return (EventDescriptor->Version);
 }
@@ -204,7 +205,7 @@ EventDescGetVersion(
 FORCEINLINE
 USHORT
 EventDescGetTask(
-  IN PCEVENT_DESCRIPTOR EventDescriptor)
+  PCEVENT_DESCRIPTOR EventDescriptor)
 {
   return (EventDescriptor->Task);
 }
@@ -212,7 +213,7 @@ EventDescGetTask(
 FORCEINLINE
 UCHAR
 EventDescGetOpcode(
-  IN PCEVENT_DESCRIPTOR EventDescriptor)
+  PCEVENT_DESCRIPTOR EventDescriptor)
 {
   return (EventDescriptor->Opcode);
 }
@@ -220,7 +221,7 @@ EventDescGetOpcode(
 FORCEINLINE
 UCHAR
 EventDescGetChannel(
-  IN PCEVENT_DESCRIPTOR EventDescriptor)
+  PCEVENT_DESCRIPTOR EventDescriptor)
 {
   return (EventDescriptor->Channel);
 }
@@ -228,7 +229,7 @@ EventDescGetChannel(
 FORCEINLINE
 UCHAR
 EventDescGetLevel(
-  IN PCEVENT_DESCRIPTOR EventDescriptor)
+  PCEVENT_DESCRIPTOR EventDescriptor)
 {
   return (EventDescriptor->Level);
 }
@@ -236,7 +237,7 @@ EventDescGetLevel(
 FORCEINLINE
 ULONGLONG
 EventDescGetKeyword(
-  IN PCEVENT_DESCRIPTOR EventDescriptor)
+  PCEVENT_DESCRIPTOR EventDescriptor)
 {
   return (EventDescriptor->Keyword);
 }
@@ -244,8 +245,8 @@ EventDescGetKeyword(
 FORCEINLINE
 PEVENT_DESCRIPTOR
 EventDescSetId(
-  IN PEVENT_DESCRIPTOR EventDescriptor,
-  IN USHORT Id)
+  PEVENT_DESCRIPTOR EventDescriptor,
+  USHORT Id)
 {
   EventDescriptor->Id = Id;
   return (EventDescriptor);
@@ -254,8 +255,8 @@ EventDescSetId(
 FORCEINLINE
 PEVENT_DESCRIPTOR
 EventDescSetVersion(
-  IN PEVENT_DESCRIPTOR EventDescriptor,
-  IN UCHAR Version)
+  PEVENT_DESCRIPTOR EventDescriptor,
+  UCHAR Version)
 {
   EventDescriptor->Version = Version;
   return (EventDescriptor);
@@ -264,8 +265,8 @@ EventDescSetVersion(
 FORCEINLINE
 PEVENT_DESCRIPTOR
 EventDescSetTask(
-  IN PEVENT_DESCRIPTOR EventDescriptor,
-  IN USHORT Task)
+  PEVENT_DESCRIPTOR EventDescriptor,
+  USHORT Task)
 {
   EventDescriptor->Task = Task;
   return (EventDescriptor);
@@ -274,8 +275,8 @@ EventDescSetTask(
 FORCEINLINE
 PEVENT_DESCRIPTOR
 EventDescSetOpcode(
-  IN PEVENT_DESCRIPTOR EventDescriptor,
-  IN UCHAR Opcode)
+  PEVENT_DESCRIPTOR EventDescriptor,
+  UCHAR Opcode)
 {
   EventDescriptor->Opcode = Opcode;
   return (EventDescriptor);
@@ -284,8 +285,8 @@ EventDescSetOpcode(
 FORCEINLINE
 PEVENT_DESCRIPTOR
 EventDescSetLevel(
-  IN PEVENT_DESCRIPTOR EventDescriptor,
-  IN UCHAR  Level)
+  PEVENT_DESCRIPTOR EventDescriptor,
+  UCHAR  Level)
 {
   EventDescriptor->Level = Level;
   return (EventDescriptor);
@@ -294,8 +295,8 @@ EventDescSetLevel(
 FORCEINLINE
 PEVENT_DESCRIPTOR
 EventDescSetChannel(
-  IN PEVENT_DESCRIPTOR EventDescriptor,
-  IN UCHAR Channel)
+  PEVENT_DESCRIPTOR EventDescriptor,
+  UCHAR Channel)
 {
   EventDescriptor->Channel = Channel;
   return (EventDescriptor);
@@ -304,8 +305,8 @@ EventDescSetChannel(
 FORCEINLINE
 PEVENT_DESCRIPTOR
 EventDescSetKeyword(
-  IN PEVENT_DESCRIPTOR EventDescriptor,
-  IN ULONGLONG Keyword)
+  PEVENT_DESCRIPTOR EventDescriptor,
+  ULONGLONG Keyword)
 {
   EventDescriptor->Keyword = Keyword;
   return (EventDescriptor);
@@ -315,8 +316,8 @@ EventDescSetKeyword(
 FORCEINLINE
 PEVENT_DESCRIPTOR
 EventDescOrKeyword(
-  IN PEVENT_DESCRIPTOR EventDescriptor,
-  IN ULONGLONG Keyword)
+  PEVENT_DESCRIPTOR EventDescriptor,
+  ULONGLONG Keyword)
 {
   EventDescriptor->Keyword |= Keyword;
   return (EventDescriptor);
