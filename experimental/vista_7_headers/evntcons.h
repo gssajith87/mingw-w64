@@ -67,9 +67,6 @@ struct _EVENT_RECORD {
   PVOID                            UserData;
   PVOID                            UserContext;
 };
-#ifndef _defined_PEVENT_RECORD
-typedef struct _EVENT_RECORD EVENT_RECORD, *PEVENT_RECORD;
-#endif	/* evntrace.h */
 
 #if (_WIN32_WINNT >= 0x0600)
 ULONG WINAPI EventAccessControl(
