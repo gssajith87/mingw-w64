@@ -308,5 +308,12 @@ WINBOOL WINAPI TerminateReadLog(
   PVOID pvCursorContext
 );
 
+WINBOOL WINAPI ValidateLog(
+  LPCWSTR pszLogFileName,
+  LPSECURITY_ATTRIBUTES psaLogFile,
+  PCLFS_INFORMATION pinfoBuffer,
+  PULONG pcbBuffer
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_CLFSW32*/

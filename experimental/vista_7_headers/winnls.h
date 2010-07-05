@@ -1029,6 +1029,14 @@ WINBASEAPI WINBOOL WINAPI RtlIsValidLocaleName(
   ULONG Flags
 );
 
+WINBASEAPI WINBOOL VerifyScripts(
+  DWORD dwFlags,
+  LPCWSTR lpLocaleScripts,
+  int cchLocaleScripts,
+  LPCWSTR lpTestScripts,
+  int cchTestScripts
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif
 

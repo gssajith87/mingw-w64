@@ -3819,6 +3819,20 @@ WINBASEAPI WINBOOL WINAPI TrySubmitThreadpoolCallback(
   PVOID pv,
   PTP_CALLBACK_ENVIRON pcbe
 );
+
+WINBASEAPI HRESULT WINAPI UnregisterApplicationRestart(void);
+
+WINBASEAPI HRESULT WINAPI UnregisterApplicationRecoveryCallback(void);
+
+LPVOID WINAPI VirtualAllocExNuma(
+  HANDLE hProcess,
+  LPVOID lpAddress,
+  SIZE_T dwSize,
+  DWORD flAllocationType,
+  DWORD flProtect,
+  DWORD nndPreferred
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #if (_WIN32_WINNT >= 0x0601)

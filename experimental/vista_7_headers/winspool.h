@@ -1642,14 +1642,14 @@ WINBOOL WINAPI CloseSpoolFileHandle(
   HANDLE hSpoolFile
 );
 
-WINBOOL OpenPrinter2A(
+WINBOOL WINAPI OpenPrinter2A(
   LPCSTR pPrinterName,
   LPHANDLE phPrinter,
   LPPRINTER_DEFAULTS pDefault,
   PPRINTER_OPTIONS pOptions
 );
 
-WINBOOL OpenPrinter2W(
+WINBOOL WINAPI OpenPrinter2W(
   LPCWSTR pPrinterName,
   LPHANDLE phPrinter,
   LPPRINTER_DEFAULTS pDefault,
@@ -1657,6 +1657,28 @@ WINBOOL OpenPrinter2W(
 );
 
 #define OpenPrinter2 __MINGW_NAME_AW(OpenPrinter2)
+
+HRESULT WINAPI UploadPrinterDriverPackageA(
+  LPCSTR pszServer,
+  LPCSTR pszInfPath,
+  LPCSTR pszEnvironment,
+  DWORD dwFlags,
+  HWND hwnd,
+  LPSTR pszDestInfPath,
+  PULONG pcchDestInfPath
+);
+
+HRESULT WINAPI UploadPrinterDriverPackageW(
+  LPCWSTR pszServer,
+  LPCWSTR pszInfPath,
+  LPCWSTR pszEnvironment,
+  DWORD dwFlags,
+  HWND hwnd,
+  LPWSTR pszDestInfPath,
+  PULONG pcchDestInfPath
+);
+
+#define UploadPrinterDriverPackage __MINGW_NAME_AW(UploadPrinterDriverPackage)
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
