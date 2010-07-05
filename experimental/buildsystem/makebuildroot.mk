@@ -383,7 +383,7 @@ build/gcc/gcc/.winsup.marker: \
     ${BUILD_DIR}/.extract.marker \
     ${BUILD_DIR}/root/.root.init.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
-	test -e build/gcc/src/insup  || \
+	test -e build/gcc/src/winsup  || \
 	  junction build/gcc/src/winsup "${BUILD_DIR}/root"
 	test -e build/gcc/src/winsup
 else
@@ -409,7 +409,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/binutils/obj/.install.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
-	../../../build/gcc/src/configure \
+	${CURDIR}/build/gcc/src/configure \
 	    --target=${TARGET_ARCH} \
 	    ${GCC_CONFIG_HOST_ARGS} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
