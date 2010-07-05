@@ -3030,6 +3030,12 @@ typedef DWORD LCID;
       TOKEN_AUDIT_POLICY_ELEMENT Policy[ANYSIZE_ARRAY];
     } TOKEN_AUDIT_POLICY,*PTOKEN_AUDIT_POLICY;
 
+/* MSDN has:
+typedef struct _TOKEN_AUDIT_POLICY {
+  UCHAR PerUserPolicy;
+} TOKEN_AUDIT_POLICY, *PTOKEN_AUDIT_POLICY;
+*/
+
 #define PER_USER_AUDITING_POLICY_SIZE(p) (sizeof(TOKEN_AUDIT_POLICY) + (((p)->PolicyCount > ANYSIZE_ARRAY) ? (sizeof(TOKEN_AUDIT_POLICY_ELEMENT) *((p)->PolicyCount - ANYSIZE_ARRAY)) : 0))
 #define PER_USER_AUDITING_POLICY_SIZE_BY_COUNT(C) (sizeof(TOKEN_AUDIT_POLICY) + (((C) > ANYSIZE_ARRAY) ? (sizeof(TOKEN_AUDIT_POLICY_ELEMENT) *((C) - ANYSIZE_ARRAY)) : 0))
 
@@ -6343,6 +6349,12 @@ typedef DWORD (WINAPI *PRTL_RUN_ONCE_INIT_FN)(PRTL_RUN_ONCE, PVOID, PVOID *);
     PlatformRolePerformanceServer   = 7,
     PlatformRoleMaximum             = 8 
   } POWER_PLATFORM_ROLE;
+  
+  typedef enum _TOKEN_ELEVATION_TYPE {
+    TokenElevationTypeDefault   = 1,
+    TokenElevationTypeFull,
+    TokenElevationTypeLimited 
+  } TOKEN_ELEVATION_TYPE , *PTOKEN_ELEVATION_TYPE;
 
   typedef unsigned long ULONG;
 

@@ -1,6 +1,8 @@
 #ifndef _INC_TDH
 #define _INC_TDH
 #include <windows.h>
+#include <evntprov.h>
+#include <evntcons.h>
 #if (_WIN32_WINNT >= 0x0600)
 
 typedef enum _EVENT_FIELD_TYPE {
@@ -45,7 +47,7 @@ typedef struct _EVENT_MAP_INFO {
     ULONG FormatStringOffset;
   };
   EVENT_MAP_ENTRY MapEntryArray[ANYSIZE_ARRAY];
-} EVENT_MAP_INFO;
+} EVENT_MAP_INFO, *PEVENT_MAP_INFO;
 
 typedef enum _PROPERTY_FLAGS {
   PropertyStruct             = 0x1,
@@ -54,11 +56,6 @@ typedef enum _PROPERTY_FLAGS {
   PropertyWBEMXmlFragment    = 0x8,
   PropertyParamFixedLength   = 0x10 
 } PROPERTY_FLAGS;
-
-typedef enum _MAP_VALUETYPE {
-  EVENTMAP_ENTRY_VALUETYPE_ULONG    = 0,
-  EVENTMAP_ENTRY_VALUETYPE_STRING   = 1 
-} MAP_VALUETYPE;
 
 typedef struct _EVENT_PROPERTY_INFO {
   PROPERTY_FLAGS Flags;
@@ -92,13 +89,18 @@ typedef enum _DECODING_SOURCE {
   DecodingSourceWPP       = 2 
 } DECODING_SOURCE;
 
-typedef enum _PROPERTY_FLAGS {
-  PropertyStruct             = 0x1,
-  PropertyParamLength        = 0x2,
-  PropertyParamCount         = 0x4,
-  PropertyWBEMXmlFragment    = 0x8,
-  PropertyParamFixedLength   = 0x10 
-} PROPERTY_FLAGS;
+typedef enum _TDH_CONTEXT_TYPE {
+  TDH_CONTEXT_WPP_TMFFILE         = 0,
+  TDH_CONTEXT_WPP_TMFSEARCHPATH   = 1,
+  TDH_CONTEXT_WPP_GMT             = 2,
+  TDH_CONTEXT_POINTERSIZE         = 3,
+  TDH_CONTEXT_MAXIMUM             = 4 
+} TDH_CONTEXT_TYPE;
+
+typedef enum _TEMPLATE_FLAGS {
+  TEMPLATE_EVENT_DATA   = 1,
+  TEMPLATE_USER_DATA    = 2 
+} TEMPLATE_FLAGS;
 
 typedef struct _TRACE_EVENT_INFO {
   GUID                ProviderGuid;
@@ -121,13 +123,13 @@ typedef struct _TRACE_EVENT_INFO {
   ULONG               TopLevelPropertyCount;
   TEMPLATE_FLAGS      Flags;
   EVENT_PROPERTY_INFO EventPropertyInfoArray[ANYSIZE_ARRAY];
-} TRACE_EVENT_INFO;
+} TRACE_EVENT_INFO, *PTRACE_EVENT_INFO;
 
 typedef struct _PROPERTY_DATA_DESCRIPTOR {
   ULONGLONG PropertyName;
   ULONG     ArrayIndex;
   ULONG     Reserved;
-} PROPERTY_DATA_DESCRIPTOR;
+} PROPERTY_DATA_DESCRIPTOR, *PPROPERTY_DATA_DESCRIPTOR;
 
 typedef struct _TRACE_PROVIDER_INFO {
   GUID  ProviderGuid;
@@ -139,7 +141,7 @@ typedef struct _PROVIDER_ENUMERATION_INFO {
   ULONG               NumberOfProviders;
   ULONG               Padding;
   TRACE_PROVIDER_INFO TraceProviderInfoArray[ANYSIZE_ARRAY];
-} PROVIDER_ENUMERATION_INFO;
+} PROVIDER_ENUMERATION_INFO, *PPROVIDER_ENUMERATION_INFO;
 
 typedef struct _PROVIDER_FIELD_INFO {
   ULONG     NameOffset;
@@ -151,7 +153,67 @@ typedef struct _PROVIDER_FIELD_INFOARRAY {
   ULONG               NumberOfElements;
   EVENT_FIELD_TYPE    FieldType;
   PROVIDER_FIELD_INFO FieldInfoArray[ANYSIZE_ARRAY];
-} PROVIDER_FIELD_INFOARRAY;
+} PROVIDER_FIELD_INFOARRAY, *PPROVIDER_FIELD_INFOARRAY;
+
+typedef struct _TDH_CONTEXT {
+  ULONGLONG        ParameterValue;
+  TDH_CONTEXT_TYPE ParameterType;
+  ULONG            ParameterSize;
+} TDH_CONTEXT, *PTDH_CONTEXT;
+
+ULONG __stdcall TdhEnumerateProviderFieldInformation(
+  LPGUID pGuid,
+  EVENT_FIELD_TYPE EventFieldType,
+  PPROVIDER_FIELD_INFOARRAY pBuffer,
+  ULONG *pBufferSize
+);
+
+ULONG __stdcall TdhEnumerateProviders(
+  PPROVIDER_ENUMERATION_INFO pBuffer,
+  ULONG *pBufferSize
+);
+
+ULONG __stdcall TdhGetEventInformation(
+  PEVENT_RECORD pEvent,
+  ULONG TdhContextCount,
+  PTDH_CONTEXT pTdhContext,
+  PTRACE_EVENT_INFO pBuffer,
+  ULONG *pBufferSize
+);
+
+ULONG __stdcall TdhGetEventMapInformation(
+  PEVENT_RECORD pEvent,
+  LPWSTR pMapName,
+  PEVENT_MAP_INFO pBuffer,
+  ULONG *pBufferSize
+);
+
+ULONG __stdcall TdhGetProperty(
+  PEVENT_RECORD pEvent,
+  ULONG TdhContextCount,
+  PTDH_CONTEXT pTdhContext,
+  ULONG PropertyDataCount,
+  PPROPERTY_DATA_DESCRIPTOR pPropertyData,
+  ULONG BufferSize,
+  PBYTE pBuffer
+);
+
+ULONG __stdcall TdhGetPropertySize(
+  PEVENT_RECORD pEvent,
+  ULONG TdhContextCount,
+  PTDH_CONTEXT pTdhContext,
+  ULONG PropertyDataCount,
+  PPROPERTY_DATA_DESCRIPTOR pPropertyData,
+  ULONG *pPropertySize
+);
+
+ULONG __stdcall TdhQueryProviderFieldInformation(
+  LPGUID pGuid,
+  ULONGLONG EventFieldValue,
+  EVENT_FIELD_TYPE EventFieldType,
+  PPROVIDER_FIELD_INFOARRAY pBuffer,
+  ULONG *pBufferSize
+);
 
 #if (_WIN32_WINNT >= 0x0601)
 typedef struct _PROVIDER_FILTER_INFO {

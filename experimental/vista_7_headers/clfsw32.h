@@ -2,6 +2,7 @@
 #define _INC_CLFSW32
 #include <windows.h>
 #include <clfs.h>
+#include <clfsmgmt.h>
 
 #if (_WIN32_WINNT >= 0x0600)
 
@@ -142,8 +143,6 @@ WINBOOL WINAPI GetLogFileInformation(
   PULONG cbBuffer
 );
 
-typedef LPVOID CLFS_IOSTATS_CLASS;
-
 WINBOOL WINAPI GetLogIoStatistics(
   HANDLE hLog,
   PVOID pvStatsBuffer,
@@ -151,6 +150,9 @@ WINBOOL WINAPI GetLogIoStatistics(
   CLFS_IOSTATS_CLASS eStatsClass,
   PULONG pcbStatsWritten
 );
+
+typedef LPVOID CLFS_LOG_ARCHIVE_CONTEXT;
+typedef CLFS_LOG_ARCHIVE_CONTEXT *PCLFS_LOG_ARCHIVE_CONTEXT;
 
 WINBOOL WINAPI GetNextLogArchiveExtent(
   CLFS_LOG_ARCHIVE_CONTEXT pvArchiveContext,
@@ -300,6 +302,10 @@ WINBOOL WINAPI SetLogArchiveTail(
   HANDLE hLog,
   PCLFS_LSN plsnArchiveTail,
   LPVOID pReserved
+);
+
+WINBOOL WINAPI TerminateReadLog(
+  PVOID pvCursorContext
 );
 
 #endif /* (_WIN32_WINNT >= 0x0600) */

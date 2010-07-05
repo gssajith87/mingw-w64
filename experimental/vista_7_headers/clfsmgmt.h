@@ -1,11 +1,7 @@
 #ifndef _INC_CLFSMGMT
 #define _INC_CLFSMGMT
+#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
-
-#define ClfsMgmtAdvanceTailNotification 0
-#define ClfsMgmtLogFullHandlerNotification 1
-#define ClfsMgmtLogUnpinnedNotification 2
-#define ClfsMgmtLogWriteNotification 3
 
 typedef enum _CLFS_MGMT_POLICY_TYPE {
   ClfsMgmtPolicyMaximumSize             = 0x0,
@@ -20,10 +16,12 @@ typedef enum _CLFS_MGMT_POLICY_TYPE {
   ClfsMgmtPolicyNewContainerExtension 
 } CLFS_MGMT_POLICY_TYPE, *PCLFS_MGMT_POLICY_TYPE;
 
-typedef struct _CLFS_NODE_ID {
-  ULONG cType;
-  ULONG cbNode;
-} CLFS_NODE_ID, *PCLFS_NODE_ID;
+typedef enum _CLFS_MGMT_NOTIFICATION_TYPE {
+  ClfsMgmtAdvanceTailNotification = 0,
+  ClfsMgmtLogFullHandlerNotification,
+  ClfsMgmtLogUnpinnedNotification,
+  ClfsMgmtLogWriteNotification
+} CLFS_MGMT_NOTIFICATION_TYPE;
 
 typedef struct _CLFS_MGMT_NOTIFICATION {
   CLFS_MGMT_NOTIFICATION_TYPE Notification;
@@ -54,26 +52,27 @@ typedef struct _CLFS_MGMT_POLICY {
       ULONG MinimumAvailablePercentage;
       ULONG MinimumAvailableContainers;
     } LogTail;
-    struct DUMMYSTRUCTNAME(6) {
+    struct DUMMYSTRUCTNAMEX(6) {
       ULONG Percentage;
     } AutoShrink;
-    struct DUMMYSTRUCTNAME(7) {
+    struct DUMMYSTRUCTNAMEX(7) {
       ULONG Enabled;
     } AutoGrow;
-    struct DUMMYSTRUCTNAME(8) {
+    struct DUMMYSTRUCTNAMEX(8) {
       USHORT PrefixLengthInBytes;
       WCHAR PrefixString[1];
     } NewContainerPrefix;
-    struct DUMMYSTRUCTNAME(9) {
+    struct DUMMYSTRUCTNAMEX(9) {
       ULONGLONG NextContainerSuffix;
     } NewContainerSuffix;
-    struct DUMMYSTRUCTNAME(10) {
+    struct DUMMYSTRUCTNAMEX(10) {
       USHORT ExtensionLengthInBytes;
       WCHAR ExtensionString[1];
     } NewContainerExtension;
   } PolicyParameters;
 } CLFS_MGMT_POLICY,  *PCLFS_MGMT_POLICY;
 
+/* Conflict with CLFS_MGMT_POLICY_TYPE
 typedef struct _ClfsMgmtPolicyAutoGrow {
   ULONG Enabled;
 } ClfsMgmtPolicyAutoGrow;
@@ -117,6 +116,6 @@ typedef struct _ClfsMgmtPolicyNewContainerSize {
 typedef struct _ClfsMgmtPolicyNewContainerSuffix {
   ULONGLONG NextContainerSuffix;
 } ClfsMgmtPolicyNewContainerSuffix, *PClfsMgmtPolicyNewContainerSuffix;
-
+*/
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_CLFSMGMT*/

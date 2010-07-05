@@ -536,12 +536,54 @@ typedef struct _EVENT_TRACE {
   } DUMMYUNIONNAME;
 } EVENT_TRACE,*PEVENT_TRACE;
 
+/* MSDN Says: http://msdn.microsoft.com/en-us/library/aa363773%28VS.85%29.aspx
+typedef struct _EVENT_TRACE {
+  EVENT_TRACE_HEADER Header;
+  ULONG              InstanceId;
+  ULONG              ParentInstanceId;
+  GUID               ParentGuid;
+  PVOID              MofData;
+  ULONG              MofLength;
+  union {
+    ULONG ClientContext;
+    ULONG BufferContext;
+  } ;
+} EVENT_TRACE, *PEVENT_TRACE;
+*/
+
 typedef struct _EVENT_TRACE_LOGFILEW EVENT_TRACE_LOGFILEW,*PEVENT_TRACE_LOGFILEW;
 typedef struct _EVENT_TRACE_LOGFILEA EVENT_TRACE_LOGFILEA,*PEVENT_TRACE_LOGFILEA;
 typedef ULONG (WINAPI *PEVENT_TRACE_BUFFER_CALLBACKW)(PEVENT_TRACE_LOGFILEW Logfile);
 typedef ULONG (WINAPI *PEVENT_TRACE_BUFFER_CALLBACKA)(PEVENT_TRACE_LOGFILEA Logfile);
 typedef VOID (WINAPI *PEVENT_CALLBACK)(PEVENT_TRACE pEvent);
 typedef ULONG (WINAPI *WMIDPREQUEST)(WMIDPREQUESTCODE RequestCode,PVOID RequestContext,ULONG *BufferSize,PVOID Buffer);
+
+/* MSDN says http://msdn.microsoft.com/en-us/library/aa363780%28VS.85%29.aspx
+
+typedef struct _EVENT_TRACE_LOGFILE {
+  LPTSTR                       LogFileName;
+  LPTSTR                       LoggerName;
+  LONGLONG                     CurrentTime;
+  ULONG                        BuffersRead;
+  union {
+    ULONG LogFileMode;
+    ULONG ProcessTraceMode;
+  } ;
+  EVENT_TRACE                  CurrentEvent;
+  TRACE_LOGFILE_HEADER         LogfileHeader;
+  PEVENT_TRACE_BUFFER_CALLBACK BufferCallback;
+  ULONG                        BufferSize;
+  ULONG                        Filled;
+  ULONG                        EventsLost;
+  union {
+    PEVENT_CALLBACK        EventCallback;
+    PEVENT_RECORD_CALLBACK EventRecordCallback;
+  } ;
+  ULONG                        IsKernelTrace;
+  PVOID                        Context;
+} EVENT_TRACE_LOGFILE, *PEVENT_TRACE_LOGFILE;
+
+*/
 
 struct _EVENT_TRACE_LOGFILEW {
   LPWSTR LogFileName;
@@ -716,13 +758,7 @@ typedef VOID (WINAPI *PEVENT_RECORD_CALLBACK)(
 );
 
 #if (_WIN32_WINNT >= 0x0601)
-typedef enum TRACE_INFO_CLASS {
-  TraceGuidQueryList,
-  TraceGuidQueryInfo,
-  TraceGuidQueryProcess,
-  TraceStackTracingInfo,
-  MaxTraceSetInfoClass 
-} TRACE_INFO_CLASS;
+typedef enum TRACE_QUERY_INFO_CLASS TRACE_INFO_CLASS;
 
 typedef struct _ENABLE_TRACE_PARAMETERS {
   ULONG                    Version;
