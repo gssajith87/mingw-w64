@@ -10,6 +10,7 @@
 #ifndef WMIAPI
 #define WMIAPI DECLSPEC_IMPORT WINAPI
 #endif
+
 #include <evntprov.h>
 #include <guiddef.h>
 
@@ -477,12 +478,18 @@ typedef struct _TRACE_LOGFILE_HEADER64 {
   ULONG BuffersLost;
 } TRACE_LOGFILE_HEADER64, *PTRACE_LOGFILE_HEADER64;
 
-#endif
+#endif /* !_NTDDK_ || _WMIKM_ */
 
-typedef struct EVENT_INSTANCE_INFO {
+typedef struct _EVENT_INSTANCE_INFO {
   HANDLE RegHandle;
   ULONG InstanceId;
 } EVENT_INSTANCE_INFO,*PEVENT_INSTANCE_INFO;
+
+typedef struct _ETW_BUFFER_CONTEXT {
+  UCHAR  ProcessorNumber;
+  UCHAR  Alignment;
+  USHORT LoggerId;
+} ETW_BUFFER_CONTEXT, *PETW_BUFFER_CONTEXT;
 
 #if !defined(_WMIKM_) && !defined(_NTDDK_) && !defined(_NTIFS_)
 
@@ -553,9 +560,12 @@ typedef struct _EVENT_TRACE {
 
 typedef struct _EVENT_TRACE_LOGFILEW EVENT_TRACE_LOGFILEW,*PEVENT_TRACE_LOGFILEW;
 typedef struct _EVENT_TRACE_LOGFILEA EVENT_TRACE_LOGFILEA,*PEVENT_TRACE_LOGFILEA;
+typedef struct _EVENT_RECORD EVENT_RECORD, *PEVENT_RECORD;
+#define _defined_PEVENT_RECORD	/* for evntcons.h */
 typedef ULONG (WINAPI *PEVENT_TRACE_BUFFER_CALLBACKW)(PEVENT_TRACE_LOGFILEW Logfile);
 typedef ULONG (WINAPI *PEVENT_TRACE_BUFFER_CALLBACKA)(PEVENT_TRACE_LOGFILEA Logfile);
 typedef VOID (WINAPI *PEVENT_CALLBACK)(PEVENT_TRACE pEvent);
+typedef VOID (WINAPI *PEVENT_RECORD_CALLBACK)(PEVENT_RECORD EventRecord);
 typedef ULONG (WINAPI *WMIDPREQUEST)(WMIDPREQUESTCODE RequestCode,PVOID RequestContext,ULONG *BufferSize,PVOID Buffer);
 
 /* MSDN says http://msdn.microsoft.com/en-us/library/aa363780%28VS.85%29.aspx
@@ -640,14 +650,13 @@ struct _EVENT_TRACE_LOGFILEA {
 #define GLOBAL_LOGGER_NAME GLOBAL_LOGGER_NAMEW
 #define EVENT_LOGGER_NAME EVENT_LOGGER_NAMEW
 #else
-
 #define PEVENT_TRACE_BUFFER_CALLBACK PEVENT_TRACE_BUFFER_CALLBACKA
 #define EVENT_TRACE_LOGFILE EVENT_TRACE_LOGFILEA
 #define PEVENT_TRACE_LOGFILE PEVENT_TRACE_LOGFILEA
 #define KERNEL_LOGGER_NAME KERNEL_LOGGER_NAMEA
 #define GLOBAL_LOGGER_NAME GLOBAL_LOGGER_NAMEA
 #define EVENT_LOGGER_NAME EVENT_LOGGER_NAMEA
-#endif
+#endif /* defined(_UNICODE) || defined(UNICODE) */
 
 #ifdef __cplusplus
 extern "C" {
@@ -724,12 +733,6 @@ EXTERN_C ULONG WINAPI EnumerateTraceGuidsEx(
   PULONG ReturnLength
 );
 
-typedef struct _ETW_BUFFER_CONTEXT {
-  UCHAR  ProcessorNumber;
-  UCHAR  Alignment;
-  USHORT LoggerId;
-} ETW_BUFFER_CONTEXT, *PETW_BUFFER_CONTEXT;
-
 typedef struct _TRACE_ENABLE_INFO {
   ULONG IsEnabled;
   UCHAR Level;
@@ -752,10 +755,6 @@ typedef struct _TRACE_GUID_INFO {
   ULONG InstanceCount;
   ULONG Reserved;
 } TRACE_GUID_INFO, *PTRACE_GUID_INFO;
-
-typedef VOID (WINAPI *PEVENT_RECORD_CALLBACK)(
-  PEVENT_RECORD EventRecord
-);
 
 #if (_WIN32_WINNT >= 0x0601)
 typedef enum TRACE_QUERY_INFO_CLASS TRACE_INFO_CLASS;
@@ -791,15 +790,18 @@ EXTERN_C ULONG WMIAPI TraceSetInformation(
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif
 
 #if defined(UNICODE) || defined(_UNICODE)
+
 #define RegisterTraceGuids RegisterTraceGuidsW
 #define StartTrace StartTraceW
 #define ControlTrace ControlTraceW
-#ifdef __TRACE_W2K_COMPATIBLE
+
+#if defined(__TRACE_W2K_COMPATIBLE)
 #define StopTrace(a,b,c) ControlTraceW((a),(b),(c),EVENT_TRACE_CONTROL_STOP)
 #define QueryTrace(a,b,c) ControlTraceW((a),(b),(c),EVENT_TRACE_CONTROL_QUERY)
 #define UpdateTrace(a,b,c) ControlTraceW((a),(b),(c),EVENT_TRACE_CONTROL_UPDATE)
@@ -807,15 +809,19 @@ EXTERN_C ULONG WMIAPI TraceSetInformation(
 #define StopTrace StopTraceW
 #define QueryTrace QueryTraceW
 #define UpdateTrace UpdateTraceW
-#endif
+#endif /* defined(__TRACE_W2K_COMPATIBLE) */
+
 #define FlushTrace FlushTraceW
 #define QueryAllTraces QueryAllTracesW
 #define OpenTrace OpenTraceW
-#else
+
+#else /* defined(UNICODE) || defined(_UNICODE) */
+
 #define RegisterTraceGuids RegisterTraceGuidsA
 #define StartTrace StartTraceA
 #define ControlTrace ControlTraceA
-#ifdef __TRACE_W2K_COMPATIBLE
+
+#if defined(__TRACE_W2K_COMPATIBLE)
 #define StopTrace(a,b,c) ControlTraceA((a),(b),(c),EVENT_TRACE_CONTROL_STOP)
 #define QueryTrace(a,b,c) ControlTraceA((a),(b),(c),EVENT_TRACE_CONTROL_QUERY)
 #define UpdateTrace(a,b,c) ControlTraceA((a),(b),(c),EVENT_TRACE_CONTROL_UPDATE)
@@ -823,11 +829,16 @@ EXTERN_C ULONG WMIAPI TraceSetInformation(
 #define StopTrace StopTraceA
 #define QueryTrace QueryTraceA
 #define UpdateTrace UpdateTraceA
-#endif
+#endif /* defined(__TRACE_W2K_COMPATIBLE) */
+
 #define FlushTrace FlushTraceA
 #define QueryAllTraces QueryAllTracesA
 #define OpenTrace OpenTraceA
-#endif
-#endif
-#endif
-#endif
+#endif /* defined(UNICODE) || defined(_UNICODE) */
+
+#endif /* !defined(_WMIKM_) && !defined(_NTDDK_) && !defined(_NTIFS_) */
+
+#endif /* defined(_WINNT_) || defined(WINNT) */
+
+#endif /* _EVNTRACE_ */
+

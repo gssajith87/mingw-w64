@@ -21,7 +21,6 @@
 extern "C" {
 #endif
 
-#include <windows.h>
 #include <guiddef.h>
 
 typedef ULONGLONG REGHANDLE, *PREGHANDLE;
@@ -64,6 +63,7 @@ typedef struct _EVENT_FILTER_HEADER {
 #define WINEVENT_LEVEL_WARNING	3
 #define WINEVENT_LEVEL_INFO	4
 #define WINEVENT_LEVEL_VERBOSE	5
+
 
 #ifndef _ETW_KM_ /* for wdm.h */
 

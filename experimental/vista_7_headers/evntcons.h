@@ -1,8 +1,9 @@
-#ifndef _INC_EAPMETHODTYPES
-#define _INC_EAPMETHODTYPES
-#include <windows.h>
+#ifndef _EVNTCONS_H_
+#define _EVNTCONS_H_
+
+#include <wmistr.h>
 #include <evntrace.h>
-#if (_WIN32_WINNT >= 0x0600)
+#include <evntprov.h>
 
 typedef enum EVENTSECURITYOPERATION {
   EventSecuritySetDACL,
@@ -57,7 +58,7 @@ typedef struct _EVENT_HEADER {
   GUID             ActivityId;
 } EVENT_HEADER, *PEVENT_HEADER;
 
-typedef struct _EVENT_RECORD {
+struct _EVENT_RECORD {
   EVENT_HEADER                     EventHeader;
   ETW_BUFFER_CONTEXT               BufferContext;
   USHORT                           ExtendedDataCount;
@@ -65,8 +66,12 @@ typedef struct _EVENT_RECORD {
   PEVENT_HEADER_EXTENDED_DATA_ITEM ExtendedData;
   PVOID                            UserData;
   PVOID                            UserContext;
-} EVENT_RECORD, *PEVENT_RECORD;
+};
+#ifndef _defined_PEVENT_RECORD
+typedef struct _EVENT_RECORD EVENT_RECORD, *PEVENT_RECORD;
+#endif	/* evntrace.h */
 
+#if (_WIN32_WINNT >= 0x0600)
 ULONG WINAPI EventAccessControl(
   LPGUID Guid,
   ULONG Operation,
@@ -99,4 +104,6 @@ typedef struct _EVENT_EXTENDED_ITEM_STACK_TRACE64 {
 
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 #endif /*(_WIN32_WINNT >= 0x0600)*/
-#endif /*_INC_EAPMETHODTYPES*/
+
+#endif /* _EVNTCONS_H_ */
+
