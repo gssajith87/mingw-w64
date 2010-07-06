@@ -17,6 +17,7 @@ svn://svn.reactos.org/reactos/trunk/reactos/include/ddk/
 Files not included in this ddk directory :
     ntddscsi.h: R/OS version seems outdated. Use the stock version
 		from our official headers.
+    ntddndis.h: same situation as with ntddscsi.h.
 
 The individual files
     atsmedia.h,
