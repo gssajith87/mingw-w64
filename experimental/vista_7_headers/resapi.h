@@ -344,6 +344,11 @@ DWORD WINAPI ResUtilSetQwordValue(
   PULONGLONG pqwOutValue
 );
 
+typedef DWORD (WINAPI *PWORKER_START_ROUTINE)( 
+  PCLUS_WORKER pWorker,
+  LPVOID lpThreadParameter
+);
+
 #endif /* (_WIN32_WINNT >= 0x0600) */
 
 #ifdef __cplusplus

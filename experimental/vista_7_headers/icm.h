@@ -492,6 +492,133 @@ typedef enum tagCOLORPROFILETYPE {
   CPT_GMMP 
 } COLORPROFILETYPE, *PCOLORPROFILETYPE, *LPCOLORPROFILETYPE;
 
+typedef enum tagWCS_PROFILE_MANAGEMENT_SCOPE {
+  WCS_PROFILE_MANAGEMENT_SCOPE_SYSTEM_WIDE,
+  WCS_PROFILE_MANAGEMENT_SCOPE_CURRENT_USER 
+} WCS_PROFILE_MANAGEMENT_SCOPE;
+
+#define WcsAssociateColorProfileWithDevice __MINGW_NAME_AW(WcsAssociateColorProfileWithDevice)
+
+WINBOOL WINAPI WcsAssociateColorProfileWithDeviceA(
+  WCS_PROFILE_MANAGEMENT_SCOPE profileManagementScope,
+  PCSTR pProfileName,
+  PCSTR pDeviceName
+);
+
+WINBOOL WINAPI WcsAssociateColorProfileWithDeviceW(
+  WCS_PROFILE_MANAGEMENT_SCOPE profileManagementScope,
+  PCWSTR pProfileName,
+  PCWSTR pDeviceName
+);
+
+WINBOOL WINAPI WcsCheckColors(
+  HTRANSFORM hColorTransform,
+  DWORD nColors,
+  DWORD nInputChannels,
+  COLORDATATYPE cdtInput,
+  DWORD cbInput,
+  PVOID pInputData,
+  PBYTE paResult
+);
+
+HPROFILE WINAPI WcsCreateIccProfile(
+  HPROFILE hWcsProfile,
+  DWORD dwOptions
+);
+
+WINBOOL WINAPI WcsDisassociateColorProfileFromDevice(
+  WCS_PROFILE_MANAGEMENT_SCOPE profileManagementScope,
+  PCWSTR pProfileName,
+  PCWSTR pDeviceName
+);
+
+WINBOOL WINAPI WcsEnumColorProfiles(
+  WCS_PROFILE_MANAGEMENT_SCOPE profileManagementScope,
+  PENUMTYPEW pEnumRecord,
+  PBYTE pBuffer,
+  DWORD dwSize,
+  PDWORD pnProfiles
+);
+
+WINBOOL WINAPI WcsEnumColorProfilesSize(
+  WCS_PROFILE_MANAGEMENT_SCOPE profileManagementScope,
+  PENUMTYPEW pEnumRecord,
+  PDWORD pdwSize
+);
+
+WINBOOL WINAPI WcsGetDefaultColorProfile(
+  WCS_PROFILE_MANAGEMENT_SCOPE profileManagementScope,
+  PCWSTR pDeviceName,
+  COLORPROFILETYPE cptColorProfileType,
+  COLORPROFILESUBTYPE cpstColorProfileSubType,
+  DWORD dwProfileID,
+  DWORD cbProfileName,
+  LPWSTR pProfileName
+);
+
+WINBOOL WINAPI WcsGetDefaultColorProfileSize(
+  WCS_PROFILE_MANAGEMENT_SCOPE profileManagementScope,
+  PCWSTR pDeviceName,
+  COLORPROFILETYPE cptColorProfileType,
+  COLORPROFILESUBTYPE cpstColorProfileSubType,
+  DWORD dwProfileID,
+  PDWORD pcbProfileName
+);
+
+WINBOOL WINAPI WcsGetDefaultRenderingIntent(
+  WCS_PROFILE_MANAGEMENT_SCOPE scope,
+  PDWORD pdwRenderingIntent
+);
+
+WINBOOL WINAPI WcsGetUsePerUserProfiles(
+  LPCWSTR pDeviceName,
+  DWORD dwDeviceClass,
+  WINBOOL *pUsePerUserProfiles
+);
+
+HPROFILE WINAPI WcsOpenColorProfile(
+  PPROFILE pCDMPProfile,
+  PPROFILE pCAMPProfile,
+  PPROFILE pGMMPProfile,
+  DWORD dwDesiredAccess,
+  DWORD dwShareMode,
+  DWORD dwCreationMode,
+  DWORD dwFlags
+);
+
+WINBOOL WINAPI WcsSetDefaultColorProfile(
+  WCS_PROFILE_MANAGEMENT_SCOPE profileManagementScope,
+  PCWSTR pDeviceName,
+  COLORPROFILETYPE cptColorProfileType,
+  COLORPROFILESUBTYPE cpstColorProfileSubType,
+  DWORD dwProfileID,
+  LPCWSTR pProfileName
+);
+
+WInBOOL WINAPI WcsSetDefaultRenderingIntent(
+  WCS_PROFILE_MANAGEMENT_SCOPE scope,
+  DWORD dwRenderingIntent
+);
+
+WINBOOL WINAPI WcsSetUsePerUserProfiles(
+  LPCWSTR pDeviceName,
+  DWORD dwDeviceClass,
+  WINBOOL usePerUserProfiles
+);
+
+WINBOOL WINAPI WcsTranslateColors(
+  HTRANSFORM hColorTransform,
+  DWORD nColors,
+  DWORD nInputChannels,
+  COLORDATATYPE cdtInput,
+  DWORD cbInput,
+  PVOID pInputData,
+  DWORD nOutputChannels,
+  COLORDATATYPE cdtOutput,
+  DWORD cbOutput,
+  PVOID pOutputData
+);
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus

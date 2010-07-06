@@ -3824,13 +3824,51 @@ WINBASEAPI HRESULT WINAPI UnregisterApplicationRestart(void);
 
 WINBASEAPI HRESULT WINAPI UnregisterApplicationRecoveryCallback(void);
 
-LPVOID WINAPI VirtualAllocExNuma(
+WINBASEAPI LPVOID WINAPI VirtualAllocExNuma(
   HANDLE hProcess,
   LPVOID lpAddress,
   SIZE_T dwSize,
   DWORD flAllocationType,
   DWORD flProtect,
   DWORD nndPreferred
+);
+
+WINBASEAPI VOID WINAPI WaitForThreadpoolIoCallbacks(
+  PTP_IO pio,
+  WINBOOL fCancelPendingCallbacks
+);
+
+WINBASEAPI VOID WINAPI WaitForThreadpoolTimerCallbacks(
+  PTP_TIMER pti,
+  WINBOOL fCancelPendingCallbacks
+);
+
+WINBASEAPI VOID WINAPI WaitForThreadpoolWaitCallbacks(
+  PTP_WAIT pwa,
+  WINBOOL fCancelPendingCallbacks
+);
+
+WINBASEAPI VOID WINAPI WaitForThreadpoolWorkCallbacks(
+  PTP_WORK pwk,
+  WINBOOL fCancelPendingCallbacks
+);
+
+WINBASEAPI WINBOOL WINAPI Wow64GetThreadContext(
+  HANDLE hThread,
+  PWOW64_CONTEXT lpContext
+);
+
+WINBASEAPI WINBOOL WINAPI Wow64RevertWow64FsRedirection(
+  PVOID OldValue
+);
+
+WINBASEAPI WINBOOL WINAPI Wow64SetThreadContext(
+  HANDLE hThread,
+  const WOW64_CONTEXT *lpContext
+);
+
+WINBASEAPI DWORD WINAPI Wow64SuspendThread(
+  HANDLE hThread
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

@@ -1,18 +1,13 @@
 #ifndef _INC_WSDXMLDOM
 #define _INC_WSDXMLDOM
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
-
-typedef struct _WSDXML_NAME WSDXML_NAME;
-typedef struct _WSDXML_ELEMENT WSDXML_ELEMENT;
-typedef struct _WSDXML_NODE WSDXML_NODE;
-typedef struct _WSDXML_ATTRIBUTE WSDXML_ATTRIBUTE;
-typedef struct _WSDXML_PREFIX_MAPPING WSDXML_PREFIX_MAPPING;
 
 typedef struct _WSDXML_TYPE {
   WCHAR *Uri;
   BYTE  *Table;
 } WSDXML_TYPE;
+
+typedef const WSDXML_TYPE *PCWSDXML_TYPE;
 
 typedef struct _WSDXML_NAMESPACE {
   const WCHAR *Uri;
@@ -21,6 +16,8 @@ typedef struct _WSDXML_NAMESPACE {
   WORD        NamesCount;
   WORD        Encoding;
 } WSDXML_NAMESPACE;
+
+typedef const WSDXML_NAMESPACE *PCWSDXML_NAMESPACE;
 
 typedef struct _WSDXML_NAME {
   WSDXML_NAMESPACE *Space;
@@ -54,6 +51,19 @@ typedef struct _WSDXML_PREFIX_MAPPING {
   WSDXML_NAMESPACE      *Space;
   WCHAR                 *Prefix;
 } WSDXML_PREFIX_MAPPING;
+
+typedef struct _WSDXML_ELEMENT {
+  WSDXML_NODE           Node;
+  WSDXML_NAME           *Name;
+  WSDXML_ATTRIBUTE      *FirstAttribute;
+  WSDXML_NODE           *FirstChild;
+  WSDXML_PREFIX_MAPPING *PrefixMappings;
+} WSDXML_ELEMENT;
+
+typedef struct _WSDXML_ELEMENT_LIST {
+  WSDXML_ELEMENT_LIST *Next;
+  WSDXML_ELEMENT      *Element;
+} WSDXML_ELEMENT_LIST;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WSDXMLDOM*/

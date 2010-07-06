@@ -87,12 +87,12 @@ typedef struct _SOCKET_SECURITY_SETTINGS_IPSEC {
 #define RtlIpv6AddressToString __MINGW_NAME_AW(RtlIpv6AddressToString)
 #define RtlIpv6AddressToStringEx __MINGW_NAME_AW(RtlIpv6AddressToStringEx)
 
-LPWSTR NTAPI RtlIpv6AddressToString(
+LPWSTR NTAPI RtlIpv6AddressToStringA(
   const IN6_ADDR *Addr,
   LPSTR S
 );
 
-LPSTR NTAPI RtlIpv6AddressToString(
+LPSTR NTAPI RtlIpv6AddressToStringW(
   const IN6_ADDR *Addr,
   LPWSTR S
 );

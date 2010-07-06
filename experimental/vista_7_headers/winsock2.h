@@ -39,6 +39,7 @@
 #endif
 #endif /* WINSOCK_API_LINKAGE */
 #define WSAAPI			WINAPI
+#define WSPAPI			WINAPI
 
 /* undefine macros from winsock.h */
 #include <mingw_inc/_ws1_undef.h>
@@ -697,7 +698,7 @@ typedef unsigned int GROUP;
   typedef struct _SOCKET_ADDRESS_LIST {
     INT iAddressCount;
     SOCKET_ADDRESS Address[1];
-  } SOCKET_ADDRESS_LIST,*LPSOCKET_ADDRESS_LIST;
+  } SOCKET_ADDRESS_LIST,*PSOCKET_ADDRESS_LIST,*LPSOCKET_ADDRESS_LIST;
 
   typedef struct _AFPROTOCOLS {
     INT iAddressFamily;
@@ -1085,6 +1086,28 @@ typedef unsigned int GROUP;
 #define WSAGETSELECTERROR(lParam) HIWORD(lParam)
 
 #if (_WIN32_WINNT >= 0x0600)
+typedef struct _WSANAMESPACE_INFOEXA {
+  GUID   NSProviderId;
+  DWORD  dwNameSpace;
+  WINBOOL   fActive;
+  DWORD  dwVersion;
+  LPSTR lpszIdentifier;
+  BLOB   ProviderSpecific;
+} WSANAMESPACE_INFOEXA, *PWSANAMESPACE_INFOEXA, *LPWSANAMESPACE_INFOEXA;
+
+typedef struct _WSANAMESPACE_INFOEXW {
+  GUID   NSProviderId;
+  DWORD  dwNameSpace;
+  WINBOOL   fActive;
+  DWORD  dwVersion;
+  LPWSTR lpszIdentifier;
+  BLOB   ProviderSpecific;
+} WSANAMESPACE_INFOEXW, *PWSANAMESPACE_INFOEXW, *LPWSANAMESPACE_INFOEXW;
+
+__MINGW_TYPEDEF_AW(WSANAMESPACE_INFOEX)
+__MINGW_TYPEDEF_AW(PWSANAMESPACE_INFOEX)
+__MINGW_TYPEDEF_AW(LPWSANAMESPACE_INFOEX)
+
 typedef struct _WSAQUERYSET2A {
   DWORD         dwSize;
   LPSTR         lpszServiceInstanceName;
@@ -1118,8 +1141,60 @@ typedef struct _WSAQUERYSET2W {
   DWORD         dwOutputFlags;
   LPBLOB        lpBlob;
 } WSAQUERYSET2W, *PWSAQUERYSET2W, *LPWSAQUERYSET2W;
-#endif /*(_WIN32_WINNT >= 0x0600)*/
 
+typedef struct pollfd {
+  SOCKET fd;
+  short  events;
+  short  revents;
+} WSAPOLLFD, *PWSAPOLLFD, *LPWSAPOLLFD;
+
+WINSOCK_API_LINKAGE WINBOOL PASCAL WSAConnectByList(
+  SOCKET s,
+  PSOCKET_ADDRESS_LIST SocketAddressList,
+  LPDWORD LocalAddressLength,
+  LPSOCKADDR LocalAddress,
+  LPDWORD RemoteAddressLength,
+  LPSOCKADDR RemoteAddress,
+  const struct timeval *timeout,
+  LPWSAOVERLAPPED Reserved
+);
+
+WINSOCK_API_LINKAGE WINBOOL PASCAL WSAConnectByNameA(
+  SOCKET s,
+  LPSTR nodename,
+  LPSTR servicename,
+  LPDWORD LocalAddressLength,
+  LPSOCKADDR LocalAddress,
+  LPDWORD RemoteAddressLength,
+  LPSOCKADDR RemoteAddress,
+  const struct timeval *timeout,
+  LPWSAOVERLAPPED Reserved
+);
+
+WINSOCK_API_LINKAGE WINBOOL PASCAL WSAConnectByNameW(
+  SOCKET s,
+  LPWSTR nodename,
+  LPWSTR servicename,
+  LPDWORD LocalAddressLength,
+  LPSOCKADDR LocalAddress,
+  LPDWORD RemoteAddressLength,
+  LPSOCKADDR RemoteAddress,
+  const struct timeval *timeout,
+  LPWSAOVERLAPPED Reserved
+);
+#define WSAConnectByName __MINGW_NAME_AW(WSAConnectByName)
+
+INT WSPAPI WSAEnumNameSpaceProvidersExA(
+  LPDWORD lpdwBufferLength,
+  LPWSANAMESPACE_INFOEXA lpnspBuffer
+);
+
+INT WSPAPI WSAEnumNameSpaceProvidersExW(
+  LPDWORD lpdwBufferLength,
+  LPWSANAMESPACE_INFOEXW lpnspBuffer
+);
+#define WSAEnumNameSpaceProvidersEx __MINGW_NAME_AW(WSAEnumNameSpaceProvidersEx)
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 #ifdef __cplusplus
 }
 #endif
@@ -1131,5 +1206,7 @@ typedef struct _WSAQUERYSET2W {
 #ifdef IPV6STRICT
 #include <wsipv6ok.h>
 #endif
+
+#include <mswsock.h>
 
 #endif /* _WINSOCK2API_ */

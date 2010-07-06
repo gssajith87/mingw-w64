@@ -66,5 +66,17 @@ typedef enum _ValueMapType {
   plaValidation   = 4 
 } ValueMapType;
 
+typedef enum  {
+  plaRunOnce     = 0x00,
+  plaSunday      = 0x01,
+  plaMonday      = 0x02,
+  plaTuesday     = 0x04,
+  plaWednesday   = 0x08,
+  plaThursday    = 0x10,
+  plaFriday      = 0x20,
+  plaSaturday    = 0x40,
+  plaEveryday    = 0x7F 
+} WeekDays;
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_PLA*/
