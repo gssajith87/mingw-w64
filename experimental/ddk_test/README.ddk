@@ -14,6 +14,10 @@ The "ddk" directory is from the ReactOS repo
 svn://svn.reactos.org/reactos/trunk/reactos/include/ddk/
 ... revision 47852.
 
+Files not included in this ddk directory :
+    ntddscsi.h: R/OS version seems outdated. Use the stock version
+		from our official headers.
+
 The individual files
     atsmedia.h,
     compstui.h,
