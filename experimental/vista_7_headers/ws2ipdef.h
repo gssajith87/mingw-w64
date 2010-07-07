@@ -1,5 +1,11 @@
 #ifndef _INC_WS2IPDEF
 #define _INC_WS2IPDEF
+
+typedef enum _MULTICAST_MODE_TYPE {
+  MCAST_INCLUDE   = 0,
+  MCAST_EXCLUDE
+} MULTICAST_MODE_TYPE;
+
 #if (_WIN32_WINNT >= 0x0600)
 
 typedef struct _sockaddr_in6_pair {
@@ -12,11 +18,6 @@ typedef union _SOCKADDR_INET {
   SOCKADDR_IN6   Ipv6;
   ADDRESS_FAMILY si_family;
 } SOCKADDR_INET, *PSOCKADDR_INET;
-
-typedef enum _MULTICAST_MODE_TYPE {
-  MCAST_INCLUDE   = 0,
-  MCAST_EXCLUDE 
-} MULTICAST_MODE_TYPE;
 
 typedef struct group_filter {
   ULONG               gf_interface;
