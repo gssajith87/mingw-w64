@@ -1,3 +1,23 @@
+/*
+ * evntprov.h
+ *
+ * This file is part of the ReactOS PSDK package.
+ *
+ * Contributors:
+ *   Created by Amine Khaldi.
+ *
+ * THIS SOFTWARE IS NOT COPYRIGHTED
+ *
+ * This source code is offered for use in the public domain. You may
+ * use, modify or distribute it freely.
+ *
+ * This code is distributed in the hope that it will be useful but
+ * WITHOUT ANY WARRANTY. ALL WARRANTIES, EXPRESS OR IMPLIED ARE HEREBY
+ * DISCLAIMED. This includes but is not limited to warranties of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ */
+
 #ifndef _EVNTPROV_H_
 #define _EVNTPROV_H_
 
@@ -23,7 +43,21 @@ extern "C" {
 
 #include <guiddef.h>
 
+#define EVENT_MIN_LEVEL				0
+#define EVENT_MAX_LEVEL				0xff
+
+#define EVENT_ACTIVITY_CTRL_GET_ID		1
+#define EVENT_ACTIVITY_CTRL_SET_ID		2
+#define EVENT_ACTIVITY_CTRL_CREATE_ID		3
+#define EVENT_ACTIVITY_CTRL_GET_SET_ID		4
+#define EVENT_ACTIVITY_CTRL_CREATE_SET_ID	5
+
 typedef ULONGLONG REGHANDLE, *PREGHANDLE;
+
+#define MAX_EVENT_DATA_DESCRIPTORS		128
+#define MAX_EVENT_FILTER_DATA_SIZE		1024
+
+#define EVENT_FILTER_TYPE_SCHEMATIZED		0x80000000
 
 typedef struct _EVENT_DESCRIPTOR {
   USHORT    Id;
