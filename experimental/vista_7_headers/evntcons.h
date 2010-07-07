@@ -67,6 +67,13 @@ typedef struct _EVENT_HEADER {
   GUID             ActivityId;
 } EVENT_HEADER, *PEVENT_HEADER;
 
+/* FIXME:
+ * Need EVENT_HEADER_PROPERTY_* and EVENT_HEADER_FLAG_* macros:
+ * http://msdn.microsoft.com/en-us/library/aa363759(VS.85).aspx
+ * Need the EVENT_HEADER_EXT_TYPE_* macros:
+ * http://msdn.microsoft.com/en-us/library/aa363759(VS.85).aspx
+ */
+
 struct _EVENT_RECORD {
   EVENT_HEADER                     EventHeader;
   ETW_BUFFER_CONTEXT               BufferContext;
@@ -88,6 +95,13 @@ typedef struct _EVENT_EXTENDED_ITEM_STACK_TRACE64 {
   ULONG64 Address[];
 } EVENT_EXTENDED_ITEM_STACK_TRACE64, *PEVENT_EXTENDED_ITEM_STACK_TRACE64;
 #endif /*(_WIN32_WINNT >= 0x0601)*/
+
+/* FIXME:
+ * Need EVENT_ENABLE_PROPERTY_* macros:
+ * http://msdn.microsoft.com/en-us/library/dd392306(VS.85).aspx
+ * Need PROCESS_TRACE_MODE_* macros:
+ * http://msdn.microsoft.com/en-us/library/aa363780(VS.85).aspx
+ */
 
 #if (_WIN32_WINNT >= 0x0600)
 ULONG EVNTAPI EventAccessControl(
