@@ -216,7 +216,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
 
     # update the build stamp
     self.addStep(SubversionRevProperty(name="gcc-svnrev",
-                                       workdir="build/src/gcc/gcc",
+                                       workdir="build/src/gcc/src",
                                        prop_prefix="gcc_",
                                        config_dir=WithProperties("%(basedir:-.)s")))
     self.addStep(SubversionRevProperty(name="mingw-svnrev",
@@ -240,7 +240,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     # Set the gcc version strings if this is a formal release
     self.addStep(ShellCommand,
                  name="release-information",
-                 workdir="build/src/gcc/gcc/gcc",
+                 workdir="build/src/gcc/src/gcc",
                  description=["writing", "version", "string"],
                  descriptionDone=["version", "string", "written"],
                  doStepIf=lambda step: ("release_build" in step.build.getProperties()) and
