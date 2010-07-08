@@ -4438,5 +4438,6 @@ typedef enum {
   VariableBitRatePeak
 } VIDEOENCODER_BITRATE_MODE;
 #endif /* __ENCODER_API_DEFINES__ */
+
 #endif /* _KSMEDIA_ */
 
