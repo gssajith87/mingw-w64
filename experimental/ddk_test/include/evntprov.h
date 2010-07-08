@@ -81,9 +81,9 @@ struct _EVENT_FILTER_DESCRIPTOR {
   ULONG     Size;
   ULONG     Type;
 };
-#ifndef __defn_PEVENT_FILTER_DESC
+#ifndef DEFINED_PEVENT_FILTER_DESC
 typedef struct _EVENT_FILTER_DESCRIPTOR EVENT_FILTER_DESCRIPTOR, *PEVENT_FILTER_DESCRIPTOR;
-#define __defn_PEVENT_FILTER_DESC
+#define DEFINED_PEVENT_FILTER_DESC	1
 #endif	/* for  evntrace.h */
 
 typedef struct _EVENT_FILTER_HEADER {
