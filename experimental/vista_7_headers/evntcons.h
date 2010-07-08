@@ -83,6 +83,10 @@ struct _EVENT_RECORD {
   PVOID                            UserData;
   PVOID                            UserContext;
 };
+#ifndef DEFINED_PEVENT_RECORD
+typedef struct _EVENT_RECORD EVENT_RECORD, *PEVENT_RECORD;
+#define DEFINED_PEVENT_RECORD		1
+#endif	/* for  evntrace.h */
 
 #if (_WIN32_WINNT >= 0x0601)
 typedef struct _EVENT_EXTENDED_ITEM_STACK_TRACE32 {
