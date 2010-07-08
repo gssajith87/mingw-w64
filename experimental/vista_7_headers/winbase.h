@@ -2871,7 +2871,6 @@ WINBASEAPI VOID WINAPI CloseThreadpoolWait(PTP_WAIT pwa);
 WINBASEAPI VOID WINAPI CloseThreadpoolWork(PTP_WORK pwk);
 
 
-
 WINBASEAPI PTP_CLEANUP_GROUP WINAPI CreateThreadpoolCleanupGroup(void);
 WINBASEAPI PTP_WAIT WINAPI CreateThreadpoolWait(PTP_WAIT_CALLBACK pfnwa,PVOID pv,PTP_CALLBACK_ENVIRON pcbe);
 WINBASEAPI PTP_WORK WINAPI CreateThreadpoolWork(PTP_WORK_CALLBACK pfnwk,PVOID pv,PTP_CALLBACK_ENVIRON pcbe);
@@ -4011,10 +4010,12 @@ WINBASEAPI PUMS_CONTEXT GetNextUmsListItem(
   PUMS_CONTEXT UmsContext
 );
 
-#endif /*_WIN64*/
+#endif /* _WIN64 */
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #ifdef __cplusplus
 }
 #endif
-#endif
+
+#endif /* _WINBASE_ */
+
