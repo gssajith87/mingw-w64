@@ -1,7 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_WERAPI
 #define _INC_WERAPI
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Guessed from http://msdn.microsoft.com/en-us/library/bb513623%28v=VS.85%29.aspx */
 typedef enum _WER_REGISTER_FILE_TYPE {
@@ -173,5 +181,8 @@ HRESULT WINAPI WerUnregisterMemoryBlock(
   PVOID pvAddress
 );
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WERAPI*/

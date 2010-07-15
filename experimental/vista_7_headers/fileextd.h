@@ -1,8 +1,17 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_FILEEXTD
 #define _INC_FILEEXTD
-#include <windows.h>
 
 #if (_WIN32_WINNT < 0x0600) /*XP & 2003*/
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct _FILE_ALLOCATION_INFO {
   LARGE_INTEGER AllocationSize;
 } FILE_ALLOCATION_INFO, *PFILE_ALLOCATION_INFO;
@@ -140,4 +149,8 @@ WINBOOL WINAPI SetFileInformationByHandle(
 );
 
 #endif /*(_WIN32_WINNT < 0x0600)*/
+
+#ifdef __cplusplus
+}
+#endif
 #endif /*_INC_FILEEXTD*/

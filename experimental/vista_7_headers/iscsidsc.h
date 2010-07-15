@@ -1,8 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_ISCSIDSC
 #define _INC_ISCSIDSC
-#include <windows.h>
 #include <ntddscsi.h>
 #if (_WIN32_WINNT >= 0x0600)
+#ifdef __cplusplus
+extern "C" {
+#endif
 
   typedef PVOID ISCSI_UNIQUE_SESSION_ID;
   typedef PVOID ISCSI_UNIQUE_CONNECTION_ID;
@@ -741,5 +748,8 @@ HRESULT WINAPI SetIScsiTunnelModeOuterAddressW(
 
 HRESULT WINAPI SetupPersistentIScsiDevices(void);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif

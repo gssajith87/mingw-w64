@@ -1,7 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_TSSBX
 #define _INC_TSSBX
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum _WTSSBX_ADDRESS_FAMILY {
   WTSSBX_ADDRESS_FAMILY_AF_UNSPEC    = 0,
@@ -87,5 +95,9 @@ typedef struct _WTSSBX_SESSION_INFO {
 } WTSSBX_SESSION_INFO;
 
 /*IID_IWTSSBPlugin is defined as DC44BE78-B18D-4399-B210-641BF67A002C*/
+
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_TSSBX*/

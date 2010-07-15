@@ -1,7 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_RDPENCOMAPI
 #define _INC_RDPENCOMAPI
 #if (_WIN32_WINNT >= 0x0600)
-#include <windows.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 typedef enum _ATTENDEE_DISCONNECT_REASON {
   ATTENDEE_DISCONNECT_REASON_MIN   = 0,
@@ -57,6 +65,9 @@ typedef enum _RDPSRAPI_WND_FLAGS {
   WND_FLAG_PRIVILEGED   = 1 
 } RDPSRAPI_WND_FLAGS;
 
+#ifdef __cplusplus
+}
+#endif
 #undef  INTERFACE
 #define INTERFACE IRDPSRAPITcpConnectionInfo
 DECLARE_INTERFACE_(IRDPSRAPITcpConnectionInfo,IDispatch)

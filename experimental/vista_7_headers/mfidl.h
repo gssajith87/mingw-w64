@@ -1,6 +1,10 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_MFIDL
 #define _INC_MFIDL
-#include <windows.h>
 #include <mfobjects.h>
 #include <mfapi.h>
 #include <wmcontainer.h>
@@ -1759,9 +1763,21 @@ DECLARE_INTERFACE_(IMFVideoSampleAllocatorCallback,IUnknown)
 #define IMFVideoSampleAllocatorCallback_SetCallback(This,pNotify) (This)->lpVtbl->SetCallback(This,pNotify)
 #endif /*COBJMACROS*/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 HRESULT MFCreate3GPMediaSink(IMFByteStream *pIByteStream,IMFMediaType *pVideoMediaType,IMFMediaType *pAudioMediaType,IMFMediaSink **ppIMediaSink);
 HRESULT MFCreateAggregateSource(IMFCollection *pSourceCollection,IMFMediaSource **ppAggSource);
+
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0601)*/
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 HRESULT WINAPI MFCreateAlignedMemoryBuffer(DWORD cbMaxLength,DWORD fAlignmentFlags,IMFMediaBuffer **ppBuffer);
 HRESULT WINAPI MFCreateASFContentInfo(IMFASFContentInfo **ppIContentInfo);
@@ -1804,14 +1820,25 @@ HRESULT WINAPI MFGetSupportedMimeTypes(PROPVARIANT *pPropVarMimeTypeArray);
 HRESULT WINAPI MFGetSupportedSchemes(PROPVARIANT *pPropVarSchemeArray);
 MFTIME WINAPI MFGetSystemTime(void);
 HRESULT WINAPI MFShutdownObject(IUnknown *pUnk);
-
+#ifdef __cplusplus
+}
+#endif
 #if (_WIN32_WINNT >= 0x0601)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 HRESULT WINAPI MFCreateTranscodeProfile(IMFTranscodeProfile **ppTranscodeProfile);
 HRESULT WINAPI MFCreateTranscodeSinkActivate(IMFActivate **ppActivate);
 HRESULT WINAPI MFCreateTranscodeTopology(IMFMediaSource *pSrc,LPCWSTR pwszOutputFilePath,IMFTranscodeProfile *pProfile,IMFTopology **ppTranscodeTopo);
 HRESULT WINAPI MFEnumDeviceSources(IMFAttributes *pAttributes,IMFActivate ***pppSourceActivate,UINT32 *pcSourceActivate);
 HRESULT WINAPI MFGetTopoNodeCurrentType(IMFTopologyNode *pNode,DWORD dwStreamIndex,WINBOOL fOutput,IMFMediaType **ppType);
 HRESULT WINAPI MFTranscodeGetAudioOutputAvailableTypes(REFGUID guidSubType,DWORD dwMFTFlags,IMFAttributes *pCodecConfig,IMFCollection **ppAvailableTypes);
+
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/

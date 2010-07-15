@@ -1,6 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_WS2BTH
 #define _INC_WS2BTH
 #include <bthsdpdef.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct _BTH_QUERY_SERVICE {
   ULONG             type;
@@ -36,4 +45,7 @@ typedef struct _SOCKADDR_BTH {
   ULONG    port;
 } SOCKADDR_BTH, *PSOCKADDR_BTH;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*_INC_WS2BTH*/

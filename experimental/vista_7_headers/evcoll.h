@@ -1,7 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_EVCOLL
 #define _INC_EVCOLL
 #if (_WIN32_WINNT >= 0x0600)
-#include <windows.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum _EC_SUBSCRIPTION_CONFIGURATION_MODE {
   EcConfigurationModeNormal         = 0,
@@ -92,7 +99,7 @@ typedef struct _EC_VARIANT {
     ULONGLONG DateTimeVal;
     LPCWSTR   StringVal;
     PBYTE     BinaryVal;
-    BOOL      *BooleanArr;
+    WINBOOL   *BooleanArr;
     INT32*    Int32Arr;
     LPWSTR    *StringArr;
   } ;
@@ -192,7 +199,7 @@ WINBOOL WINAPI EcSaveSubscription(
   DWORD Flags
 );
 
-BOOL WINAPI EcSetObjectArrayProperty(
+WINBOOL WINAPI EcSetObjectArrayProperty(
   EC_OBJECT_ARRAY_PROPERTY_HANDLE ObjectArray,
   EC_SUBSCRIPTION_PROPERTY_ID PropertyId,
   DWORD ArrayIndex,
@@ -217,5 +224,8 @@ DWORD EjectDiskFromSADrive(
   DWORD    dwOptions
 );
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_EVCOLL*/

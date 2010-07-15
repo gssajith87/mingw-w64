@@ -1,3 +1,9 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
+
 #define TABLET_DISABLE_PRESSANDHOLD        0x00000001
 #define TABLET_DISABLE_PENTAPFEEDBACK      0x00000008
 #define TABLET_DISABLE_PENBARRELFEEDBACK   0x00000010

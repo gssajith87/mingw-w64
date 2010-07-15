@@ -1,7 +1,10 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_OPMAPI
 #define _INC_OPMAPI
-#include <windows.h>
-#include <d3d9.h>
 #include <dxva2api.h>
 
 #if (_WIN32_WINNT >= 0x0600)
@@ -13,6 +16,10 @@
 #define OPM_GET_INFORMATION_PARAMETERS_SIZE          4056
 #define OPM_HDCP_KEY_SELECTION_VECTOR_SIZE           0/*?*/
 #define OPM_128_BIT_RANDOM_NUMBER_SIZE               16
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum _OPM_VIDEO_OUTPUT_SEMANTICS {
   OPM_VOS_COPP_SEMANTICS   = 0,
@@ -176,6 +183,10 @@ typedef struct _OPM_STANDARD_INFORMATION {
   ULONG             ulReserved2;
 } OPM_STANDARD_INFORMATION;
 
+#ifdef __cplusplus
+}
+#endif
+
 #undef  INTERFACE
 #define INTERFACE IOPMVideoOutput
 DECLARE_INTERFACE_(IOPMVideoOutput,IUnknown)
@@ -207,6 +218,10 @@ DECLARE_INTERFACE_(IOPMVideoOutput,IUnknown)
 #define IOPMVideoOutput_StartInitialization(This,prnRandomNumber,ppbCertificate,pulCertificateLength) (This)->lpVtbl->StartInitialization(This,prnRandomNumber,ppbCertificate,pulCertificateLength)
 #endif /*COBJMACROS*/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 HRESULT WINAPI OPMGetVideoOutputsFromHMONITOR(
   HMONITOR hMonitor,
   OPM_VIDEO_OUTPUT_SEMANTICS vos,
@@ -220,6 +235,8 @@ HRESULT WINAPI OPMGetVideoOutputsFromIDirect3DDevice9Object(
   ULONG *pulNumVideoOutputs,
   IOPMVideoOutput ***pppOPMVideoOutputArray
 );
-
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_OPMAPI*/

@@ -1,6 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_TCPESTATS
 #define _INC_TCPESTATS
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct _TCP_ESTATS_BANDWIDTH_ROD_v0 {
   ULONG64 OutboundBandwidth;
@@ -197,5 +206,8 @@ typedef enum _TCP_BOOLEAN_OPTIONAL {
   TcpBoolOptUnchanged   = -1 
 } TCP_BOOLEAN_OPTIONAL;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_TCPESTATS*/

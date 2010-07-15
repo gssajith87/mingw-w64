@@ -1,7 +1,16 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_NDHELPER
 #define _INC_NDHELPER
 #include <ndattrib.h>
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct tagDiagnosticsInfo {
   long  cost;
@@ -19,6 +28,10 @@ typedef struct tagHelperAttributeInfo {
   LPWSTR pwszName;
   ATTRIBUTE_TYPE  type;
 } HelperAttributeInfo, *PHelperAttributeInfo;
+
+#ifdef __cplusplus
+}
+#endif
 
 #undef  INTERFACE
 #define INTERFACE INetDiagHelperInfo

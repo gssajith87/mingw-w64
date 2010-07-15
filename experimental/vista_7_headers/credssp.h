@@ -1,6 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_CREDSSP
 #define _INC_CREDSSP
 #if (_WIN32_WINNT >= 0x0600)
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum _CREDSSP_SUBMIT_TYPE {
   CredsspPasswordCreds         = 2,
@@ -21,5 +29,8 @@ typedef struct _SecPkgContext_ClientCreds {
   PUCHAR AuthBuffer;
 } SecPkgContext_ClientCreds, *PSecPkgContext_ClientCreds;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_CREDSSP*/

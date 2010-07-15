@@ -1,3 +1,8 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_AVRT
 #define _INC_AVRT
 
@@ -7,15 +12,9 @@
 #define AVRT_PRIORITY_LOW      -1
 #define AVRT_PRIORITY_NORMAL   0
 
-#ifdef UNICODE
-#define AvSetMmThreadCharacteristics AvSetMmThreadCharacteristicsW
-#define AvSetMmMaxThreadCharacteristics AvSetMmMaxThreadCharacteristicsW
-#define AvRtCreateThreadOrderingGroupEx AvRtCreateThreadOrderingGroupExW
-#else
-#define AvSetMmThreadCharacteristics AvSetMmThreadCharacteristicsA
-#define AvSetMmMaxThreadCharacteristics AvSetMmMaxThreadCharacteristicsA
-#define AvRtCreateThreadOrderingGroupEx AvRtCreateThreadOrderingGroupExA
-#endif
+#define AvSetMmThreadCharacteristics __MINGW_NAME_AW(AvSetMmThreadCharacteristics)
+#define AvSetMmMaxThreadCharacteristics __MINGW_NAME_AW(AvSetMmMaxThreadCharacteristics)
+#define AvRtCreateThreadOrderingGroupEx __MINGW_NAME_AW(AvRtCreateThreadOrderingGroupEx)
 
 WINBOOL WINAPI AvQuerySystemResponsiveness(
   HANDLE AvrtHandle,

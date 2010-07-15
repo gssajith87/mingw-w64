@@ -1,3 +1,8 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_WSDCLIENT
 #define _INC_WSDCLIENT
 #if (_WIN32_WINNT >= 0x0600)
@@ -224,14 +229,18 @@ DECLARE_INTERFACE_(IWSDEndpointProxy,IUnknown)
 #define IWSDEndpointProxy_GetFaultInfo(This,ppFault) (This)->lpVtbl->GetFaultInfo(This,ppFault)
 #endif /*COBJMACROS*/
 
-HRESULT WSDCreateDeviceProxy(
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+HRESULT WINAPI WSDCreateDeviceProxy(
   const WCHAR *pszDeviceId,
   const WCHAR *pszLocalId,
   IWSDXMLContext *pContext,
   IWSDDeviceProxy **ppDeviceProxy
 );
 
-HRESULT WSDCreateDeviceProxyAdvanced(
+HRESULT WINAPI WSDCreateDeviceProxyAdvanced(
   const WCHAR *pszDeviceId,
   IWSDAddress *pDeviceAddress,
   const WCHAR *pszLocalId,
@@ -239,5 +248,8 @@ HRESULT WSDCreateDeviceProxyAdvanced(
   IWSDDeviceProxy **ppDeviceProxy
 );
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WSDCLIENT*/

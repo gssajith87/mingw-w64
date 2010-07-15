@@ -1,10 +1,18 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_FWPMTYPES
 #define _INC_FWPMTYPES
-#include <windows.h>
 #include <fwptypes.h>
 #include <ipsectypes.h>
 #include <iketypes.h>
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef UINT32 FWP_ACTION_TYPE;
 
@@ -389,5 +397,8 @@ typedef struct FWPM_SUBLAYER0_ {
   UINT16             weight;
 } FWPM_SUBLAYER0;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_FWPMTYPES*/

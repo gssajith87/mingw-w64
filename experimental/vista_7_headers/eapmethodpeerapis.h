@@ -1,9 +1,17 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_EAPMETHODPEERAPIS
 #define _INC_EAPMETHODPEERAPIS
 #if (_WIN32_WINNT >= 0x0600)
-#include <windows.h>
 #include <eaptypes.h>
 #include <eapmethodtypes.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 DWORD WINAPI EapPeerQueryCredentialInputFields(
   HANDLE hUserImpersonationToken,
@@ -232,6 +240,10 @@ DWORD WINAPI EapPeerCredentialsXml2Blob(
 VOID WINAPI EapPeerFreeMemory(
   void *pUIContextData
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_EAPMETHODPEERAPIS*/

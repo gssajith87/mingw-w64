@@ -1,4 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
+#ifndef _INC_VSMGT
+#define _INC_VSMGT
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef PWSTR VSS_PWSZ; /*assumed*/
 
 typedef enum _VSS_PROTECTION_FAULT {
@@ -71,3 +81,9 @@ typedef struct _VSS_VOLUME_PROTECTION_INFO {
   WINBOOL              m_volumeHasUnusedDiffArea;
   DWORD                m_reserved;
 } VSS_VOLUME_PROTECTION_INFO;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /*_INC_VSMGT*/

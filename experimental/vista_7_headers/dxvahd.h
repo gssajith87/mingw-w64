@@ -1,9 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_DXAVHD
 #define _INC_DXAVHD
-#include <windows.h>
-#include <d3d9.h>
-
 #if (_WIN32_WINNT >= 0x0601)
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef CALLBACK
 #define CALLBACK __stdcall
@@ -368,6 +373,10 @@ typedef struct _DXVAHDSW_CALLBACKS {
 } DXVAHDSW_CALLBACKS;
 
 HRESULT DXVAHD_CreateDevice(IDirect3DDevice9Ex *pD3DDevice,const DXVAHD_CONTENT_DESC *pContentDesc,DXVAHD_DEVICE_USAGE Usage,PDXVAHDSW_Plugin pPlugin,IDXVAHD_Device **ppDevice);
+
+#ifdef __cplusplus
+}
+#endif
 
 #undef  INTERFACE
 #define INTERFACE IDXVAHD_Device

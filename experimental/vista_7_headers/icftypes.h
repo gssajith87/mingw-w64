@@ -1,7 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_ICFTYPES
 #define _INC_ICFTYPES
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum _NET_FW_ACTION {
   NET_FW_ACTION_BLOCK,
@@ -27,6 +35,10 @@ typedef enum NET_FW_RULE_DIRECTION_ {
   NET_FW_RULE_DIR_OUT,
   NET_FW_RULE_DIR_MAX 
 } NET_FW_RULE_DIRECTION;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_ICFTYPES*/

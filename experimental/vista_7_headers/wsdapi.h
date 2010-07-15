@@ -1,6 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_WSDAPI
 #define _INC_WSDAPI
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct IWSDAsyncResult IWSDAsyncResult;
 typedef struct IWSDServiceProxy IWSDServiceProxy;
@@ -27,6 +36,10 @@ typedef struct _WSDXML_TYPE WSDXML_TYPE;
 typedef struct _WSD_METADATA_SECTION_LIST WSD_METADATA_SECTION_LIST;
 typedef struct _WSD_METADATA_SECTION WSD_METADATA_SECTION;
 typedef struct _WSD_ENDPOINT_REFERENCE_LIST WSD_ENDPOINT_REFERENCE_LIST;
+
+#ifdef __cplusplus
+}
+#endif
 
 #include <wsdtypes.h>
 #include <wsdbase.h>

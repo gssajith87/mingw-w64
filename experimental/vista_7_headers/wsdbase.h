@@ -1,3 +1,8 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_WSDBASE
 #define _INC_WSDBASE
 #if (_WIN32_WINNT >= 0x0600)
@@ -284,11 +289,15 @@ DECLARE_INTERFACE_(IWSDUdpMessageParameters,IWSDMessageParameters)
 #define IWSDUdpMessageParameters_GetRetransmitParams(This,pParams) (This)->lpVtbl->GetRetransmitParams(This,pParams)
 #endif /*COBJMACROS*/
 
-HRESULT WSDCreateHttpAddress(
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+HRESULT WINAPI WSDCreateHttpAddress(
   IWSDHttpAddress **ppAddress
 );
 
-HRESULT WSDCreateHttpMessageParameters(
+HRESULT WINAPI WSDCreateHttpMessageParameters(
   IWSDHttpMessageParameters **ppTxParams
 );
 
@@ -300,5 +309,8 @@ HRESULT WINAPI WSDCreateUdpMessageParameters(
   IWSDUdpMessageParameters **ppTxParams
 );
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WSDBASE*/

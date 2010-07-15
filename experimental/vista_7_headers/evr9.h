@@ -1,7 +1,16 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_EVR9
 #define _INC_EVR9
 
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum  {
   MFVideoAlphaBitmap_EntireDDS     = 0x00000001,
@@ -13,5 +22,8 @@ typedef enum  {
   MFVideoAlphaBitmap_BitMask       = 0x0000003f 
 } MFVideoAlphaBitmapFlags;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_EVR9*/

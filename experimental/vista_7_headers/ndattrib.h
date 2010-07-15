@@ -1,6 +1,10 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_NDATTRIB
 #define _INC_NDATTRIB
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
 
 /* In ndhelper.idl
@@ -9,6 +13,10 @@ typedef struct tagDIAG_SOCKADDR {
   CHAR   data[126];
 } DIAG_SOCKADDR, *PDIAG_SOCKADDR;
 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct tagDIAG_SOCKADDR DIAG_SOCKADDR;
 
@@ -128,7 +136,14 @@ typedef struct tagHELPER_ATTRIBUTE {
   } ;
 } HELPER_ATTRIBUTE;
 
+#ifdef __cplusplus
+}
+#endif
+
 #if (_WIN32_WINNT >= 0x0601)
+#ifdef __cplusplus
+extern "C" {
+#endif
 #define RCF_ISLEAF 0x1
 #define RCF_ISCONFIRMED 0x2
 #define RCF_ISTHIRDPARTY 0x4
@@ -147,6 +162,9 @@ typedef struct tagRootCauseInfo {
   USHORT       repairCount;
 } RootCauseInfo;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_NDATTRIB*/

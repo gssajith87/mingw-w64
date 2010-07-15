@@ -1,7 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_MFMP2DLNA
 #define _INC_MFMP2DLNA
 
 #if (_WIN32_WINNT >= 0x0601)
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct _MFMPEG2DLNASINKSTATS {
   DWORDLONG cBytesWritten;
   BOOL      fPAL;
@@ -18,6 +26,8 @@ typedef struct _MFMPEG2DLNASINKSTATS {
   DWORDLONG cAudioBytesReceived;
   DWORDLONG cAudioFramesEncoded;
 } MFMPEG2DLNASINKSTATS;
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0601)*/
-
 #endif /*_INC_MFMP2DLNA*/

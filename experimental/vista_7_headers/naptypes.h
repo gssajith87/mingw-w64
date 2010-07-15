@@ -1,7 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_NAPTYPES
 #define _INC_NAPTYPES
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define maxSoHAttributeCount          0x64
 #define maxSoHAttributeSize           0xFA0
@@ -194,5 +201,8 @@ typedef struct _NAPI_PROVIDER_INSTALLATION_BLOB {
   DWORD OffsetFirstDomain;
 } NAPI_PROVIDER_INSTALLATION_BLOB, *PNAPI_PROVIDER_INSTALLATION_BLOB;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif _INC_NAPTYPES

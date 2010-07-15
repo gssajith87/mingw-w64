@@ -1,8 +1,17 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_WLANAPI
 #define _INC_WLANAPI
-#include <windows.h>
 #include <windot11.h>
 #include <eaptypes.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef DWORD WLAN_REASON_CODE, *PWLAN_REASON_CODE;
 
 typedef struct _DOT11_NETWORK {
@@ -700,6 +709,10 @@ DWORD WINAPI WlanUIEditProfile(
   PVOID pReserved,
   PWLAN_REASON_CODE *pWlanReasonCode
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WLANAPI*/

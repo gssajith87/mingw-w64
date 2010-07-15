@@ -1,7 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_CSCOBJ
 #define _INC_CSCOBJ
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum _OFFLINEFILES_CACHING_MODE {
   OFFLINEFILES_CACHING_MODE_NONE              = 0,
@@ -198,6 +205,9 @@ typedef enum _OFFLINEFILES_SYNC_STATE {
   OFFLINEFILES_SYNC_STATE_FileReplacedAndDeletedOnClient_DirChangedOnServer    = 53 
 } OFFLINEFILES_SYNC_STATE;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_CSCOBJ*/
 

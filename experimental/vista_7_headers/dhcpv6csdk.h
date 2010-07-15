@@ -1,7 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_DHCPV6CSDK
 #define _INC_DHCPV6CSDK
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum _StatusCode {
   STATUS_NO_ERROR,
@@ -76,6 +83,8 @@ DWORD APIENTRY Dhcpv6RequestPrefix(
   LPDHCPV6PrefixLeaseInformation prefixleaseInfo,
   DWORD pdwTimeToWait
 );
-
+#ifdef __cplusplus
+}
+#endif
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_DHCPV6CSDK*/

@@ -1,9 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_DXVA2API
 #define _INC_DXVA2API
-#include <windows.h>
-#include <dshow.h>
-#include <d3d9.h>
 #if (_WIN32_WINNT >= 0x0600)
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct IDirect3DDeviceManager9 IDirect3DDeviceManager9;
 
@@ -331,7 +336,7 @@ typedef struct _DXVA2_VideoSample {
   DWORD                SampleData;
 } DXVA2_VideoSample;
 
-/*inlines?*/
+/*Fixme: inlines?*/
 const DXVA2_Fixed32 DXVA2_Fixed32OpaqueAlpha(void);
 const DXVA2_Fixed32 DXVA2_Fixed32TransparentAlpha(void);
 float DXVA2FixedToFloat(const DXVA2_Fixed32 _fixed_);
@@ -339,6 +344,10 @@ DXVA2_Fixed32 DXVA2FloatToFixed(const float _float_);
 
 HRESULT WINAPI DXVA2CreateDirect3DDeviceManager9(UINT *pResetToken,IDirect3DDeviceManager9 **ppDXVAManager);
 HRESULT WINAPI DXVA2CreateVideoService(IDirect3DDevice9 *pDD,REFIID riid,void **ppService);
+
+#ifdef __cplusplus
+}
+#endif
 
 #undef  INTERFACE
 #define INTERFACE IDirect3DDeviceManager9

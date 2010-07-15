@@ -1,10 +1,17 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_CLFSW32
 #define _INC_CLFSW32
-#include <windows.h>
 #include <clfs.h>
 #include <clfsmgmt.h>
 
 #if (_WIN32_WINNT >= 0x0600)
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef PVOID (* CLFS_BLOCK_ALLOCATION) (ULONG cbBufferSize, PVOID pvUserContext);
 typedef void  (* CLFS_BLOCK_DEALLOCATION) (PVOID pvBuffer, PVOID pvUserContext);
@@ -315,5 +322,8 @@ WINBOOL WINAPI ValidateLog(
   PULONG pcbBuffer
 );
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* (_WIN32_WINNT >= 0x0600) */
 #endif /*_INC_CLFSW32*/

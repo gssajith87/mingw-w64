@@ -1,7 +1,16 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
+
 #ifndef _INC_WDSTPDI
 #define _INC_WDSTPDI
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* 	Wdsmc.dll is missing an implib because Vista clients don't have the dll to generate it from */
 
@@ -81,5 +90,8 @@ HRESULT WDSMCSAPI WdsTransportServerTrace(
   LPCWSTR pwszFormat
 );
 
+#ifdef __cplusplus
+}
+#endi
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WDSTPDI*/

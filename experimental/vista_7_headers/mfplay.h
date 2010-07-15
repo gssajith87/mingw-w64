@@ -1,6 +1,10 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_MFPLAY
 #define _INC_MFPLAY
-#include <oaidl.h>
 #include <evr.h>
 
 #if (_WIN32_WINNT >= 0x0601)
@@ -325,8 +329,15 @@ typedef struct MFP_ACQUIRE_USER_CREDENTIAL_EVENT {
 
 typedef UINT32 MFP_CREATION_OPTIONS;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 HRESULT WINAPI MFPCreateMediaPlayer(LPCWSTR pwszURL,WINBOOL fStartPlayback,MFP_CREATION_OPTIONS creationOptions,IMFPMediaPlayerCallback *pCallback,HWND hWnd,IMFPMediaPlayer **ppMediaPlayer);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #endif /*_INC_MFPLAY*/

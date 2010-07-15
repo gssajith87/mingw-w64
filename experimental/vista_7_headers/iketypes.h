@@ -1,9 +1,17 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_IKETYPES
 #define _INC_IKETYPES
-#include <windows.h>
 #include <fwptypes.h>
 
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum IKEEXT_EM_SA_STATE_ {
   IKEEXT_EM_SA_STATE_NONE,
@@ -266,7 +274,7 @@ typedef struct IKEEXT_IP_VERSION_SPECIFIC_KEYMODULE_STATISTICS0_ {
   UINT32 totalImpersonationMainModes;
 } IKEEXT_IP_VERSION_SPECIFIC_KEYMODULE_STATISTICS0;
 
-#define IERROR_IPSEC_IKE_NEG_STATUS_END (ERROR_IPSEC_IKE_NEG_STATUS_BEGIN - ERROR_IPSEC_IKE_NEG_STATUS_END) /* Should be 84 */
+#define IKEEXT_ERROR_CODE_COUNT (ERROR_IPSEC_IKE_NEG_STATUS_END - ERROR_IPSEC_IKE_NEG_STATUS_BEGIN) /* Should be 84 */
 
 typedef struct IKEEXT_KEYMODULE_STATISTICS0_ {
   IKEEXT_IP_VERSION_SPECIFIC_KEYMODULE_STATISTICS0 v4Statistics;
@@ -322,5 +330,8 @@ typedef struct IKEEXT_TRAFFIC0_ {
   UINT64         authIpFilterId;
 } IKEEXT_TRAFFIC0;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_IKETYPES*/

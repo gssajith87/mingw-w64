@@ -1,5 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_WS2IPDEF
 #define _INC_WS2IPDEF
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum _MULTICAST_MODE_TYPE {
   MCAST_INCLUDE   = 0,
@@ -39,4 +48,9 @@ typedef struct group_source_req {
 } GROUP_SOURCE_REQ, *PGROUP_SOURCE_REQ;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /*_INC_WS2IPDEF*/

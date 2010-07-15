@@ -1,6 +1,11 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
+
 #ifndef _INC_CARDMOD
 #define _INC_CARDMOD
-#include <windows.h>
 #include <wincrypt.h>
 
 #define CARD_BUFFER_SIZE_ONLY 0x20000000
@@ -22,14 +27,18 @@
 #define AT_ECDHE_P384  7
 #define AT_ECDHE_P521  8
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum _CARD_DIRECTORY_ACCESS_CONDITION {
-  DInvalidAc                = 0, /*Should be InvalidAc, conflict with CARD_FILE_ACCESS_CONDITION*/
+  DInvalidAc                = 0, /*Fixme: Should be InvalidAc, conflict with CARD_FILE_ACCESS_CONDITION*/
   UserCreateDeleteDirAc    = 1,
   AdminCreateDeleteDirAc   = 2 
 } CARD_DIRECTORY_ACCESS_CONDITION;
 
 typedef enum _CARD_FILE_ACCESS_CONDITION {
-  FInvalidAc                  = 0, /*Should be InvalidAc, conflict with CARD_DIRECTORY_ACCESS_CONDITION*/
+  FInvalidAc                  = 0, /*Fixme: Should be InvalidAc, conflict with CARD_DIRECTORY_ACCESS_CONDITION*/
   EveryoneReadUserWriteAc    = 1,
   UserWriteExecuteAc         = 2,
   EveryoneReadAdminWriteAc   = 3,
@@ -399,6 +408,7 @@ DWORD WINAPI CardDeleteContainer(
   DWORD dwReserved
 );
 
-
-
+#ifdef __cplusplus
+}
+#endif
 #endif /*_INC_CARDMOD*/

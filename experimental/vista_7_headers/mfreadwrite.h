@@ -1,6 +1,10 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_MFREADWRITE
 #define _INC_MFREADWRITE
-#include <oaidl.h>
 
 #if (_WIN32_WINNT >= 0x0601)
 
@@ -121,11 +125,19 @@ DECLARE_INTERFACE_(IMFSourceReader,IUnknown)
 #define MF_SOURCE_READER_ALL_STREAMS        0xFFFFFFFE
 #define MF_SOURCE_READER_MEDIASOURCE        0xFFFFFFFF
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 HRESULT WINAPI MFCreateSinkWriterFromMediaSink(IMFMediaSink *pMediaSink,IMFAttributes *pAttributes,IMFSinkWriter **ppSinkWriter);
 HRESULT WINAPI MFCreateSinkWriterFromURL(LPCWSTR pwszOutputURL,IMFByteStream *pByteStream,IMFAttributes *pAttributes,IMFSinkWriter **ppSinkWriter);
 HRESULT WINAPI MFCreateSourceReaderFromByteStream(IMFByteStream *pByteStream,IMFAttributes *pAttributes,IMFSourceReader **ppSourceReader);
 HRESULT WINAPI MFCreateSourceReaderFromMediaSource(IMFMediaSource *pMediaSource,IMFAttributes *pAttributes,IMFSourceReader **ppSourceReader);
 HRESULT WINAPI MFCreateSourceReaderFromURL(LPCWSTR pwszURL,IMFAttributes *pAttributes,IMFSourceReader **ppSourceReader);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 #endif /*_INC_MFREADWRITE*/

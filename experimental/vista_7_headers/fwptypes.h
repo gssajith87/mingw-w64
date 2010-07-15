@@ -1,10 +1,18 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_FWTYPES
 #define _INC_FWTYPES
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
 
 #define SOCKET_SETTINGS_GUARANTEE_ENCRYPTION 0x00000001 
 #define SOCKET_SETTINGS_ALLOW_INSECURE 0x00000002
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum FWP_CLASSIFY_OPTION_TYPE_ {
   FWP_CLASSIFY_OPTION_MULTICAST_STATE,
@@ -166,6 +174,10 @@ typedef struct FWP_VALUE0_ {
     FWP_BYTE_ARRAY6       *byteArray6;
   } ;
 } FWP_VALUE0;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_FWTYPES*/

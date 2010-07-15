@@ -1,8 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_EVR
 #define _INC_EVR
-#include <windows.h>
-#include <oaidl.h>
-#include <mfidl.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if (_WIN32_WINNT >= 0x0600)
 #if (_WIN32_WINNT >= 0x0601)
@@ -64,6 +70,10 @@ typedef struct MFVideoNormalizedRect {
   float right;
   float bottom;
 } MFVideoNormalizedRect;
+
+#ifdef __cplusplus
+}
+#endif
 
 #undef  INTERFACE
 #define INTERFACE IMFVideoPresenter
@@ -152,6 +162,9 @@ DECLARE_INTERFACE_(IMFTrackedSample,IUnknown)
 #define IMFTrackedSample_SetAllocator(This,pSampleAllocator,pUnkState) (This)->lpVtbl->SetAllocator(This,pSampleAllocator,pUnkState)
 #endif /*COBJMACROS*/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 HRESULT WINAPI MFCreateVideoMixer(IUnknown *pOwner,REFIID riidDevice,REFIID riid,void **ppVideoMixer);
 HRESULT WINAPI MFCreateVideoMixerAndPresenter(IUnknown *pMixerOwner,IUnknown *pPresenterOwner,REFIID riidMixer,void **ppvVideoMixer,REFIID riidPresenter,void **ppvVideoPresenter);
@@ -159,6 +172,9 @@ HRESULT WINAPI MFCreateVideoPresenter(IUnknown *pOwner,REFIID riidDevice,REFIID 
 HRESULT WINAPI MFCreateVideoSampleAllocator(REFIID riid,void** ppSampleAllocator);
 HRESULT WINAPI MFCreateVideoSampleFromSurface(IUnknown *pUnkSurface,IMFSample **ppSample);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #endif /*_INC_EVR*/

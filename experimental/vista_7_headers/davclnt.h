@@ -1,6 +1,13 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_DAVCLNT
 #define _INC_DAVCLNT
-#include <windows.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if (_WIN32_WINNT >= 0x0600)
 #define DAV_AUTHN_SCHEME_BASIC      0x00000001
@@ -119,8 +126,11 @@ OPAQUE_HANDLE WINAPI DavRegisterAuthCallback(
 );
 
 VOID WINAPI DavUnregisterAuthCallback(
-  __in  OPAQUE_HANDLE hCallback
+  OPAQUE_HANDLE hCallback
 );
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_DAVCLNT*/

@@ -1,3 +1,12 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
+
+#ifndef _INC_WINSATCOMINTERFACEI
+#define _INC_WINSATCOMINTERFACEI
+
 typedef enum _WINSAT_ASSESSMENT_STATE {
   WINSAT_ASSESSMENT_STATE_MIN                        = 0,
   WINSAT_ASSESSMENT_STATE_UNKNOWN                    = 0,
@@ -21,3 +30,4 @@ typedef enum _WINSAT_BITMAP_SIZE {
   WINSAT_BITMAP_SIZE_NORMAL   = 1 
 } WINSAT_BITMAP_SIZE;
 
+#endif /*_INC_WINSATCOMINTERFACEI*/

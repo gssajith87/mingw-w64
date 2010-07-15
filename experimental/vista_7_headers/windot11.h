@@ -1,9 +1,12 @@
-#include <windows.h>
-#include <ntddnis.h>
-#include <wlantypes.h>
-
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_WINDOT11
 #define _INC_WINDOT11
+#include <ntddnis.h>
+#include <wlantypes.h>
 
 typedef UCHAR DOT11_MAC_ADDRESS[6];
 typedef DOT11_MAC_ADDRESS* PDOT11_MAC_ADDRESS;

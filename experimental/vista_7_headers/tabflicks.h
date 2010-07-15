@@ -1,25 +1,14 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_TABFLICKS
 #define _INC_TABFLICKS
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
-
-typedef struct FLICK_DATA {
-  FLICKACTION_COMMANDCODE iFlickActionCommandCode  :5;
-  FLICKDIRECTION          iFlickDirection  :3;
-  WINBOOL                 fControlModifier  :1;
-  WINBOOL                 fMenuModifier  :1;
-  WINBOOL                 fAltGRModifier  :1;
-  WINBOOL                 fWinModifier  :1;
-  WINBOOL                 fShiftModifier  :1;
-  INT                     iReserved  :2;
-  WINBOOL                 fOnInkingSurface  :1;
-  INT                     iActionArgument  :16;
-} FLICK_DATA;
-
-typedef struct FLICK_POINT {
-  INT x  :16;
-  INT y  :16;
-} FLICK_POINT;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum FLICKACTION_COMMANDCODE {
   FLICKACTION_COMMANDCODE_NULL          = 0,
@@ -59,5 +48,26 @@ typedef enum SCROLLDIRECTION {
   SCROLLDIRECTION_DOWN   = 1 
 } SCROLLDIRECTION;
 
+typedef struct FLICK_DATA {
+  FLICKACTION_COMMANDCODE iFlickActionCommandCode  :5;
+  FLICKDIRECTION          iFlickDirection  :3;
+  WINBOOL                 fControlModifier  :1;
+  WINBOOL                 fMenuModifier  :1;
+  WINBOOL                 fAltGRModifier  :1;
+  WINBOOL                 fWinModifier  :1;
+  WINBOOL                 fShiftModifier  :1;
+  INT                     iReserved  :2;
+  WINBOOL                 fOnInkingSurface  :1;
+  INT                     iActionArgument  :16;
+} FLICK_DATA;
+
+typedef struct FLICK_POINT {
+  INT x  :16;
+  INT y  :16;
+} FLICK_POINT;
+
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif _INC_TABFLICKS

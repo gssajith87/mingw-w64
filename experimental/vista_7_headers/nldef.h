@@ -1,6 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_NLDEF
 #define _INC_NLDEF
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum _NL_ADDRESS_TYPE {
   NlatUnspecified,
@@ -128,5 +137,8 @@ typedef struct _NL_INTERFACE_OFFLOAD_ROD {
   BOOLEAN TlGiantSendOffloadSupported  :1;
 } NL_INTERFACE_OFFLOAD_ROD, *PNL_INTERFACE_OFFLOAD_ROD;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_NLDEF*/

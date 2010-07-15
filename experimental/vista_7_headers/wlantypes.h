@@ -1,7 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_WLANTYPES
 #define _INC_WLANTYPES
 
-#include <windows.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define DOT11_SSID_MAX_LENGTH 32
 
 typedef enum _DOT11_CIPHER_ALGORITHM {
@@ -57,5 +65,9 @@ typedef struct _DOT11_SSID {
   ULONG uSSIDLength;
   UCHAR ucSSID[DOT11_SSID_MAX_LENGTH];
 } DOT11_SSID, *PDOT11_SSID;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*_INC_WLANTYPES*/

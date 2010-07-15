@@ -1,7 +1,10 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_MFAPI
 #define _INC_MFAPI
-#include <windows.h>
-#include <mfidl.h>
 #include <dshow.h>
 #include <dvdmedia.h>
 #include <opmapi.h>
@@ -32,6 +35,7 @@ typedef enum _MFVideoDRMFlags {
 
 
 #if (_WIN32_WINNT >= 0x0601)
+
 typedef enum  {
   MF_STANDARD_WORKQUEUE   = 0,
   MF_WINDOW_WORKQUEUE     = 1 
@@ -113,6 +117,10 @@ typedef struct _MT_CUSTOM_VIDEO_PRIMARIES {
   float fWx;
   float fWy;
 } MT_CUSTOM_VIDEO_PRIMARIES;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef void (*MFPERIODICCALLBACK )(IUnknown *pContext);
 typedef LPVOID MFWORKITEM_KEY;
@@ -211,7 +219,14 @@ UINT64 WINAPI Pack2UINT32AsUINT64(UINT32 unHigh,UINT32 unLow);
 punHigh=(unPacked&0xffff0000); \
 punLow=(unPacked&0x0000ffff);
 
+#ifdef __cplusplus
+}
+#endif
+
 #if (_WIN32_WINNT >= 0x0601)
+#ifdef __cplusplus
+extern "C" {
+#endif
 HRESULT WINAPI MFCreateMFByteStreamOnStream(IStream *pStream,IMFByteStream **ppByteStream);
 HRESULT WINAPI MFGetMFTMerit(IUnknown *pMFT,UINT32 cbVerifier,const BYTE *verifier,DWORD *merit);
 HRESULT WINAPI MFGetPluginControl(IMFPluginControl **ppPluginControl);
@@ -220,6 +235,9 @@ HRESULT WINAPI MFTEnumEx(GUID guidCategory,UINT32 Flags,const MFT_REGISTER_TYPE_
 HRESULT WINAPI MFTRegisterLocalByCLSID(REFCLSID clisdMFT,REFGUID guidCategory,LPCWSTR pszName,UINT32 Flags,UINT32 cInputTypes,const MFT_REGISTER_TYPE_INFO *pInputTypes,UINT32 cOutputTypes,const MFT_REGISTER_TYPE_INFO *pOutputTypes);
 HRESULT WINAPI MFTUnregisterLocal(IClassFactory *pClassFactory);
 HRESULT WINAPI MFTUnregisterLocalByCLSID(CLSID clsidMFT);
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #ifndef __cplusplus

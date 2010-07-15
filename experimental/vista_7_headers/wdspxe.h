@@ -1,7 +1,15 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER.PD within this package.
+ */
 #ifndef _INC_WDSPXE
 #define _INC_WDSPXE
-#include <windows.h>
 #if (_WIN32_WINNT >= 0x0600)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define PXE_ADDR_BROADCAST 0x0001
 #define PXE_ADDR_USE_PORT 0x0002
@@ -243,6 +251,7 @@ typedef DWORD PXE_SEVERITY;
 #define PXE_TRACE_ERROR 0x00080000
 #define PXE_TRACE_FATAL 0x00100000
 
+/* Fixme: PXEAPI/WINAPI varargs?? */
 DWORD PXEAPI PxeTrace(
   HANDLE hProvider,
   PXE_SEVERITY Severity,
@@ -250,5 +259,8 @@ DWORD PXEAPI PxeTrace(
   ...
 );
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 #endif /*_INC_WDSPXE*/
