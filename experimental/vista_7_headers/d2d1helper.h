@@ -6,9 +6,6 @@
 #ifndef _INC_D2D1HELPER
 #define _INC_D2D1HELPER
 
-#include <windows.h>
-#include <d2d1.h>
-
 #if (_WIN32_WINNT >= 0x0600)
 #ifdef __cplusplus
 D2D1_ARC_SEGMENT ArcSegment(
