@@ -3918,6 +3918,17 @@ WINBASEAPI WINBOOL WINAPI QueryUnbiasedInterruptTime(
   PULONGLONG UnbiasedTime
 );
 
+WINBASEAPI WINBOOL WINAPI AddConditionalAce(
+  PACL pAcl,
+  DWORD dwAceRevision,
+  DWORD AceFlags,
+  UCHAR AceType,
+  DWORD AccessMask,
+  PSID pSid,
+  PWCHAR ConditionStr,
+  DWORD *ReturnLength
+);
+
 #ifdef _WIN64
 typedef struct _UMS_COMPLETION_LIST *PUMS_COMPLETION_LIST;
 typedef struct _UMS_CONTEXT *PUMS_CONTEXT;

@@ -12,6 +12,10 @@
 extern "C" {
 #endif
 
+typedef struct in_addr RASIPV4ADDR;
+typedef struct in6_addr RASIPV6ADDR;
+
+
 #ifndef UNLEN
 #include <lmcons.h>
 #endif
@@ -997,6 +1001,32 @@ DWORD rasgetnapstatus(
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
+#if (_WIN32_WINNT >= 0x0601)
+typedef enum  {
+  RASAPIVERSION_500   = 1,
+  RASAPIVERSION_501   = 2,
+  RASAPIVERSION_600   = 3,
+  RASAPIVERSION_601   = 4 
+} RASAPIVERSION;
+
+typedef struct _RASTUNNELENDPOINT {
+  DWORD dwType;
+  union DUMMYUNIONNAME {
+    RASIPV4ADDR ipv4;
+    RASIPV6ADDR ipv6;
+  }DUMMYUNIONNAME;
+} RASTUNNELENDPOINT, *PRASTUNNELENDPOINT;
+
+typedef struct _RASUPDATECONN {
+  RASAPIVERSION     version;
+  DWORD             dwSize;
+  DWORD             dwFlags;
+  DWORD             dwIfIndex;
+  RASTUNNELENDPOINT  localEndPoint;
+  RASTUNNELENDPOINT  remoteEndPoint;
+} RASUPDATECONN, *LPRASUPDATECONN;
+#endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #ifdef __cplusplus
 }

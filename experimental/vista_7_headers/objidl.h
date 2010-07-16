@@ -5110,6 +5110,17 @@ typedef struct tagBIND_OPTS3 {
 } BIND_OPTS3, *LPBIND_OPTS3;
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
+#if (_WIN32_WINNT >= 0x0601)
+typedef enum  {
+  APTTYPEQUALIFIER_NONE                 = 0,
+  APTTYPEQUALIFIER_IMPLICIT_MTA         = 1,
+  APTTYPEQUALIFIER_NA_ON_MTA            = 2,
+  APTTYPEQUALIFIER_NA_ON_STA            = 3,
+  APTTYPEQUALIFIER_NA_ON_IMPLICIT_MTA   = 4,
+  APTTYPEQUALIFIER_NA_ON_MAINSTA        = 5 
+} APTTYPEQUALIFIER;
+#endif /*(_WIN32_WINNT >= 0x0601)*/
+
 #ifdef __cplusplus
 }
 #endif

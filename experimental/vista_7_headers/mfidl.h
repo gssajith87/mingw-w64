@@ -1710,8 +1710,50 @@ DECLARE_INTERFACE_(IMFObjectReferenceStream,IUnknown)
 #define IMFObjectReferenceStream_SaveReference(This,riid,pUnk) (This)->lpVtbl->SaveReference(This,riid,pUnk)
 #endif /*COBJMACROS*/
 
-HRESULT WINAPI CreateNamedPropertyStore(INamedPropertyStore **ppStore);
-HRESULT WINAPI CreatePropertyStore(IPropertyStore **ppStore);
+#undef  INTERFACE
+#define INTERFACE IMFWorkQueueServices
+DECLARE_INTERFACE_(IMFWorkQueueServices,IUnknown)
+{
+    BEGIN_INTERFACE
+
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppvObject) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    /* IMFWorkQueueServices methods */
+    STDMETHOD_(HRESULT,BeginRegisterPlatformWorkQueueWithMMCSS)(THIS_ DWORD dwPlatformWorkQueue,LPCWSTR wszClass,DWORD dwTaskId,IMFAsyncCallback *pCallback,IUnknown *pState) PURE;
+    STDMETHOD_(HRESULT,BeginRegisterTopologyWorkQueuesWithMMCSS)(THIS_ IMFAsyncCallback *pCallback,IUnknown *pState) PURE;
+    STDMETHOD_(HRESULT,BeginUnregisterPlatformWorkQueueWithMMCSS)(THIS_ DWORD dwPlatformWorkQueue,IMFAsyncCallback *pCallback,IUnknown *pState) PURE;
+    STDMETHOD_(HRESULT,BeginUnregisterTopologyWorkQueuesWithMMCSS)(THIS_ IMFAsyncCallback *pCallback,IUnknown *pState) PURE;
+    STDMETHOD_(HRESULT,EndRegisterPlatformWorkQueueWithMMCSS)(THIS_ IMFAsyncResult *pResult,DWORD *pdwTaskId) PURE;
+    STDMETHOD_(HRESULT,EndRegisterTopologyWorkQueuesWithMMCSS)(THIS_ IMFAsyncResult *pResult) PURE;
+    STDMETHOD_(HRESULT,EndUnregisterPlatformWorkQueueWithMMCSS)(THIS_ IMFAsyncResult *pResult) PURE;
+    STDMETHOD_(HRESULT,EndUnregisterTopologyWorkQueuesWithMMCSS)(THIS_ IMFAsyncResult *pResult) PURE;
+    STDMETHOD_(HRESULT,GetPlaftormWorkQueueMMCSSClass)(THIS_ DWORD dwPlatformWorkQueueId,LPWSTR pwszClass,DWORD *pcchClass) PURE;
+    STDMETHOD_(HRESULT,GetPlatformWorkQueueMMCSSTaskId)(THIS_ DWORD dwPlatformWorkQueueId,DWORD *pdwTaskId) PURE;
+    STDMETHOD_(HRESULT,GetTopologyWorkQueueMMCSSClass)(THIS_ DWORD dwTopologyWorkQueueId,LPWSTR pwszClass,DWORD *pcchClass) PURE;
+    STDMETHOD_(HRESULT,GetTopologyWorkQueueMMCSSTaskId)(THIS_ DWORD dwTopologyWorkQueueId,DWORD *pdwTaskId) PURE;
+
+    END_INTERFACE
+};
+#ifdef COBJMACROS
+#define IMFWorkQueueServices_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
+#define IMFWorkQueueServices_AddRef(This) (This)->pVtbl->AddRef(This)
+#define IMFWorkQueueServices_Release(This) (This)->pVtbl->Release(This)
+#define IMFWorkQueueServices_BeginRegisterPlatformWorkQueueWithMMCSS(This,dwPlatformWorkQueue,wszClass,dwTaskId,pCallback,pState) (This)->lpVtbl->BeginRegisterPlatformWorkQueueWithMMCSS(This,dwPlatformWorkQueue,wszClass,dwTaskId,pCallback,pState)
+#define IMFWorkQueueServices_BeginRegisterTopologyWorkQueuesWithMMCSS(This,pCallback,pState) (This)->lpVtbl->BeginRegisterTopologyWorkQueuesWithMMCSS(This,pCallback,pState)
+#define IMFWorkQueueServices_BeginUnregisterPlatformWorkQueueWithMMCSS(This,dwPlatformWorkQueue,pCallback,pState) (This)->lpVtbl->BeginUnregisterPlatformWorkQueueWithMMCSS(This,dwPlatformWorkQueue,pCallback,pState)
+#define IMFWorkQueueServices_BeginUnregisterTopologyWorkQueuesWithMMCSS(This,pCallback,pState) (This)->lpVtbl->BeginUnregisterTopologyWorkQueuesWithMMCSS(This,pCallback,pState)
+#define IMFWorkQueueServices_EndRegisterPlatformWorkQueueWithMMCSS(This,pResult,pdwTaskId) (This)->lpVtbl->EndRegisterPlatformWorkQueueWithMMCSS(This,pResult,pdwTaskId)
+#define IMFWorkQueueServices_EndRegisterTopologyWorkQueuesWithMMCSS(This,pResult) (This)->lpVtbl->EndRegisterTopologyWorkQueuesWithMMCSS(This,pResult)
+#define IMFWorkQueueServices_EndUnregisterPlatformWorkQueueWithMMCSS(This,pResult) (This)->lpVtbl->EndUnregisterPlatformWorkQueueWithMMCSS(This,pResult)
+#define IMFWorkQueueServices_EndUnregisterTopologyWorkQueuesWithMMCSS(This,pResult) (This)->lpVtbl->EndUnregisterTopologyWorkQueuesWithMMCSS(This,pResult)
+#define IMFWorkQueueServices_GetPlaftormWorkQueueMMCSSClass(This,dwPlatformWorkQueueId,pwszClass,pcchClass) (This)->lpVtbl->GetPlaftormWorkQueueMMCSSClass(This,dwPlatformWorkQueueId,pwszClass,pcchClass)
+#define IMFWorkQueueServices_GetPlatformWorkQueueMMCSSTaskId(This,dwPlatformWorkQueueId,pdwTaskId) (This)->lpVtbl->GetPlatformWorkQueueMMCSSTaskId(This,dwPlatformWorkQueueId,pdwTaskId)
+#define IMFWorkQueueServices_GetTopologyWorkQueueMMCSSClass(This,dwTopologyWorkQueueId,pwszClass,pcchClass) (This)->lpVtbl->GetTopologyWorkQueueMMCSSClass(This,dwTopologyWorkQueueId,pwszClass,pcchClass)
+#define IMFWorkQueueServices_GetTopologyWorkQueueMMCSSTaskId(This,dwTopologyWorkQueueId,pdwTaskId) (This)->lpVtbl->GetTopologyWorkQueueMMCSSTaskId(This,dwTopologyWorkQueueId,pdwTaskId)
+#endif /*COBJMACROS*/
 
 #if (_WIN32_WINNT >= 0x0601)
 
@@ -1820,6 +1862,8 @@ HRESULT WINAPI MFGetSupportedMimeTypes(PROPVARIANT *pPropVarMimeTypeArray);
 HRESULT WINAPI MFGetSupportedSchemes(PROPVARIANT *pPropVarSchemeArray);
 MFTIME WINAPI MFGetSystemTime(void);
 HRESULT WINAPI MFShutdownObject(IUnknown *pUnk);
+HRESULT WINAPI CreateNamedPropertyStore(INamedPropertyStore **ppStore);
+HRESULT WINAPI CreatePropertyStore(IPropertyStore **ppStore);
 #ifdef __cplusplus
 }
 #endif

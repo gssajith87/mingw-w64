@@ -1187,6 +1187,8 @@ HRESULT WINAPI MFDeserializePresentationDescriptor(DWORD cbData,BYTE *pbData,IMF
 HRESULT WINAPI MFGetAttribute2UINT32asUINT64(IMFAttributes *pAttributes,REFGUID guidKey,UINT32 *punHigh32,UINT32 *punLow32);
 HRESULT WINAPI MFSerializeAttributesToStream(IMFAttributes *pAttr,DWORD dwOptions,IStream *pStm);
 
+typedef enum MF_OBJECT_TYPE MF_OBJECT_TYPE;
+
 /*[call_as(BeginCreateObjectFromByteStream)]*/
 HRESULT WINAPI RemoteBeginCreateObjectFromByteStream(
     IMFByteStream* pByteStream,
