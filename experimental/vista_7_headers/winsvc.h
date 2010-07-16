@@ -327,7 +327,7 @@ extern "C" {
   WINADVAPI WINBOOL WINAPI StartServiceA(SC_HANDLE hService,DWORD dwNumServiceArgs,LPCSTR *lpServiceArgVectors);
   WINADVAPI WINBOOL WINAPI StartServiceW(SC_HANDLE hService,DWORD dwNumServiceArgs,LPCWSTR *lpServiceArgVectors);
   WINADVAPI WINBOOL WINAPI UnlockServiceDatabase(SC_LOCK ScLock);
-  
+
 #if (_WIN32_WINNT >= 0x0600)
 
 typedef VOID( CALLBACK * PFN_SC_NOTIFY_CALLBACK ) (

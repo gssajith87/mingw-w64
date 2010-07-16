@@ -6335,7 +6335,7 @@ typedef DWORD (WINAPI *PRTL_RUN_ONCE_INIT_FN)(PRTL_RUN_ONCE, PVOID, PVOID *);
     ACTCTX_RUN_LEVEL_REQUIRE_ADMIN,
     ACTCTX_RUN_LEVEL_NUMBERS
   } ACTCTX_REQUESTED_RUN_LEVEL, ACTCTX_REQUESTED_RUN_LEVEL_INFORMATION;
-  
+
   typedef enum _TRANSACTION_OUTCOME {
     TransactionOutcomeUndetermined,
     TransactionOutcomeCommitted,
@@ -6353,7 +6353,7 @@ typedef DWORD (WINAPI *PRTL_RUN_ONCE_INIT_FN)(PRTL_RUN_ONCE, PVOID, PVOID *);
     PlatformRolePerformanceServer   = 7,
     PlatformRoleMaximum             = 8 
   } POWER_PLATFORM_ROLE;
-  
+
   typedef enum _TOKEN_ELEVATION_TYPE {
     TokenElevationTypeDefault   = 1,
     TokenElevationTypeFull,
@@ -6365,7 +6365,7 @@ typedef DWORD (WINAPI *PRTL_RUN_ONCE_INIT_FN)(PRTL_RUN_ONCE, PVOID, PVOID *);
     ACTCTX_REQUESTED_RUN_LEVEL_INFORMATION RunLevel;
     ULONG UiAccess;
   } ACTIVATION_CONTEXT_RUN_LEVEL_INFORMATION, *PACTIVATION_CONTEXT_RUN_LEVEL_INFORMATION;
-  
+
   typedef VOID (CALLBACK *CleanupGroupCancelCallback)(
     PVOID ObjectContext,
     PVOID CleanupContext
@@ -6495,7 +6495,7 @@ typedef struct _UMS_CREATE_THREAD_ATTRIBUTES {
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #ifdef __cplusplus
-  }
+}
 #endif
 
 #endif /* _WINNT_ */

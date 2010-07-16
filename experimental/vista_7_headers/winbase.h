@@ -2732,7 +2732,7 @@ extern "C" {
 #if (_WIN32_WINNT >= 0x0600)
 #define SYMBOLIC_LINK_FLAG_FILE		0x0
 #define SYMBOLIC_LINK_FLAG_DIRECTORY	0x1
-#define EXTENDED_STARTUPINFO_PRESENT 0x00080000
+#define EXTENDED_STARTUPINFO_PRESENT	0x00080000
 
 #define CreateSymbolicLink __MINGW_NAME_AW(CreateSymbolicLink)
 #define CreateBoundaryDescriptor __MINGW_NAME_AW(CreateBoundaryDescriptor)
@@ -2751,12 +2751,8 @@ extern "C" {
 #define CreateWaitableTimerEx __MINGW_NAME_AW(CreateWaitableTimerEx)
 #define FindFirstFileTransacted __MINGW_NAME_AW(FindFirstFileTransacted)
 
-  WINBASEAPI BOOLEAN WINAPI CreateSymbolicLinkA (LPSTR lpSymLinkFileName, LPSTR lpTargetFileName, DWORD dwFlags);
-  WINBASEAPI BOOLEAN WINAPI CreateSymbolicLinkW (LPWSTR lpSymLinkFileName, LPWSTR lpTargetFileName, DWORD dwFlags);
-
-#define CreateBoundaryDescriptor __MINGW_NAME_AW(CreateBoundaryDescriptor)
-#define OpenPrivateNamespace __MINGW_NAME_AW(OpenPrivateNamespace)
-#define CreatePrivateNamespace __MINGW_NAME_AW(CreatePrivateNamespace)
+WINBASEAPI BOOLEAN WINAPI CreateSymbolicLinkA (LPSTR lpSymLinkFileName, LPSTR lpTargetFileName, DWORD dwFlags);
+WINBASEAPI BOOLEAN WINAPI CreateSymbolicLinkW (LPWSTR lpSymLinkFileName, LPWSTR lpTargetFileName, DWORD dwFlags);
 
 /* Condition Variables http://msdn.microsoft.com/en-us/library/ms682052%28VS.85%29.aspx  */
 typedef RTL_CONDITION_VARIABLE CONDITION_VARIABLE, *PCONDITION_VARIABLE;

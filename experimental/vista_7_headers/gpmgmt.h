@@ -2997,7 +2997,7 @@ typedef enum _GPMPermissionType {
   permStarterGPOEdit             = 0x00030501,
   permStarterGPOFullControl      = 0x00030502,
   permStarterGPOCustom           = 0x00030503,
-  permSOMStarterGPOCreate        = 0x00100500 
+  permSOMStarterGPOCreate        = 0x00100500
 } GPMPermissionType;
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 

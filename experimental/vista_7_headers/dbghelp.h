@@ -1188,15 +1188,15 @@ extern "C" {
     ULONG ThreadId;
   } MINIDUMP_INCLUDE_THREAD_CALLBACK,*PMINIDUMP_INCLUDE_THREAD_CALLBACK;
 
-typedef enum _THREAD_WRITE_FLAGS {
-  ThreadWriteThread              = 0x0001,
-  ThreadWriteStack               = 0x0002,
-  ThreadWriteContext             = 0x0004,
-  ThreadWriteBackingStore        = 0x0008,
-  ThreadWriteInstructionWindow   = 0x0010,
-  ThreadWriteThreadData          = 0x0020,
-  ThreadWriteThreadInfo          = 0x0040 
-} THREAD_WRITE_FLAGS;
+  typedef enum _THREAD_WRITE_FLAGS {
+    ThreadWriteThread              = 0x0001,
+    ThreadWriteStack               = 0x0002,
+    ThreadWriteContext             = 0x0004,
+    ThreadWriteBackingStore        = 0x0008,
+    ThreadWriteInstructionWindow   = 0x0010,
+    ThreadWriteThreadData          = 0x0020,
+    ThreadWriteThreadInfo          = 0x0040
+  } THREAD_WRITE_FLAGS;
 
   typedef struct _MINIDUMP_MODULE_CALLBACK {
     PWCHAR FullPath;
@@ -1215,19 +1215,19 @@ typedef enum _THREAD_WRITE_FLAGS {
     ULONG64 BaseOfImage;
   } MINIDUMP_INCLUDE_MODULE_CALLBACK,*PMINIDUMP_INCLUDE_MODULE_CALLBACK;
 
-typedef enum _MODULE_WRITE_FLAGS {
-  ModuleWriteModule          = 0x0001,
-  ModuleWriteDataSeg         = 0x0002,
-  ModuleWriteMiscRecord      = 0x0004,
-  ModuleWriteCvRecord        = 0x0008,
-  ModuleReferencedByMemory   = 0x0010,
-  ModuleWriteTlsData         = 0x0020,
-  ModuleWriteCodeSegs        = 0x0040 
-} MODULE_WRITE_FLAGS;
+  typedef enum _MODULE_WRITE_FLAGS {
+    ModuleWriteModule          = 0x0001,
+    ModuleWriteDataSeg         = 0x0002,
+    ModuleWriteMiscRecord      = 0x0004,
+    ModuleWriteCvRecord        = 0x0008,
+    ModuleReferencedByMemory   = 0x0010,
+    ModuleWriteTlsData         = 0x0020,
+    ModuleWriteCodeSegs        = 0x0040
+  } MODULE_WRITE_FLAGS;
 
-typedef enum _MINIDUMP_SECONDARY_FLAGS {
-  MiniSecondaryWithoutPowerInfo   = 0x00000001 
-} MINIDUMP_SECONDARY_FLAGS;
+  typedef enum _MINIDUMP_SECONDARY_FLAGS {
+    MiniSecondaryWithoutPowerInfo   = 0x00000001
+  } MINIDUMP_SECONDARY_FLAGS;
 
   typedef struct _MINIDUMP_CALLBACK_INPUT {
     ULONG ProcessId;
@@ -1242,50 +1242,50 @@ typedef enum _MINIDUMP_SECONDARY_FLAGS {
     };
   } MINIDUMP_CALLBACK_INPUT,*PMINIDUMP_CALLBACK_INPUT;
 
-typedef struct _MINIDUMP_CALLBACK_OUTPUT {
-  __MINGW_EXTENSION union {
-    ULONG  ModuleWriteFlags;
-    ULONG  ThreadWriteFlags;
-    ULONG  SecondaryFlags;
+  typedef struct _MINIDUMP_CALLBACK_OUTPUT {
+    __MINGW_EXTENSION union {
+      ULONG ModuleWriteFlags;
+      ULONG ThreadWriteFlags;
+      ULONG SecondaryFlags;
+      __MINGW_EXTENSION struct {
+	ULONG64 MemoryBase;
+	ULONG MemorySize;
+      };
+      __MINGW_EXTENSION struct {
+	WINBOOL CheckCancel;
+	WINBOOL Cancel;
+      };
+      HANDLE Handle;
+    };
     __MINGW_EXTENSION struct {
-      ULONG64 MemoryBase;
-      ULONG   MemorySize;
-    } ;
-    __MINGW_EXTENSION struct {
-      WINBOOL CheckCancel;
-      WINBOOL Cancel;
-    } ;
-    HANDLE Handle;
-  } ;
-  __MINGW_EXTENSION struct {
-    MINIDUMP_MEMORY_INFO VmRegion;
-    WINBOOL                 Continue;
-  } ;
-  HRESULT Status;
-} MINIDUMP_CALLBACK_OUTPUT, *PMINIDUMP_CALLBACK_OUTPUT;
+      MINIDUMP_MEMORY_INFO VmRegion;
+      WINBOOL Continue;
+    };
+    HRESULT Status;
+  } MINIDUMP_CALLBACK_OUTPUT, *PMINIDUMP_CALLBACK_OUTPUT;
 
-typedef enum _MINIDUMP_TYPE {
-  MiniDumpNormal                           = 0x00000000,
-  MiniDumpWithDataSegs                     = 0x00000001,
-  MiniDumpWithFullMemory                   = 0x00000002,
-  MiniDumpWithHandleData                   = 0x00000004,
-  MiniDumpFilterMemory                     = 0x00000008,
-  MiniDumpScanMemory                       = 0x00000010,
-  MiniDumpWithUnloadedModules              = 0x00000020,
-  MiniDumpWithIndirectlyReferencedMemory   = 0x00000040,
-  MiniDumpFilterModulePaths                = 0x00000080,
-  MiniDumpWithProcessThreadData            = 0x00000100,
-  MiniDumpWithPrivateReadWriteMemory       = 0x00000200,
-  MiniDumpWithoutOptionalData              = 0x00000400,
-  MiniDumpWithFullMemoryInfo               = 0x00000800,
-  MiniDumpWithThreadInfo                   = 0x00001000,
-  MiniDumpWithCodeSegs                     = 0x00002000,
-  MiniDumpWithoutAuxiliaryState            = 0x00004000,
-  MiniDumpWithFullAuxiliaryState           = 0x00008000,
-  MiniDumpWithPrivateWriteCopyMemory       = 0x00010000,
-  MiniDumpIgnoreInaccessibleMemory         = 0x00020000,
-  MiniDumpWithTokenInformation             = 0x00040000 
-} MINIDUMP_TYPE;
+  typedef enum _MINIDUMP_TYPE {
+    MiniDumpNormal                           = 0x00000000,
+    MiniDumpWithDataSegs                     = 0x00000001,
+    MiniDumpWithFullMemory                   = 0x00000002,
+    MiniDumpWithHandleData                   = 0x00000004,
+    MiniDumpFilterMemory                     = 0x00000008,
+    MiniDumpScanMemory                       = 0x00000010,
+    MiniDumpWithUnloadedModules              = 0x00000020,
+    MiniDumpWithIndirectlyReferencedMemory   = 0x00000040,
+    MiniDumpFilterModulePaths                = 0x00000080,
+    MiniDumpWithProcessThreadData            = 0x00000100,
+    MiniDumpWithPrivateReadWriteMemory       = 0x00000200,
+    MiniDumpWithoutOptionalData              = 0x00000400,
+    MiniDumpWithFullMemoryInfo               = 0x00000800,
+    MiniDumpWithThreadInfo                   = 0x00001000,
+    MiniDumpWithCodeSegs                     = 0x00002000,
+    MiniDumpWithoutAuxiliaryState            = 0x00004000,
+    MiniDumpWithFullAuxiliaryState           = 0x00008000,
+    MiniDumpWithPrivateWriteCopyMemory       = 0x00010000,
+    MiniDumpIgnoreInaccessibleMemory         = 0x00020000,
+    MiniDumpWithTokenInformation             = 0x00040000
+  } MINIDUMP_TYPE;
 
 typedef struct _MINIDUMP_MEMORY_INFO {
   ULONG64 BaseAddress;

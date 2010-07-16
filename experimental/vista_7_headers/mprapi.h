@@ -621,7 +621,7 @@ typedef enum _RAS_QUARANTINE_STATE {
   RAS_QUAR_STATE_NORMAL,
   RAS_QUAR_STATE_QUARANTINE,
   RAS_QUAR_STATE_PROBATION,
-  RAS_QUAR_STATE_NOT_CAPABLE     
+  RAS_QUAR_STATE_NOT_CAPABLE
 } RAS_QUARANTINE_STATE;
 
 typedef struct _MPR_FILTER_0 {
@@ -926,4 +926,5 @@ DWORD APIENTRY MprConfigServerSetInfo(
 #ifdef __cplusplus
 }
 #endif
-#endif
+
+#endif /* __ROUTING_MPRADMIN_H__ */

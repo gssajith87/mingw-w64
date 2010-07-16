@@ -196,9 +196,9 @@ extern "C" {
     PHTTP_REQUEST_INFO pRequestInfo;
   } HTTP_REQUEST_V2, *PHTTP_REQUEST_V2;
 
-typedef HTTP_REQUEST_V2 HTTP_REQUEST, *PHTTP_REQUEST;
+  typedef HTTP_REQUEST_V2 HTTP_REQUEST, *PHTTP_REQUEST;
 #else
-typedef HTTP_REQUEST_V1 HTTP_REQUEST, *PHTTP_REQUEST;
+  typedef HTTP_REQUEST_V1 HTTP_REQUEST, *PHTTP_REQUEST;
 #endif
 
 #define HTTP_REQUEST_FLAG_MORE_ENTITY_BODY_EXISTS 0x00000001
@@ -215,19 +215,22 @@ typedef HTTP_REQUEST_V1 HTTP_REQUEST, *PHTTP_REQUEST;
   } HTTP_RESPONSE_V1,*PHTTP_RESPONSE_V1;
 
 #if (_WIN32_WINNT >= 0x0600)
-typedef struct {
-  struct HTTP_RESPONSE_V1;
-  USHORT              ResponseInfoCount;
-  PHTTP_RESPONSE_INFO pResponseInfo;
-} HTTP_RESPONSE_V2, *PHTTP_RESPONSE_V2;
+  typedef struct {
+    struct HTTP_RESPONSE_V1;
+    USHORT              ResponseInfoCount;
+    PHTTP_RESPONSE_INFO pResponseInfo;
+  } HTTP_RESPONSE_V2, *PHTTP_RESPONSE_V2;
 
-typedef HTTP_RESPONSE_V2 HTTP_RESPONSE, *PHTTP_RESPONSE;
+  typedef HTTP_RESPONSE_V2 HTTP_RESPONSE, *PHTTP_RESPONSE;
 #else
-typedef HTTP_RESPONSE_V1 HTTP_RESPONSE, *PHTTP_RESPONSE;
-#endif
+  typedef HTTP_RESPONSE_V1 HTTP_RESPONSE, *PHTTP_RESPONSE;
+#endif /* _WIN32_WINNT >= 0x0600 */
 
   typedef enum _HTTP_CACHE_POLICY_TYPE {
-    HttpCachePolicyNocache,HttpCachePolicyUserInvalidates,HttpCachePolicyTimeToLive,HttpCachePolicyMaximum
+    HttpCachePolicyNocache,
+    HttpCachePolicyUserInvalidates,
+    HttpCachePolicyTimeToLive,
+    HttpCachePolicyMaximum
   } HTTP_CACHE_POLICY_TYPE,*PHTTP_CACHE_POLICY_TYPE;
 
   typedef struct _HTTP_CACHE_POLICY {
@@ -236,11 +239,16 @@ typedef HTTP_RESPONSE_V1 HTTP_RESPONSE, *PHTTP_RESPONSE;
   } HTTP_CACHE_POLICY,*PHTTP_CACHE_POLICY;
 
   typedef enum _HTTP_SERVICE_CONFIG_ID {
-    HttpServiceConfigIPListenList,HttpServiceConfigSSLCertInfo,HttpServiceConfigUrlAclInfo,HttpServiceConfigMax
+    HttpServiceConfigIPListenList,
+    HttpServiceConfigSSLCertInfo,
+    HttpServiceConfigUrlAclInfo,
+    HttpServiceConfigMax
   } HTTP_SERVICE_CONFIG_ID,*PHTTP_SERVICE_CONFIG_ID;
 
   typedef enum _HTTP_SERVICE_CONFIG_QUERY_TYPE {
-    HttpServiceConfigQueryExact,HttpServiceConfigQueryNext,HttpServiceConfigQueryMax
+    HttpServiceConfigQueryExact,
+    HttpServiceConfigQueryNext,
+    HttpServiceConfigQueryMax
   } HTTP_SERVICE_CONFIG_QUERY_TYPE,*PHTTP_SERVICE_CONFIG_QUERY_TYPE;
 
   typedef struct _HTTP_SERVICE_CONFIG_SSL_KEY {
@@ -332,19 +340,20 @@ typedef HTTP_RESPONSE_V1 HTTP_RESPONSE, *PHTTP_RESPONSE;
   HTTPAPI_LINKAGE ULONG WINAPI HttpSetServiceConfiguration(HANDLE ServiceHandle,HTTP_SERVICE_CONFIG_ID ConfigId,PVOID pConfigInformation,ULONG ConfigInformationLength,LPOVERLAPPED pOverlapped);
   HTTPAPI_LINKAGE ULONG WINAPI HttpDeleteServiceConfiguration(HANDLE ServiceHandle,HTTP_SERVICE_CONFIG_ID ConfigId,PVOID pConfigInformation,ULONG ConfigInformationLength,LPOVERLAPPED pOverlapped);
   HTTPAPI_LINKAGE ULONG WINAPI HttpQueryServiceConfiguration(HANDLE ServiceHandle,HTTP_SERVICE_CONFIG_ID ConfigId,PVOID pInputConfigInformation,ULONG InputConfigInformationLength,PVOID pOutputConfigInformation,ULONG OutputConfigInformationLength,PULONG pReturnLength,LPOVERLAPPED pOverlapped);
+
 #if (_WIN32_WINNT >= 0x0600)
-#define HTTP_VERSION_2_0 { 2,0 }
-#define HTTPAPI_VERSION_2 {2, 0}
+#define HTTP_VERSION_2_0	{ 2, 0 }
+#define HTTPAPI_VERSION_2	{ 2, 0 }
 
 typedef enum _HTTP_503_RESPONSE_VERBOSITY {
   Http503ResponseVerbosityBasic,
   Http503ResponseVerbosityLimited,
-  Http503ResponseVerbosityFull 
+  Http503ResponseVerbosityFull
 } HTTP_503_RESPONSE_VERBOSITY, *PHTTP_503_RESPONSE_VERBOSITY;
 
 typedef enum _HTTP_ENABLED_STATE {
   HttpEnabledStateActive,
-  HttpEnabledStateInactive 
+  HttpEnabledStateInactive
 } HTTP_ENABLED_STATE, *PHTTP_ENABLED_STATE;
 
 typedef enum _HTTP_LOGGING_ROLLOVER_TYPE {
@@ -352,20 +361,20 @@ typedef enum _HTTP_LOGGING_ROLLOVER_TYPE {
   HttpLoggingRolloverDaily,
   HttpLoggingRolloverWeekly,
   HttpLoggingRolloverMonthly,
-  HttpLoggingRolloverHourly 
+  HttpLoggingRolloverHourly
 } HTTP_LOGGING_ROLLOVER_TYPE, *PHTTP_LOGGING_ROLLOVER_TYPE;
 
 typedef enum _HTTP_LOGGING_TYPE {
   HttpLoggingTypeW3C,
   HttpLoggingTypeIIS,
   HttpLoggingTypeNCSA,
-  HttpLoggingTypeRaw 
+  HttpLoggingTypeRaw
 } HTTP_LOGGING_TYPE, *PHTTP_LOGGING_TYPE;
 
 typedef enum _HTTP_QOS_SETTING_TYPE {
   HttpQosSettingTypeBandwidth,
   HttpQosSettingTypeConnectionLimit,
-  HttpQosSettingTypeFlowRate 
+  HttpQosSettingTypeFlowRate
 } HTTP_QOS_SETTING_TYPE, *PHTTP_QOS_SETTING_TYPE;
 
 typedef enum _HTTP_SERVER_PROPERTY {
@@ -379,47 +388,47 @@ typedef enum _HTTP_SERVER_PROPERTY {
   HttpServerBindingProperty,
   HttpServerExtendedAuthenticationProperty,
   HttpServerListenEndpointProperty,
-  HttpServerChannelBindProperty 
+  HttpServerChannelBindProperty
 } HTTP_SERVER_PROPERTY, *PHTTP_SERVER_PROPERTY;
 
 typedef enum _HTTP_AUTHENTICATION_HARDENING_LEVELS {
   HttpAuthenticationHardeningLegacy   = 0,
   HttpAuthenticationHardeningMedium   = 1,
-  HttpAuthenticationHardeningStrict   = 2 
+  HttpAuthenticationHardeningStrict   = 2
 } HTTP_AUTHENTICATION_HARDENING_LEVELS;
 
 typedef enum _HTTP_SERVICE_BINDING_TYPE {
   HttpServiceBindingTypeNone   = 0,
   HttpServiceBindingTypeW      = 1,
-  HttpServiceBindingTypeA      = 2 
+  HttpServiceBindingTypeA      = 2
 } HTTP_SERVICE_BINDING_TYPE;
 
 typedef enum _HTTP_LOG_DATA_TYPE {
-  HttpLogDataTypeFields   = 0 
+  HttpLogDataTypeFields   = 0
 } HTTP_LOG_DATA_TYPE, *PHTTP_LOG_DATA_TYPE;
 
 typedef enum _HTTP_REQUEST_AUTH_TYPE {
-  HttpRequestAuthTypeNone        = 0,
+  HttpRequestAuthTypeNone = 0,
   HttpRequestAuthTypeBasic,
   HttpRequestAuthTypeDigest,
   HttpRequestAuthTypeNTLM,
   HttpRequestAuthTypeNegotiate,
-  HttpRequestAuthTypeKerberos  
+  HttpRequestAuthTypeKerberos
 } HTTP_REQUEST_AUTH_TYPE, *PHTTP_REQUEST_AUTH_TYPE;
 
 typedef enum _HTTP_REQUEST_INFO_TYPE {
-  HttpRequestInfoTypeAuth 
+  HttpRequestInfoTypeAuth
 } HTTP_REQUEST_INFO_TYPE, *PHTTP_REQUEST_INFO_TYPE;
 
 typedef enum _HTTP_AUTH_STATUS {
   HttpAuthStatusSuccess,
   HttpAuthStatusNotAuthenticated,
-  HttpAuthStatusFailure 
+  HttpAuthStatusFailure
 } HTTP_AUTH_STATUS, *PHTTP_AUTH_STATUS;
 
 typedef enum _HTTP_SERVICE_CONFIG_TIMEOUT_KEY {
-  IdleConnectionTimeout   = 0,
-  HeaderWaitTimeout 
+  IdleConnectionTimeout = 0,
+  HeaderWaitTimeout
 } HTTP_SERVICE_CONFIG_TIMEOUT_KEY, *PHTTP_SERVICE_CONFIG_TIMEOUT_KEY;
 
 typedef struct _HTTP_CONNECTION_LIMIT_INFO {
@@ -434,7 +443,7 @@ typedef struct _HTTP_STATE_INFO {
 
 typedef struct _HTTP_QOS_SETTING_INFO {
   HTTP_QOS_SETTING_TYPE  QosType;
-  PVOID                 QosSetting;
+  PVOID               QosSetting;
 } HTTP_QOS_SETTING_INFO, *PHTTP_QOS_SETTING_INFO;
 
 typedef struct _HTTP_SERVER_AUTHENTICATION_DIGEST_PARAMS {
@@ -717,8 +726,8 @@ HTTPAPI_LINKAGE ULONG WINAPI HttpWaitForDemandStart(
 
 #if (_WIN32_WINNT >= 0x0601)
 typedef enum _HTTP_SERVICE_CONFIG_CACHE_KEY {
-  MaxCacheResponseSize   = ,
-  CacheRangeChunkSize 
+  MaxCacheResponseSize  = 0,
+  CacheRangeChunkSize
 } HTTP_SERVICE_CONFIG_CACHE_KEY;
 
 typedef struct _HTTP_FLOWRATE_INFO {
@@ -730,7 +739,9 @@ typedef struct _HTTP_FLOWRATE_INFO {
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif
-#endif
+
+#endif /* __HTTP_H__ */

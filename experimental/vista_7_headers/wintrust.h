@@ -613,6 +613,7 @@ void WINAPI WintrustSetDefaultIncludePEPageHashes(
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif

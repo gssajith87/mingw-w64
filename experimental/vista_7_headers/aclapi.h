@@ -89,6 +89,7 @@ extern "C" {
   WINADVAPI PTRUSTEE_W WINAPI GetMultipleTrusteeW(PTRUSTEE_W pTrustee);
 
 #define AccProvInit(err)
+
 #if (_WIN32_WINNT >= 0x0600)
 #define TreeSetNamedSecurityInfo __MINGW_NAME_AW(TreeSetNamedSecurityInfo)
 WINADVAPI DWORD WINAPI TreeSetNamedSecurityInfoA(
@@ -120,6 +121,7 @@ WINADVAPI DWORD WINAPI TreeSetNamedSecurityInfoW(
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif

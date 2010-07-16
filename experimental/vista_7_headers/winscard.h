@@ -435,6 +435,7 @@ LONG WINAPI SCardWriteCacheW(
 #define SCardWriteCache __MINGW_NAME_AW(SCardWriteCache)
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif

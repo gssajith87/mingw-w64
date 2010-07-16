@@ -445,6 +445,7 @@ WINADVAPI LONG WINAPI RegSetKeyValueW(
 #define RegSetKeyValue __MINGW_NAME_AW(RegSetKeyValue)
 
 #endif /* (_WIN32_WINNT >= 0x0600) */
+
 #ifdef __cplusplus
 }
 #endif
