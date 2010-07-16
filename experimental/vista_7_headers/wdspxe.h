@@ -26,10 +26,10 @@ typedef ULONG PXE_PROVIDER_ATTRIBUTE;
 
 typedef struct tagPXE_ADDRESS {
   ULONG  uFlags;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     BYTE  bAddress[PXE_MAX_ADDRESS];
     ULONG uIpAddress;
-  } DUMMYUNIONNAME ;
+  } DUMMYUNIONNAME;
   ULONG  uAddrLen;
   USHORT uPort;
 } PXE_ADDRESS, *PPXE_ADDRESS;
@@ -49,7 +49,7 @@ typedef struct _PXE_DHCP_MESSAGE {
   BYTE  HardwareAddress[PXE_DHCP_HWAADR_SIZE];
   BYTE  HostName[PXE_DHCP_SERVER_SIZE];
   BYTE  BootFileName;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     BYTE  bMagicCookie[PXE_DHCP_MAGIC_COOKIE_SIZE];
     ULONG uMagicCookie;
   } DUMMYUNIONNAME;

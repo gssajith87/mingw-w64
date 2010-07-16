@@ -811,7 +811,7 @@ typedef struct _IKEV2_PROJECTION_INFO {
 
 typedef struct _PROJECTION_INFO {
   UCHAR projectionInfoType;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     IKEV2_PROJECTION_INFO Ikev2ProjectionInfo;
     PPP_PROJECTION_INFO   PppProjectionInfo;
   } DUMMYUNIONNAME;

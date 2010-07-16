@@ -540,9 +540,9 @@ typedef struct _JET_BKLOGTIME {
   char bMonth;
   char bYear;
   char bFiller1;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     char bFiller2;
-    struct DUMMYSTRUCTNAME{
+    __MINGW_EXTENSION struct {
       unsigned char fOSSnapshot  :1;
       unsigned char fReserved  :7;
     };
@@ -570,7 +570,7 @@ typedef struct tagJET_TUPLELIMITS {
 
 typedef struct _JET_BKINFO {
   JET_LGPOS lgposMark;
-  union DUMMYUNIONNAME1 {
+  __MINGW_EXTENSION union {
     JET_LOGTIME logtimeMark;
     JET_BKLOGTIME bklogtimeMark;
   };
@@ -684,9 +684,9 @@ typedef struct tagJET_CONDITIONALCOLUMN_W {
 
 typedef struct tagCONVERT_A {
   char* SzOldDll;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     unsigned long fFlags;
-    struct DUMMYSTRUCTNAME {
+    __MINGW_EXTENSION struct {
       unsigned long fSchemaChangesOnly  :1;
     };
   };
@@ -694,9 +694,9 @@ typedef struct tagCONVERT_A {
 
 typedef struct tagCONVERT_W {
   WCHAR* SzOldDll;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     unsigned long fFlags;
-    struct DUMMYSTRUCTNAME {
+    __MINGW_EXTENSION struct {
       unsigned long fSchemaChangesOnly  :1;
     };
   };
@@ -741,9 +741,9 @@ typedef struct _JET_DBINFOUPGRADE {
   unsigned long cbFreeSpaceRequiredLow;
   unsigned long  cbFreeSpaceRequiredHigh;
   unsigned long csecToUpgrade;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     unsigned long ulFlags;
-    struct DUMMYSTRUCTNAME {
+    __MINGW_EXTENSION struct {
       unsigned long fUpgradable  :1;
       unsigned long fAlreadyUpgraded  :1;
     };
@@ -760,14 +760,14 @@ typedef struct _JET_ENUMCOLUMNVALUE {
 typedef struct _JET_ENUMCOLUMN {
   JET_COLUMNID columnid;
   JET_ERR err;
-  union DUMMYNIONNAME1 {    
-    struct DUMMYSTRUCTNAME1 {
+  __MINGW_EXTENSION union {
+    __MINGW_EXTENSION struct {
       unsigned long cEnumColumnValue;
       JET_ENUMCOLUMNVALUE rgEnumColumnValue;
     };
-    struct DUMMYSTRUCTNAME2 {
-    unsigned long cbData;
-    void* pvData;
+    __MINGW_EXTENSION struct {
+      unsigned long cbData;
+      void* pvData;
     };
   } DUMMYNIONNAME1;
 } JET_ENUMCOLUMN;
@@ -785,11 +785,11 @@ typedef struct tagJET_INDEXCREATE_A {
   unsigned long cbKey;
   JET_GRBIT grbit;
   unsigned long ulDensity;
-  union DUMMYUNIONNAME1 {
+  __MINGW_EXTENSION union {
     unsigned long lcid;
     JET_UNICODEINDEX* pidxunicode;
   };
-  union DUMMYUNIONNAME2 {
+  __MINGW_EXTENSION union {
     unsigned long cbVarSegMac;
     JET_TUPLELIMITS* ptuplelimits;
   };
@@ -806,11 +806,11 @@ typedef struct tagJET_INDEXCREATE_W {
   unsigned long cbKey;
   JET_GRBIT grbit;
   unsigned long ulDensity;
-  union DUMMYUNIONNAME1 {
+  __MINGW_EXTENSION union {
     unsigned long lcid;
     JET_UNICODEINDEX* pidxunicode;
   };
-  union DUMMYUNIONNAME2 {
+  __MINGW_EXTENSION union {
     unsigned long cbVarSegMac;
     JET_TUPLELIMITS* ptuplelimits;
   };

@@ -41,38 +41,38 @@ typedef struct _CLFS_MGMT_POLICY {
   ULONG LengthInBytes;
   ULONG PolicyFlags;
   CLFS_MGMT_POLICY_TYPE PolicyType;
-  union DUMMYUNIONNAME {
-    struct DUMMYSTRUCTNAME1 {
+  __MINGW_EXTENSION union {
+    __MINGW_EXTENSION struct {
       ULONG Containers;
     } MaximumSize;
-    struct DUMMYSTRUCTNAME2 {
+    __MINGW_EXTENSION struct {
       ULONG Containers;
     } MinimumSize;
-    struct DUMMYSTRUCTNAME3 {
+    __MINGW_EXTENSION struct {
       ULONG SizeInBytes;
     } NewContainerSize;
-    struct DUMMYSTRUCTNAME4 {
+    __MINGW_EXTENSION struct {
       ULONG AbsoluteGrowthInContainers;
       ULONG RelativeGrowthPercentage;
     } GrowthRate;
-    struct DUMMYSTRUCTNAME5 {
+    __MINGW_EXTENSION struct {
       ULONG MinimumAvailablePercentage;
       ULONG MinimumAvailableContainers;
     } LogTail;
-    struct DUMMYSTRUCTNAMEX(6) {
+    __MINGW_EXTENSION struct {
       ULONG Percentage;
     } AutoShrink;
-    struct DUMMYSTRUCTNAMEX(7) {
+    __MINGW_EXTENSION struct {
       ULONG Enabled;
     } AutoGrow;
-    struct DUMMYSTRUCTNAMEX(8) {
+    __MINGW_EXTENSION struct {
       USHORT PrefixLengthInBytes;
       WCHAR PrefixString[1];
     } NewContainerPrefix;
-    struct DUMMYSTRUCTNAMEX(9) {
+    __MINGW_EXTENSION struct {
       ULONGLONG NextContainerSuffix;
     } NewContainerSuffix;
-    struct DUMMYSTRUCTNAMEX(10) {
+    __MINGW_EXTENSION struct {
       USHORT ExtensionLengthInBytes;
       WCHAR ExtensionString[1];
     } NewContainerExtension;

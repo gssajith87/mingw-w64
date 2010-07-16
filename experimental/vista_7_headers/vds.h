@@ -684,62 +684,62 @@ typedef struct _VDS_PARTITION_INFO_GPT {
 
 typedef struct _CHANGE_ATTRIBUTES_PARAMETERS {
   VDS_PARTITION_STYLE style;
-  union DUMMYUNIONNAME {
-    struct DUMMYSTRUCTNAME1 {
+  __MINGW_EXTENSION union {
+    __MINGW_EXTENSION struct {
       BOOLEAN bootIndicator;
     } MbrPartInfo;
-    struct DUMMYSTRUCTNAME2 {
+    __MINGW_EXTENSION struct {
       ULONGLONG attributes;
     } GptPartInfo;
-  } ;
+  };
 } CHANGE_ATTRIBUTES_PARAMETERS;
 
 typedef struct _CREATE_PARTITION_PARAMETERS {
   VDS_PARTITION_STYLE style;
-  union DUMMYUNIONNAME1 {
-    struct DUMMYSTRUTNAME1 {
+  __MINGW_EXTENSION union {
+    __MINGW_EXTENSION struct {
       BYTE    partitionType;
       BOOLEAN bootIndicator;
     } MbrPartInfo;
-    struct DUMMYSTRUCTNAME2 {
+    __MINGW_EXTENSION struct {
       GUID      partitionType;
       GUID      partitionId;
       ULONGLONG attributes;
       WCHAR     name[GPT_PARTITION_NAME_LENGTH];
     } GptPartInfo;
-  } ;
+  };
 } CREATE_PARTITION_PARAMETERS;
 
 typedef struct _VDS_ASYNC_OUTPUT {
   VDS_ASYNC_OUTPUT_TYPE type;
-  /*[switch(type)] */union DUMMYUNIONNAME {
+  /*[switch(type)] */__MINGW_EXTENSION union {
     /*[case(VDS_ASYNCOUT_CREATEPARTITION)]*/
-      struct DUMMYSTRUCTNAME1 {
+    __MINGW_EXTENSION struct {
       ULONGLONG     ullOffset;
       VDS_OBJECT_ID volumeId;
     } cp;
     /*[case(VDS_ASYNCOUT_CREATEVOLUME)]*/
-      struct DUMMYSTRUCTNAME2 {
+    __MINGW_EXTENSION struct {
       IUnknown *pVolumeUnk;
     } cv;
     /*[case(VDS_ASYNCOUT_BREAKVOLUMEPLEX)]*/
-      struct DUMMYSTRUCTNAME3 {
+    __MINGW_EXTENSION struct {
       IUnknown *pVolumeUnk;
     } bvp;
     /*[case(VDS_ASYNCOUT_CREATELUN)]*/
-      struct DUMMYSTRUCTNAME4 {
+    __MINGW_EXTENSION struct {
       IUnknown *pLunUnk;
     } cl;
     /*[case(VDS_ASYNCOUT_CREATETARGET)]*/
-      struct DUMMYSTRUCTNAME5 {
+    __MINGW_EXTENSION struct {
       IUnknown *pTargetUnk;
     } ct;
     /*[case(VDS_ASYNCOUT_CREATEPORTALGROUP)]*/
-      struct DUMMYSTRUCTNAMEX(5) {
+    __MINGW_EXTENSION struct {
       IUnknown *pPortalGroupUnk;
     } cpg;
     /*[case(VDS_ASYNCOUT_CREATE_VDISK)]*/
-      struct DUMMYSTRUCTNAMEX(6) {
+    __MINGW_EXTENSION struct {
       IUnknown *pVDiskUnk;
     } cvd;
   } DUMMYUNIONNAME;
@@ -851,7 +851,7 @@ typedef struct _VDS_PORTAL_GROUP_NOTIFICATION {
 
 typedef struct _VDS_NOTIFICATION {
   VDS_NOTIFICATION_TARGET_TYPE objectType;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     VDS_PACK_NOTIFICATION         Pack;
     VDS_DISK_NOTIFICATION         Disk;
     VDS_VOLUME_NOTIFICATION       Volume;
@@ -886,7 +886,7 @@ typedef struct _VDS_DISK_PROP {
   ULONG                ulFlags;
   VDS_STORAGE_BUS_TYPE BusType;
   VDS_PARTITION_STYLE  PartitionStyle;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     DWORD dwSignature;
     GUID  DiskGuid;
   } DUMMYUNIONNAME;
@@ -1159,7 +1159,7 @@ typedef struct _VDS_PARTITION_PROP {
   ULONG               ulPartitionNumber;
   ULONGLONG           ullOffset;
   ULONGLONG           ullSize;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     VDS_PARTITION_INFO_MBR Mbr;
     VDS_PARTITION_INFO_GPT Gpt;
   } DUMMYUNIONNAME;
@@ -1169,18 +1169,18 @@ typedef struct _VDS_PATH_INFO {
   VDS_PATH_ID         pathId;
   VDS_HWPROVIDER_TYPE type;
   VDS_PATH_STATUS     status;
-  union DUMMYUNIONNAME1 {
+  __MINGW_EXTENSION union {
     VDS_OBJECT_ID controllerPortId;
     VDS_OBJECT_ID targetPortalId;
-  } ;
-  union DUMMYUNIONNAME2 {
+  };
+  __MINGW_EXTENSION union {
     VDS_OBJECT_ID hbaPortId;
     VDS_OBJECT_ID initiatorAdapterId;
-  } ;
-  union DUMMYUNIONNAME3 {
+  };
+  __MINGW_EXTENSION union {
     VDS_HBAPORT_PROP *pHbaPortProp;
     VDS_IPADDRESS    *pInitiatorPortalIpAddr;
-  } ;
+  };
 } VDS_PATH_INFO;
 
 typedef struct _VDS_PATH_POLICY {

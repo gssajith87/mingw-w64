@@ -44,10 +44,10 @@ typedef enum FWPM_NET_EVENT_TYPE_ {
 
 typedef struct FWPM_ACTION0_ {
   FWP_ACTION_TYPE type;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     GUID filterType;
     GUID calloutKey;
-  } ;
+  };
 } FWPM_ACTION0;
 
 typedef struct FWPM_DISPLAY_DATA0_ {
@@ -176,10 +176,10 @@ typedef struct FWPM_FILTER0_ {
   UINT32                 numFilterConditions;
   FWPM_FILTER_CONDITION0 *filterCondition;
   FWPM_ACTION0           action;
-  union DUMMYUNIONNMAE {
+  __MINGW_EXTENSION union {
     UINT64 rawContext;
     GUID   providerContextKey;
-  } ;
+  };
   GUID                   *reserved;
   UINT64                 filterId;
   FWP_VALUE0             effectiveWeight;
@@ -216,14 +216,14 @@ typedef struct FWPM_NET_EVENT_HEADER0_ {
   UINT32         flags;
   FWP_IP_VERSION ipVersion;
   UINT8          ipProtocol;
-  union DUMMYUNIONNAME1 {
+  __MINGW_EXTENSION union {
     UINT32           localAddrV4;
     FWP_BYTE_ARRAY16 localAddrV6;
-  } ;
-  union DUMMYUNIONNAME2 {
+  };
+  __MINGW_EXTENSION union {
     UINT32           remoteAddrV4;
     FWP_BYTE_ARRAY16 remoteAddrV6;
-  } ;
+  };
   UINT16         localPort;
   UINT16         remotePort;
   UINT32         scopeId;
@@ -265,14 +265,14 @@ typedef struct FWPM_BET_EVENT_IKEEXT_QM_FAILURE0 {
   IKEEXT_QM_SA_STATE     qmState;
   IKEEXT_SA_ROLE         saRole;
   IPSEC_TRAFFIC_TYPE     saTrafficType;
-  union DUMMYUNIONNAME1 {
+  __MINGW_EXTENSION union {
     FWP_CONDITION_VALUE0 localSubNet;
     ;      // case(IPSEC_TRAFFIC_TYPE_TRANSPORT)
-  } ;
-  union DUMMYUNIONNAME2 {
+  };
+  __MINGW_EXTENSION union {
     FWP_CONDITION_VALUE0 remoteSubNet;
     ;      // case(IPSEC_TRAFFIC_TYPE_TRANSPORT)
-  } ;
+  };
   UINT64                 qmFilterId;
 } FWPM_NET_EVENT_IKEEXT_QM_FAILURE0;
 
@@ -288,14 +288,14 @@ typedef struct FWPM_NET_EVENT_IPSEC_KERNEL_DROP0_ {
 
 typedef struct FWPM_NET_EVENT_IPSEC_DOSP_DROP0_ {
   FWP_IP_VERSION ipVersion;
-  union DUMMYUNIONNAME1 {
+  __MINGW_EXTENSION union {
     UINT32 publicHostV4Addr;
     UINT8  publicHostV6Addr[16];
-  } ;
-  union DUMMYUNIONNAME2 {
+  };
+  __MINGW_EXTENSION union {
     UINT32 internalHostV4Addr;
     UINT8  internalHostV6Addr[16];
-  } ;
+  };
   INT32          failureStatus;
   FWP_DIRECTION  direction;
 } FWPM_NET_EVENT_IPSEC_DOSP_DROP0;
@@ -303,14 +303,14 @@ typedef struct FWPM_NET_EVENT_IPSEC_DOSP_DROP0_ {
 typedef struct FWPM_NET_EVENT0_ {
   FWPM_NET_EVENT_HEADER0 header;
   FWPM_NET_EVENT_TYPE    type;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     FWPM_NET_EVENT_IKEEXT_MM_FAILURE0 *ikeMmFailure;
     FWPM_NET_EVENT_IKEEXT_QM_FAILURE0 *ikeQmFailure;
     FWPM_NET_EVENT_IKEEXT_EM_FAILURE0 *ikeEmFailure;
     FWPM_NET_EVENT_CLASSIFY_DROP0     *classifyDrop;
     FWPM_NET_EVENT_IPSEC_KERNEL_DROP0 *ipsecDrop;
     FWPM_NET_EVENT_IPSEC_DOSP_DROP0   *idpDrop;
-  } ;
+  };
 } FWPM_NET_EVENT0;
 
 typedef struct FWPM_PROVIDER_CHANGE0_ {
@@ -337,7 +337,7 @@ typedef struct FWPM_PROVIDER_CONTEXT0_ {
   GUID                       *providerKey;
   FWP_BYTE_BLOB              providerData;
   FWPM_PROVIDER_CONTEXT_TYPE type;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     IPSEC_KEYING_POLICY0    *keyingPolicy;
     IPSEC_TRANSPORT_POLICY0 *ikeQmTransportPolicy;
     IPSEC_TUNNEL_POLICY0    *ikeQmTunnelPolicy;
@@ -347,7 +347,7 @@ typedef struct FWPM_PROVIDER_CONTEXT0_ {
     IKEEXT_POLICY0          *authIpMmPolicy;
     FWP_BYTE_BLOB           *dataBuffer;
     FWPM_CLASSIFY_OPTIONS0  *classifyOptions;
-  } ;
+  };
   UINT64                     providerContextId;
 } FWPM_PROVIDER_CONTEXT0;
 

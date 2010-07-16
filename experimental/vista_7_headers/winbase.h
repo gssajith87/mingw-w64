@@ -3167,10 +3167,10 @@ typedef struct _FILE_ID_BOTH_DIR_INFO {
 typedef struct _FILE_ID_DESCRIPTOR{
   DWORD        dwSize;
   FILE_ID_TYPE Type;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     LARGE_INTEGER FileId;
     GUID          ObjectId;
-  } ;
+  };
 } FILE_ID_DESCRIPTOR, *LPFILE_ID_DESCRIPTOR;
 
 typedef enum _FILE_INFO_BY_HANDLE_CLASS {

@@ -1358,10 +1358,10 @@ extern "C" {
   typedef struct _KERB_SMARTCARD_CSP_INFO {
     DWORD dwCspInfoLen;
     DWORD MessageType;
-    union DUMMYUNIONNAME1 {
+    __MINGW_EXTENSION union {
       PVOID   ContextInformation;
       ULONG64 SpaceHolderForWow64;
-    } ;
+    };
     DWORD flags;
     DWORD KeySpec;
     ULONG nCardNameOffset;

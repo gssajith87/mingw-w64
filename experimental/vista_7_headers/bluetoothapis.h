@@ -17,10 +17,10 @@ extern "C" {
 typedef LPVOID HBLUETOOTH_DEVICE_FIND;
 
 typedef struct _BLUETOOTH_ADDRESS {
-  union DUMMYUNIONNAME{
+  __MINGW_EXTENSION union {
     BTH_ADDR ullLong;
     BYTE     rgBytes[6];
-  } ;
+  };
 } BLUETOOTH_ADDRESS;
 
 typedef struct _BLUETOOTH_COD_PAIRS {
@@ -108,7 +108,7 @@ typedef struct _BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS {
   BLUETOOTH_AUTHENTICATION_METHOD       authenticationMethod;
   BLUETOOTH_IO_CAPABILITY               ioCapability;
   BLUETOOTH_AUTHENTICATION_REQUIREMENTS authenticationRequirements;
-  union DUMMYUNIONNAME{
+  __MINGW_EXTENSION union {
     ULONG Numeric_Value;
     ULONG Passkey;
   } ;
@@ -117,19 +117,19 @@ typedef struct _BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS {
 typedef struct _BLUETOOTH_AUTHENTICATE_RESPONSE {
   BLUETOOTH_ADDRESS               bthAddressRemote;
   BLUETOOTH_AUTHENTICATION_METHOD authMethod;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     BLUETOOTH_PIN_INFO                pinInfo;
     BLUETOOTH_OOB_DATA                oobInfo;
     BLUETOOTH_NUMERIC_COMPARISON_INFO numericCompInfo;
     BLUETOOTH_PASSKEY_INFO            passkeyInfo;
-  } ;
+  };
   UCHAR                           negativeResponse;
 } BLUETOOTH_AUTHENTICATE_RESPONSE, *PBLUETOOTH_AUTHENTICATE_RESPONSE;
 
 typedef struct _SPD_ELEMENT_DATA {
   SDP_TYPE         type;
   SDP_SPECIFICTYPE specificType;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     SDP_LARGE_INTEGER_16  int128;
     LONGLONG              int64;
     LONG                  int32;
@@ -144,19 +144,19 @@ typedef struct _SPD_ELEMENT_DATA {
     GUID                  uuid128;
     ULONG                 uuid32;
     USHORT                uuid16;
-    struct DUMMYSTRUCTNAME1 {
+    __MINGW_EXTENSION struct {
       LPBYTE value;
       ULONG  length;
     } string;
-    struct DUMMYSTRUCTNAME2 {
+    __MINGW_EXTENSION struct {
       LPBYTE value;
       ULONG  length;
     } url;
-    struct DUMMYSTRUCTNAME3 {
+    __MINGW_EXTENSION struct {
       LPBYTE value;
       ULONG  length;
     } sequence;
-    struct DUMMYSTRUCTNAME4 {
+    __MINGW_EXTENSION struct {
       LPBYTE value;
       ULONG  length;
     } alternative;
@@ -172,12 +172,12 @@ typedef struct _SDP_STRING_TYPE_DATA {
 typedef struct _BLUETOOTH_AUTHENTICATE_RESPONSE {
   BLUETOOTH_ADDRESS               bthAddressRemote;
   BLUETOOTH_AUTHENTICATION_METHOD authMethod;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     BLUETOOTH_PIN_INFO                pinInfo;
     BLUETOOTH_OOB_DATA                oobInfo;
     BLUETOOTH_NUMERIC_COMPARISON_INFO numericCompInfo;
     BLUETOOTH_PASSKEY_INFO            passkeyInfo;
-  } ;
+  };
   UCHAR                           negativeResponse;
 } BLUETOOTH_AUTHENTICATE_RESPONSE, *PBLUETOOTH_AUTHENTICATE_RESPONSE;
 

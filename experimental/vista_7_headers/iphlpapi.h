@@ -138,15 +138,15 @@ typedef enum _NET_ADDRESS_FORMAT {
 
 typedef struct _NET_ADDRESS_INFO {
   NET_ADDRESS_FORMAT Format;
-  union DUMMYUNIONNAME {
-    struct DUMMYSTRUCTNAME {
+  __MINGW_EXTENSION union {
+    __MINGW_EXTENSION struct {
       WCHAR Address[DNS_MAX_NAME_BUFFER_LENGTH];
       WCHAR Port[6];
     } NamedAddress;
     SOCKADDR_IN  Ipv4Address;
     SOCKADDR_IN6 Ipv6Address;
     SOCKADDR     IpAddress;
-  } ;
+  };
 } NET_ADDRESS_INFO, *PNET_ADDRESS_INFO;
 
 ULONG WINAPI GetPerTcp6ConnectionEStats(

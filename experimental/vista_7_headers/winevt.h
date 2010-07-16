@@ -267,7 +267,7 @@ typedef enum _EVT_VARIANT_TYPE {
 } EVT_VARIANT_TYPE;
 
 typedef struct _EVT_VARIANT {
-  union DUMMYNIONNAME {
+  __MINGW_EXTENSION union {
     WINBOOL    BooleanVal;
     INT8       SByteVal;
     INT16      Int16Val;
@@ -308,7 +308,7 @@ typedef struct _EVT_VARIANT {
     size_t     *SizeTArr;
     LPCWSTR    XmlVal;
     LPCWSTR*   XmlValArr;
-  } ;
+  };
   DWORD Count;
   DWORD Type;
 } EVT_VARIANT, *PEVT_VARIANT;

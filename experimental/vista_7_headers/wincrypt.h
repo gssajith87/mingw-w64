@@ -4314,10 +4314,10 @@ typedef struct _CERT_HASHED_URL {
 
 typedef struct _CERT_BIOMETRIC_DATA {
   DWORD dwTypeOfBiometricDataChoice;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     DWORD dwPredefined;
     LPSTR pszObjId;
-  } ;
+  };
   CERT_HASHED_URL HashedUrl;
 } CERT_BIOMETRIC_DATA, *PCERT_BIOMETRIC_DATA;
 
@@ -4356,10 +4356,10 @@ typedef struct _CERT_LOGOTYPE_IMAGE_INFO {
   DWORD  dwXSize;
   DWORD  dwYSize;
   DWORD  dwLogotypeImageResolutionChoice;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     DWORD dwNumBits;
     DWORD dwTableSize;
-  } ;
+  };
   LPWSTR pwszLanguage;
 } CERT_LOGOTYPE_IMAGE_INFO, *PCERT_LOGOTYPE_IMAGE_INFO;
 
@@ -4382,7 +4382,7 @@ typedef struct _CERT_LOGOTYPE_REFERENCE {
 
 typedef struct _CERT_LOGOTYPE_INFO {
   DWORD dwLogotypeInfoChoice;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     PCERT_LOGOTYPE_DATA      pLogotypeDirectInfo;
     PCERT_LOGOTYPE_REFERENCE pLogotypeIndirectInfo;
   } ;
@@ -4639,9 +4639,9 @@ typedef struct _OCSP_BASIC_REVOKED_INFO {
 typedef struct _OCSP_BASIC_RESPONSE_ENTRY {
   OCSP_CERT_ID    CertId;
   DWORD           dwCertStatus;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     POCSP_BASIC_REVOKED_INFO pRevokedInfo;
-  } ;
+  };
   FILETIME        ThisUpdate;
   FILETIME        NextUpdate;
   DWORD           cExtension;
@@ -4651,10 +4651,10 @@ typedef struct _OCSP_BASIC_RESPONSE_ENTRY {
 typedef struct _OCSP_BASIC_RESPONSE_INFO {
   DWORD                      dwVersion;
   DWORD                      dwResponderIdChoice;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     CERT_NAME_BLOB  ByNameResponderId;
     CRYPT_HASH_BLOB ByKeyResponderId;
-  } ;
+  };
   FILETIME                   ProducedAt;
   DWORD                      cResponseEntry;
   POCSP_BASIC_RESPONSE_ENTRY rgResponseEntry;

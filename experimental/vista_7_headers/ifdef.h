@@ -100,7 +100,7 @@ typedef enum _TUNNEL_TYPE {
 
 typedef union _NET_LUID {
   ULONG64 Value;
-  struct DUMMYSTRUCTNAME {
+  __MINGW_EXTENSION struct {
     ULONG64 Reserved  :24;
     ULONG64 NetLuidIndex  :24;
     ULONG64 IfType  :16;

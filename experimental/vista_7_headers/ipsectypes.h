@@ -147,13 +147,13 @@ typedef struct IPSEC_CIPHER_TRANSFORM0_ {
 
 typedef struct IPSEC_SA_TRANSFORM0_ {
   IPSEC_TRANSFORM_TYPE ipsecTransformType;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     IPSEC_AUTH_TRANSFORM0            *ahTransform;
     IPSEC_AUTH_TRANSFORM0            *espAuthTransform;
     IPSEC_CIPHER_TRANSFORM0          *espCipherTransform;
     IPSEC_AUTH_AND_CIPHER_TRANSFORM0 *espAuthAndCipherTransform;
     IPSEC_AUTH_TRANSFORM0            *espAuthFwTransform;
-  } ;
+  };
 } IPSEC_SA_TRANSFORM0;
 
 typedef struct IPSEC_CIPHER_TRANSFORM_ID0_ {
@@ -177,14 +177,14 @@ typedef struct IPSEC_TUNNEL_POLICY0_ {
 
 typedef struct IPSEC_TUNNEL_ENDPOINTS0_ {
   FWP_IP_VERSION ipVersion;
-  union DUMMYUNIONNAME1 {
+  __MINGW_EXTENSION union {
     UINT32 localV4Address;
     UINT8  localV6Address[16];
-  } ;
-  union DUMMYUNIONNAME2 {
+  };
+  __MINGW_EXTENSION union {
     UINT32 remoteV4Address;
     UINT8  remoteV6Address[16];
-  } ;
+  };
 } IPSEC_TUNNEL_ENDPOINTS0;
 
 typedef struct IPSEC_V4_UDP_ENCAPSULATION0_ {

@@ -87,12 +87,12 @@ typedef struct tagOCTET_STRING {
 
 typedef struct tagUiInfo {
   UI_INFO_TYPE type;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     LPWSTR pwzNull;
     ShellCommandInfo ShellInfo;
     LPWSTR pwzHelpURL;
     LPWSTR pwzDui;
-  } ;
+  };
 } UiInfo, *PUiInfo;
 
 typedef struct tagRepairInfo {
@@ -118,7 +118,7 @@ typedef struct tagShellCommandInfo {
 typedef struct tagHELPER_ATTRIBUTE {
   LPWSTR pwszName;
   ATTRIBUTE_TYPE  type;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     WINBOOL Boolean;
     char Char;
     byte Byte;
@@ -133,7 +133,7 @@ typedef struct tagHELPER_ATTRIBUTE {
     LIFE_TYPE LifeTime;
     DIAG_SOCKADDR Address;
     OCTET_STRING OctetString;
-  } ;
+  };
 } HELPER_ATTRIBUTE;
 
 #ifdef __cplusplus

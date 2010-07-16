@@ -48,19 +48,19 @@ typedef enum _WCT_OBJECT_STATUS {
 typedef struct _WAITCHAIN_NODE_INFO {
   WCT_OBJECT_TYPE   ObjectType;
   WCT_OBJECT_STATUS ObjectStatus;
-  union DUMMYUNIONNAME {
-    struct DUMMYSTRUCTNAME1 {
+  __MINGW_EXTENSION union {
+    __MINGW_EXTENSION struct {
       WCHAR         ObjectName[WCT_OBJNAME_LENGTH];
       LARGE_INTEGER Timeout;
       WINBOOL       Alertable;
     } LockObject;
-    struct DUMMYSTRUCTNAME2 {
+    __MINGW_EXTENSION struct {
       DWORD ProcessId;
       DWORD ThreadId;
       DWORD WaitTime;
       DWORD ContextSwitches;
     } ThreadObject;
-  } ;
+  };
 } WAITCHAIN_NODE_INFO, *PWAITCHAIN_NODE_INFO;
 
 typedef VOID (CALLBACK *PWAITCHAINCALLBACK)(

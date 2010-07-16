@@ -589,7 +589,7 @@ typedef struct _RPC_BINDING_HANDLE_TEMPLATE {
   unsigned long  ProtocolSequence;
   unsigned short *NetworkAddress;
   unsigned short *StringEndpoint;
-  union DUMMYSTRUCTNAME1 {
+  __MINGW_EXTENSION union {
     unsigned short *Reserved;
   } u1;
   UUID           ObjectUuid;

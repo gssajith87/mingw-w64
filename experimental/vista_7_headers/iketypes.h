@@ -144,7 +144,7 @@ typedef struct IKEEXT_PRESHARED_KEY_AUTHENTICATION0__ {
 
 typedef struct IKEEXT_AUTHENTICATION_METHOD0_ {
   IKEEXT_AUTHENTICATION_METHOD_TYPE authenticationMethodType;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     IKEEXT_PRESHARED_KEY_AUTHENTICATION0 presharedKeyAuthentication;
     IKEEXT_CERTIFICATE_AUTHENTICATION0   certificateAuthentication;
     IKEEXT_KERBEROS_AUTHENTICATION0      kerberosAuthentication;
@@ -152,7 +152,7 @@ typedef struct IKEEXT_AUTHENTICATION_METHOD0_ {
     IKEEXT_CERTIFICATE_AUTHENTICATION0   sslAuthentication;
     IKEEXT_IPV6_CGA_AUTHENTICATION0      cgaAuthentication;
     ;      // case(IKEEXT_ANONYMOUS)
-  } ;
+  };
 } IKEEXT_AUTHENTICATION_METHOD0;
 
 typedef struct IKEEXT_CERTIFICATE_AUTHENTICATION0_ {
@@ -235,12 +235,12 @@ typedef struct IKEEXT_COOKIE_PAIR0_ {
 typedef struct IKEEXT_CREDENTIAL0_ {
   IKEEXT_AUTHENTICATION_METHOD_TYPE        authenticationMethodType;
   IKEEXT_AUTHENTICATION_IMPERSONATION_TYPE impersonationType;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     IKEEXT_PRESHARED_KEY_AUTHENTICATION0 *presharedKey;
     IKEEXT_CERTIFICATE_CREDENTIAL0       *certificate;
     IKEEXT_NAME_CREDENTIAL0              *name;
     ;      // case(IKEEXT_ANONYMOUS)
-  } ;
+  };
 } IKEEXT_CREDENTIAL0;
 
 typedef struct IKEEXT_CREDENTIAL_PAIR0_ {
@@ -319,14 +319,14 @@ typedef struct IKEEXT_STATISTICS0_ {
 
 typedef struct IKEEXT_TRAFFIC0_ {
   FWP_IP_VERSION ipVersion;
-  union DUMMYUNIONNAME1 {
+  __MINGW_EXTENSION union {
     UINT32 localV4Address;
     UINT8  localV6Address[16];
-  } ;
-  union DUMMYUNIONNAME2 {
+  };
+  __MINGW_EXTENSION union {
     UINT32 remoteV4Address;
     UINT8  remoteV6Address[16];
-  } ;
+  };
   UINT64         authIpFilterId;
 } IKEEXT_TRAFFIC0;
 

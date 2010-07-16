@@ -118,7 +118,7 @@ typedef struct FWP_RANGE0_ {
 
 typedef struct FWP_CONDITION_VALUE0_ {
   FWP_DATA_TYPE type;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     UINT8                uint8;
     UINT16               uint16;
     UINT32               uint32;
@@ -140,7 +140,7 @@ typedef struct FWP_CONDITION_VALUE0_ {
     FWP_V4_ADDR_AND_MASK *v4AddrMask;
     FWP_V6_ADDR_AND_MASK *v6AddrMask;
     FWP_RANGE0           *rangeValue;
-  } ;
+  };
 } FWP_CONDITION_VALUE0;
 
 typedef struct _FWP_TOKEN_INFORMATION {
@@ -152,7 +152,7 @@ typedef struct _FWP_TOKEN_INFORMATION {
 
 typedef struct FWP_VALUE0_ {
   FWP_DATA_TYPE type;
-  union DUMMYUNIONNMAE {
+  __MINGW_EXTENSION union {
     LPVOID                EMPTY;      // case(FWP_EMPTY)
     UINT8                 uint8;
     UINT16                uint16;
@@ -172,7 +172,7 @@ typedef struct FWP_VALUE0_ {
     FWP_BYTE_BLOB         *tokenAccessInformation;
     LPWSTR                unicodeString;
     FWP_BYTE_ARRAY6       *byteArray6;
-  } ;
+  };
 } FWP_VALUE0;
 
 #ifdef __cplusplus

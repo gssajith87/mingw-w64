@@ -71,14 +71,14 @@ typedef struct _MIB_IPNET_ROW2 {
   UCHAR             PhysicalAddress[IF_MAX_PHYS_ADDRESS_LENGTH];
   ULONG             PhysicalAddressLength;
   NL_NEIGHBOR_STATE State;
-  union DUMMYUNIONNAME1 {
-    struct DUMMYSTRUCTNAME1 {
+  __MINGW_EXTENSION union {
+    __MINGW_EXTENSION struct {
       BOOLEAN IsRouter  :1;
       BOOLEAN IsUnreachable  :1;
-    } ;
+    };
     UCHAR  Flags;
-  } ;
-  union DUMMYUNIONNAME2 {
+  };
+  __MINGW_EXTENSION union {
     ULONG LastReachable;
     ULONG LastUnreachable;
   } ReachabilityTime;
@@ -178,7 +178,7 @@ typedef struct _MIB_IF_ROW2 {
   NDIS_PHYSICAL_MEDIUM       PhysicalMediumType;
   NET_IF_ACCESS_TYPE         AccessType;
   NET_IF_DIRECTION_TYPE      DirectionType;
-  struct DUMMYSTRUCTNAME {
+  __MINGW_EXTENSION struct {
     BOOLEAN HardwareInterface  :1;
     BOOLEAN FilterInterface  :1;
     BOOLEAN ConnectorPresent   :1;
@@ -249,10 +249,10 @@ typedef struct _MIB_IPPATH_ROW {
   ULONG         PathMtu;
   ULONG         RttMean;
   ULONG         RttDeviation;
-  union DUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     ULONG LastReachable;
     ULONG LastUnreachable;
-  } ;
+  };
   BOOLEAN       IsReachable;
   ULONG64       LinkTransmitSpeed;
   ULONG64       LinkReceiveSpeed;
