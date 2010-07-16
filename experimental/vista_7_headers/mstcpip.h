@@ -5,6 +5,7 @@
  */
 #ifndef _MSTCPIP_
 #define _MSTCPIP_
+
 #include <_mingw_unicode.h>
 
 struct tcp_keepalive {
@@ -185,5 +186,6 @@ LONG NTAPI RtlIpv6StringToAddressExW(
 );
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /* _MSTCPIP_ */
 

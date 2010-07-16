@@ -2751,10 +2751,9 @@ extern "C" {
 #define CreateWaitableTimerEx __MINGW_NAME_AW(CreateWaitableTimerEx)
 #define FindFirstFileTransacted __MINGW_NAME_AW(FindFirstFileTransacted)
 
-  WINBASEAPI WINBOOL WINAPI CreateSymbolicLinkA (LPSTR lpSymLinkFileName, LPSTR lpTargetFileName, DWORD dwFlags);
-  WINBASEAPI WINBOOL WINAPI CreateSymbolicLinkW (LPWSTR lpSymLinkFileName, LPWSTR lpTargetFileName, DWORD dwFlags);
+  WINBASEAPI BOOLEAN WINAPI CreateSymbolicLinkA (LPSTR lpSymLinkFileName, LPSTR lpTargetFileName, DWORD dwFlags);
+  WINBASEAPI BOOLEAN WINAPI CreateSymbolicLinkW (LPWSTR lpSymLinkFileName, LPWSTR lpTargetFileName, DWORD dwFlags);
 
-#define CreateSymbolicLink __MINGW_NAME_AW(CreateSymbolicLink)
 #define CreateBoundaryDescriptor __MINGW_NAME_AW(CreateBoundaryDescriptor)
 #define OpenPrivateNamespace __MINGW_NAME_AW(OpenPrivateNamespace)
 #define CreatePrivateNamespace __MINGW_NAME_AW(CreatePrivateNamespace)

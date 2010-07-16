@@ -7,6 +7,7 @@
 #define __WINCRYPT_H__
 
 #include <_mingw.h>
+#include <_mingw_unicode.h>
 #include <guiddef.h>
 #include <bcrypt.h>
 #include <ncrypt.h>

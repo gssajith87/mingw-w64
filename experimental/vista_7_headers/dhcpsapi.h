@@ -5,7 +5,6 @@
  */
 #ifndef _DHCPSAPI_
 #define _DHCPSAPI_
-#include <windows.h>
 
 #ifndef WINAPI
 #define WINAPI __stdcall
