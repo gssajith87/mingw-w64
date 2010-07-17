@@ -5,16 +5,17 @@
  */
 #ifndef _INC_OPMAPI
 #define _INC_OPMAPI
+
 #include <dxva2api.h>
 
 #if (_WIN32_WINNT >= 0x0600)
 
-#define OPM_OMAC_SIZE                                1
+#define OPM_OMAC_SIZE                                16
 #define OPM_CONFIGURE_SETTING_DATA_SIZE              4056
 #define OPM_REQUESTED_INFORMATION_SIZE               4076
 #define OPM_ENCRYPTED_INITIALIZATION_PARAMETERS_SIZE 256
 #define OPM_GET_INFORMATION_PARAMETERS_SIZE          4056
-#define OPM_HDCP_KEY_SELECTION_VECTOR_SIZE           0/*?*/
+#define OPM_HDCP_KEY_SELECTION_VECTOR_SIZE           5
 #define OPM_128_BIT_RANDOM_NUMBER_SIZE               16
 
 #ifdef __cplusplus
@@ -23,7 +24,7 @@ extern "C" {
 
 typedef enum _OPM_VIDEO_OUTPUT_SEMANTICS {
   OPM_VOS_COPP_SEMANTICS   = 0,
-  OPM_VOS_OPM_SEMANTICS    = 1 
+  OPM_VOS_OPM_SEMANTICS    = 1
 } OPM_VIDEO_OUTPUT_SEMANTICS;
 
 typedef enum _OPM_ACP_PROTECTION_LEVEL {
@@ -31,19 +32,19 @@ typedef enum _OPM_ACP_PROTECTION_LEVEL {
   OPM_ACP_LEVEL_ONE     = 1,
   OPM_ACP_LEVEL_TWO     = 2,
   OPM_ACP_LEVEL_THREE   = 3,
-  OPM_ACP_FORCE_ULONG   = 0x7fffffff 
+  OPM_ACP_FORCE_ULONG   = 0x7fffffff
 } OPM_ACP_PROTECTION_LEVEL;
 
 typedef enum _OPM_DPCP_PROTECTION_LEVEL {
   OPM_DPCP_OFF           = 0,
   OPM_DPCP_ON            = 1,
-  OPM_DPCP_FORCE_ULONG   = 0x7fffffff 
+  OPM_DPCP_FORCE_ULONG   = 0x7fffffff
 } OPM_DPCP_PROTECTION_LEVEL;
 
 typedef enum _OPM_HDCP_PROTECTION_LEVEL {
   OPM_HDCP_OFF           = 0,
   OPM_HDCP_ON            = 1,
-  OPM_HDCP_FORCE_ULONG   = 0x7fffffff 
+  OPM_HDCP_FORCE_ULONG   = 0x7fffffff
 } OPM_HDCP_PROTECTION_LEVEL;
 
 typedef enum _OPM_IMAGE_ASPECT_RATIO_EN300294 {
@@ -55,7 +56,7 @@ typedef enum _OPM_IMAGE_ASPECT_RATIO_EN300294 {
   OPM_ASPECT_RATIO_EN300294_BOX_GT_16_BY_9_CENTER                 = 5,
   OPM_ASPECT_RATIO_EN300294_FULL_FORMAT_4_BY_3_PROTECTED_CENTER   = 6,
   OPM_ASPECT_RATIO_EN300294_FULL_FORMAT_16_BY_9_ANAMORPHIC        = 7,
-  OPM_ASPECT_RATIO_FORCE_ULONG                                    = 0x7FFFFFFF 
+  OPM_ASPECT_RATIO_FORCE_ULONG                                    = 0x7FFFFFFF
 } OPM_IMAGE_ASPECT_RATIO_EN300294;
 
 typedef struct _OPM_OMAC {
@@ -238,5 +239,8 @@ HRESULT WINAPI OPMGetVideoOutputsFromIDirect3DDevice9Object(
 #ifdef __cplusplus
 }
 #endif
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_OPMAPI*/
+
