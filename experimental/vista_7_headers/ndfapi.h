@@ -5,8 +5,11 @@
  */
 #ifndef _INC_NDFAPI
 #define _INC_NDFAPI
+
 #include <ndattrib.h>
+
 #if (_WIN32_WINNT >= 0x0600)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -66,5 +69,7 @@ HRESULT NdfExecuteDiagnosis(
 #ifdef __cplusplus
 }
 #endif
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_NDFAPI*/

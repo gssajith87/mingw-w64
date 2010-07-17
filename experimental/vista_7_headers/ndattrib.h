@@ -5,6 +5,7 @@
  */
 #ifndef _INC_NDATTRIB
 #define _INC_NDATTRIB
+
 #if (_WIN32_WINNT >= 0x0600)
 
 /* In ndhelper.idl
@@ -35,27 +36,27 @@ typedef enum tagATTRIBUTE_TYPE {
   AT_GUID,
   AT_LIFE_TIME,
   AT_SOCKADDR,
-  AT_OCTET_STRING 
+  AT_OCTET_STRING
 } ATTRIBUTE_TYPE;
 
 typedef enum tagREPAIR_SCOPE {
   RS_SYSTEM        = 0,
   RS_USER          = 1,
   RS_APPLICATION   = 2,
-  RS_PROCESS       = 3 
+  RS_PROCESS       = 3
 } REPAIR_SCOPE;
 
 typedef enum tagREPAIR_RISK {
   RR_NOROLLBACK   = 0,
   RR_ROLLBACK     = 1,
-  RR_NORISK       = 2 
+  RR_NORISK       = 2
 } REPAIR_RISK;
 
 typedef enum tagUI_INFO_TYPE {
   UIT_NONE            = 0,
   UIT_SHELL_COMMAND,
   UIT_HELP_PANE,
-  UIT_DUI 
+  UIT_DUI
 } UI_INFO_TYPE;
 
 typedef enum tagPROBLEM_TYPE {
@@ -64,7 +65,7 @@ typedef enum tagPROBLEM_TYPE {
   PT_DOWN_STREAM_HEALTH      = 4,
   PT_HIGH_UTILIZATION        = 8,
   PT_HIGHER_UTILIZATION      = 16,
-  PT_UP_STREAM_UTILIZATION   = 32 
+  PT_UP_STREAM_UTILIZATION   = 32
 } PROBLEM_TYPE;
 
 typedef enum tagREPAIR_STATUS {
@@ -72,7 +73,7 @@ typedef enum tagREPAIR_STATUS {
   RS_REPAIRED          = 1,
   RS_UNREPAIRED        = 2,
   RS_DEFERRED          = 3,
-  RS_USER_ACTION       = 4 
+  RS_USER_ACTION       = 4
 } REPAIR_STATUS;
 
 typedef struct tagLIFE_TIME {
@@ -140,10 +141,13 @@ typedef struct tagHELPER_ATTRIBUTE {
 }
 #endif
 
+
 #if (_WIN32_WINNT >= 0x0601)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #define RCF_ISLEAF 0x1
 #define RCF_ISCONFIRMED 0x2
 #define RCF_ISTHIRDPARTY 0x4
@@ -165,6 +169,11 @@ typedef struct tagRootCauseInfo {
 #ifdef __cplusplus
 }
 #endif
+
 #endif /*(_WIN32_WINNT >= 0x0601)*/
+
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_NDATTRIB*/
+

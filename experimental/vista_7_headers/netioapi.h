@@ -5,8 +5,10 @@
  */
 #ifndef _INC_NETIOAPI
 #define _INC_NETIOAPI
+
 #include <iprtrmib.h>
 #include <ifdef.h>
+
 #if (_WIN32_WINNT >= 0x0600)
 
 #ifdef __cplusplus
@@ -31,7 +33,7 @@ typedef enum _MIB_NOTIFICATION_TYPE {
   MibParameterNotification   = 0,
   MibAddInstance             = 1,
   MibDeleteInstance          = 2,
-  MibInitialNotification     = 3 
+  MibInitialNotification     = 3
 } MIB_NOTIFICATION_TYPE, *PMIB_NOTIFICATION_TYPE;
 
 typedef struct _MIB_ANYCASTIPADDRESS_ROW {
@@ -50,7 +52,7 @@ typedef struct _MIB_IPFORWARD_ROW2 {
   NET_LUID          InterfaceLuid;
   NET_IFINDEX       InterfaceIndex;
   IP_ADDRESS_PREFIX DestinationPrefix;
-  SOCKADDR_INET      NextHop;
+  SOCKADDR_INET     NextHop;
   UCHAR             SitePrefixLength;
   ULONG             ValidLifetime;
   ULONG             PreferredLifetime;
@@ -241,11 +243,11 @@ typedef struct _MIB_INVERTEDIFSTACK_TABLE {
 } MIB_INVERTEDIFSTACK_TABLE, *PMIB_INVERTEDIFSTACK_TABLE;
 
 typedef struct _MIB_IPPATH_ROW {
-  SOCKADDR_INET  Source;
-  SOCKADDR_INET  Destination;
+  SOCKADDR_INET Source;
+  SOCKADDR_INET Destination;
   NET_LUID      InterfaceLuid;
   NET_IFINDEX   InterfaceIndex;
-  SOCKADDR_INET  CurrentNextHop;
+  SOCKADDR_INET CurrentNextHop;
   ULONG         PathMtu;
   ULONG         RttMean;
   ULONG         RttDeviation;
@@ -453,7 +455,7 @@ NETIOAPI_API GetBestRoute2(
 );
 
 NETIOAPI_API GetIfEntry2(
-    PMIB_IF_ROW2 Row
+  PMIB_IF_ROW2 Row
 );
 
 NETIOAPI_API GetIfTable2(
@@ -510,7 +512,7 @@ NETIOAPI_API GetMulticastIpAddressTable(
 
 NETIOAPI_API GetTeredoPort(
   USHORT *Port
-);]
+);
 
 /*Unknown*/
 typedef LPVOID PTEREDO_PORT_CHANGE_CALLBACK;
@@ -592,5 +594,7 @@ NETIOAPI_API SetUnicastIpAddressEntry(
 #ifdef __cplusplus
 }
 #endif
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_NETIOAPI*/

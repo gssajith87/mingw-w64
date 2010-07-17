@@ -5,6 +5,7 @@
  */
 #ifndef _INC_NLDEF
 #define _INC_NLDEF
+
 #if (_WIN32_WINNT >= 0x0600)
 
 #ifdef __cplusplus
@@ -17,7 +18,7 @@ typedef enum _NL_ADDRESS_TYPE {
   NlatAnycast,
   NlatMulticast,
   NlatBroadcast,
-  NlatInvalid 
+  NlatInvalid
 } NL_ADDRESS_TYPE, *PNL_ADDRESS_TYPE;
 
 typedef enum _NL_DAD_STATE {
@@ -26,18 +27,18 @@ typedef enum _NL_DAD_STATE {
   NldsDuplicate,
   NldsDeprecated,
   NldsPreferred,
-  IpDadStateInvalid      = 0,
+  IpDadStateInvalid   = 0,
   IpDadStateTentative,
   IpDadStateDuplicate,
   IpDadStateDeprecated,
-  IpDadStatePreferred 
+  IpDadStatePreferred
 } NL_DAD_STATE;
 
 typedef enum _NL_LINK_LOCAL_ADDRESS_BEHAVIOR {
   LinkLocalAlwaysOff   = 0,
   LinkLocalDelayed,
   LinkLocalAlwaysOn,
-  LinkLocalUnchanged   = -1 
+  LinkLocalUnchanged   = -1
 } NL_LINK_LOCAL_ADDRESS_BEHAVIOR;
 
 typedef enum _NL_NEIGHBOR_STATE {
@@ -48,16 +49,16 @@ typedef enum _NL_NEIGHBOR_STATE {
   NlnsStale,
   NlnsReachable,
   NlnsPermanent,
-  NlnsMaximum 
+  NlnsMaximum
 } NL_NEIGHBOR_STATE, *PNL_NEIGHBOR_STATE;
 
 typedef enum  {
-  IpPrefixOriginOther                 = 0,
+  IpPrefixOriginOther           = 0,
   IpPrefixOriginManual,
   IpPrefixOriginWellKnown,
   IpPrefixOriginDhcp,
   IpPrefixOriginRouterAdvertisement,
-  IpPrefixOriginUnchanged             = 1 << 4 
+  IpPrefixOriginUnchanged  = 1 << 4
 } NL_PREFIX_ORIGIN;
 
 typedef enum _NL_ROUTE_ORIGIN {
@@ -99,14 +100,14 @@ typedef enum _NL_ROUTE_PROTOCOL {
   MIB_IPPROTO_BGP                 = 14,
   MIB_IPPROTO_NT_AUTOSTATIC       = 10002,
   MIB_IPPROTO_NT_STATIC           = 10006,
-  MIB_IPPROTO_NT_STATIC_NON_DOD   = 10007 
+  MIB_IPPROTO_NT_STATIC_NON_DOD   = 10007
 } NL_ROUTE_PROTOCOL, *PNL_ROUTE_PROTOCOL;
 
 typedef enum _NL_ROUTER_DISCOVERY_BEHAVIOR {
   RouterDiscoveryDisabled    = 0,
   RouterDiscoveryEnabled,
   RouterDiscoveryDhcp,
-  RouterDiscoveryUnchanged   = -1 
+  RouterDiscoveryUnchanged   = -1
 } NL_ROUTER_DISCOVERY_BEHAVIOR;
 
 typedef enum  {
@@ -116,13 +117,13 @@ typedef enum  {
   NlsoDhcp,
   NlsoLinkLayerAddress,
   NlsoRandom,
-  IpSuffixOriginOther              = 0,
+  IpSuffixOriginOther        = 0,
   IpSuffixOriginManual,
   IpSuffixOriginWellKnown,
   IpSuffixOriginDhcp,
   IpSuffixOriginLinkLayerAddress,
   IpSuffixOriginRandom,
-  IpSuffixOriginUnchanged          = 1 << 4 
+  IpSuffixOriginUnchanged = 1 << 4
 } NL_SUFFIX_ORIGIN;
 
 typedef struct _NL_INTERFACE_OFFLOAD_ROD {
@@ -140,5 +141,7 @@ typedef struct _NL_INTERFACE_OFFLOAD_ROD {
 #ifdef __cplusplus
 }
 #endif
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_NLDEF*/
