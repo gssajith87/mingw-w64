@@ -157,23 +157,23 @@ typedef struct IKEEXT_AUTHENTICATION_METHOD0_ {
 
 typedef struct IKEEXT_CERTIFICATE_AUTHENTICATION0_ {
   IKEEXT_CERT_CONFIG_TYPE inboundConfigType;
-  union {
-    struct {
+  __MINGW_EXTENSION union {
+    __MINGW_EXTENSION struct {
       UINT32                   inboundRootArraySize;
       IKEEXT_CERT_ROOT_CONFIG0 *inboundRootArray;
-    } ;
+    };
     IKEEXT_CERT_ROOT_CONFIG0 *inboundEnterpriseStoreConfig;
     IKEEXT_CERT_ROOT_CONFIG0 *inboundTrustedRootStoreConfig;
-  } ;
+  };
   IKEEXT_CERT_CONFIG_TYPE outboundConfigType;
-  union {
-    struct {
+  __MINGW_EXTENSION union {
+    __MINGW_EXTENSION struct {
       UINT32                   outboundRootArraySize;
       IKEEXT_CERT_ROOT_CONFIG0 *outboundRootArray;
-    } ;
+    };
     IKEEXT_CERT_ROOT_CONFIG0 *outboundEnterpriseStoreConfig;
     IKEEXT_CERT_ROOT_CONFIG0 *outboundTrustedRootStoreConfig;
-  } ;
+  };
   UINT32                  flags;
 } IKEEXT_CERTIFICATE_AUTHENTICATION0;
 
@@ -293,10 +293,10 @@ typedef struct IKEEXT_SA_DETAILS0_ {
   UINT64                 saId;
   IKEEXT_KEY_MODULE_TYPE keyModuleType;
   FWP_IP_VERSION         ipVersion;
-  union SUMMYUNIONNAME {
+  __MINGW_EXTENSION union {
     IPSEC_V4_UDP_ENCAPSULATION0 *v4UdpEncapsulation;
     ;      // case(FWP_IP_VERSION_V6)
-  } ;
+  };
   IKEEXT_TRAFFIC0        ikeTraffic;
   IKEEXT_PROPOSAL0       ikeProposal;
   IKEEXT_COOKIE_PAIR0    cookiePair;
