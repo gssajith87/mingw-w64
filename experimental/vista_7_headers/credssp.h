@@ -5,7 +5,9 @@
  */
 #ifndef _INC_CREDSSP
 #define _INC_CREDSSP
+
 #if (_WIN32_WINNT >= 0x0600)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,8 +17,8 @@ typedef enum _CREDSSP_SUBMIT_TYPE {
   CredsspSchannelCreds         = 4,
   CredsspCertificateCreds      = 13,
   CredsspSubmitBufferBoth      = 50,
-  CredsspSubmitBufferBothOld   = 51 
-}   CREDSPP_SUBMIT_TYPE;
+  CredsspSubmitBufferBothOld   = 51
+} CREDSPP_SUBMIT_TYPE;
 
 typedef struct _CREDSSP_CRED {
   CREDSPP_SUBMIT_TYPE Type;
@@ -32,5 +34,7 @@ typedef struct _SecPkgContext_ClientCreds {
 #ifdef __cplusplus
 }
 #endif
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_CREDSSP*/
