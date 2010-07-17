@@ -23,7 +23,7 @@ typedef enum tagSoHAttributeType {
   sohAttributeTypeErrorCodes               = 13,
   sohAttributeTypeFailureCategory          = 14,
   sohAttributeTypeIpv6FixupServers         = 15,
-  sohAttributeTypeExtendedIsolationState   = 16 
+  sohAttributeTypeExtendedIsolationState   = 16
 } SoHAttributeType;
 
 typedef union tagSoHAttributeValue {
@@ -55,9 +55,10 @@ typedef enum tagHealthClassValue {
   healthClassPatchLevel       = 1,
   healthClassAntiVirus        = 2,
   healthClassCriticalUpdate   = 3,
-  healthClassReserved         = 128 
+  healthClassReserved         = 128
 } HealthClassValue;
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
-#endif _INC_NAPTYPES
+#endif /* _INC_NAPTYPES */
+

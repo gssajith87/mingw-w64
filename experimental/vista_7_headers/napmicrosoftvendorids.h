@@ -21,4 +21,5 @@
 #define NapFCSv2SystemHealthId          0x00013783
 #define NapTpmSystemHealthId            0x00013784
 #endif /*(_WIN32_WINNT >= 0x0600)*/
-#endif /*_INC_NAPMICROSOFTVENDORIDS*/
+
+#endif /* _INC_NAPMICROSOFTVENDORIDS */

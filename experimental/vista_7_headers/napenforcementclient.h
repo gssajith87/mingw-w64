@@ -31,8 +31,9 @@
   typedef GUID ConnectionId;
   typedef UINT8 Percentage;
   typedef UINT32 MessageId;
-#endif
+#endif /* NAPTypes */
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
 
-#endif _INC_NAPENFORCEMENTCLIENT
+#endif /* _INC_NAPENFORCEMENTCLIENT */
+

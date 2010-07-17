@@ -5,7 +5,9 @@
  */
 #ifndef _INC_NAPTYPES
 #define _INC_NAPTYPES
+
 #if (_WIN32_WINNT >= 0x0600)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -45,12 +47,12 @@ extern "C" {
   typedef GUID ConnectionId;
   typedef UINT8 Percentage;
   typedef UINT32 MessageId;
-#endif
+#endif /* NAPTypes */
 
   typedef enum tagFixupState {
     fixupStateSuccess          = 0,
     fixupStateInProgress       = 1,
-    fixupStateCouldNotUpdate   = 2 
+    fixupStateCouldNotUpdate   = 2
   } FixupState;
 
 typedef enum tagFailureCategory {
@@ -59,103 +61,103 @@ typedef enum tagFailureCategory {
   failureCategoryClientComponent       = 2,
   failureCategoryClientCommunication   = 3,
   failureCategoryServerComponent       = 4,
-  failureCategoryServerCommunication   = 5 
+  failureCategoryServerCommunication   = 5
 } FailureCategory;
 
   typedef enum tagIsolationState {
     isolationStateNotRestricted      = 1,
     isolationStateInProbation        = 2,
-    isolationStateRestrictedAccess   = 3 
+    isolationStateRestrictedAccess   = 3
   } IsolationState;
 
   typedef enum tagExtendedIsolationState {
     extendedIsolationStateNoData       = 0,
     extendedIsolationStateTransition   = 1,
     extendedIsolationStateInfected     = 2,
-    extendedIsolationStateUnknown      = 3 
+    extendedIsolationStateUnknown      = 3
   } ExtendedIsolationState;
 
   typedef enum tagRemoteConfigurationType {
     remoteConfigTypeMachine      = 1,
-    remoteConfigTypeConfigBlob   = 2 
+    remoteConfigTypeConfigBlob   = 2
   } RemoteConfigurationType;
 
   typedef enum tagNapNotifyType {
     napNotifyTypeUnknown        = 0,
     napNotifyTypeServiceState   = 1,
-    napNotifyTypeQuarState      = 2 
+    napNotifyTypeQuarState      = 2
   } NapNotifyType;
   
   typedef enum _NAPI_PROVIDER_LEVEL {
     ProviderLevel_None        = 0,
     ProviderLevel_Secondary,
-    ProviderLevel_Primary 
+    ProviderLevel_Primary
   } NAPI_PROVIDER_LEVEL;
 
   typedef enum _NAPI_PROVIDER_TYPE {
     ProviderType_Application   = 1,
-    ProviderType_Service 
+    ProviderType_Service
   } NAPI_PROVIDER_TYPE;
 
   typedef struct tagResultCodes {
     UINT16  count;
     HRESULT *results;
-  }ResultCodes;
+  } ResultCodes;
 
   typedef struct tagCorrelationId {
     GUID     connId;
     FILETIME timeStamp;
-  }CorrelationId;
+  } CorrelationId;
 
   typedef struct tagSoHAttribute {
     UINT16 type;
     UINT16 size;
     BYTE * value;
-  }SoHAttribute;
+  } SoHAttribute;
 
   typedef struct tagCountedString {
     UINT16 length;
     WCHAR *string;
-  }CountedString;
+  } CountedString;
 
   typedef struct tagIpv4Address {
     BYTE addr[4];
-  }Ipv4Address;
+  } Ipv4Address;
 
   typedef struct tagIpv6Address {
     BYTE addr[16];
-  }Ipv6Address;
+  } Ipv6Address;
 
   typedef struct tagSoH {
     UINT16       count;
     SoHAttribute *attributes;
-  }SoH, SoHRequest, SoHResponse;
+  } SoH, SoHRequest, SoHResponse;
 
   typedef struct tagFixupInfo {
     FixupState  state;
     Percentage  percentage;
     ResultCodes resultCodes;
     MessageId   fixupMsgId;
-  }FixupInfo;
+  } FixupInfo;
 
 #define failureCategoryCount 5
 
   typedef struct tagFailureCategoryMapping {
     WINBOOL mappingCompliance[failureCategoryCount];
-  }FailureCategoryMapping;
+  } FailureCategoryMapping;
 
   typedef struct tagIsolationInfo {
     IsolationState isolationState;
     ProbationTime  probEndTime;
     CountedString  failureUrl;
-  }IsolationInfo;
+  } IsolationInfo;
 
   typedef struct tagIsolationInfoEx {
     IsolationState         isolationState;
     ExtendedIsolationState extendedIsolationState;
     ProbationTime          probEndTime;
     CountedString          failureUrl;
-  }IsolationInfoEx;
+  } IsolationInfoEx;
 
   typedef struct tagNapComponentRegistrationInfo {
     NapComponentId id;
@@ -167,17 +169,17 @@ typedef enum tagFailureCategory {
     CLSID          configClsid;
     FILETIME       registrationDate;
     UINT32         componentType;
-  }NapComponentRegistrationInfo;
+  } NapComponentRegistrationInfo;
 
   typedef struct tagPrivateData {
     UINT16 size;
     BYTE * data;
-  }PrivateData;
+  } PrivateData;
 
   typedef struct tagNetworkSoH {
     UINT16 size;
     BYTE * data;
-  }NetworkSoH, NetworkSoHRequest, NetworkSoHResponse;
+  } NetworkSoH, NetworkSoHRequest, NetworkSoHResponse;
 
   typedef struct tagSystemHealthAgentState {
     SystemHealthEntityId id;
@@ -204,5 +206,8 @@ typedef struct _NAPI_PROVIDER_INSTALLATION_BLOB {
 #ifdef __cplusplus
 }
 #endif
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
-#endif _INC_NAPTYPES
+
+#endif /* _INC_NAPTYPES */
+
