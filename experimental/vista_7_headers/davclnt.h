@@ -5,6 +5,7 @@
  */
 #ifndef _INC_DAVCLNT
 #define _INC_DAVCLNT
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -129,8 +130,10 @@ VOID WINAPI DavUnregisterAuthCallback(
   OPAQUE_HANDLE hCallback
 );
 
+#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #ifdef __cplusplus
 }
 #endif
-#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_DAVCLNT*/
