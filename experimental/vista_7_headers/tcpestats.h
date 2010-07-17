@@ -5,6 +5,7 @@
  */
 #ifndef _INC_TCPESTATS
 #define _INC_TCPESTATS
+
 #if (_WIN32_WINNT >= 0x0600)
 
 #ifdef __cplusplus
@@ -209,5 +210,8 @@ typedef enum _TCP_BOOLEAN_OPTIONAL {
 #ifdef __cplusplus
 }
 #endif
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_TCPESTATS*/
+
