@@ -39,7 +39,7 @@ typedef struct _DOCEVENT_CREATEDCPRE {
     PWSTR       pszDriver;
     PWSTR       pszDevice;
     PDEVMODEW   pdm;
-    BOOL        bIC;
+    WINBOOL     bIC;
 } DOCEVENT_CREATEDCPRE, *PDCEVENT_CREATEDCPRE;
 typedef struct _DOCEVENT_ESCAPE {
     int    iEscape;
@@ -107,8 +107,8 @@ int WINAPI DrvDocumentEvent(HANDLE,HDC,int,ULONG,PVOID,ULONG,PVOID);
 
 #define PRINTER_EVENT_FLAG_NO_UI 1
 
-BOOL WINAPI DrvDriverEvent(DWORD, DWORD, LPBYTE, LPARAM);
-BOOL WINAPI DrvPrinterEvent(LPWSTR, INT, DWORD, LPARAM);
+WINBOOL WINAPI DrvDriverEvent(DWORD, DWORD, LPBYTE, LPARAM);
+WINBOOL WINAPI DrvPrinterEvent(LPWSTR, INT, DWORD, LPARAM);
 
 #ifdef __cplusplus
 } /* extern "C" */
