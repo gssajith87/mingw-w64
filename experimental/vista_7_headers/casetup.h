@@ -5,12 +5,15 @@
  */
 #ifndef _INC_CASETUP
 #define _INC_CASETUP
-#if (_WIN32_WINNT >= 0x0600)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#if (_WIN32_WINNT >= 0x0600)
+
 typedef enum _CASetupProperty {
-  ENUM_SETUPPROP_INVALID              = 1,
+  ENUM_SETUPPROP_INVALID              = -1,
   ENUM_SETUPPROP_CATYPE               = 0,
   ENUM_SETUPPROP_CAKEYINFORMATION     = 1,
   ENUM_SETUPPROP_INTERACTIVE          = 2,
@@ -27,7 +30,7 @@ typedef enum _CASetupProperty {
   ENUM_SETUPPROP_PARENTCANAME         = 13,
   ENUM_SETUPPROP_REQUESTFILE          = 14,
   ENUM_SETUPPROP_WEBCAMACHINE         = 15,
-  ENUM_SETUPPROP_WEBCANAME            = 16 
+  ENUM_SETUPPROP_WEBCANAME            = 16
 } CASetupProperty;
 
 typedef enum _MSCEPSetupProperty {
@@ -44,11 +47,13 @@ typedef enum _MSCEPSetupProperty {
   ENUM_CEPSETUPPROP_EXCHANGEKEYINFORMATION   = 10,
   ENUM_CEPSETUPPROP_CAINFORMATION            = 11,
   ENUM_CEPSETUPPROP_MSCEPURL                 = 12,
-  ENUM_CEPSETUPPROP_CHALLENGEURL             = 13 
+  ENUM_CEPSETUPPROP_CHALLENGEURL             = 13
 } MSCEPSetupProperty;
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus
 }
 #endif
-#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_CASETUP*/
