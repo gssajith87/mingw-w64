@@ -5,7 +5,9 @@
  */
 #ifndef _INC_MSRDC
 #define _INC_MSRDC
+
 #if (_WIN32_WINNT >= 0x0600)
+
 typedef LPVOID SimilarityFileIndexT;
 
 typedef enum _GeneratorParametersType {
@@ -308,4 +310,6 @@ DECLARE_INTERFACE_(ISimilarity,IUnknown)
 #endif /*COBJMACROS*/
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
-#endif _INC_MSRDC
+
+#endif /* _INC_MSRDC */
+

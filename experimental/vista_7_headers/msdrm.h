@@ -44,5 +44,7 @@ HRESULT DRMRegisterProtectedWindow(
 #ifdef __cplusplus
 }
 #endif
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_NDHELPER*/

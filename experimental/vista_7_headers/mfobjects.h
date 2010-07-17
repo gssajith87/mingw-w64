@@ -1332,5 +1332,7 @@ HRESULT WINAPI RemoteRequestSample();
 #if (_WIN32_WINNT >= 0x0601)
 HRESULT WINAPI MFGetPluginControl(IMFPluginControl **ppPluginControl);
 #endif /*(_WIN32_WINNT >= 0x0601)*/
+
 #endif /*(_WIN32_WINNT >= 0x0600)*/
-#endif /*_INC_EVR*/
+
+#endif /* _INC_MFOBJECTS */

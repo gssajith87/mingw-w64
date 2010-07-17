@@ -163,6 +163,7 @@ DECLARE_INTERFACE_(IMFTransform,IUnknown)
 
     END_INTERFACE
 };
+
 #ifdef COBJMACROS
 #define IMFTransform_QueryInterface(This,riid,ppvObject) (This)->pVtbl->QueryInterface(This,riid,ppvObject)
 #define IMFTransform_AddRef(This) (This)->pVtbl->AddRef(This)
@@ -203,4 +204,5 @@ HRESULT WINAPI MFCreateTransformActivate(IMFActivate **ppActivate);
 #endif /*(_WIN32_WINNT >= 0x0601)*/
 
 #endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_MFTRANSFORM*/
