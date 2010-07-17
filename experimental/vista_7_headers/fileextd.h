@@ -76,7 +76,7 @@ typedef struct _FILE_ID_DESCRIPTOR{
 typedef enum _FILE_ID_TYPE {
   FileIdType,
   ObjectIdType,
-  MaximumFileIdType 
+  MaximumFileIdType
 } FILE_ID_TYPE, *PFILE_ID_TYPE;
 
 typedef enum _FILE_INFO_BY_HANDLE_CLASS {
@@ -148,9 +148,10 @@ WINBOOL WINAPI SetFileInformationByHandle(
   DWORD dwBufferSize
 );
 
-#endif /*(_WIN32_WINNT < 0x0600)*/
-
 #ifdef __cplusplus
 }
 #endif
+
+#endif /*(_WIN32_WINNT < 0x0600)*/
+
 #endif /*_INC_FILEEXTD*/
