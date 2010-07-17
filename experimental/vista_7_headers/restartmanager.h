@@ -5,12 +5,12 @@
  */
 #ifndef _INC_RESTARTMANAGER
 #define _INC_RESTARTMANAGER
+
 #if (_WIN32_WINNT >= 0x0600)
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 typedef enum _RM_APP_STATUS {
   RmStatusUnknown          = 0x0,
@@ -21,7 +21,7 @@ typedef enum _RM_APP_STATUS {
   RmStatusErrorOnStop      = 0x10,
   RmStatusErrorOnRestart   = 0x20,
   RmStatusShutdownMasked   = 0x40,
-  RmStatusRestartMasked    = 0x80 
+  RmStatusRestartMasked    = 0x80
 } RM_APP_STATUS;
 
 typedef enum _RM_APP_TYPE {
@@ -31,20 +31,20 @@ typedef enum _RM_APP_TYPE {
   RmService       = 3,
   RmExplorer      = 4,
   RmConsole       = 5,
-  RmCritical      = 1000 
+  RmCritical      = 1000
 } RM_APP_TYPE;
 
 typedef enum _RM_FILTER_ACTION {
   RmInvalidFilterAction   = 0,
   RmNoRestart             = 1,
-  RmNoShutdown            = 2 
+  RmNoShutdown            = 2
 } RM_FILTER_ACTION;
 
 typedef enum _RM_FILTER_TRIGGER {
   RmFilterTriggerInvalid   = 0,
   RmFilterTriggerFile      = 1,
   RmFilterTriggerProcess   = 2,
-  RmFilterTriggerService   = 3 
+  RmFilterTriggerService   = 3
 } RM_FILTER_TRIGGER;
 
 typedef enum _RM_REBOOT_REASON {
@@ -53,12 +53,12 @@ typedef enum _RM_REBOOT_REASON {
   RmRebootReasonSessionMismatch    = 0x2,
   RmRebootReasonCriticalProcess    = 0x4,
   RmRebootReasonCriticalService    = 0x8,
-  RmRebootReasonDetectedSelf       = 0x10 
+  RmRebootReasonDetectedSelf       = 0x10
 } RM_REBOOT_REASON;
 
 typedef enum _RM_SHUTDOWN_TYPE {
   RmForceShutdown            = 0x1,
-  RmShutdownOnlyRegistered   = 0x10 
+  RmShutdownOnlyRegistered   = 0x10
 } RM_SHUTDOWN_TYPE;
 
 typedef struct _RM_UNIQUE_PROCESS {
@@ -160,7 +160,7 @@ DWORD WINAPI RmShutdown(
 DWORD WINAPI RmStartSession(
   DWORD *pSessionHandle,
   DWORD dwSessionFlags,
-  WCHAR strSessionKey[ ]
+  WCHAR strSessionKey[]
 );
 
 #ifdef __cplusplus
@@ -168,4 +168,6 @@ DWORD WINAPI RmStartSession(
 #endif
 
 #endif /* (_WIN32_WINNT >= 0x0600) */
+
 #endif /*_INC_RESTARTMANAGER*/
+
