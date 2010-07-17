@@ -8,6 +8,7 @@
 
 #include <_mingw.h>
 #include <bthsdpdef.h>
+
 #define BLUETOOTH_MAX_NAME_SIZE 248
 
 #ifdef __cplusplus
@@ -79,10 +80,10 @@ typedef struct _BTH_HCI_EVENT_INFO {
 
 typedef enum _BLUETOOTH_AUTHENTICATION_METHOD {
   BLUETOOTH_AUTHENTICATION_METHOD_LEGACY                 = 0x1,
-  BLUETOOTH_AUTHENTICATION_METHOD_OOB                    = ,
-  BLUETOOTH_AUTHENTICATION_METHOD_NUMERIC_COMPARISON     = ,
-  BLUETOOTH_AUTHENTICATION_METHOD_PASSKEY_NOTIFICATION   = ,
-  BLUETOOTH_AUTHENTICATION_METHOD_PASSKEY                =  
+  BLUETOOTH_AUTHENTICATION_METHOD_OOB,
+  BLUETOOTH_AUTHENTICATION_METHOD_NUMERIC_COMPARISON,
+  BLUETOOTH_AUTHENTICATION_METHOD_PASSKEY_NOTIFICATION,
+  BLUETOOTH_AUTHENTICATION_METHOD_PASSKEY
 } BLUETOOTH_AUTHENTICATION_METHOD;
 
 typedef enum _BLUETOOTH_IO_CAPABILITY {
@@ -90,7 +91,7 @@ typedef enum _BLUETOOTH_IO_CAPABILITY {
   BLUETOOTH_IO_CAPABILITY_DISPLAYYESNO      = 0x01,
   BLUETOOTH_IO_CAPABILITY_KEYBOARDONLY      = 0x02,
   BLUETOOTH_IO_CAPABILITY_NOINPUTNOOUTPUT   = 0x03,
-  BLUETOOTH_IO_CAPABILITY_UNDEFINED         = 0xff 
+  BLUETOOTH_IO_CAPABILITY_UNDEFINED         = 0xff
 } BLUETOOTH_IO_CAPABILITY;
 
 typedef enum _AUTHENTICATION_REQUIREMENTS {
@@ -100,7 +101,7 @@ typedef enum _AUTHENTICATION_REQUIREMENTS {
   MITMProtectionRequiredBonding             = 0x03,
   MITMProtectionNotRequiredGeneralBonding   = 0x04,
   MITMProtectionRequiredGeneralBonding      = 0x05,
-  MITMProtectionNotDefined                  = 0xff 
+  MITMProtectionNotDefined                  = 0xff
 } AUTHENTICATION_REQUIREMENTS;
 
 typedef struct _BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS {
@@ -417,11 +418,14 @@ typedef enum AUTHENTICATION_REQUIREMENTS {
   MITMProtectionRequiredBonding             = 0x03,
   MITMProtectionNotRequiredGeneralBonding   = 0x04,
   MITMProtectionRequiredGeneralBonding      = 0x05,
-  MITMProtectionNotDefined                  = 0xff 
+  MITMProtectionNotDefined                  = 0xff
 } AUTHENTICATION_REQUIREMENTS;
+
+#endif /*(_WIN32_WINNT >= 0x0600)*/
 
 #ifdef __cplusplus
 }
 #endif
-#endif /*(_WIN32_WINNT >= 0x0600)*/
+
 #endif /*_INC_BLUETOOTHAPIS*/
+
