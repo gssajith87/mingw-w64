@@ -5,10 +5,12 @@
  */
 #ifndef _INC_DHCPV6CSDK
 #define _INC_DHCPV6CSDK
-#if (_WIN32_WINNT >= 0x0600)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#if (_WIN32_WINNT >= 0x0600)
 
 typedef enum _StatusCode {
   STATUS_NO_ERROR,
@@ -28,7 +30,7 @@ typedef struct _DHCPV6CAPI_PARAMS {
   ULONG   OptionId;
   WINBOOL IsVendor;
   LPBYTE  Data;
-          nBytesData;
+  DWORD   nBytesData;
 } DHCPV6CAPI_PARAMS, *PDHCPV6CAPI_PARAMS, *LPDHCPV6CAPI_PARAMS;
 
 typedef struct _DHCPV6Prefix {
@@ -83,8 +85,11 @@ DWORD APIENTRY Dhcpv6RequestPrefix(
   LPDHCPV6PrefixLeaseInformation prefixleaseInfo,
   DWORD pdwTimeToWait
 );
+
+#endif /* (_WIN32_WINNT >= 0x0600) */
+
 #ifdef __cplusplus
 }
 #endif
-#endif /* (_WIN32_WINNT >= 0x0600) */
+
 #endif /*_INC_DHCPV6CSDK*/
