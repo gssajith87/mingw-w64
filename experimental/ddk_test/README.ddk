@@ -30,7 +30,7 @@ The individual files
     winsplp.h
 ... are from the ReactOS repo:
 svn://svn.reactos.org/reactos/trunk/reactos/include/psdk/
-... revision 48097.
+... revision 48102.
 They are dependencies of ddk headers. Of them, evntprov.h, ktmtypes.h,
 ksuuids.h are already merged back to our main headers as of rev. 2855.
 
