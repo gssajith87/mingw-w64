@@ -500,7 +500,7 @@ extern "C" {
 #define DMPUB_USER                     100
 
 #define MAKE_DMPUB_HIDEBIT(DMPub) (DWORD)(((DWORD)0x01 << ((DMPub) - 1)))
-#define IS_DMPUB_HIDDEN(dw, DMPub) (BOOL)((DWORD)(dw) & MAKE_DMPUB_HIDEBIT(DMPub))
+#define IS_DMPUB_HIDDEN(dw, DMPub) (WINBOOL)((DWORD)(dw) & MAKE_DMPUB_HIDEBIT(DMPub))
 
 #define OIEXTF_ANSI_STRING             0x0001
 
@@ -947,7 +947,7 @@ APIENTRY
 GetCPSUIUserData(
   HWND hDlg);
 
-BOOL
+WINBOOL
 APIENTRY
 SetCPSUIUserData(
   HWND hDlg,
@@ -957,7 +957,7 @@ SetCPSUIUserData(
 
 /* FIXME : These declarations doesn't exist in the official header */
 ULONG_PTR WINAPI GetPSTUIUserData(HWND);
-BOOL WINAPI SetPSTUIUserData(HWND, ULONG_PTR);
+WINBOOL WINAPI SetPSTUIUserData(HWND, ULONG_PTR);
 
 
 #ifdef __cplusplus

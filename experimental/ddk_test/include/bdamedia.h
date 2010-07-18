@@ -14,27 +14,27 @@ typedef struct _KSP_BDA_NODE_PIN {
 typedef struct _KSM_BDA_PIN
 {
     KSMETHOD    Method;
-    union
+    union DUMMYUNIONNAME
     {
         ULONG       PinId;
         ULONG       PinType;
-    };
+    } DUMMYUNIONNAME;
     ULONG       Reserved;
 } KSM_BDA_PIN, * PKSM_BDA_PIN;
 
 typedef struct _KSM_BDA_PIN_PAIR
 {
     KSMETHOD    Method;
-    union
+    union DUMMYUNIONNAME1
     {
         ULONG       InputPinId;
         ULONG       InputPinType;
-    };
-    union
+    } DUMMYUNIONNAME1;
+    union DUMMYUNIONNAME2
     {
         ULONG       OutputPinId;
         ULONG       OutputPinType;
-    };
+    } DUMMYUNIONNAME2;
 } KSM_BDA_PIN_PAIR, * PKSM_BDA_PIN_PAIR;
 
 /* ------------------------------------------------------------

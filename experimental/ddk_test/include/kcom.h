@@ -244,11 +244,11 @@ inline void __cdecl operator delete(
 #ifndef _GUID_OPERATORS_
 #define _GUID_OPERATORS_
 
-__inline BOOL operator==(const GUID& guidOne, const GUID& guidOther) {
+__inline WINBOOL operator==(const GUID& guidOne, const GUID& guidOther) {
   return IsEqualGUIDAligned(guidOne,guidOther);
 }
 
-__inline BOOL operator!=(const GUID& guidOne, const GUID& guidOther) {
+__inline WINBOOL operator!=(const GUID& guidOne, const GUID& guidOther) {
   return !(guidOne == guidOther);
 }
 
