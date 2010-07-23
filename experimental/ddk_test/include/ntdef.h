@@ -263,7 +263,7 @@
 #elif (_MSC_VER)
 #define FORCEINLINE __inline
 #else /* __GNUC__ */
-#define FORCEINLINE __inline__ __attribute__((always_inline))
+#define FORCEINLINE extern __inline__ __attribute__((always_inline))
 #endif
 #endif /* FORCEINLINE */
 
