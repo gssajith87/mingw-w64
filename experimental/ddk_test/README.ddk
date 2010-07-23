@@ -12,7 +12,7 @@ sources from the ReactOS project.
 
 The "ddk" directory is from the ReactOS repo
 svn://svn.reactos.org/reactos/trunk/reactos/include/ddk/
-... revision 48205.
+... revision 48211.
 
 The individual files
     atsmedia.h,
