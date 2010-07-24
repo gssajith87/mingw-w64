@@ -176,6 +176,10 @@
 
 #endif /* __ANONYMOUS_DEFINED */
 
+/* undefine UNALIGNED and UNALIGNED64 to avoid
+ * redefinition warnings against _mingw.h.  */
+#undef  UNALIGNED
+#undef  UNALIGNED64
 #if defined(_M_MRX000) || defined(_M_ALPHA) || defined(_M_PPC) || defined(_M_IA64) || defined(_M_AMD64)
 #define ALIGNMENT_MACHINE
 #define UNALIGNED __unaligned
