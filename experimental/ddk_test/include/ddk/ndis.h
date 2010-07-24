@@ -652,21 +652,6 @@ typedef CM_EISA_SLOT_INFORMATION NDIS_EISA_SLOT_INFORMATION, *PNDIS_EISA_SLOT_IN
 typedef CM_EISA_FUNCTION_INFORMATION NDIS_EISA_FUNCTION_INFORMATION, *PNDIS_EISA_FUNCTION_INFORMATION;
 typedef CM_PARTIAL_RESOURCE_LIST NDIS_RESOURCE_LIST, *PNDIS_RESOURCE_LIST;
 
-/* Hardware status codes (OID_GEN_HARDWARE_STATUS) */
-typedef enum _NDIS_HARDWARE_STATUS {
-  NdisHardwareStatusReady,
-  NdisHardwareStatusInitializing,
-  NdisHardwareStatusReset,
-  NdisHardwareStatusClosing,
-  NdisHardwareStatusNotReady
-} NDIS_HARDWARE_STATUS, *PNDIS_HARDWARE_STATUS;
-
-/* OID_GEN_GET_TIME_CAPS */
-typedef struct _GEN_GET_TIME_CAPS {
-  ULONG  Flags;
-  ULONG  ClockPrecision;
-} GEN_GET_TIME_CAPS, *PGEN_GET_TIME_CAPS;
-
 /* Flag bits */
 #define	READABLE_LOCAL_CLOCK                    0x00000001
 #define	CLOCK_NETWORK_DERIVED                   0x00000002
@@ -674,11 +659,6 @@ typedef struct _GEN_GET_TIME_CAPS {
 #define	RECEIVE_TIME_INDICATION_CAPABLE         0x00000008
 #define	TIMED_SEND_CAPABLE                      0x00000010
 #define	TIME_STAMP_CAPABLE                      0x00000020
-
-/* OID_GEN_GET_NETCARD_TIME */
-typedef struct _GEN_GET_NETCARD_TIME {
-  ULONGLONG  ReadTime;
-} GEN_GET_NETCARD_TIME, *PGEN_GET_NETCARD_TIME;
 
 /* NDIS packet filter bits (OID_GEN_CURRENT_PACKET_FILTER) */
 #define NDIS_PACKET_TYPE_DIRECTED               0x00000001
@@ -708,23 +688,6 @@ typedef struct _GEN_GET_NETCARD_TIME {
 #define	NDIS_MAC_OPTION_EOTX_INDICATION         0x00000020
 #define	NDIS_MAC_OPTION_8021P_PRIORITY          0x00000040
 #define NDIS_MAC_OPTION_RESERVED                0x80000000
-
-/* State of the LAN media (OID_GEN_MEDIA_CONNECT_STATUS) */
-typedef enum _NDIS_MEDIA_STATE {
-	NdisMediaStateConnected,
-	NdisMediaStateDisconnected
-} NDIS_MEDIA_STATE, *PNDIS_MEDIA_STATE;
-
-/* OID_GEN_SUPPORTED_GUIDS */
-typedef struct _NDIS_GUID {
-	GUID  Guid;
-	union {
-		NDIS_OID  Oid;
-		NDIS_STATUS  Status;
-	} u;
-	ULONG  Size;
-	ULONG  Flags;
-} NDIS_GUID, *PNDIS_GUID;
 
 #define	NDIS_GUID_TO_OID                  0x00000001
 #define	NDIS_GUID_TO_STATUS               0x00000002
@@ -822,15 +785,6 @@ typedef struct _NDIS_PACKET_OOB_DATA {
   NDIS_STATUS Status;
 } NDIS_PACKET_OOB_DATA, *PNDIS_PACKET_OOB_DATA;
 #endif
-
-typedef struct _NDIS_PM_PACKET_PATTERN {
-  ULONG  Priority;
-  ULONG  Reserved;
-  ULONG  MaskSize;
-  ULONG  PatternOffset;
-  ULONG  PatternSize;
-  ULONG  PatternFlags;
-} NDIS_PM_PACKET_PATTERN,  *PNDIS_PM_PACKET_PATTERN;
 
 /* Request types used by NdisRequest */
 typedef enum _NDIS_REQUEST_TYPE {
@@ -1059,19 +1013,6 @@ typedef enum _NDIS_PNP_DEVICE_STATE {
 #define NDIS_DEVICE_DISABLE_WAKE_ON_PATTERN_MATCH 0x00000100
 
 
-/* OID_GEN_NETWORK_LAYER_ADDRESSES */
-typedef struct _NETWORK_ADDRESS {
-  USHORT  AddressLength;
-  USHORT  AddressType;
-  UCHAR  Address[1];
-} NETWORK_ADDRESS, *PNETWORK_ADDRESS;
-
-typedef struct _NETWORK_ADDRESS_LIST {
-	LONG  AddressCount;
-	USHORT  AddressType;
-	NETWORK_ADDRESS  Address[1];
-} NETWORK_ADDRESS_LIST, *PNETWORK_ADDRESS_LIST;
-
 /* Protocol types supported by NDIS */
 #define	NDIS_PROTOCOL_ID_DEFAULT        0x00
 #define	NDIS_PROTOCOL_ID_TCP_IP         0x02
@@ -1079,18 +1020,6 @@ typedef struct _NETWORK_ADDRESS_LIST {
 #define	NDIS_PROTOCOL_ID_NBF            0x07
 #define	NDIS_PROTOCOL_ID_MAX            0x0F
 #define	NDIS_PROTOCOL_ID_MASK           0x0F
-
-/* OID_GEN_TRANSPORT_HEADER_OFFSET */
-typedef struct _TRANSPORT_HEADER_OFFSET {
-	USHORT  ProtocolType;
-	USHORT  HeaderOffset;
-} TRANSPORT_HEADER_OFFSET, *PTRANSPORT_HEADER_OFFSET;
-
-/* OID_GEN_CO_LINK_SPEED / OID_GEN_CO_MINIMUM_LINK_SPEED */
-typedef struct _NDIS_CO_LINK_SPEED {
-  ULONG  Outbound;
-  ULONG  Inbound;
-} NDIS_CO_LINK_SPEED, *PNDIS_CO_LINK_SPEED;
 
 typedef ULONG NDIS_AF, *PNDIS_AF;
 
