@@ -21,6 +21,8 @@
 #ifndef _NTDEF_
 #define _NTDEF_
 
+#include <_mingw.h>
+
 #if defined(__x86_64) && \
   !(defined(_X86_) || defined(__i386__) || defined(_IA64_))
 #if !defined(_AMD64_)
