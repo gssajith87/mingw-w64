@@ -54,10 +54,6 @@
 /* Approximate msg: %u System Processors [%u MB Memory] %Z */
 #define WINDOWS_NT_INFO_STRING_PLURAL	((ULONG)0x4000009dL)
 
-/* MessageId  : 0x4000009f */
-/* Approximate msg: \n\nReactOS is free software, covered by the GNU General Public License, */
-#define REACTOS_COPYRIGHT_NOTICE	((ULONG)0x4000009fL)
-
 /* MessageId  : 0x8000007f */
 /* Approximate msg: A problem has been detected and ReactOS has been shut down to prevent damage */
 #define BUGCHECK_MESSAGE_INTRO	((ULONG)0x8000007fL)
