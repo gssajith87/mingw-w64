@@ -38,7 +38,7 @@ The individual files
     bdamedia.h, bdatypes.h,
 ... are from the ReactOS repo:
 svn://svn.reactos.org/reactos/trunk/reactos/include/dxsdk/
-... revision 48328.
+... revision 48330.
 
 The bugcodes.mc file is from
 svn://svn.reactos.org/reactos/trunk/reactos/include/reactos/mc/
