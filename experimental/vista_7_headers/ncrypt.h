@@ -39,11 +39,11 @@ typedef LPVOID NCRYPT_KEY_HANDLE;
 typedef LPVOID NCRYPT_PROV_HANDLE;
 typedef LPVOID NCRYPT_SECRET_HANDLE;
 typedef LPVOID NCRYPT_HANDLE;
-typedef ULONG_PTR HCRYPTPROV;
 
 #ifndef __HCRYPTKEY__
 #define __HCRYPTKEY__
 /* In wincrypt.h too */
+  typedef ULONG_PTR HCRYPTPROV;
   typedef ULONG_PTR HCRYPTKEY;
 #endif
 
