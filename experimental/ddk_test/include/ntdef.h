@@ -109,66 +109,6 @@
 #endif /* NULL64 */
 
 
-//
-// FIXME
-// We should use the -fms-extensions compiler flag for gcc,
-// and clean up the mess.
-//
-#ifndef __ANONYMOUS_DEFINED
-#define __ANONYMOUS_DEFINED
-
-#ifndef NONAMELESSUNION
-#ifdef __GNUC__
-#define _ANONYMOUS_UNION __GNU_EXTENSION
-#define _ANONYMOUS_STRUCT __GNU_EXTENSION
-#elif defined(__WATCOMC__) || defined(_MSC_VER)
-#define _ANONYMOUS_UNION
-#define _ANONYMOUS_STRUCT
-#endif /* __GNUC__/__WATCOMC__ */
-#endif /* NONAMELESSUNION */
-
-#ifndef _ANONYMOUS_UNION
-#define _ANONYMOUS_UNION
-#define _UNION_NAME(x) x
-#define DUMMYUNIONNAME  u
-#define DUMMYUNIONNAME2 u2
-#define DUMMYUNIONNAME3 u3
-#define DUMMYUNIONNAME4 u4
-#define DUMMYUNIONNAME5 u5
-#define DUMMYUNIONNAME6 u6
-#define DUMMYUNIONNAME7 u7
-#define DUMMYUNIONNAME8 u8
-#else
-#define _UNION_NAME(x)
-#define DUMMYUNIONNAME
-#define DUMMYUNIONNAME2
-#define DUMMYUNIONNAME3
-#define DUMMYUNIONNAME4
-#define DUMMYUNIONNAME5
-#define DUMMYUNIONNAME6
-#define DUMMYUNIONNAME7
-#define DUMMYUNIONNAME8
-#endif
-
-#ifndef _ANONYMOUS_STRUCT
-#define _ANONYMOUS_STRUCT
-#define _STRUCT_NAME(x) x
-#define DUMMYSTRUCTNAME s
-#define DUMMYSTRUCTNAME2 s2
-#define DUMMYSTRUCTNAME3 s3
-#define DUMMYSTRUCTNAME4 s4
-#define DUMMYSTRUCTNAME5 s5
-#else
-#define _STRUCT_NAME(x)
-#define DUMMYSTRUCTNAME
-#define DUMMYSTRUCTNAME2
-#define DUMMYSTRUCTNAME3
-#define DUMMYSTRUCTNAME4
-#define DUMMYSTRUCTNAME5
-#endif
-
-#endif /* __ANONYMOUS_DEFINED */
-
 #undef  UNALIGNED	/* avoid redefinition warnings vs _mingw.h */
 #undef  UNALIGNED64
 #if defined(_M_MRX000) || defined(_M_ALPHA) || defined(_M_PPC) || defined(_M_IA64) || defined(_M_AMD64)
@@ -812,3 +752,4 @@ typedef struct _GROUP_AFFINITY {
 #define LANG_ZULU                                 0x35
 
 #endif /* _NTDEF_ */
+
