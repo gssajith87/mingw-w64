@@ -355,6 +355,12 @@ typedef enum  {
   D2D1_WINDOW_STATE_OCCLUDED   = 0x0000001 
 } D2D1_WINDOW_STATE;
 
+/* this is a hack so we can use forward declares in C (easier than reordering interfaces) */
+#if !defined(__cplusplus)
+#undef DECLARE_INTERFACE
+#define DECLARE_INTERFACE(iface) struct iface { struct iface##Vtbl *lpVtbl; }; typedef struct iface##Vtbl iface##Vtbl; struct iface##Vtbl
+#endif
+
 /* interface forward declares */
 
 typedef _COM_interface ID2D1Bitmap ID2D1Bitmap;
@@ -385,7 +391,6 @@ typedef _COM_interface ID2D1SolidColorBrush ID2D1SolidColorBrush;
 typedef _COM_interface ID2D1StrokeStyle ID2D1StrokeStyle;
 typedef _COM_interface ID2D1TessellationSink ID2D1TessellationSink;
 typedef _COM_interface ID2D1TransformedGeometry ID2D1TransformedGeometry;
-typedef _COM_interface IUnknown IUnknown;
 
 /* structures */
 
