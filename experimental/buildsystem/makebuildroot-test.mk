@@ -261,6 +261,7 @@ src/gmp/.gmp.extract.marker: \
     src/gmp/src/.mkdir.marker \
     src/patches/.patches.pull.marker
 	$(TAR) -C $(dir $@)/src --strip-components=1 -xjvf $<
+	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/20100730.patch
 	@touch $@
 
 ########################################
