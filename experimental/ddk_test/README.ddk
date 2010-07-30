@@ -44,10 +44,10 @@ svn://svn.reactos.org/reactos/trunk/reactos/include/reactos/mc/
 ... revision 47897 and it was used for generating the bugcodes.h
 header using the wmc tool from wine-1.2-rc5.
 
-All of these dependency headers are merged into the main headers in
-trunk (rev. 3016) and in v1.0 branch (rev. 3025).
-All of the new GUIDs defined in them are added to the crt build in
-trunk (rev. 3016) and in v1.0 branch (rev. 3025).
+All of these dependency headers are merged into the main headers
+in trunk and in v1.0 branch as of rev. 3045.
+All of the new GUIDs defined in them are added to the crt build
+in trunk and in v1.0 branch as of rev. 3045.
 
 
 How to install this SDK
