@@ -265,16 +265,15 @@ src/gmp/.gmp.extract.marker: \
 	@touch $@
 
 ########################################
-# Execute autoconf for gmp
+# Download mpfr
 ########################################
 
-gmp-autoconf: \
-    src/gmp/src/configure
+mpfr-download: \
+    src/mpfr.tar.bz2
 
-src/gmp/src/configure: \
-    src/gmp/.gmp.extract.marker
-	cd $(dir $@) && \
-	autoconf
+src/mpfr.tar.bz2: \
+    src/.mkdir.marker
+	$(WGET) $@ http://www.mpfr.org/mpfr-$(strip ${MPFR_VERSION})/mpfr-$(strip ${MPFR_VERSION}).tar.bz2
 
 ########################################
 # Extract mpfr
@@ -288,7 +287,7 @@ src/mpfr/.mpfr.extract.marker: \
     src/mpfr/src/.mkdir.marker \
     src/patches/.patches.pull.marker
 	$(TAR) -C $(dir $@)/src --strip-components=1 -xjvf $<
-	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/cumulative-2.4.2-p3
+	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr/20100730.patch
 	@touch $@
 
 ########################################
