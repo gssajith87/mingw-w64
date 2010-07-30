@@ -277,17 +277,6 @@ src/gmp/src/configure: \
 	autoconf
 
 ########################################
-# Download mpfr
-########################################
-
-mpfr-download: \
-    src/mpfr.tar.bz2
-
-src/mpfr.tar.bz2: \
-    src/.mkdir.marker
-	$(WGET) $@ http://www.mpfr.org/mpfr-$(strip ${MPFR_VERSION})/mpfr-$(strip ${MPFR_VERSION}).tar.bz2
-
-########################################
 # Extract mpfr
 ########################################
 
@@ -405,7 +394,7 @@ ifeq (,$(wildcard ${SRC_ARCHIVE}))
 ${SRC_ARCHIVE}: \
     src/binutils/.binutils.pull.marker \
     src/gcc/gcc/.gcc.pull.marker \
-    src/gmp/src/configure \
+    src/gmp/.gmp.extract.marker \
     src/mpfr/.mpfr.extract.marker \
     src/mpc/.mpc.extract.marker \
     src/ppl/.ppl.extract.marker \
@@ -1735,7 +1724,6 @@ TARGETS := \
   gcc-pull \
   gmp-download \
   gmp-extract \
-  gmp-autoconf \
   mpfr-download \
   mpfr-extract \
   mpc-download \
