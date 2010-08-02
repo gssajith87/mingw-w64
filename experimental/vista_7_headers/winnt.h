@@ -5469,11 +5469,11 @@ typedef struct _TOKEN_AUDIT_POLICY {
 
     typedef union _SLIST_HEADER {
       ULONGLONG Alignment;
-      struct {
+      __MINGW_EXTENSION struct {
 	SLIST_ENTRY Next;
 	WORD Depth;
 	WORD Sequence;
-      };
+      } DUMMYSTRUCTNAME;
     } SLIST_HEADER,*PSLIST_HEADER;
 #endif /* _WIN64 */
 #endif /* _SLIST_HEADER_ */
