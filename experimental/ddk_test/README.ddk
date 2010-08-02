@@ -13,6 +13,7 @@ sources from the ReactOS project.
 The "ddk" directory is from the ReactOS repo
 svn://svn.reactos.org/reactos/trunk/reactos/include/ddk/
 ... revision 48370.
+For now, wdm.h and mce.h have some local edits.
 
 The individual files
     atsmedia.h,
