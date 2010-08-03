@@ -35,7 +35,7 @@ extern "C" {
 
 typedef struct _ACPI_EVAL_INPUT_BUFFER {
   ULONG Signature;
-  union {
+  _ANONYMOUS_UNION union {
     UCHAR MethodName[4];
     ULONG MethodNameAsUlong;
   } DUMMYUNIONNAME;
@@ -43,7 +43,7 @@ typedef struct _ACPI_EVAL_INPUT_BUFFER {
 
 typedef struct _ACPI_EVAL_INPUT_BUFFER_SIMPLE_INTEGER {
   ULONG Signature;
-  union {
+  _ANONYMOUS_UNION union {
     UCHAR MethodName[4];
     ULONG MethodNameAsUlong;
   } DUMMYUNIONNAME;
@@ -52,7 +52,7 @@ typedef struct _ACPI_EVAL_INPUT_BUFFER_SIMPLE_INTEGER {
 
 typedef struct _ACPI_EVAL_INPUT_BUFFER_SIMPLE_STRING {
   ULONG Signature;
-  union {
+  _ANONYMOUS_UNION union {
     UCHAR MethodName[4];
     ULONG MethodNameAsUlong;
   } DUMMYUNIONNAME;
@@ -63,7 +63,7 @@ typedef struct _ACPI_EVAL_INPUT_BUFFER_SIMPLE_STRING {
 typedef struct _ACPI_METHOD_ARGUMENT {
   USHORT Type;
   USHORT DataLength;
-  union {
+  _ANONYMOUS_UNION union {
     ULONG Argument;
     UCHAR Data[ANYSIZE_ARRAY];
   } DUMMYUNIONNAME;
@@ -72,7 +72,7 @@ typedef ACPI_METHOD_ARGUMENT UNALIGNED *PACPI_METHOD_ARGUMENT;
 
 typedef struct _ACPI_EVAL_INPUT_BUFFER_COMPLEX {
   ULONG Signature;
-  union {
+  _ANONYMOUS_UNION union {
     UCHAR MethodName[4];
     ULONG MethodNameAsUlong;
   } DUMMYUNIONNAME;

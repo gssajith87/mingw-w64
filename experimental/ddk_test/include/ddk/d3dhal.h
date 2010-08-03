@@ -241,19 +241,19 @@ typedef struct _D3DHAL_CALLBACKS3 {
  * parameter structures
  */
 typedef struct _D3DHAL_CONTEXTCREATEDATA {
-  union {
+  _ANONYMOUS_UNION union {
     LPDDRAWI_DIRECTDRAW_GBL	lpDDGbl; /* pre-DirectX 7 */
     LPDDRAWI_DIRECTDRAW_LCL	lpDDLcl; /* DirectX 7 */
   } DUMMYUNIONNAME1;
-  union {
+  _ANONYMOUS_UNION union {
     LPDIRECTDRAWSURFACE		lpDDS;
     LPDDRAWI_DDRAWSURFACE_LCL	lpDDSLcl; /* DirectX 7 */
   } DUMMYUNIONNAME2;
-  union {
+  _ANONYMOUS_UNION union {
     LPDIRECTDRAWSURFACE		lpDDSZ;
     LPDDRAWI_DDRAWSURFACE_LCL	lpDDSZLcl; /* DirectX 7 */
   } DUMMYUNIONNAME3;
-  union {
+  _ANONYMOUS_UNION union {
     DWORD			dwPID;
     ULONG_PTR			dwrstates;
   } DUMMYUNIONNAME4;
@@ -282,11 +282,11 @@ typedef struct _D3DHAL_SCENECAPTUREDATA {
 
 typedef struct _D3DHAL_SETRENDERTARGETDATA {
   ULONG_PTR			dwhContext;
-  union {
+  _ANONYMOUS_UNION union {
     LPDIRECTDRAWSURFACE		lpDDS;
     LPDDRAWI_DDRAWSURFACE_LCL	lpDDSLcl;
   } DUMMYUNIONNAME1;
-  union {
+  _ANONYMOUS_UNION union {
     LPDIRECTDRAWSURFACE		lpDDSZ;
     LPDDRAWI_DDRAWSURFACE_LCL	lpDDSZLcl;
   } DUMMYUNIONNAME2;
@@ -300,7 +300,7 @@ typedef struct _D3DHAL_DRAWPRIMITIVES2DATA {
   LPDDRAWI_DDRAWSURFACE_LCL	lpDDCommands;
   DWORD				dwCommandOffset;
   DWORD				dwCommandLength;
-  union {
+  _ANONYMOUS_UNION union {
     LPDDRAWI_DDRAWSURFACE_LCL	lpDDVertex;
     LPVOID			lpVertices;
   } DUMMYUNIONNAME1;
@@ -309,7 +309,7 @@ typedef struct _D3DHAL_DRAWPRIMITIVES2DATA {
   DWORD				dwReqVertexBufSize;
   DWORD				dwReqCommandBufSize;
   LPDWORD			lpdwRStates;
-  union {
+  _ANONYMOUS_UNION union {
     DWORD			dwVertexSize;
     HRESULT			ddrval;
   } DUMMYUNIONNAME2;
@@ -331,7 +331,7 @@ typedef struct _D3DHAL_DRAWPRIMITIVES2DATA {
 typedef struct _D3DHAL_DP2COMMAND {
   BYTE bCommand;
   BYTE bReserved;
-  union {
+  _ANONYMOUS_UNION union {
     WORD wPrimitiveCount;
     WORD wStateCount;
   } DUMMYUNIONNAME;
@@ -500,7 +500,7 @@ typedef struct _D3DHAL_DP2TRIANGLEFAN_IMM {
 /* render states */
 typedef struct _D3DHAL_DP2RENDERSTATE {
   D3DRENDERSTATETYPE	RenderState;
-  union {
+  _ANONYMOUS_UNION union {
     D3DVALUE dvState;
     DWORD dwState;
   } DUMMYUNIONNAME;
