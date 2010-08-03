@@ -2130,16 +2130,16 @@ typedef struct _DDRAWI_DDRAWCLIPPER_LCL
     LPDDRAWI_DIRECTDRAW_LCL   lpDD_lcl;
     DWORD                     dwLocalRefCnt;
 #ifndef _NO_COM
-    IUnknown                  *pUnkOuter;
+    IUnknown *                pUnkOuter;
 #else
-    PVOID                     *pUnkOuter;
+    PVOID                     pUnkOuter;
 #endif
     LPDDRAWI_DIRECTDRAW_INT   lpDD_int;
     ULONG_PTR                 dwReserved1;
 #ifndef _NO_COM
     IUnknown *                pAddrefedThisOwner;
 #else
-	PVOID                     pAddrefedThisOwner;
+    PVOID                     pAddrefedThisOwner;
 #endif
 } DDRAWI_DDRAWCLIPPER_LCL;
 
