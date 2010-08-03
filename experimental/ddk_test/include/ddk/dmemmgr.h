@@ -54,7 +54,7 @@ typedef struct _VMEML
   struct _VMEML *next;
   FLATPTR ptr;
   DWORD size;
-  BOOL bDiscardable;
+  WINBOOL bDiscardable;
 } VMEML, *LPVMEML, *LPLPVMEML;
 
 typedef struct _VMEMR
@@ -74,7 +74,7 @@ typedef struct _VMEMR
   DWORD cy;
   DWORD flags;
   FLATPTR pBits;
-  BOOL bDiscardable;
+  WINBOOL bDiscardable;
 } VMEMR,  *LPVMEMR,  *LPLPVMEMR;
 
 typedef struct _SURFACEALIGNMENT

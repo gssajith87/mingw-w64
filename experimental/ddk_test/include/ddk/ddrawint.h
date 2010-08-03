@@ -297,7 +297,7 @@ typedef struct _DD_BLTDATA
 	DDBLTFX                       bltFX;
 	HRESULT                       ddRVal;
 	PVOID                         Blt;
-	BOOL                          IsClipped;
+	WINBOOL                       IsClipped;
 	RECTL                         rOrigDest;
 	RECTL                         rOrigSrc;
 	DWORD                         dwRectCnt;
@@ -340,7 +340,7 @@ typedef struct _DD_SETPALETTEDATA
 	PDD_PALETTE_GLOBAL            lpDDPalette;
 	HRESULT                       ddRVal;
 	PVOID                         SetPalette;
-	BOOL                          Attach;
+	WINBOOL                       Attach;
 } DD_SETPALETTEDATA, *PDD_SETPALETTEDATA;
 typedef DWORD (WINAPI *PDD_SURFCB_SETPALETTE)(PDD_SETPALETTEDATA);
 
@@ -506,7 +506,7 @@ typedef struct _DD_CREATEPALETTEDATA
 	LPPALETTEENTRY           lpColorTable;
 	HRESULT                  ddRVal;
 	PVOID                    CreatePalette;
-	BOOL                     is_excl;
+	WINBOOL                  is_excl;
 } DD_CREATEPALETTEDATA, *PDD_CREATEPALETTEDATA;
 typedef DWORD (WINAPI *PDD_CREATEPALETTE)(PDD_CREATEPALETTEDATA);
 
@@ -522,7 +522,7 @@ typedef DWORD (WINAPI *PDD_GETSCANLINE)(PDD_GETSCANLINEDATA);
 typedef struct _DD_MAPMEMORYDATA
 {
 	PDD_DIRECTDRAW_GLOBAL    lpDD;
-	BOOL                     bMap;
+	WINBOOL                  bMap;
 	HANDLE                   hProcess;
 	FLATPTR                  fpProcess;
 	HRESULT                  ddRVal;
@@ -795,7 +795,7 @@ typedef struct _DD_GETVPORTFIELDDATA
 {
 	PDD_DIRECTDRAW_LOCAL           lpDD;
 	PDD_VIDEOPORT_LOCAL            lpVideoPort;
-	BOOL                           bField;
+	WINBOOL                        bField;
 	HRESULT                        ddRVal;
 	PVOID                          GetVideoPortField;
 } DD_GETVPORTFIELDDATA, *PDD_GETVPORTFIELDDATA;
@@ -1332,7 +1332,7 @@ typedef struct _DD_STEREOMODE
     DWORD dwWidth;
     DWORD dwBpp;
     DWORD dwRefreshRate;
-    BOOL bSupported;
+    WINBOOL bSupported;
 } DD_STEREOMODE, *PDD_STEREOMODE;
 
 typedef struct _DD_MORECAPS

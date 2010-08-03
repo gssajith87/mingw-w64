@@ -169,7 +169,7 @@ typedef struct _DDRAWI_DDMOTIONCOMP_LCL *LPDDRAWI_DDMOTIONCOMP_LCL;
 /*****************************************************************************
  * driver->ddraw callbacks
  */
-typedef BOOL    (DDAPI *LPDDHAL_SETINFO)(LPDDHALINFO lpDDHalInfo, BOOL reset);
+typedef WINBOOL (DDAPI *LPDDHAL_SETINFO)(LPDDHALINFO lpDDHalInfo, WINBOOL reset);
 typedef FLATPTR (DDAPI *LPDDHAL_VIDMEMALLOC)(LPDDRAWI_DIRECTDRAW_GBL lpDD, int heap, DWORD dwWidth, DWORD dwHeight);
 typedef void    (DDAPI *LPDDHAL_VIDMEMFREE)(LPDDRAWI_DIRECTDRAW_GBL lpDD, int heap, FLATPTR fpMem);
 
@@ -816,8 +816,8 @@ typedef struct _DDHAL_SETMODEDATA {
     DWORD			dwModeIndex;
     HRESULT			ddRVal;
     LPDDHAL_SETMODE		SetMode;
-    BOOL			inexcl;
-    BOOL			useRefreshRate;
+    WINBOOL			inexcl;
+    WINBOOL			useRefreshRate;
 } DDHAL_SETMODEDATA;
 
 typedef struct _DDHAL_CREATESURFACEDATA {
@@ -843,7 +843,7 @@ typedef struct _DDHAL_CREATEPALETTEDATA {
     LPPALETTEENTRY		lpColorTable;
     HRESULT			ddRVal;
     LPDDHAL_CREATEPALETTE	CreatePalette;
-    BOOL			is_excl;
+    WINBOOL			is_excl;
 } DDHAL_CREATEPALETTEDATA;
 
 typedef struct _DDHAL_SETEXCLUSIVEMODEDATA {
@@ -902,7 +902,7 @@ typedef struct _DDHAL_BLTDATA {
     DDBLTFX			bltFX;
     HRESULT			ddRVal;
     LPDDHALSURFCB_BLT		Blt;
-    BOOL			IsClipped;
+    WINBOOL			IsClipped;
     RECTL			rOrigDest;
     RECTL			rOrigSrc;
     DWORD			dwRectCnt;
@@ -915,7 +915,7 @@ typedef struct _DDHAL_SETPALETTEDATA {
     LPDDRAWI_DDRAWPALETTE_GBL	lpDDPalette;
     HRESULT			ddRVal;
     LPDDHALSURFCB_SETPALETTE	SetPalette;
-    BOOL			Attach;
+    WINBOOL			Attach;
 } DDHAL_SETPALETTEDATA;
 
 /* palettes */
@@ -982,7 +982,7 @@ typedef struct _DDHAL_GETVPORTFIELDDATA
 {
     LPDDRAWI_DIRECTDRAW_LCL  lpDD;
     LPDDRAWI_DDVIDEOPORT_LCL lpVideoPort;
-    BOOL                     bField;
+    WINBOOL                  bField;
     HRESULT                  ddRVal;
     LPDDHALVPORTCB_GETFIELD  GetVideoPortField;
 } DDHAL_GETVPORTFIELDDATA;
@@ -1163,7 +1163,7 @@ typedef struct _DDSTEREOMODE
     DWORD dwWidth;
     DWORD dwBpp;
     DWORD dwRefreshRate;
-    BOOL bSupported;
+    WINBOOL bSupported;
 
 } DDSTEREOMODE, * LPDDSTEREOMODE;
 
@@ -2156,7 +2156,7 @@ typedef struct _DDRAWI_DDRAWCLIPPER_GBL
     LPRGNDATA                 lpStaticClipList;
 } DDRAWI_DDRAWCLIPPER_GBL;
 
-typedef BOOL    (PASCAL *LPDDHEL_INIT)(LPDDRAWI_DIRECTDRAW_GBL,BOOL);
+typedef WINBOOL (PASCAL *LPDDHEL_INIT)(LPDDRAWI_DIRECTDRAW_GBL,WINBOOL);
 
 extern HRESULT DDAPI
        LateAllocateSurfaceMem(

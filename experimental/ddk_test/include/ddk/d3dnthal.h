@@ -117,7 +117,7 @@ typedef struct _D3DNTHALDeviceDesc_V1
 	D3DCOLORMODEL    dcmColorModel;
 	DWORD            dwDevCaps;
 	D3DTRANSFORMCAPS dtcTransformCaps;
-	BOOL             bClipping;
+	WINBOOL          bClipping;
 	D3DLIGHTINGCAPS  dlcLightingCaps;
 	D3DPRIMCAPS      dpcLineCaps;
 	D3DPRIMCAPS      dpcTriCaps;

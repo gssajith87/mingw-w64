@@ -18,9 +18,9 @@ typedef struct
 
 typedef struct
 {
-    BOOL CopyProtect;
+    WINBOOL CopyProtect;
     ULONG Reserved;
-    BOOL DigitalOutputDisable;
+    WINBOOL DigitalOutputDisable;
 } DRMRIGHTS, *PDRMRIGHTS;
 
 typedef const DRMRIGHTS *PCDRMRIGHTS;

@@ -120,7 +120,7 @@ typedef struct _DDVIDEOPORTINFO
 typedef struct _DDVIDEOPORTSTATUS
 {
     DWORD dwSize;
-    BOOL bInUse;
+    WINBOOL bInUse;
     DWORD dwFlags;
     DWORD dwReserved1;
     DDVIDEOPORTCONNECT VideoPortType;

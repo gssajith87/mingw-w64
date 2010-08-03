@@ -156,7 +156,7 @@ typedef struct _DDGETAUTOFLIPOUT
   DWORD  ddRVal;
   HANDLE  hVideoSurface;
   HANDLE  hVBISurface;
-  BOOL  bPolarity;
+  WINBOOL  bPolarity;
 } DDGETAUTOFLIPOUT, *LPDDGETAUTOFLIPOUT;
 
 typedef struct _DDGETPOLARITYIN
@@ -168,7 +168,7 @@ typedef struct _DDGETPOLARITYIN
 typedef struct _DDGETPOLARITYOUT
 {
   DWORD  ddRVal;
-  BOOL  bPolarity;
+  WINBOOL  bPolarity;
 } DDGETPOLARITYOUT, *LPDDGETPOLARITYOUT;
 
 typedef struct _DDGETSURFACESTATEIN
