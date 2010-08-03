@@ -3204,9 +3204,9 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
   ULONG64 R14;
   ULONG64 R15;
   ULONG64 Rip;
-  union {
+  _ANONYMOUS_UNION union {
     XMM_SAVE_AREA32 FltSave;
-    struct {
+    _ANONYMOUS_STRUCT struct {
       M128A Header[2];
       M128A Legacy[8];
       M128A Xmm0;
