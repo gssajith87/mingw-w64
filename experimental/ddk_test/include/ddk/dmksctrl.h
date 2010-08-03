@@ -37,7 +37,5 @@ DECLARE_INTERFACE_(IKsControl, IUnknown)
     ) PURE;
 };
 
-#endif
-
-
+#endif /* _IKsControl_ */
 
