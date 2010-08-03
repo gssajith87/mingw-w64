@@ -15,41 +15,6 @@ svn://svn.reactos.org/reactos/trunk/reactos/include/ddk/
 ... revision 48370.
 For now, wdm.h and mce.h have some local edits.
 
-The individual files
-    atsmedia.h,
-    compstui.h,
-    devioctl.h, devpropdef.h,
-    dpfilter.h,
-    evntprov.h,
-    ktmtypes.h, kcom.h, ksdebug.h, ksuuids.h,
-    lmon.h, netevent.h, nettypes.h, newdev.h,
-    ntdef.h, ntiologc.h,
-    ntddchgr.h, ntddkbd.h, ntddmou.h, ntddstor.h,
-    usb100.h, usb200.h, usbcamdi.h, usbdi.h, usb.h,
-    usbioctl.h, usbiodef.h, usbrpmif.h, usbuser.h,
-    winddi.h, winddiui.h,
-    winsplp.h
-... are from the ReactOS repo:
-svn://svn.reactos.org/reactos/trunk/reactos/include/psdk/
-... revision 48277.
-They are dependencies of ddk headers.
-
-The individual files
-    bdamedia.h, bdatypes.h,
-... are from the ReactOS repo:
-svn://svn.reactos.org/reactos/trunk/reactos/include/dxsdk/
-... revision 48330.
-
-The bugcodes.mc file is from
-svn://svn.reactos.org/reactos/trunk/reactos/include/reactos/mc/
-... revision 47897 and it was used for generating the bugcodes.h
-header using the wmc tool from wine-1.2-rc5.
-
-All of these dependency headers are merged into the main headers
-in trunk and in v1.0 branch as of rev. 3045.
-All of the new GUIDs defined in them are added to the crt build
-in trunk and in v1.0 branch as of rev. 3045.
-
 
 How to install this SDK
 ----------------------------------
