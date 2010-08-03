@@ -37,3 +37,4 @@
 #define STI_DEVICE_VALUE_DISABLE_NOTIFICATIONS_A    "DisableNotifications"
 #define REGSTR_VAL_BAUDRATE_A                       "BaudRate"
 #endif
+

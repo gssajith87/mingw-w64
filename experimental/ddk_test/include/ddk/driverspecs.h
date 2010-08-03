@@ -27,3 +27,4 @@
 #define __inout
 
 #define __deref_out_ecount(Size)
+

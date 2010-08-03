@@ -1,6 +1,3 @@
-
-
-
 #ifndef _STIERR_
 #define _STIERR_
 

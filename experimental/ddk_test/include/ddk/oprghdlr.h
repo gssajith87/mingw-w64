@@ -1,7 +1,7 @@
 #include "wdm.h"
 
 #ifdef EXPORT
-  #undef EXPORT
+#undef EXPORT
 #endif
 #define EXPORT  __cdecl
 
@@ -41,3 +41,4 @@ DeRegisterOpRegionHandler (IN PDEVICE_OBJECT DeviceObject,
 #define ACPI_OPREGION_READ                     0x0
 #define ACPI_OPREGION_WRITE                    0x1
 #define ACPI_OPREGION_ACCESS_AT_HIGH_LEVEL     0x1
+

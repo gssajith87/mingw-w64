@@ -1,5 +1,4 @@
 
-
 #ifndef _D3DHALEX_H
 #define _D3DHALEX_H
 #define D3DGDI_IS_GDI2(pData)               ((((DD_GETDRIVERINFO2DATA*)(pData->lpvData))->dwMagic)  == D3DGDI2_MAGIC)
