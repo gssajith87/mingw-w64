@@ -2613,7 +2613,6 @@ extern NTKERNELAPI PEPROCESS PsInitialSystemProcess;
  *                           Runtime Library Types                            *
  ******************************************************************************/
 
-
 #ifndef _RTL_RUN_ONCE_DEF
 #define _RTL_RUN_ONCE_DEF
 
@@ -3101,10 +3100,6 @@ KeGetCurrentProcessorNumber(VOID)
 }
 
 
-
-
-
-
 extern NTKERNELAPI PVOID MmHighestUserAddress;
 extern NTKERNELAPI PVOID MmSystemRangeStart;
 extern NTKERNELAPI ULONG MmUserProbeAddress;
@@ -3239,40 +3234,37 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
 #define PCR_MINOR_VERSION 1
 #define PCR_MAJOR_VERSION 1
 
-typedef struct _KPCR
-{
-    _ANONYMOUS_UNION union
-    {
-        NT_TIB NtTib;
-        _ANONYMOUS_STRUCT struct
-        {
-            union _KGDTENTRY64 *GdtBase;
-            struct _KTSS64 *TssBase;
-            ULONG64 UserRsp;
-            struct _KPCR *Self;
-            struct _KPRCB *CurrentPrcb;
-            PKSPIN_LOCK_QUEUE LockArray;
-            PVOID Used_Self;
-        };
+typedef struct _KPCR {
+  _ANONYMOUS_UNION union {
+    NT_TIB NtTib;
+    _ANONYMOUS_STRUCT struct {
+      union _KGDTENTRY64 *GdtBase;
+      struct _KTSS64 *TssBase;
+      ULONG64 UserRsp;
+      struct _KPCR *Self;
+      struct _KPRCB *CurrentPrcb;
+      PKSPIN_LOCK_QUEUE LockArray;
+      PVOID Used_Self;
     };
-    union _KIDTENTRY64 *IdtBase;
-    ULONG64 Unused[2];
-    KIRQL Irql;
-    UCHAR SecondLevelCacheAssociativity;
-    UCHAR ObsoleteNumber;
-    UCHAR Fill0;
-    ULONG Unused0[3];
-    USHORT MajorVersion;
-    USHORT MinorVersion;
-    ULONG StallScaleFactor;
-    PVOID Unused1[3];
-    ULONG KernelReserved[15];
-    ULONG SecondLevelCacheSize;
-    ULONG HalReserved[16];
-    ULONG Unused2;
-    PVOID KdVersionBlock;
-    PVOID Unused3;
-    ULONG PcrAlign1[24];
+  };
+  union _KIDTENTRY64 *IdtBase;
+  ULONG64 Unused[2];
+  KIRQL Irql;
+  UCHAR SecondLevelCacheAssociativity;
+  UCHAR ObsoleteNumber;
+  UCHAR Fill0;
+  ULONG Unused0[3];
+  USHORT MajorVersion;
+  USHORT MinorVersion;
+  ULONG StallScaleFactor;
+  PVOID Unused1[3];
+  ULONG KernelReserved[15];
+  ULONG SecondLevelCacheSize;
+  ULONG HalReserved[16];
+  ULONG Unused2;
+  PVOID KdVersionBlock;
+  PVOID Unused3;
+  ULONG PcrAlign1[24];
 } KPCR, *PKPCR;
 
 FORCEINLINE
@@ -4768,6 +4760,8 @@ PsSetCreateProcessNotifyRoutineEx(
   IN PCREATE_PROCESS_NOTIFY_ROUTINE_EX NotifyRoutine,
   IN BOOLEAN Remove);
 #endif /* (NTDDI_VERSION >= NTDDI_VISTASP1) */
+
+
 /******************************************************************************
  *                         Runtime Library Functions                          *
  ******************************************************************************/

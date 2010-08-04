@@ -14,23 +14,23 @@ typedef struct _ROOTHUB_PDO_EXTENSION {
   ULONG Signature;
 } ROOTHUB_PDO_EXTENSION, *PROOTHUB_PDO_EXTENSION;
 
-#define USBD_DEVHACK_SLOW_ENUMERATION   0x00000001
-#define USBD_DEVHACK_DISABLE_SN         0x00000002
-#define USBD_DEVHACK_SET_DIAG_ID        0x00000004
+#define USBD_DEVHACK_SLOW_ENUMERATION	0x00000001
+#define USBD_DEVHACK_DISABLE_SN		0x00000002
+#define USBD_DEVHACK_SET_DIAG_ID	0x00000004
 
 #ifndef USB_BUSIFFN
 #define USB_BUSIFFN __stdcall
 #endif
 
-#define CD_ERR_V1       0x00000001
+#define CD_ERR_V1			0x00000001
 
-#define ID_ERR_V1       0x00000001
+#define ID_ERR_V1			0x00000001
 
-#define USBD_KEEP_DEVICE_DATA   0x00000001
-#define USBD_MARK_DEVICE_BUSY   0x00000002
+#define USBD_KEEP_DEVICE_DATA		0x00000001
+#define USBD_MARK_DEVICE_BUSY		0x00000002
 
-#define USB_IDLE_NOT_READY                      0
-#define USB_IDLE_READY                          1
+#define USB_IDLE_NOT_READY		0
+#define USB_IDLE_READY			1
 
 typedef
 NTSTATUS
@@ -56,12 +56,12 @@ typedef enum _USBPORT_CREATEDEV_ERROR {
 } USBPORT_CREATEDEV_ERROR;
 
 typedef struct _USB_CD_ERROR_INFORMATION {
-  ULONG  Version;
-  USBPORT_CREATEDEV_ERROR  PathError;
-  ULONG  UlongArg1;
-  ULONG  UlongArg2;
-  NTSTATUS  NtStatus;
-  UCHAR  XtraInfo[64];
+  ULONG Version;
+  USBPORT_CREATEDEV_ERROR PathError;
+  ULONG UlongArg1;
+  ULONG UlongArg2;
+  NTSTATUS NtStatus;
+  UCHAR XtraInfo[64];
 } USB_CD_ERROR_INFORMATION, *PUSB_CD_ERROR_INFORMATION;
 
 typedef
@@ -445,21 +445,21 @@ USB_BUSIFFN_ABORT_ALL_DEVICE_PIPES (
 
 typedef USB_BUSIFFN_ABORT_ALL_DEVICE_PIPES *PUSB_BUSIFFN_ABORT_ALL_DEVICE_PIPES;
 
-#define ERRATA_FLAG_RESET_TT_ON_CANCEL              1
-#define ERRATA_FLAG_NO_CLEAR_TT_BUFFER_ON_CANCEL    2
+#define ERRATA_FLAG_RESET_TT_ON_CANCEL			1
+#define ERRATA_FLAG_NO_CLEAR_TT_BUFFER_ON_CANCEL	2
 
-#define USB_BUSIF_HUB_VERSION_0         0x0000
-#define USB_BUSIF_HUB_VERSION_1         0x0001
-#define USB_BUSIF_HUB_VERSION_2         0x0002
-#define USB_BUSIF_HUB_VERSION_3         0x0003
-#define USB_BUSIF_HUB_VERSION_4         0x0004
-#define USB_BUSIF_HUB_VERSION_5         0x0005
-#define USB_BUSIF_HUB_VERSION_6         0x0006
-#define USB_BUSIF_HUB_VERSION_7         0x0007
+#define USB_BUSIF_HUB_VERSION_0		0x0000
+#define USB_BUSIF_HUB_VERSION_1		0x0001
+#define USB_BUSIF_HUB_VERSION_2		0x0002
+#define USB_BUSIF_HUB_VERSION_3		0x0003
+#define USB_BUSIF_HUB_VERSION_4		0x0004
+#define USB_BUSIF_HUB_VERSION_5		0x0005
+#define USB_BUSIF_HUB_VERSION_6		0x0006
+#define USB_BUSIF_HUB_VERSION_7		0x0007
 
-#define USB_BUSIF_HUB_MIDUMP_VERSION_0  0x0000
+#define USB_BUSIF_HUB_MIDUMP_VERSION_0	0x0000
 
-#define USB_BUSIF_HUB_SS_VERSION_0      0x0000
+#define USB_BUSIF_HUB_SS_VERSION_0	0x0000
 
 typedef
 VOID
@@ -667,7 +667,7 @@ typedef struct _USB_BUS_INTERFACE_HUB_V7 {
 } USB_BUS_INTERFACE_HUB_V7, *PUSB_BUS_INTERFACE_HUB_V7;
 
 DEFINE_GUID(USB_BUS_INTERFACE_HUB_MINIDUMP_GUID,
-0xc5485f21, 0x4e81, 0x4a23, 0xa8, 0xf9, 0xd8, 0x51, 0x8a, 0xf4, 0x5c, 0x38);
+	0xc5485f21, 0x4e81, 0x4a23, 0xa8, 0xf9, 0xd8, 0x51, 0x8a, 0xf4, 0x5c, 0x38);
 
 typedef VOID
 (USB_BUSIFFN *PUSB_BUSIFFN_SET_MINIDUMP_FLAGS) (
@@ -683,7 +683,7 @@ typedef struct _USB_BUS_INTERFACE_HUB_MINIDUMP {
 } USB_BUS_INTERFACE_HUB_MINIDUMP, *PUSB_BUS_INTERFACE_HUB_MINIDUMP;
 
 DEFINE_GUID(USB_BUS_INTERFACE_HUB_SS_GUID, 
-0xbfc3f363, 0x8ba1, 0x4c7b, 0x97, 0xba, 0x9b, 0x12, 0xb1, 0xca, 0x13, 0x2f);
+	0xbfc3f363, 0x8ba1, 0x4c7b, 0x97, 0xba, 0x9b, 0x12, 0xb1, 0xca, 0x13, 0x2f);
 
 typedef NTSTATUS
 (USB_BUSIFFN *PUSB_BUSIFFN_SUSPEND_HUB) (
@@ -694,8 +694,8 @@ typedef NTSTATUS
   PDEVICE_OBJECT Pdo);
 
 typedef struct _USB_BUS_INTERFACE_HUB_SELECTIVE_SUSPEND {
-  USHORT  Size;
-  USHORT  Version;
+  USHORT Size;
+  USHORT Version;
   PVOID  BusContext;
   PINTERFACE_REFERENCE  InterfaceReference;
   PINTERFACE_DEREFERENCE  InterfaceDereference;
@@ -724,7 +724,7 @@ typedef struct _USB_DEVICE_INFORMATION_0 {
   UCHAR  DD_pad[2];
   UCHAR  CurrentConfigurationValue;
   UCHAR  ReservedMBZ;
-  USHORT  DeviceAddress;
+  USHORT DeviceAddress;
   ULONG  HubAddress;
   USB_DEVICE_SPEED  DeviceSpeed;
   USB_DEVICE_TYPE  DeviceType;
@@ -735,15 +735,15 @@ typedef struct _USB_DEVICE_INFORMATION_0 {
 typedef struct _USB_CONTROLLER_INFORMATION_0 {
   ULONG  InformationLevel;
   ULONG  ActualLength;
-  BOOLEAN  SelectiveSuspendEnabled;
-  BOOLEAN  IsHighSpeedController;
+  BOOLEAN SelectiveSuspendEnabled;
+  BOOLEAN IsHighSpeedController;
 } USB_CONTROLLER_INFORMATION_0, *PUSB_CONTROLLER_INFORMATION_0;
 
 typedef struct _USB_CONTROLLER_INFORMATION_1 {
   ULONG  InformationLevel;
   ULONG  ActualLength;
-  BOOLEAN  SelectiveSuspendEnabled;
-  BOOLEAN  IsHighSpeedController;
+  BOOLEAN SelectiveSuspendEnabled;
+  BOOLEAN IsHighSpeedController;
   ULONG  HcBusNumber;
   ULONG  HcBusDevice;
   ULONG  HcBusFunction;
@@ -752,8 +752,8 @@ typedef struct _USB_CONTROLLER_INFORMATION_1 {
 typedef struct _USB_EXTPORT_INFORMATION_0 {
   ULONG  PhysicalPortNumber;
   ULONG  PortLabelNumber;
-  USHORT  VidOverride;
-  USHORT  PidOverride;
+  USHORT VidOverride;
+  USHORT PidOverride;
   ULONG  PortAttributes;
 } USB_EXTPORT_INFORMATION_0, *PUSB_EXTPORT_INFORMATION;
 
@@ -785,4 +785,5 @@ typedef struct _USB_DEVICE_PERFORMANCE_INFO_0 {
 
 #include <poppack.h>
 
-#endif
+#endif /* NTDDI_VERSION >= NTDDI_WINXP */
+

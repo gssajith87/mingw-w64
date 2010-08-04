@@ -114,8 +114,8 @@
     WAVE_CTL_CODE(0x0010, METHOD_BUFFERED, FILE_WRITE_ACCESS)
 
 #if DBG
-    /* Debug-only control code */
-    #define IOCTL_WAVE_SET_DEBUG_LEVEL \
+/* Debug-only control code */
+#define IOCTL_WAVE_SET_DEBUG_LEVEL \
         WAVE_CTL_CODE(0x0040, METHOD_BUFFERED, FILE_READ_ACCESS)
 #endif
 
@@ -152,8 +152,8 @@
     MIDI_CTL_CODE(0x0009, METHOD_BUFFERED, FILE_WRITE_ACCESS)
 
 #if DBG
-    /* Debug-only control code */
-    #define IOCTL_MIDI_SET_DEBUG_LEVEL \
+/* Debug-only control code */
+#define IOCTL_MIDI_SET_DEBUG_LEVEL \
         WAVE_CTL_CODE(0x0040, METHOD_BUFFERED, FILE_READ_ACCESS)
 #endif
 
@@ -299,4 +299,5 @@ typedef struct _AUX_DD_VOLUME
 } AUX_DD_VOLUME, *PAUX_DD_VOLUME;
 
 
-#endif
+#endif /* NTDDSND_H */
+

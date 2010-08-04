@@ -30,9 +30,9 @@ extern "C" {
 #endif
 
 #if defined(_HIDPI_)
-  #define HIDAPI
+# define HIDAPI
 #else
-  #define HIDAPI DECLSPEC_IMPORT
+# define HIDAPI DECLSPEC_IMPORT
 #endif
 
 typedef PUCHAR PHIDP_REPORT_DESCRIPTOR;

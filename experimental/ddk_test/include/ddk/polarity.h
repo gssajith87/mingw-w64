@@ -9,15 +9,17 @@
  */
 
 #ifndef POLARITY_HEADERFILE_IS_INCLUDED
-    #define POLARITY_HEADERFILE_IS_INCLUDED
+#define POLARITY_HEADERFILE_IS_INCLUDED
 
-    #ifdef USE_POLARITY
-        #ifdef BUILDING_DLL
-            #define POLARITY __declspec( dllexport )
-        #else
-            #define POLARITY __declspec( dllimport )
-        #endif
-    #else
-        #define POLARITY
-    #endif
+#ifdef USE_POLARITY
+#  ifdef BUILDING_DLL
+#    define POLARITY __declspec( dllexport )
+#  else
+#    define POLARITY __declspec( dllimport )
+#  endif
+#else
+#  define POLARITY
 #endif
+
+#endif /* POLARITY_HEADERFILE_IS_INCLUDED */
+

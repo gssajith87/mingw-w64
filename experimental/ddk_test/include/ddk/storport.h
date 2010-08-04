@@ -30,9 +30,9 @@ extern "C" {
 #endif
 
 #if defined(_STORPORT_)
-  #define STORPORTAPI
+#define STORPORTAPI
 #else
-  #define STORPORTAPI DECLSPEC_IMPORT
+#define STORPORTAPI DECLSPEC_IMPORT
 #endif
 
 

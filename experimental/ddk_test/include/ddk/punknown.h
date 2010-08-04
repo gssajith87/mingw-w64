@@ -21,7 +21,7 @@ extern "C" {
 #include <basetyps.h>
 
 #ifdef PUT_GUIDS_HERE
-    #include <initguid.h>
+#include <initguid.h>
 #endif
 
 
@@ -86,4 +86,5 @@ typedef HRESULT (NTAPI *PFNCREATEINSTANCE)(
     IN  PUNKNOWN OuterUnknown,
     IN  POOL_TYPE PoolType);
 
-#endif
+#endif /* _UNKNOWN_H_ */
+

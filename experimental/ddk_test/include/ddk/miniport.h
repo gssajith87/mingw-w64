@@ -51,7 +51,7 @@ typedef VOID
   IN ULONG  ReadBank,
   IN ULONG  WriteBank,
   IN PVOID  Context);
-  
+
 #ifndef __BROKEN__
 
 typedef enum _INTERFACE_TYPE {
@@ -231,13 +231,12 @@ typedef struct _IO_RESOURCE_DESCRIPTOR {
             PHYSICAL_ADDRESS MaximumAddress;
         } Memory64;
 
-
     } u;
 
 } IO_RESOURCE_DESCRIPTOR, *PIO_RESOURCE_DESCRIPTOR;
 
 #include <guiddef.h>
-#endif
+#endif /* ! __BROKEN__ */
 
 #ifdef __cplusplus
 }

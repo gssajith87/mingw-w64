@@ -43,7 +43,6 @@
 #define IMAGE_FILE_MACHINE_CEF        0x0CEF
 
 
-
 //
 // DOS Image Header Format
 //
@@ -72,7 +71,6 @@ typedef struct _IMAGE_DOS_HEADER {
 #include <poppack.h>
 
 
-
 //
 // Export/Import Format
 //
@@ -92,7 +90,6 @@ typedef struct _IMAGE_EXPORT_DIRECTORY {
 } IMAGE_EXPORT_DIRECTORY, *PIMAGE_EXPORT_DIRECTORY;
 
 
-
 //
 // Resource Data Entry Format
 //
@@ -102,7 +99,6 @@ typedef struct _IMAGE_RESOURCE_DATA_ENTRY {
     ULONG CodePage;
     ULONG Reserved;
 } IMAGE_RESOURCE_DATA_ENTRY, *PIMAGE_RESOURCE_DATA_ENTRY;
-
 
 
 //
@@ -172,7 +168,6 @@ typedef struct _IMAGE_BASE_RELOCATION {
 } IMAGE_BASE_RELOCATION, *PIMAGE_BASE_RELOCATION;
 
 
-
 //
 // Resource Format
 //
@@ -189,7 +184,6 @@ typedef struct _IMAGE_RESOURCE_DIRECTORY_STRING {
     USHORT Length;
     CHAR NameString[ANYSIZE_ARRAY];
 } IMAGE_RESOURCE_DIRECTORY_STRING, *PIMAGE_RESOURCE_DIRECTORY_STRING;
-
 
 
 //
@@ -232,7 +226,6 @@ typedef struct _IMAGE_SECTION_HEADER {
 #define IMAGE_SCN_MEM_WRITE                  0x80000000
 
 
-
 //
 // File Header Format
 //
@@ -268,7 +261,6 @@ typedef struct _IMAGE_FILE_HEADER {
 #define IMAGE_FILE_BYTES_REVERSED_HI         0x8000
 
 
-
 //
 // Directory format.
 //
@@ -278,7 +270,6 @@ typedef struct _IMAGE_DATA_DIRECTORY {
     ULONG   VirtualAddress;
     ULONG   Size;
 } IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
-
 
 
 //
@@ -386,7 +377,6 @@ typedef PIMAGE_OPTIONAL_HEADER32            PIMAGE_OPTIONAL_HEADER;
 #endif
 
 
-
 //
 // Nt Header Formats
 //
@@ -462,7 +452,6 @@ typedef PIMAGE_NT_HEADERS32                 PIMAGE_NT_HEADERS;
 #define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14
 
 
-
 //
 // Import Formats
 //
@@ -497,7 +486,6 @@ typedef struct _IMAGE_THUNK_DATA32 {
 #define IMAGE_ORDINAL32(Ordinal) (Ordinal & 0xffff)
 #define IMAGE_SNAP_BY_ORDINAL64(Ordinal) ((Ordinal & IMAGE_ORDINAL_FLAG64) != 0)
 #define IMAGE_SNAP_BY_ORDINAL32(Ordinal) ((Ordinal & IMAGE_ORDINAL_FLAG32) != 0)
-
 
 
 //
@@ -561,5 +549,5 @@ typedef struct _IMAGE_IMPORT_DESCRIPTOR {
 #include <poppack.h>
 
 
+#endif /* _NTIMAGE_ */
 
-#endif

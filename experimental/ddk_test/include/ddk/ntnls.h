@@ -2,10 +2,10 @@
 #ifndef _NTNLS_
 #define _NTNLS_
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #define MAXIMUM_LEADBYTES 12
 
 /* Some documentation can be found here: http://www.ping.uio.no/~ovehk/nls/ */
@@ -36,4 +36,6 @@ typedef struct _NLSTABLEINFO
 #ifdef __cplusplus
 }
 #endif
-#endif
+
+#endif /* _NTNLS_ */
+

@@ -128,10 +128,10 @@
 #ifdef __cplusplus
 extern "C"
 {
-    #include <wdm.h>
+# include <wdm.h>
 }
 #else
-    #include <wdm.h>
+# include <wdm.h>
 #endif
 
 #include <windef.h>
@@ -148,10 +148,10 @@ extern "C"
 #ifdef __cplusplus
 extern "C"
 {
-    #include <wdm.h>
+# include <wdm.h>
 }
 #else
-    #include <wdm.h>
+# include <wdm.h>
 #endif
 
 #ifndef PC_NO_IMPORTS
@@ -2445,4 +2445,5 @@ PcGetContentRights(
     OUT PDRMRIGHTS DrmRights);
 
 
-#endif
+#endif /* PORTCLS_H */
+

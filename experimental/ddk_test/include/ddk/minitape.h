@@ -22,15 +22,6 @@
 #ifndef __MINITAPE_H
 #define __MINITAPE_H
 
-/* Helper macro to enable gcc's extension.  */
-#ifndef __GNU_EXTENSION
-#ifdef __GNUC__
-#define __GNU_EXTENSION __extension__
-#else
-#define __GNU_EXTENSION
-#endif
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif

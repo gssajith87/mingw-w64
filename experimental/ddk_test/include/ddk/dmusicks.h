@@ -7,33 +7,30 @@
 typedef LONGLONG REFERENCE_TIME;
 #endif
 
-typedef struct _DMUS_KERNEL_EVENT
-{
-    BYTE bReserved;
-    BYTE cbStruct;
-    USHORT cbEvent;
-    USHORT usChannelGroup;
-    USHORT usFlags;
-    REFERENCE_TIME ullPresTime100ns;
-    ULONGLONG ullBytePosition;
-    struct _DMUS_KERNEL_EVENT *pNextEvt;
-    union
-    {
-        BYTE abData[sizeof(PBYTE)];
-        PBYTE pbData;
-        struct _DMUS_KERNEL_EVENT *pPackageEvt;
-    }uData;
-}DMUS_KERNEL_EVENT, *PDMUS_KERNEL_EVENT;
+typedef struct _DMUS_KERNEL_EVENT {
+  BYTE bReserved;
+  BYTE cbStruct;
+  USHORT cbEvent;
+  USHORT usChannelGroup;
+  USHORT usFlags;
+  REFERENCE_TIME ullPresTime100ns;
+  ULONGLONG ullBytePosition;
+  struct _DMUS_KERNEL_EVENT *pNextEvt;
+  union {
+    BYTE abData[sizeof(PBYTE)];
+    PBYTE pbData;
+    struct _DMUS_KERNEL_EVENT *pPackageEvt;
+  } uData;
+} DMUS_KERNEL_EVENT, *PDMUS_KERNEL_EVENT;
 
-typedef enum
-{
-    DMUS_STREAM_MIDI_INVALID = -1,
-    DMUS_STREAM_MIDI_RENDER = 0,
-    DMUS_STREAM_MIDI_CAPTURE,
-    DMUS_STREAM_WAVE_SINK
-}DMUS_STREAM_TYPE;
+typedef enum {
+  DMUS_STREAM_MIDI_INVALID = -1,
+  DMUS_STREAM_MIDI_RENDER = 0,
+  DMUS_STREAM_MIDI_CAPTURE,
+  DMUS_STREAM_WAVE_SINK
+} DMUS_STREAM_TYPE;
 
-DEFINE_GUID(CLSID_MiniportDriverDMusUART, 0xd3f0ce1c, 0xFFFC, 0x11D1, 0x81, 0xB0, 0x00, 0x60, 0x08, 0x33, 0x16, 0xC1);
+DEFINE_GUID(CLSID_MiniportDriverDMusUART,        0xd3f0ce1c, 0xFFFC, 0x11D1, 0x81, 0xB0, 0x00, 0x60, 0x08, 0x33, 0x16, 0xC1);
 DEFINE_GUID(CLSID_MiniportDriverDMusUARTCapture, 0xD3F0CE1D, 0xFFFC, 0x11D1, 0x81, 0xB0, 0x00, 0x60, 0x08, 0x33, 0x16, 0xC1);
 
 /* ===============================================================
@@ -206,7 +203,6 @@ DECLARE_INTERFACE_(IMiniportDMus, IMiniport)
     DEFINE_ABSTRACT_UNKNOWN()
 
     DEFINE_ABSTRACT_MINIPORT()
-  
 
     STDMETHOD_(NTSTATUS,Init)(THIS_
         IN      PUNKNOWN        UnknownAdapter,
@@ -258,4 +254,5 @@ typedef IMiniportDMus *PMINIPORTDMUS;
         OUT     PULONGLONG        SchedulePreFetch     \
     )
 
-#endif
+#endif /* _DMUSICKS_ */
+

@@ -6,10 +6,9 @@
 #define IOCTL_SWENUM_GET_BUS_ID CTL_CODE(FILE_DEVICE_BUS_EXTENDER, 0x002, METHOD_NEITHER, FILE_READ_ACCESS)
 
 typedef struct _SWENUM_INSTALL_INTERFACE {
-    GUID    DeviceId;
-    GUID    InterfaceId;
-    WCHAR  ReferenceString[1];
-    
+  GUID   DeviceId;
+  GUID   InterfaceId;
+  WCHAR  ReferenceString[1];
 } SWENUM_INSTALL_INTERFACE, *PSWENUM_INSTALL_INTERFACE;
 
 #if defined(_KS_)
@@ -18,27 +17,23 @@ typedef struct _SWENUM_INSTALL_INTERFACE {
 #else
 #define STATIC_BUSID_SoftwareDeviceEnumerator \
     0x4747B320L, 0x62CE, 0x11CF, 0xA5, 0xD6, 0x28, 0xDB, 0x04, 0xC1, 0x00, 0x00
-#endif
+#endif /* _KS_ */
 
 #if defined(_NTDDK_)
 
-
 #if !defined(_KS_)
-
 typedef VOID (NTAPI *PFNREFERENCEDEVICEOBJECT)(PVOID Context);
 typedef VOID (NTAPI *PFNDEREFERENCEDEVICEOBJECT)(PVOID Context);
 typedef NTSTATUS (NTAPI *PFNQUERYREFERENCESTRING)(PVOID Context, PWCHAR *String);
-
-#endif
+#endif /* _KS_ */
 
 #define BUS_INTERFACE_SWENUM_VERSION    0x100
 
-typedef struct _BUS_INTERFACE_SWENUM
-{
-    INTERFACE Interface;
-    PFNREFERENCEDEVICEOBJECT ReferenceDeviceObject;
-    PFNDEREFERENCEDEVICEOBJECT DereferenceDeviceObject;
-    PFNQUERYREFERENCESTRING QueryReferenceString;
+typedef struct _BUS_INTERFACE_SWENUM {
+  INTERFACE Interface;
+  PFNREFERENCEDEVICEOBJECT ReferenceDeviceObject;
+  PFNDEREFERENCEDEVICEOBJECT DereferenceDeviceObject;
+  PFNQUERYREFERENCESTRING QueryReferenceString;
 } BUS_INTERFACE_SWENUM, *PBUS_INTERFACE_SWENUM;
 
 #if defined(__cplusplus)
@@ -143,11 +138,13 @@ KsGetBusEnumParentFDOFromChildPDO(
     OUT PDEVICE_OBJECT *FunctionalDeviceObject
 );
 
-#endif
+#endif /* _KS_ */
 
 #if defined(__cplusplus)
 }
 #endif
-#endif
-#endif
+
+#endif /* _NTDDK_ */
+
+#endif /* _SWENUM_ */
 

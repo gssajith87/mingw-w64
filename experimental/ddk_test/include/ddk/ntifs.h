@@ -904,13 +904,12 @@ typedef struct _COMPRESSED_DATA_INFO {
   ULONG CompressedChunkSizes[ANYSIZE_ARRAY];
 } COMPRESSED_DATA_INFO, *PCOMPRESSED_DATA_INFO;
 #endif
+
 /******************************************************************************
  *                         Runtime Library Functions                          *
  ******************************************************************************/
 
-
 #if (NTDDI_VERSION >= NTDDI_WIN2K)
-
 
 NTSYSAPI
 PVOID
@@ -1466,8 +1465,6 @@ RtlInitCodePageTable(
 
 #if (NTDDI_VERSION >= NTDDI_WINXP)
 
-
-
 NTSYSAPI
 PVOID
 NTAPI
@@ -1651,7 +1648,7 @@ RtlFillMemoryUlong (
       if ((Length -= 1) == 0) {
         return;
       }
-    Address += 1;
+      Address += 1;
     }
     __stosq((PULONG64)(Address), Pattern | ((ULONG64)Pattern << 32), Length / 2);
     if ((Length & 1) != 0) Address[Length - 1] = Pattern;
@@ -1812,7 +1809,6 @@ RtlCompareAltitudes(
   IN PCUNICODE_STRING Altitude1,
   IN PCUNICODE_STRING Altitude2);
 
-
 #endif /* (NTDDI_VERSION >= NTDDI_VISTA) */
 
 #if (NTDDI_VERSION >= NTDDI_WIN7)
@@ -1859,7 +1855,6 @@ RtlCreateVirtualAccountSid(
 
 
 #if defined(_AMD64_) || defined(_IA64_)
-
 
 
 #endif /* defined(_AMD64_) || defined(_IA64_) */
@@ -2180,7 +2175,7 @@ NtFreeVirtualMemory(
   IN OUT PSIZE_T RegionSize,
   IN ULONG FreeType);
 
-#endif
+#endif /* (NTDDI_VERSION >= NTDDI_WIN2K) */
 
 #if (NTDDI_VERSION >= NTDDI_WINXP)
 
@@ -2421,7 +2416,7 @@ NtCreateSection(
   IN ULONG AllocationAttributes,
   IN HANDLE FileHandle OPTIONAL);
 
-#endif
+#endif /* (NTDDI_VERSION >= NTDDI_WINXP) */
 
 #define COMPRESSION_FORMAT_NONE         (0x0000)
 #define COMPRESSION_FORMAT_DEFAULT      (0x0001)
@@ -4907,7 +4902,6 @@ KeAcquireSpinLockRaiseToSynch(
 
 #if (NTDDI_VERSION >= NTDDI_WINXP)
 
-
 _DECL_HAL_KE_IMPORT
 KIRQL
 FASTCALL
@@ -4929,8 +4923,6 @@ KeTryToAcquireQueuedSpinLock(
   OUT PKIRQL OldIrql);
 
 #endif /* (NTDDI_VERSION >= NTDDI_WINXP) */
-
-
 
 
 
@@ -4960,10 +4952,10 @@ KeRemoveQueueEx (
 
 #define EX_PUSH_LOCK ULONG_PTR
 #define PEX_PUSH_LOCK PULONG_PTR
+
 /******************************************************************************
  *                          Executive Functions                               *
  ******************************************************************************/
-
 
 #define ExDisableResourceBoost ExDisableResourceBoostLite
 
@@ -5007,7 +4999,6 @@ InterlockedPushListSList(
  ******************************************************************************/
 
 #if (NTDDI_VERSION >= NTDDI_WIN2K)
-
 
 NTKERNELAPI
 VOID
@@ -5844,7 +5835,6 @@ IoGetRequestorSessionId(
 
 #if (NTDDI_VERSION >= NTDDI_WINXP)
 
-
 NTKERNELAPI
 PFILE_OBJECT
 NTAPI
@@ -5892,7 +5882,6 @@ IoGetDiskDeviceObject(
 
 #if (NTDDI_VERSION >= NTDDI_WS03SP1)
 
-
 NTKERNELAPI
 NTSTATUS
 NTAPI
@@ -5918,7 +5907,6 @@ IoInitializePriorityInfo(
 #endif /* (NTDDI_VERSION >= NTDDI_VISTA) */
 
 #if (NTDDI_VERSION >= NTDDI_WIN7)
-
 
 NTKERNELAPI
 NTSTATUS
@@ -5953,9 +5941,11 @@ NTAPI
 PoQueueShutdownWorkItem(
   IN OUT PWORK_QUEUE_ITEM WorkItem);
 #endif
+
 /******************************************************************************
  *                         Memory manager Types                               *
  ******************************************************************************/
+
 typedef enum _MMFLUSH_TYPE {
   MmFlushForDelete,
   MmFlushForWrite
@@ -6084,7 +6074,6 @@ MmSetAddressRangeModified(
 #endif /* (NTDDI_VERSION >= NTDDI_WIN2K) */
 
 #if (NTDDI_VERSION >= NTDDI_WINXP)
-
 
 NTKERNELAPI
 NTSTATUS
@@ -8476,11 +8465,11 @@ CcCopyWriteWontFlush(
         CcScheduleReadAhead((FO), (FOFF), (LEN));   \
     }                                               \
 )
+
+
 /******************************************************************************
  *                            ZwXxx Functions                                 *
  ******************************************************************************/
-
-
 
 NTSYSAPI
 NTSTATUS
@@ -8773,6 +8762,7 @@ ZwFlushBuffersFile(
   IN HANDLE FileHandle,
   OUT PIO_STATUS_BLOCK IoStatusBlock);
 #endif /* (NTDDI_VERSION >= NTDDI_VISTA) */
+
 #if (NTDDI_VERSION >= NTDDI_WIN7)
 
 NTSYSAPI

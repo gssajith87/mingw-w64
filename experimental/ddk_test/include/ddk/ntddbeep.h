@@ -2,7 +2,6 @@
 #ifndef _NTDDBEEP_
 #define _NTDDBEEP_
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,12 +14,13 @@ extern "C" {
 
 typedef struct _BEEP_SET_PARAMETERS
 {
-   ULONG Frequency;
-   ULONG Duration;
+  ULONG Frequency;
+  ULONG Duration;
 } BEEP_SET_PARAMETERS, *PBEEP_SET_PARAMETERS;
 
 #ifdef __cplusplus
 }
 #endif
-#endif
+
+#endif /* _NTDDBEEP_ */
 

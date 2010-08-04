@@ -28,9 +28,9 @@ extern "C" {
 #endif
 
 #if !defined(SMBCLASS)
-  #define SMBCLASSAPI DECLSPEC_IMPORT
+#define SMBCLASSAPI DECLSPEC_IMPORT
 #else
-  #define SMBCLASSAPI
+#define SMBCLASSAPI
 #endif
 
 #define SMB_BUS_REQUEST \
@@ -184,3 +184,4 @@ SmbClassUnlockDevice(
 #endif
 
 #endif /* __SMBUS_H */
+

@@ -433,8 +433,8 @@ typedef struct {
 	USHORT  NumEntries;
 	USHORT  FirstEntry;
 	union {
-    VIDEO_CLUTDATA  RgbArray;
-    ULONG  RgbLong;
+		VIDEO_CLUTDATA  RgbArray;
+		ULONG  RgbLong;
 	} LookupTable[1];
 } VIDEO_CLUT, *PVIDEO_CLUT;
 
@@ -462,8 +462,7 @@ typedef struct _VIDEO_HARDWARE_STATE {
 typedef struct _ENG_EVENT *PEVENT;
 #endif
 
-typedef struct _ENG_EVENT
-{
+typedef struct _ENG_EVENT {
     PVOID pKEvent;
     ULONG fFlags;
 } ENG_EVENT, *PENG_EVENT;

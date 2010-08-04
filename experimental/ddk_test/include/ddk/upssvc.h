@@ -28,9 +28,9 @@ extern "C" {
 #endif
 
 #if defined(_APCUPS_)
-  #define UPSAPI
+#define UPSAPI
 #else
-  #define UPSAPI DECLSPEC_IMPORT
+#define UPSAPI DECLSPEC_IMPORT
 #endif
 
 

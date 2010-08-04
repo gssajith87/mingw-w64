@@ -23,15 +23,6 @@
 #ifndef __NTDDDISK_H
 #define __NTDDDISK_H
 
-/* Helper macro to enable gcc's extension.  */
-#ifndef __GNU_EXTENSION
-#ifdef __GNUC__
-#define __GNU_EXTENSION __extension__
-#else
-#define __GNU_EXTENSION
-#endif
-#endif
-
 #include "ntddstor.h"
 
 #ifdef __cplusplus
@@ -594,11 +585,11 @@ typedef struct _SENDCMDOUTPARAMS {
 #define ENABLE_DISABLE_AUTO_OFFLINE       0xDB
 
 typedef struct _MAPPED_ADDRESS {
-    struct _MAPPED_ADDRESS *NextMappedAddress;
-    PVOID MappedAddress;
-    ULONG NumberOfBytes;
-    LARGE_INTEGER IoAddress;
-    ULONG BusNumber;
+  struct _MAPPED_ADDRESS *NextMappedAddress;
+  PVOID MappedAddress;
+  ULONG NumberOfBytes;
+  LARGE_INTEGER IoAddress;
+  ULONG BusNumber;
 } MAPPED_ADDRESS, *PMAPPED_ADDRESS;
 
 

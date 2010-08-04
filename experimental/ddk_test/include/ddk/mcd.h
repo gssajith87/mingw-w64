@@ -32,9 +32,9 @@ extern "C" {
 #endif
 
 #if defined(_MCD_)
-  #define CHANGERAPI
+#define CHANGERAPI
 #else
-  #define CHANGERAPI DECLSPEC_IMPORT
+#define CHANGERAPI DECLSPEC_IMPORT
 #endif
 
 #ifdef DebugPrint

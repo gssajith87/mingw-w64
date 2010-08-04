@@ -12,15 +12,6 @@
 #ifndef __DMEMMGR_INCLUDED__
 #define __DMEMMGR_INCLUDED__
 
-/* Helper macro to enable gcc's extension.  */
-#ifndef __GNU_EXTENSION
-#ifdef __GNUC__
-#define __GNU_EXTENSION __extension__
-#else
-#define __GNU_EXTENSION
-#endif
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,7 +25,7 @@ typedef ULONG_PTR FLATPTR;
 
 typedef struct _VIDMEM *LPVIDMEM;
 
-#else
+#else /* __NTDDKCOMP__ */
 
 #ifndef FLATPTR_DEFINED
 typedef ULONG_PTR FLATPTR;
@@ -42,7 +33,7 @@ typedef ULONG_PTR FLATPTR;
 #endif
 
 typedef struct _VIDEOMEMORY *LPVIDMEM;
-#endif
+#endif /* __NTDDKCOMP__ */
 
 #define SURFACEALIGN_DISCARDABLE 0x00000001
 #define VMEMHEAP_LINEAR 0x00000001
@@ -79,17 +70,14 @@ typedef struct _VMEMR
 
 typedef struct _SURFACEALIGNMENT
 {
-  __GNU_EXTENSION union
-  {
-    struct
-    {
+  __GNU_EXTENSION union {
+    struct {
       DWORD dwStartAlignment;
       DWORD dwPitchAlignment;
       DWORD dwFlags;
       DWORD dwReserved2;
     } Linear;
-    struct
-    {
+    struct {
       DWORD dwXAlignment;
       DWORD dwYAlignment;
       DWORD dwFlags;
@@ -149,24 +137,20 @@ typedef DD_GETHEAPALIGNMENTDATA *PDD_GETHEAPALIGNMENTDATA;
 #define DD_GETHEAPALIGNMENTDATA_DECLARED
 #endif
 
-extern void WINAPI VidMemFree( LPVMEMHEAP pvmh, FLATPTR ptr);
-extern FLATPTR WINAPI VidMemAlloc( LPVMEMHEAP pvmh, DWORD width, DWORD height);
+extern void WINAPI VidMemFree (LPVMEMHEAP pvmh, FLATPTR ptr);
+extern FLATPTR WINAPI VidMemAlloc (LPVMEMHEAP pvmh, DWORD width, DWORD height);
 
 extern FLATPTR WINAPI
        HeapVidMemAllocAligned(
                                LPVIDMEM lpVidMem,
                                DWORD dwWidth,
                                DWORD dwHeight,
-                               LPSURFACEALIGNMENT lpAlignment ,
+                               LPSURFACEALIGNMENT lpAlignment,
                                LPLONG lpNewPitch );
-
-
-
-
-
 
 #ifdef __cplusplus
 };
 #endif
 
-#endif
+#endif /* __DMEMMGR_INCLUDED__ */
+

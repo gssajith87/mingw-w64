@@ -139,6 +139,7 @@ typedef struct {
 
 #endif /* _PO_DDK_ */
 
+
 #define POWER_PERF_SCALE                  100
 #define PERF_LEVEL_TO_PERCENT(x)          (((x) * 1000) / (POWER_PERF_SCALE * 10))
 #define PERCENT_TO_PERF_LEVEL(x)          (((x) * POWER_PERF_SCALE * 10) / 1000)
@@ -341,7 +342,7 @@ typedef struct {
     UCHAR               ProcessorMaxThrottle;
     BOOLEAN             FastSystemS4;
     UCHAR               spare2[3];
-#endif // (NTDDI_VERSION < NTDDI_WINXP)
+#endif /* (NTDDI_VERSION < NTDDI_WINXP) */
     BOOLEAN             DiskSpinDown;
     UCHAR               spare3[8];
     BOOLEAN             SystemBatteriesPresent;
@@ -415,3 +416,4 @@ typedef struct _POWER_ACTION_POLICY {
 #endif
 
 #endif /* __NTPOAPI_H */
+
