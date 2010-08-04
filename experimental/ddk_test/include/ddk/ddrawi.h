@@ -2120,7 +2120,7 @@ HRESULT CALLBACK
                                 LPVOID *lplpvReturnedCommand);
 
 #ifdef __cplusplus
- /* extern "C" */
+} /* extern "C" */
 #endif
 
 #endif /* __DDRAWI_INCLUDED__ */
