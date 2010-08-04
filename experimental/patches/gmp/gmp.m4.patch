@@ -1,5 +1,0 @@
---- gcc/gmp/configure.in        2007-09-09 12:39:14 -0400
-+++ gcc/gmp/configure.in        2008-08-31 18:03:18 -0400
-@@ -2901 +2901 @@
--  M4=m4-not-needed
-+  AC_CHECK_PROGS(M4,m4,m4-not-needed)
