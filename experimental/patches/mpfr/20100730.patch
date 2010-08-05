@@ -1,17 +1,17 @@
-diff -Naurd src/mpfr/PATCHES src/mpfr/PATCHES
---- src/mpfr/PATCHES	2010-06-23 11:02:49.000000000 +0000
-+++ src/mpfr/PATCHES	2010-06-23 11:03:36.000000000 +0000
+diff -Naurd PATCHES PATCHES
+--- PATCHES	2010-06-23 11:02:49.000000000 +0000
++++ PATCHES	2010-06-23 11:03:36.000000000 +0000
 @@ -0,0 +1 @@
 +mpfr_out_str
-diff -Naurd src/mpfr/VERSION src/mpfr/VERSION
---- src/mpfr/VERSION	2010-06-10 11:00:14.000000000 +0000
-+++ src/mpfr/VERSION	2010-06-23 11:03:20.000000000 +0000
+diff -Naurd VERSION VERSION
+--- VERSION	2010-06-10 11:00:14.000000000 +0000
++++ VERSION	2010-06-23 11:03:20.000000000 +0000
 @@ -1 +1 @@
 -3.0.0
 +3.0.0-p1
-diff -Naurd src/mpfr/mpfr.h src/mpfr/mpfr.h
---- src/mpfr/mpfr.h	2010-06-10 11:00:14.000000000 +0000
-+++ src/mpfr/mpfr.h	2010-06-23 11:03:20.000000000 +0000
+diff -Naurd mpfr.h mpfr.h
+--- mpfr.h	2010-06-10 11:00:14.000000000 +0000
++++ mpfr.h	2010-06-23 11:03:20.000000000 +0000
 @@ -27,7 +27,7 @@
  #define MPFR_VERSION_MAJOR 3
  #define MPFR_VERSION_MINOR 0
@@ -21,9 +21,9 @@ diff -Naurd src/mpfr/mpfr.h src/mpfr/mpfr.h
  
  /* Macros dealing with MPFR VERSION */
  #define MPFR_VERSION_NUM(a,b,c) (((a) << 16L) | ((b) << 8) | (c))
-diff -Naurd src/mpfr/mpfr.texi src/mpfr/mpfr.texi
---- src/mpfr/mpfr.texi	2010-06-10 11:00:14.000000000 +0000
-+++ src/mpfr/mpfr.texi	2010-06-23 11:03:12.000000000 +0000
+diff -Naurd mpfr.texi mpfr.texi
+--- mpfr.texi	2010-06-10 11:00:14.000000000 +0000
++++ mpfr.texi	2010-06-23 11:03:12.000000000 +0000
 @@ -2050,7 +2050,7 @@
  are printed. If @var{base} is greater than 10, @samp{@@} will be used
  instead of @samp{e} as exponent delimiter.
@@ -33,9 +33,9 @@ diff -Naurd src/mpfr/mpfr.texi src/mpfr/mpfr.texi
  @end deftypefun
  
  @deftypefun size_t mpfr_inp_str (mpfr_t @var{rop}, FILE *@var{stream}, int @var{base}, mpfr_rnd_t @var{rnd})
-diff -Naurd src/mpfr/out_str.c src/mpfr/out_str.c
---- src/mpfr/out_str.c	2010-06-10 11:00:14.000000000 +0000
-+++ src/mpfr/out_str.c	2010-06-23 11:03:12.000000000 +0000
+diff -Naurd out_str.c out_str.c
+--- out_str.c	2010-06-10 11:00:14.000000000 +0000
++++ out_str.c	2010-06-23 11:03:12.000000000 +0000
 @@ -22,6 +22,16 @@
  
  #include "mpfr-impl.h"
@@ -145,9 +145,9 @@ diff -Naurd src/mpfr/out_str.c src/mpfr/out_str.c
      }
  
    return l;
-diff -Naurd src/mpfr/tests/tout_str.c src/mpfr/tests/tout_str.c
---- src/mpfr/tests/tout_str.c	2010-06-10 11:00:13.000000000 +0000
-+++ src/mpfr/tests/tout_str.c	2010-06-23 11:03:12.000000000 +0000
+diff -Naurd tests/tout_str.c tests/tout_str.c
+--- tests/tout_str.c	2010-06-10 11:00:13.000000000 +0000
++++ tests/tout_str.c	2010-06-23 11:03:12.000000000 +0000
 @@ -46,22 +46,54 @@
  special (void)
  {
@@ -208,9 +208,9 @@ diff -Naurd src/mpfr/tests/tout_str.c src/mpfr/tests/tout_str.c
  
    mpfr_clear (x);
  }
-diff -Naurd src/mpfr/version.c src/mpfr/version.c
---- src/mpfr/version.c	2010-06-10 11:00:14.000000000 +0000
-+++ src/mpfr/version.c	2010-06-23 11:03:20.000000000 +0000
+diff -Naurd version.c version.c
+--- version.c	2010-06-10 11:00:14.000000000 +0000
++++ version.c	2010-06-23 11:03:20.000000000 +0000
 @@ -25,5 +25,5 @@
  const char *
  mpfr_get_version (void)
@@ -218,9 +218,9 @@ diff -Naurd src/mpfr/version.c src/mpfr/version.c
 -  return "3.0.0";
 +  return "3.0.0-p1";
  }
-diff -Naurd src/mpfr/Makefile.in src/mpfr/Makefile.in
---- src/mpfr/Makefile.in	2010-06-10 11:00:52.000000000 +0000
-+++ src/mpfr/Makefile.in	2010-06-10 11:00:52.000000000 +0000
+diff -Naurd Makefile.in Makefile.in
+--- Makefile.in	2010-06-10 11:00:52.000000000 +0000
++++ Makefile.in	2010-06-10 11:00:52.000000000 +0000
 @@ -239,6 +239,7 @@
  distuninstallcheck_listfiles = find . -type f -print
  distcleancheck_listfiles = find . -type f -print
@@ -229,20 +229,20 @@ diff -Naurd src/mpfr/Makefile.in src/mpfr/Makefile.in
  AMTAR = @AMTAR@
  AR = @AR@
  AS = @AS@
-diff -Naurd src/mpfr/PATCHES src/mpfr/PATCHES
---- src/mpfr/PATCHES	2010-06-23 11:03:36.000000000 +0000
-+++ src/mpfr/PATCHES	2010-06-25 13:23:13.000000000 +0000
+diff -Naurd PATCHES PATCHES
+--- PATCHES	2010-06-23 11:03:36.000000000 +0000
++++ PATCHES	2010-06-25 13:23:13.000000000 +0000
 @@ -0,0 +1 @@
 +alloca
-diff -Naurd src/mpfr/VERSION src/mpfr/VERSION
---- src/mpfr/VERSION	2010-06-23 11:03:20.000000000 +0000
-+++ src/mpfr/VERSION	2010-06-25 13:23:13.000000000 +0000
+diff -Naurd VERSION VERSION
+--- VERSION	2010-06-23 11:03:20.000000000 +0000
++++ VERSION	2010-06-25 13:23:13.000000000 +0000
 @@ -1 +1 @@
 -3.0.0-p1
 +3.0.0-p2
-diff -Naurd src/mpfr/acinclude.m4 src/mpfr/acinclude.m4
---- src/mpfr/acinclude.m4	2010-06-10 11:00:14.000000000 +0000
-+++ src/mpfr/acinclude.m4	2010-06-10 11:00:14.000000000 +0000
+diff -Naurd acinclude.m4 acinclude.m4
+--- acinclude.m4	2010-06-10 11:00:14.000000000 +0000
++++ acinclude.m4	2010-06-10 11:00:14.000000000 +0000
 @@ -59,6 +59,9 @@
  dnl sys/fpu.h - MIPS specific
  AC_CHECK_HEADERS([sys/time.h sys/fpu.h])
@@ -253,9 +253,9 @@ diff -Naurd src/mpfr/acinclude.m4 src/mpfr/acinclude.m4
  dnl SIZE_MAX macro
  gl_SIZE_MAX
  
-diff -Naurd src/mpfr/configure src/mpfr/configure
---- src/mpfr/configure	2010-06-10 11:00:51.000000000 +0000
-+++ src/mpfr/configure	2010-06-25 13:23:05.000000000 +0000
+diff -Naurd configure configure
+--- configure	2010-06-10 11:00:51.000000000 +0000
++++ configure	2010-06-25 13:23:05.000000000 +0000
 @@ -783,6 +783,7 @@
  OBJDUMP
  DLLTOOL
@@ -562,9 +562,9 @@ diff -Naurd src/mpfr/configure src/mpfr/configure
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-diff -Naurd src/mpfr/mpfr.h src/mpfr/mpfr.h
---- src/mpfr/mpfr.h	2010-06-23 11:03:20.000000000 +0000
-+++ src/mpfr/mpfr.h	2010-06-25 13:23:13.000000000 +0000
+diff -Naurd mpfr.h mpfr.h
+--- mpfr.h	2010-06-23 11:03:20.000000000 +0000
++++ mpfr.h	2010-06-25 13:23:13.000000000 +0000
 @@ -27,7 +27,7 @@
  #define MPFR_VERSION_MAJOR 3
  #define MPFR_VERSION_MINOR 0
@@ -574,9 +574,9 @@ diff -Naurd src/mpfr/mpfr.h src/mpfr/mpfr.h
  
  /* Macros dealing with MPFR VERSION */
  #define MPFR_VERSION_NUM(a,b,c) (((a) << 16L) | ((b) << 8) | (c))
-diff -Naurd src/mpfr/tests/Makefile.in src/mpfr/tests/Makefile.in
---- src/mpfr/tests/Makefile.in	2010-06-10 11:00:52.000000000 +0000
-+++ src/mpfr/tests/Makefile.in	2010-06-10 11:00:52.000000000 +0000
+diff -Naurd tests/Makefile.in tests/Makefile.in
+--- tests/Makefile.in	2010-06-10 11:00:52.000000000 +0000
++++ tests/Makefile.in	2010-06-10 11:00:52.000000000 +0000
 @@ -960,6 +960,7 @@
  red=; grn=; lgn=; blu=; std=
  DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -585,9 +585,9 @@ diff -Naurd src/mpfr/tests/Makefile.in src/mpfr/tests/Makefile.in
  AMTAR = @AMTAR@
  AR = @AR@
  AS = @AS@
-diff -Naurd src/mpfr/version.c src/mpfr/version.c
---- src/mpfr/version.c	2010-06-23 11:03:20.000000000 +0000
-+++ src/mpfr/version.c	2010-06-25 13:23:13.000000000 +0000
+diff -Naurd version.c version.c
+--- version.c	2010-06-23 11:03:20.000000000 +0000
++++ version.c	2010-06-25 13:23:13.000000000 +0000
 @@ -25,5 +25,5 @@
  const char *
  mpfr_get_version (void)
@@ -595,20 +595,20 @@ diff -Naurd src/mpfr/version.c src/mpfr/version.c
 -  return "3.0.0-p1";
 +  return "3.0.0-p2";
  }
-diff -Naurd src/mpfr/PATCHES src/mpfr/PATCHES
---- src/mpfr/PATCHES	2010-07-10 00:11:19.000000000 +0000
-+++ src/mpfr/PATCHES	2010-07-10 00:12:50.000000000 +0000
+diff -Naurd PATCHES PATCHES
+--- PATCHES	2010-07-10 00:11:19.000000000 +0000
++++ PATCHES	2010-07-10 00:12:50.000000000 +0000
 @@ -0,0 +1 @@
 +gamma_underflow
-diff -Naurd src/mpfr/VERSION src/mpfr/VERSION
---- src/mpfr/VERSION	2010-06-25 13:23:13.000000000 +0000
-+++ src/mpfr/VERSION	2010-07-10 00:11:53.000000000 +0000
+diff -Naurd VERSION VERSION
+--- VERSION	2010-06-25 13:23:13.000000000 +0000
++++ VERSION	2010-07-10 00:11:53.000000000 +0000
 @@ -1 +1 @@
 -3.0.0-p2
 +3.0.0-p3
-diff -Naurd src/mpfr/gamma.c src/mpfr/gamma.c
---- src/mpfr/gamma.c	2010-06-10 11:00:14.000000000 +0000
-+++ src/mpfr/gamma.c	2010-07-10 00:11:46.000000000 +0000
+diff -Naurd gamma.c gamma.c
+--- gamma.c	2010-06-10 11:00:14.000000000 +0000
++++ gamma.c	2010-07-10 00:11:46.000000000 +0000
 @@ -274,7 +274,7 @@
        /* we want an upper bound for x * [log(2-x)-1].
           since x < 0, we need a lower bound on log(2-x) */
@@ -629,9 +629,9 @@ diff -Naurd src/mpfr/gamma.c src/mpfr/gamma.c
            underflow = mpfr_cmp_si (xp, expo.saved_emin - 2) <= 0;
          }
  
-diff -Naurd src/mpfr/mpfr.h src/mpfr/mpfr.h
---- src/mpfr/mpfr.h	2010-06-25 13:23:13.000000000 +0000
-+++ src/mpfr/mpfr.h	2010-07-10 00:11:53.000000000 +0000
+diff -Naurd mpfr.h mpfr.h
+--- mpfr.h	2010-06-25 13:23:13.000000000 +0000
++++ mpfr.h	2010-07-10 00:11:53.000000000 +0000
 @@ -27,7 +27,7 @@
  #define MPFR_VERSION_MAJOR 3
  #define MPFR_VERSION_MINOR 0
@@ -641,9 +641,9 @@ diff -Naurd src/mpfr/mpfr.h src/mpfr/mpfr.h
  
  /* Macros dealing with MPFR VERSION */
  #define MPFR_VERSION_NUM(a,b,c) (((a) << 16L) | ((b) << 8) | (c))
-diff -Naurd src/mpfr/tests/tgamma.c src/mpfr/tests/tgamma.c
---- src/mpfr/tests/tgamma.c	2010-06-10 11:00:13.000000000 +0000
-+++ src/mpfr/tests/tgamma.c	2010-07-10 00:11:46.000000000 +0000
+diff -Naurd tests/tgamma.c tests/tgamma.c
+--- tests/tgamma.c	2010-06-10 11:00:13.000000000 +0000
++++ tests/tgamma.c	2010-07-10 00:11:46.000000000 +0000
 @@ -461,6 +461,20 @@
    mpfr_clear (x);
  }
@@ -673,9 +673,9 @@ diff -Naurd src/mpfr/tests/tgamma.c src/mpfr/tests/tgamma.c
  
    data_check ("data/gamma", mpfr_gamma, "mpfr_gamma");
  
-diff -Naurd src/mpfr/version.c src/mpfr/version.c
---- src/mpfr/version.c	2010-06-25 13:23:13.000000000 +0000
-+++ src/mpfr/version.c	2010-07-10 00:11:53.000000000 +0000
+diff -Naurd version.c version.c
+--- version.c	2010-06-25 13:23:13.000000000 +0000
++++ version.c	2010-07-10 00:11:53.000000000 +0000
 @@ -25,5 +25,5 @@
  const char *
  mpfr_get_version (void)
