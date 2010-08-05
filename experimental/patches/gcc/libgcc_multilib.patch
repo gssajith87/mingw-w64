@@ -1,7 +1,7 @@
-Index: src/gcc/config/i386/t-mingw-w64
+Index: gcc/config/i386/t-mingw-w64
 ===================================================================
---- src/gcc/config/i386/t-mingw-w64	(revision 156923)
-+++ src/gcc/config/i386/t-mingw-w64	(working copy)
+--- gcc/config/i386/t-mingw-w64	(revision 156923)
++++ gcc/config/i386/t-mingw-w64	(working copy)
 @@ -10,3 +10,9 @@
  
  LIBGCC = stmp-multilib
@@ -12,10 +12,10 @@ Index: src/gcc/config/i386/t-mingw-w64
 +
 +SHLIB_SONAME = $$(if $$(shell $$(gcc_compile_bare) -xc -dD -E /dev/null |grep -c __WIN64__ |sed -e 's/0//'),w64,w32)$(MULTILIB_SONAME)
 +SHLIB_MKMAP_OPTS = -v pe_dll=$$(if $$(shell $$(gcc_compile_bare) -xc -dD -E /dev/null |grep -c __WIN64__ |sed -e 's/0//'),w64,w32)$(MULTILIB_SONAME)
-Index: src/gcc/config/i386/mingw-w64.h
+Index: gcc/config/i386/mingw-w64.h
 ===================================================================
---- src/gcc/config/i386/mingw-w64.h	(revision 156923)
-+++ src/gcc/config/i386/mingw-w64.h	(working copy)
+--- gcc/config/i386/mingw-w64.h	(revision 156923)
++++ gcc/config/i386/mingw-w64.h	(working copy)
 @@ -34,7 +34,20 @@
    crtbegin.o%s"
  
