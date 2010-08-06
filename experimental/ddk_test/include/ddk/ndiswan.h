@@ -20,7 +20,8 @@
  *
  */
 
-#pragma once
+#ifndef _NDIS_WAN_
+#define _NDIS_WAN_
 
 #ifdef __cplusplus
 extern "C" {
@@ -352,3 +353,6 @@ typedef struct _WAN_CO_MTULINKPARAMS {
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* _NDIS_WAN_ */
+

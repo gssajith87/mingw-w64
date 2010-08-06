@@ -20,8 +20,8 @@
  *
  */
 
-#ifndef __NTDDDISK_H
-#define __NTDDDISK_H
+#ifndef _NTDDDISK_H_
+#define _NTDDDISK_H_
 
 #include "ntddstor.h"
 
@@ -597,4 +597,4 @@ typedef struct _MAPPED_ADDRESS {
 }
 #endif
 
-#endif /* __NTDDDISK_H */
+#endif /* _NTDDDISK_H_ */
