@@ -391,9 +391,6 @@ LONG WINAPI SCardGetTransmitCount(
   LPDWORD pcTransmitCount
 );
 
-#define SCARD_W_CACHE_ITEM_NOT_FOUND 0x80100070
-#define SCARD_W_CACHE_ITEM_STALE 0x80100071
-
 LONG WINAPI SCardReadCacheA(
   SCARDCONTEXT hContext,
   UUID *CardIdentifier,

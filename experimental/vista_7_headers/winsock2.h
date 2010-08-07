@@ -611,7 +611,7 @@ typedef unsigned int GROUP;
   typedef struct sockaddr_storage SOCKADDR_STORAGE;
   typedef struct sockaddr_storage *PSOCKADDR_STORAGE;
   typedef struct sockaddr_storage *LPSOCKADDR_STORAGE;
-  typedef short ADDRESS_FAMILY;
+  typedef u_short ADDRESS_FAMILY;
 
 #ifndef _tagBLOB_DEFINED
 #define _tagBLOB_DEFINED
