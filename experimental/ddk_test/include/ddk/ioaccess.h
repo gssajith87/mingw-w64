@@ -66,4 +66,8 @@ extern "C" {
 
 #endif /* NO_PORT_MACROS */
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* __IOACCESS_H */

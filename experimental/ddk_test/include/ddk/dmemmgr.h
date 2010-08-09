@@ -149,7 +149,7 @@ extern FLATPTR WINAPI
                                LPLONG lpNewPitch );
 
 #ifdef __cplusplus
-};
+}
 #endif
 
 #endif /* __DMEMMGR_INCLUDED__ */

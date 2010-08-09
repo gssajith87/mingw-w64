@@ -367,7 +367,7 @@ DECLARE_INTERFACE_( IDirectDrawVideoPortNotify, IUnknown )
 #endif /* defined( _WIN32 ) && !defined( _NO_COM ) */
 
 #ifdef __cplusplus
-};
+}
 #endif
 
 #endif /* ! GUID_DEFS_ONLY */
