@@ -3057,10 +3057,15 @@ typedef DWORD LCID;
       TOKEN_AUDIT_POLICY_ELEMENT Policy[ANYSIZE_ARRAY];
     } TOKEN_AUDIT_POLICY,*PTOKEN_AUDIT_POLICY;
 
-/* FIXME: MSDN has
+/*
+TOKEN_AUDIT_POLICY Structure
+http://msdn.microsoft.com/en-us/library/dd553632%28VS.85%29.aspx
+This page describes a stub:
+
 typedef struct _TOKEN_AUDIT_POLICY {
   UCHAR PerUserPolicy;
 } TOKEN_AUDIT_POLICY, *PTOKEN_AUDIT_POLICY;
+
 */
 
 #define PER_USER_AUDITING_POLICY_SIZE(p) (sizeof(TOKEN_AUDIT_POLICY) + (((p)->PolicyCount > ANYSIZE_ARRAY) ? (sizeof(TOKEN_AUDIT_POLICY_ELEMENT) *((p)->PolicyCount - ANYSIZE_ARRAY)) : 0))
