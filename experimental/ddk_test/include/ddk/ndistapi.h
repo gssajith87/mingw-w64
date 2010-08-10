@@ -20,10 +20,10 @@
  *
  */
 
+#pragma once
+
 #ifndef _NDIS_TAPI_
 #define _NDIS_TAPI_
-
-#pragma once
 
 #include "ndis.h"
 

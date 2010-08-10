@@ -5695,6 +5695,7 @@ typedef struct _SCATTER_GATHER_ELEMENT {
 #endif
 #pragma warning(disable:4200)
 #endif /* _MSC_VER */
+
 typedef struct _SCATTER_GATHER_LIST {
   ULONG NumberOfElements;
   ULONG_PTR Reserved;
@@ -5709,12 +5710,12 @@ typedef struct _SCATTER_GATHER_LIST {
 #endif
 #endif /* _MSC_VER */
 
-#else
+#else /* defined(_MSC_EXTENSIONS) || defined(__GNUC__) */
 
 struct _SCATTER_GATHER_LIST;
 typedef struct _SCATTER_GATHER_LIST SCATTER_GATHER_LIST, *PSCATTER_GATHER_LIST;
 
-#endif
+#endif /* defined(_MSC_EXTENSIONS) || defined(__GNUC__) */
 
 typedef NTSTATUS
 (NTAPI DRIVER_ADD_DEVICE)(

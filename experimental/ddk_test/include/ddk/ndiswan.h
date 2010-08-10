@@ -20,6 +20,8 @@
  *
  */
 
+#pragma once
+
 #ifndef _NDIS_WAN_
 #define _NDIS_WAN_
 
