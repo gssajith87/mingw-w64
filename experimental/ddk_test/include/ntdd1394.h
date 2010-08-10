@@ -2,10 +2,6 @@
 #ifndef _NTDD1394_H_
 #define _NTDD1394_H_
 
-#if (_MSC_VER >= 1020)
-#pragma once
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -43,5 +39,5 @@ typedef struct _IEEE1394_API_REQUEST
 }
 #endif
 
-#endif
+#endif /* _NTDD1394_H_ */
 
