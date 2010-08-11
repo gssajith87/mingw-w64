@@ -57,7 +57,7 @@ typedef struct _D3DDeviceDesc_V1 {
   D3DCOLORMODEL		dcmColorModel;
   DWORD			dwDevCaps;
   D3DTRANSFORMCAPS	dtcTransformCaps;
-  WINBOOL		bClipping;
+  BOOL			bClipping;
   D3DLIGHTINGCAPS	dlcLightingCaps;
   D3DPRIMCAPS		dpcLineCaps;
   D3DPRIMCAPS		dpcTriCaps;
@@ -764,7 +764,7 @@ typedef struct _DD_GETADAPTERGROUPDATA {
 typedef struct _DD_MULTISAMPLEQUALITYLEVELSDATA {
   DD_GETDRIVERINFO2DATA gdi2;
   D3DFORMAT Format;
-  WINBOOL               bFlip  :  1;
+  BOOL                  bFlip  :  1;
   D3DMULTISAMPLE_TYPE   MSType : 31;
   DWORD QualityLevels;
 } DD_MULTISAMPLEQUALITYLEVELSDATA;

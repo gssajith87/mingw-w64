@@ -2029,9 +2029,9 @@ DECLARE_INTERFACE_(IPortEvents, IUnknown)
     STDMETHOD_(void,GenerateEventList)(THIS_
         IN  GUID* Set OPTIONAL,
         IN  ULONG EventId,
-        IN  WINBOOL PinEvent,
+        IN  BOOL  PinEvent,
         IN  ULONG PinId,
-        IN  WINBOOL NodeEvent,
+        IN  BOOL  NodeEvent,
         IN  ULONG NodeId)PURE;
 };
 
@@ -2045,9 +2045,9 @@ typedef IPortEvents *PPORTEVENTS;
     STDMETHODIMP_(void) GenerateEventList(     \
         IN  GUID* Set OPTIONAL,                \
         IN  ULONG EventId,                     \
-        IN  WINBOOL PinEvent,                  \
+        IN  BOOL  PinEvent,                    \
         IN  ULONG PinId,                       \
-        IN  WINBOOL NodeEvent,                 \
+        IN  BOOL  NodeEvent,                   \
         IN  ULONG NodeId)
 
 /* ===============================================================

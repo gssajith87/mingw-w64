@@ -16,9 +16,9 @@ typedef struct {
 } DRMFORWARD, *PDRMFORWARD, *PCDRMFORWARD;
 
 typedef struct {
-  WINBOOL CopyProtect;
+  BOOL  CopyProtect;
   ULONG Reserved;
-  WINBOOL DigitalOutputDisable;
+  BOOL  DigitalOutputDisable;
 } DRMRIGHTS, *PDRMRIGHTS;
 
 typedef const DRMRIGHTS *PCDRMRIGHTS;
