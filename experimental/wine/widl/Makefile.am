@@ -1,4 +1,4 @@
-AM_CFLAGS=-I$(src_dir)/include
+AM_CFLAGS=-I$(top_srcdir)/include
 	
 bin_PROGRAMS = widl
 
