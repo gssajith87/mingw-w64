@@ -99,17 +99,18 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @DELAY_IMPORT_LIBS_TRUE@am__append_1 = --output-delaylib $@.delayimp.a
+DIST_COMMON = $(am__configure_deps) $(noinst_HEADERS) \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(srcdir)/config.h.in $(srcdir)/lib32/private/Makefile.am \
+	$(srcdir)/testcases/complex/Makefile.am \
+	$(top_srcdir)/configure ChangeLog build-aux/compile \
+	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
+	build-aux/install-sh build-aux/missing
 @ENABLE_TESTS_UNICODE_TRUE@am__append_2 = testcases/t_municode testcases/t_tmain
 check_PROGRAMS = $(am__EXEEXT_2) $(am__EXEEXT_4) $(am__EXEEXT_6)
 TESTS = $(am__EXEEXT_2) $(am__EXEEXT_4) $(am__EXEEXT_6)
 XFAIL_TESTS = testcases/t_nullptrexception$(EXEEXT) $(am__EXEEXT_7) \
 	$(am__EXEEXT_7)
-DIST_COMMON = $(am__configure_deps) $(noinst_HEADERS) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/config.h.in $(srcdir)/testcases/complex/Makefile.am \
-	$(top_srcdir)/configure ChangeLog build-aux/compile \
-	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
-	build-aux/install-sh build-aux/missing
 
 # Build the libraries
 @LIB32_TRUE@am__append_3 = $(newcomplex_test_lib32)
@@ -3293,6 +3294,14 @@ src_libmingwex32 = \
 @LIB32_TRUE@  lib32/libxaudiod2_7.a     lib32/libxinput1_1.a      lib32/libxinput1_2.a \
 @LIB32_TRUE@  lib32/libxinput1_3.a
 
+@LIB32_TRUE@@PRIVATE_EXPORTS_TRUE@private_override = \
+@LIB32_TRUE@@PRIVATE_EXPORTS_TRUE@  lib32/libadvapi32.a \
+@LIB32_TRUE@@PRIVATE_EXPORTS_TRUE@  lib32/libgdi32.a    \
+@LIB32_TRUE@@PRIVATE_EXPORTS_TRUE@  lib32/libkernel32.a \
+@LIB32_TRUE@@PRIVATE_EXPORTS_TRUE@  lib32/libmsvcrt.a   \
+@LIB32_TRUE@@PRIVATE_EXPORTS_TRUE@  lib32/libntdll.a    \
+@LIB32_TRUE@@PRIVATE_EXPORTS_TRUE@  lib32/libuser32.a
+
 
 # End 32-bit runtime
 # ##########
@@ -4173,7 +4182,7 @@ all: $(BUILT_SOURCES) config.h
 .SUFFIXES: .S .c .cpp .o .obj
 am--refresh:
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/testcases/complex/Makefile.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/lib32/private/Makefile.am $(srcdir)/testcases/complex/Makefile.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -29879,6 +29888,8 @@ _libm_dummy.c:
 # Use two patterns, one for 32/64 in lib32/ and lib64/
 @LIB32_TRUE@lib32/libcrtdll.a lib32/libmsvcrt.a lib32/libmsvcr80.a: lib32/lib%.a: lib32/%.def
 @LIB32_TRUE@	$(DTDEF32) $< --dllname $*.dll
+@LIB32_TRUE@@PRIVATE_EXPORTS_TRUE@$(private_override) : lib32/lib%.a: lib32/private/%.def
+@LIB32_TRUE@@PRIVATE_EXPORTS_TRUE@	$(DTDEF32) $<
 
 @LIB32_TRUE@lib32/lib%.a: lib32/%.def
 @LIB32_TRUE@	$(DTDEF32) $<

@@ -451,6 +451,10 @@ lib32_DATA = \
 lib32/libcrtdll.a lib32/libmsvcrt.a lib32/libmsvcr80.a: lib32/lib%.a: lib32/%.def
 	$(DTDEF32) $< --dllname $*.dll
 
+if PRIVATE_EXPORTS
+include lib32/private/Makefile.am
+endif
+
 lib32/lib%.a: lib32/%.def
 	$(DTDEF32) $<
 
