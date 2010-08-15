@@ -6,15 +6,15 @@
  *                  allow drivers using them to compile with our header set.
  */
 
-//
-// Stubs
-//
+/*
+ * Stubs
+ */
 #define __drv_dispatchType(x)
 #define __drv_dispatchType_other
 
-//
-// FIXME: These annotations are not driver-only and does not belong here
-//
+/*
+ * FIXME: These annotations are not driver-only and does not belong here
+ */
 #define __in
 #define __in_bcount(Size)
 #define __in_ecount(Size)
