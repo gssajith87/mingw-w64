@@ -31,7 +31,6 @@
 #endif
 #include <string.h>
 #include <ctype.h>
-#include <fcntl.h>
 
 #define NONAMELESSUNION
 #define NONAMELESSSTRUCT

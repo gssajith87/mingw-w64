@@ -36,7 +36,6 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <time.h>
-#include <fcntl.h>
 
 #define NONAMELESSUNION
 #define NONAMELESSSTRUCT
