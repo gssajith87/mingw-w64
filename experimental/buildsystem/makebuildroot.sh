@@ -12,7 +12,7 @@ makedist="false"
 gccrev="HEAD"
 out=/dev/null
 
-#Third part packages
+#Third party packages
 gmpver=gmp-5.0.1
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
 mpfrver=mpfr-3.0.0
