@@ -30,6 +30,9 @@ AC_CHECK_TYPES([long long])
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
+AC_CHECK_FUNCS([gettimeofday mkstemp])
+
+AH_TOP([#define __WINE_CONFIG_H])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

@@ -56,7 +56,8 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_widl_OBJECTS = src/client.$(OBJEXT) src/expr.$(OBJEXT) \
 	src/hash.$(OBJEXT) src/header.$(OBJEXT) \
 	src/parser.tab.$(OBJEXT) src/parser.yy.$(OBJEXT) \
-	src/proxy.$(OBJEXT) src/server.$(OBJEXT) src/typegen.$(OBJEXT) \
+	src/port/port.$(OBJEXT) src/proxy.$(OBJEXT) \
+	src/server.$(OBJEXT) src/typegen.$(OBJEXT) \
 	src/typelib.$(OBJEXT) src/typetree.$(OBJEXT) \
 	src/utils.$(OBJEXT) src/widl.$(OBJEXT) \
 	src/write_msft.$(OBJEXT) src/wpp/ppl.yy.$(OBJEXT) \
@@ -190,6 +191,7 @@ widl_SOURCES = \
 	src/header.c \
 	src/parser.tab.c \
 	src/parser.yy.c \
+	src/port/port.c \
 	src/proxy.c \
 	src/server.c \
 	src/typegen.c \
@@ -313,6 +315,14 @@ src/parser.tab.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/parser.yy.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/port/$(am__dirstamp):
+	@$(MKDIR_P) src/port
+	@: > src/port/$(am__dirstamp)
+src/port/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/port/$(DEPDIR)
+	@: > src/port/$(DEPDIR)/$(am__dirstamp)
+src/port/port.$(OBJEXT): src/port/$(am__dirstamp) \
+	src/port/$(DEPDIR)/$(am__dirstamp)
 src/proxy.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/server.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
@@ -352,6 +362,7 @@ mostlyclean-compile:
 	-rm -f src/header.$(OBJEXT)
 	-rm -f src/parser.tab.$(OBJEXT)
 	-rm -f src/parser.yy.$(OBJEXT)
+	-rm -f src/port/port.$(OBJEXT)
 	-rm -f src/proxy.$(OBJEXT)
 	-rm -f src/server.$(OBJEXT)
 	-rm -f src/typegen.$(OBJEXT)
@@ -382,6 +393,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/utils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/widl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/write_msft.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/port/$(DEPDIR)/port.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/wpp/$(DEPDIR)/ppl.yy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/wpp/$(DEPDIR)/ppy.tab.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/wpp/$(DEPDIR)/preproc.Po@am__quote@
@@ -632,6 +644,8 @@ distclean-generic:
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
 	-rm -f src/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/$(am__dirstamp)
+	-rm -f src/port/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/port/$(am__dirstamp)
 	-rm -f src/wpp/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/wpp/$(am__dirstamp)
 
@@ -644,7 +658,7 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf src/$(DEPDIR) src/wpp/$(DEPDIR)
+	-rm -rf src/$(DEPDIR) src/port/$(DEPDIR) src/wpp/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -692,7 +706,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf src/$(DEPDIR) src/wpp/$(DEPDIR)
+	-rm -rf src/$(DEPDIR) src/port/$(DEPDIR) src/wpp/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

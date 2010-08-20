@@ -9,6 +9,7 @@ widl_SOURCES = \
 	src/header.c \
 	src/parser.tab.c \
 	src/parser.yy.c \
+	src/port/port.c \
 	src/proxy.c \
 	src/server.c \
 	src/typegen.c \
