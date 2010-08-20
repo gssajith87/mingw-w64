@@ -167,7 +167,7 @@ if [[ $build == "true" ]]; then
   ../src/configure $baseopts > $out && make -s $j > $out && make install > $out || exit 1
 
   echo "Compiling bootstrap gcc.." && cd $BD/gcc-svn/build-$HST-$BITS
-  ../gcc/configure $baseopts --disable-multilib > $out && make -s $j all-gcc > $out && make install-gcc > $out || exit 1
+  ../gcc/configure $baseopts --enable-fully-dynamic-string --disable-multilib > $out && make -s $j all-gcc > $out && make install-gcc > $out || exit 1
   export PATH=$PF/bin:$PATH
 
   echo "Compiling crt.." && cd $BD/mingw/build-$HST-$BITS
