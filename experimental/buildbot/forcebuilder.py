@@ -4,303 +4,171 @@
 
 from twisted.web.resource import Resource
 from twisted.web.error import ErrorPage
+from twisted.web.util import Redirect
 from twisted.web import http
 from twisted.python import log
 import twisted.web.server
 
 from buildbot import interfaces
 from buildbot.sourcestamp import SourceStamp
-from buildbot.status.web.base import HtmlResource
-from buildbot.process.base import BuildRequest
+from buildbot.status.web.base import HtmlResource, path_to_authfail, path_to_root
+#from buildbot.process.base import BuildRequest
 from buildbot.process.properties import Properties
 import os, time, random, cgi, re, datetime
+import itertools
 
 DEBUG = False
 
-class ForceBuilder(HtmlResource):
-  """ a IResource to accept forcing a build with custom properties """
+class ForceBuilderBase(HtmlResource):
+  """ Base class for both sorts of force builders """
+  addSlash = True
 
-  type = ""
-
-  def __init__(self, builders=[], userpass=None, properties={}):
-    Resource.__init__(self)
-    self.builders = builders
-    if userpass is not None:
-      assert len(userpass) is 2
-    self.userpass = userpass
-    self.properties = properties
+  def __init__(self, builders=[], properties={}):
+      HtmlResource.__init__(self)
+      self.builders = builders
+      self.properties = properties
 
   def setProperty(self, name, value):
     self.properties[name] = value
 
-  def render(self, request):
-    """ Check for HTTP basic auth, and pass to normal rendering if accepted """
+  def getChild(self, path, req):
+    if path == "build":
+      if not self.getAuthz(req).actionAllowed('forceBuild',
+                                              req):
+        return Redirect(path_to_authfail(req))
+      return self.build(req)
+    return HtmlResource.getChild(self, path, req)
 
-    try:
-      self.projectName = request.site.buildbot_service.parent.projectName
-    except:
-      self.projectName = ""
-
-    if self.userpass is not None:
-      if request.getUser() != self.userpass[0] or request.getPassword() != self.userpass[1]:
-        realm = "%s buildbot force builder" % self.projectName
-
-        request.setHeader('WWW-Authenticate',
-                          'Basic Realm="%s"' % realm)
-        errpage = ErrorPage(http.UNAUTHORIZED,
-                            "Unauthorized",
-                            "401 Authentication required")
-        return errpage.render(request)
-    return Resource.render(self, request)
-
-  def render_header(self, request):
-    request.write("""
-      <html>
-        <head>
-          <title>%(projectName)s Buildbot %(title)s</title>
-          <style type="text/css">
-      body[type="warn"] {
-        background-color: #FFEEEE;
-      }
-      textarea {
-        display: block;
-        height: 80%%;
-        width: 100%%;
-      }
-      select, input:not([type="submit"]):not([type="checkbox"]) {
-        min-width: 20em;
-        width: 100%%;
-      }
-          </style>
-        </head>
-        <body type="%(type)s">
-          <h1>%(projectName)s Buildbot %(title)s</h1>
-      """ % {
-        'projectName': self.projectName,
-        'title'      : self.title,
-        'type'       : self.type,
-      })
-
-  def render_GET(self, request):
-    self.render_header(request)
-    request.write("""
-          <form method="post" action="%(url)s">
-            <input type="submit" accesskey="s">
-      """ % {
-        'url'        : request.URLPath()
-      })
-    checked = 'checked="true"'
-    for builder in self.builders:
-      request.write("""
-        <nobr>
-          <input type="checkbox" name="builder" value="b_%(builder)s" id="b_%(builder)s" accesskey="b" %(checked)s>
-          <label for="b_%(builder)s">%(builder)s</label>
-        </nobr>
-        """ % ({
-          'builder': builder,
-          'checked': checked
-        }))
-      checked = ""
-    request.write("""
-        <table width="100%">
-          <tr>
-            <th>Name</th>
-            <th width="100%">Value</th>
-          </tr>
-        """)
-    for prop in sorted(self.properties):
-      request.write("""
-              <tr>
-                <th><label for="p_%(prop)s">%(prop)s</label></th>
-                <td>
-        """ % {'prop': prop})
-      if prop == "datestamp":
-        # special case datestamp to use the current date
-        request.write("""
-          <input name="p_%s" id="p_%s" type="text" value="%s">
-          """ % (prop, prop, datetime.date.today().strftime("_%Y%m%d")))
-      elif type(self.properties[prop]) is str:
-        request.write("""
-          <input name="p_%s" id="p_%s" type="text" value="%s">
-          """ % (prop, prop, self.properties[prop]))
-      elif type(self.properties[prop]) is bool:
-        request.write("""
-          <input name="p_%s" id="p_%s" type="checkbox" %s>
-          """ % (prop, prop, {True: "checked='true'", False: ""}[self.properties[prop]]))
-      elif type(self.properties[prop]) is list:
-        request.write("""<select name="p_%s" id="p_%s">""" % (prop, prop))
-        for item in self.properties[prop]:
-          request.write("""<option value="%s">%s</option>""" % (str(item), str(item)))
-      else:
-        request.write("ERROR: " + str(self.properties[prop]))
-      request.write("""
-                </td>
-              </tr>
-        """)
-    request.write("""
-              <tr>
-                <td colspan="2">
-                  <hr>
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  Your name:
-                </th>
-                <td>
-                  <input type="text" name="username">
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  Reason:
-                </th>
-                <td>
-                  <input type="text" name="comments">
-                </td>
-              </tr>
-            </table>
-          </form>
-        </body>
-      </html>
-      """)
-
-    if DEBUG:
-      object = request.site.buildbot_service.parent
-      for i in dir(object):
-        request.write("%s<br> " % i)
-      request.write("<pre>%s</pre>" % str(object).replace("<", "&lt;"))
-
-    request.finish()
-    return twisted.web.server.NOT_DONE_YET
-
-class ForceBuilderSlave(ForceBuilder):
-  title = "Force Build"
-
-  def render_POST(self, request):
-    self.render_header(request)
-    controller = self.getControl(request)
-    if not controller:
-      return "no control allowed"
-
-    builders = request.args.get("builder", [])
+  def getBuilders(self, req):
+    builders = req.args.get("builder", [])
     if len(builders) < 1:
-      return "no builders specified!"
+      return [None, BuildError("no builders specified!", req)]
     for builder in builders:
       if not builder.startswith("b_"):
-        return cgi.escape("""invalid builder "%s" specified""" % (builder[2:]))
+        return [None,
+                BuildError("""invalid builder "%s" specified""" % (builder[2:]),
+                           req)]
       if not builder[2:] in self.builders:
-        return cgi.escape("""unknown builder "%s" specified""" % (builder[2:]))
+        return [None,
+                BuildError("""unknown builder "%s" specified""" % (builder[2:]),
+                           req)]
+    return [[b[2:] for b in builders], None]
 
-    builders = [builder[2:] for builder in builders]
+  def getProperties(self, req):
+    properties = Properties()
+    for i in itertools.count(0):
+      pname = req.args.get("property%dname" % i, [""])[0]
+      pvalue = req.args.get("property%dvalue" % i, [""])[0]
+      if not pname or not pvalue:
+        break
+      properties.setProperty(pname, pvalue, "Custom Force Build Form")
+    return [properties, None]
 
-    name = str(request.args.get("username", [""])[0])
-    if len(name) < 1:
-      name = "<unknown>"
+  def build(self, req):
+    [builders, error] = self.getBuilders(req)
+    if error is not None:
+      return error
 
-    reason = str(request.args.get("comments", [""])[0])
+    reason = str(req.args.get("comments", [""])[0])
     if len(reason) < 1:
       reason = "<no reason specified>"
+    
+    [properties, error] = self.getProperties(req)
+    if error is not None:
+      return error
 
-    properties = Properties()
-    for prop_name in request.args:
-      if not prop_name[:2] == "p_":
+    log.msg("web force build with properties for builders=[%s]" % (
+      " ".join(builders)))
+
+    failed_builders = []
+    control = interfaces.IControl(self.getBuildmaster(req))
+    source_stamp = SourceStamp(branch=None, revision=None)
+    for builder_name in builders:
+      bc = control.getBuilder(builder_name)
+      if not bc:
+        failed_builders.append((builder_name, "Failed to get builder controller"))
+        log("could not force build %s - failed to get build control" % (
+            builder_name))
         continue
-      if request.args[prop_name][0] == "-":
-        continue
-      properties.setProperty(prop_name[2:],
-                             request.args[prop_name][0],
-                             "ForceBuilder")
-
-    r = "The force builder was initiated by '%s': %s\n" % (name, reason)
-    log.msg("web force build with properties for builders=[%s]"
-            " by user '%s'" % (" ".join(builders), name))
-
-    for builder in builders:
-      builder_control = controller.getBuilder(builder)
-      if not builder_control:
-        request.write("ERROR: control for builder %s not available" % (cgi.escape(builder)))
-        continue
-
-      s = SourceStamp(branch=None, revision=None)
-      req = BuildRequest(r, s, builderName=builder, properties=properties)
       try:
-        builder_control.requestBuildSoon(req)
-        request.write("successfully submitted request for %s<br>" % (cgi.escape(builder)))
+        bc.submitBuildRequest(source_stamp, reason, properties, now=True)
       except interfaces.NoSlaveError:
-        request.write("build for builder %s failed, no slave available<br>" % (cgi.escape(builder)))
+        failed_builders.append((builder_name, "No slave available"))
+    
+    if (len(failed_builders) > 0):
+      reasons = ["<dt>%s</dt><dd>%s</dd>" % (
+                 cgi.escape(x[0]), cgi.escape(x[1])) for x in failed_builders]
+      return BuildError("The following builders failed to build: <dl>%s</dl>" % (
+                        "\n".join(reasons)), req, False)
 
-    request.write("""
-      Build request submitted.
-      <a href="../waterfall">Back to waterfall</a>
-      """)
-    request.finish()
-    return ""
+    # this isn't an error, but at this point I'm feeling lazy
+    # it should realy be a templated html instead
+    HTML = "<p>Build request submitted.</p>"
+    return BuildError(HTML, req, False)
 
-class ForceBuilderSrc(ForceBuilder):
-  title = "Force Source Build"
-  type = "warn"
-
-  def render_POST(self, request):
-    self.render_header(request)
-    controller = self.getControl(request)
-    if not controller:
-      return "no control allowed"
-
-    builders = request.args.get("builder", [])
-    if len(builders) < 1:
-      return "no builders specified!"
-    for builder in builders:
-      if not builder.startswith("b_"):
-        return cgi.escape("""invalid builder "%s" specified""" % (builder[2:]))
-      if not builder[2:] in self.builders:
-        return cgi.escape("""unknown builder "%s" specified""" % (builder[2:]))
-
-    builders = [builder[2:] for builder in builders]
-
-    name = str(request.args.get("username", [""])[0])
-    if len(name) < 1:
-      name = "<unknown>"
-
-    reason = str(request.args.get("comments", [""])[0])
-    if len(reason) < 1:
-      reason = "<no reason specified>"
-
-    properties = Properties()
-    for prop_name in request.args:
-      if not prop_name[:2] == "p_":
-        continue
-      if request.args[prop_name][0] == "-":
-        continue
-      properties.setProperty(prop_name[2:],
-                             request.args[prop_name][0],
-                             "ForceBuilder")
-
-    properties.setProperty("builders",
-                           ",".join(["trigger-" + builder for builder in builders]),
-                           "ForceBuilder")
-
-    r = "The force builder was initiated by '%s': %s\n" % (name, reason)
-    log.msg("web force build with properties for builders=[%s]"
-            " by user '%s'" % (" ".join(builders), name))
-
-    builder_control = controller.getBuilder("src-package")
-    if not builder_control:
-      request.write("ERROR: control for builder %s not available" % ("src-package"))
-
+class BuildError(HtmlResource):
+  def __init__(self, msg, req = None, escape = True):
+    if escape:
+      self.msg = cgi.escape(msg)
     else:
-      s = SourceStamp(branch=None, revision=None)
-      req = BuildRequest(r, s, builderName="src-package", properties=properties)
-      try:
-        builder_control.requestBuildSoon(req)
-        request.write("successfully submitted request for %s<br>" % ("src-package"))
-      except interfaces.NoSlaveError:
-        request.write("build for builder %s failed, no slave available<br>" % ("src-package"))
+      self.msg = msg
 
-      request.write("""
-        Build request submitted.
-        <a href="../waterfall">Back to waterfall</a>
-        """)
-    request.finish()
+    if req:
+      self.suffix = """<p>back to <a href="%s">waterfall</a>.</p>""" % (
+        path_to_root(req) + "waterfall")
+    else:
+      self.suffix = ""
+
+  def render(self, req):
+    req.write(self.msg)
+    req.write(self.suffix)
+    req.finish()
     return ""
 
+class ForceBuilder(ForceBuilderBase):
+  """ a page to start forced builds as-is """
+
+  def getTitle(self, req):
+      return ("Buildbot: %s force build" %
+              (self.getBuildmaster(req).projectName))
+
+  def content(self, req, cxt):
+    cxt['builders'] = self.builders
+    cxt['properties'] = self.properties
+    cxt['now'] = datetime.date.today().strftime("_%Y%m%d")
+    cxt['authz'] = self.getAuthz(req)
+    cxt['build_url'] = '/'.join([] + req.prepath + ['build'])
+    template = req.site.buildbot_service.templates.get_template("force.html")
+    return template.render(**cxt)
+
+class ForceBuilderSrc(ForceBuilderBase):
+  """ a page to start forced builds while re-pulling the source """
+
+  def getTitle(self, req):
+      return ("Buildbot: %s force build (+source)" %
+              (self.getBuildmaster(req).projectName))
+
+  def content(self, req, cxt):
+    cxt['builders'] = self.builders
+    cxt['properties'] = self.properties
+    cxt['now'] = datetime.date.today().strftime("_%Y%m%d")
+    cxt['authz'] = self.getAuthz(req)
+    cxt['build_url'] = '/'.join([] + req.prepath + ['build'])
+    cxt['warn'] = True
+    template = req.site.buildbot_service.templates.get_template("force.html")
+    return template.render(**cxt)
+
+  def getProperties(self, req):
+    [properties, error] = ForceBuilderBase.getProperties(self, req)
+    if error is not None:
+      return [None, error]
+    [builders, error] = ForceBuilderBase.getBuilders(self, req)
+    if error is not None:
+      return [None, error]
+    properties.setProperty("builders",
+                           ",".join(["trigger-" + b for b in builders]),
+                           "Custom Force Build Form")
+    return [properties, None]
+
+  def getBuilders(self, req):
+    return [["src-package"], None]

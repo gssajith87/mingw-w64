@@ -1,0 +1,97 @@
+{#  komode: le=unix language=django codepage=utf8 tab=8 notabs indent=2 #}
+{% extends "layout.html" %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    #force_form select,
+    #force_form textarea,
+    #force_form input:not([type="submit"]):not([type="checkbox"]) {
+      min-width: 20em;
+      width: 100%;
+    }
+    
+    {% if warn %}
+      body.interface {
+        background-color: #FFEEEE;
+        background-image: none;
+      }
+    {% endif %}
+  </style>
+{% endblock head %}
+
+{% block content %}
+
+<form method="post" action="{{build_url}}" id="force_form">
+
+  <input type="submit" accesskey="s">
+  {% for b in builders %}
+    <nobr>
+      <input type="checkbox" name="builder" value="b_{{b}}" id="b_{{b}}" accesskey="b"
+        {% if loop.first %}
+          checked="true"
+        {% endif %}
+        >
+      <label for="b_{{b}}">{{b}}</label>
+    </nobr>
+  {% endfor %}
+
+  <table width="100%">
+
+    <tr>
+      <th>Name</th>
+      <th width="100%">Value</th>
+    </tr>
+
+    <tr>
+      <th><label for="username">User Name</label></th>
+      <td><input name="username"></td>
+    </tr>
+    {% if authz.needAuthForm('forceBuild') %}
+      <tr>
+        <th><label for="passwd">Password</label></th>
+        <td><input name="passwd" type="password"></td>
+      </tr>
+    {% endif %}
+
+    {% set i = 1 %}
+    {% for k,v in properties|dictsort %}
+      <tr>
+        <th><label for="p_{{k}}">{{k}}</label></th>
+        <input type="hidden" name="property{{i}}name" value="{{k}}">
+        <td>
+          {% if k == "datestamp" %}
+            {# special case datestamp to use the current date #}
+            <input name="property{{i}}value" type="text" value="{{now}}">
+          {% elif v is string %}
+            <input name="property{{i}}value" type="text" value="{{v}}">
+          {% elif v is sequence %}
+            {# assume a list #}
+            <select name="property{{i}}value">
+              {% for n in v %}
+                <option value="{{n}}">{{n}}</option>
+              {% endfor %}
+            </select>
+          {% elif v is sameas true or v is sameas false %}
+            <input name="property{{i}}value" type="checkbox"
+              {% if v %}
+                checked
+              {% endif %}
+              >
+          {% elif v is number %}
+            <input name="property{{i}}value" type="text" value="{{v}}">
+          {% endif %}
+        </td>
+      </tr>
+      {% set i = i + 1 %}
+    {% endfor %}
+    
+    <tr>
+      <th>Comments</th>
+      <td><textarea name="comments"></textarea></td>
+    </tr>
+
+  </table>
+</form>
+
+{% endblock content %}
