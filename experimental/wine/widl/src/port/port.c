@@ -30,7 +30,7 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_SYS_TIME_H
+#if defined(HAVE_SYS_TIME_H) || defined (__MINGW64_VERSION_MAJOR)
 #include <sys/time.h>
 #endif
 #ifdef HAVE_PROCESS_H
