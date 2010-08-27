@@ -409,7 +409,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/binutils/obj/.install.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
-	${CURDIR}/build/gcc/src/configure \
+	../../../build/gcc/src/configure \
 	    --target=${TARGET_ARCH} \
 	    ${GCC_CONFIG_HOST_ARGS} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
