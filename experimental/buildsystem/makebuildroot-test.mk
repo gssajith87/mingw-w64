@@ -286,7 +286,7 @@ src/mpfr/.mpfr.extract.marker: \
     src/mpfr/src/.mkdir.marker \
     src/patches/.patches.pull.marker
 	$(TAR) -C $(dir $@)/src --strip-components=1 -xjvf $<
-	cd $(dir $@)src && patch -Np0 -i ../../patches/mpfr/20100730.patch
+	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr-3.0.0/allpatches-p3
 	@touch $@
 
 ########################################
