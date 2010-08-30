@@ -526,6 +526,9 @@ typedef DWORD FLONG;
 #define PROCESSOR_ARCHITECTURE_AMD64    9
 #define PROCESSOR_ARCHITECTURE_UNKNOWN	0xFFFF
 
+/* Wine extension */
+#define PROCESSOR_ARCHITECTURE_SPARC    20
+
 /* dwProcessorType */
 #define PROCESSOR_INTEL_386      386
 #define PROCESSOR_INTEL_486      486
@@ -2692,6 +2695,9 @@ typedef struct _IMAGE_VXD_HEADER {
 #define	IMAGE_FILE_MACHINE_M32R		0x9041
 #define	IMAGE_FILE_MACHINE_CEE		0xc0ee
 
+/* Wine extension */
+#define	IMAGE_FILE_MACHINE_SPARC	0x2000
+
 #define	IMAGE_SIZEOF_FILE_HEADER		20
 #define IMAGE_SIZEOF_ROM_OPTIONAL_HEADER	56
 #define IMAGE_SIZEOF_STD_OPTIONAL_HEADER	28
@@ -4367,7 +4373,7 @@ typedef struct _TOKEN_DEFAULT_DACL {
 } TOKEN_DEFAULT_DACL, *PTOKEN_DEFAULT_DACL;
 
 /*
- * TOKEN_SOURCEL
+ * TOKEN_SOURCE
  */
 
 #define TOKEN_SOURCE_LENGTH 8
@@ -4431,6 +4437,32 @@ typedef struct _TOKEN_STATISTICS {
   LUID  ModifiedId;
 } TOKEN_STATISTICS;
 #include <poppack.h>
+
+typedef struct _TOKEN_GROUPS_AND_PRIVILEGES {
+  DWORD                 SidCount;
+  DWORD                 SidLength;
+  PSID_AND_ATTRIBUTES   Sids;
+  DWORD                 RestrictedSidCount;
+  DWORD                 RestrictedSidLength;
+  PSID_AND_ATTRIBUTES   RestrictedSids;
+  DWORD                 PrivilegeCount;
+  DWORD                 PrivilegeLength;
+  PLUID_AND_ATTRIBUTES  Privileges;
+  LUID                  AuthenticationId;
+} TOKEN_GROUPS_AND_PRIVILEGES, * PTOKEN_GROUPS_AND_PRIVILEGES;
+
+typedef struct _TOKEN_ORIGIN {
+  LUID  OriginatingLogonSession;
+} TOKEN_ORIGIN, * PTOKEN_ORIGIN;
+
+typedef struct _TOKEN_LINKED_TOKEN {
+  HANDLE LinkedToken;
+} TOKEN_LINKED_TOKEN, * PTOKEN_LINKED_TOKEN;
+
+typedef struct _TOKEN_ELEVATION {
+  DWORD TokenIsElevated;
+} TOKEN_ELEVATION, * PTOKEN_ELEVATION;
+
 
 /*
  *	ACLs of NT
