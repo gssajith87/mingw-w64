@@ -165,6 +165,20 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          command=["make", "-f", "mingw-makefile", "mpfr-extract"],
                          env={"MPFR_VERSION": WithProperties("%(mpfr_version)s")}))
 
+    self.addStep(ShellCommandConditional,
+                 name="mpfr-patch",
+                 workdir="build/src/gcc/gcc/mpfr",
+                 description=["patch", "mpfr"],
+                 condprop="scheduler",
+                 condvalue="try",
+                 condinvert=True,
+                 command=["bash", "-c",
+                          """if [ -n "$( ls ../../../patches/mpfr/*.patch )" ] ; then
+                               for i in ../../../patches/mpfr/*.patch ; do
+                                 patch -p0 -f -i "$i" ;
+                               done ;
+                             fi""".replace("\n", " ")])
+
     # download mpc
     self.addStep(Compile(name="mpc-download",
                          description=["mpc", "download"],
@@ -179,19 +193,19 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          env={"MPC_VERSION": WithProperties("%(mpc_version)s")}))
 
     self.addStep(ShellCommandConditional,
-                 name="mpfr-patch",
-                 workdir="build/src/gcc/gcc/mpfr",
-                 description=["patch", "mpfr"],
+                 name="mpc-patch",
+                 workdir="build/src/gcc/gcc/mpc",
+                 description=["patch", "mpc"],
                  condprop="scheduler",
                  condvalue="try",
                  condinvert=True,
                  command=["bash", "-c",
-                          """if [ -n "$( ls ../../../patches/mpfr/*.patch )" ] ; then
-                               for i in ../../../patches/mpfr/*.patch ; do
+                          """if [ -n "$( ls ../../../patches/mpc/*.patch )" ] ; then
+                               for i in ../../../patches/mpc/*.patch ; do
                                  patch -p0 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
- 
+
     # download mingw-w64 crt and headers
     self.addStep(Compile(name="mingw-pull",
                          description=["mingw", "pull"],
