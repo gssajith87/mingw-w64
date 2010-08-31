@@ -155,6 +155,9 @@ src/gcc/.gcc.pull.marker: \
 	cd $(dir $@) && \
 	$(SVN) $(SVN_CO) --revision ${GCC_REVISION} \
 	       svn://gcc.gnu.org/svn/gcc/$(strip ${GCC_BRANCH})/ src
+### FIXME: Remove the next two lines!
+	cd $(dir $@) && \
+	contrib/gcc_update --touch
 	@touch $@
 
   ifneq (,$(strip ${GCC_UPDATE}))
