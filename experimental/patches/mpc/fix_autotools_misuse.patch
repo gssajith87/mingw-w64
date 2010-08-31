@@ -1,0 +1,145 @@
+Index: m4/mpc.m4
+===================================================================
+--- m4/mpc.m4	(revision 815)
++++ m4/mpc.m4	(working copy)
+@@ -198,7 +198,8 @@
+ AC_DEFUN([MPC_WINDOWS], [
+    AC_MSG_CHECKING(for DLL/static GMP)
+    if test "$enable_shared" = yes; then
+-     LDFLAGS="$LDFLAGS -no-undefined"
++     MPC_NO_UNDEFINED="-no-undefined"
++     AC_SUBST([MPC_NO_UNDEFINED])
+      AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+ #include "gmp.h"
+ #if !__GMP_LIBGMP_DLL
+Index: src/Makefile.am
+===================================================================
+--- src/Makefile.am	(revision 815)
++++ src/Makefile.am	(working copy)
+@@ -1,8 +1,10 @@
+ ## src/Makefile.am -- Process this file with automake to produce Makefile.in
+ AM_CFLAGS=@WARNINGCFLAGS@
++AM_CPPFLAGS=@MPC_CPPFLAGS@
++AM_LDFLAGS=@MPC_LDFLAGS@ @MPC_NO_UNDEFINED@
+ 
+ lib_LTLIBRARIES = libmpc.la
+-libmpc_la_LDFLAGS = -version-info 2:0:0
++libmpc_la_LDFLAGS = -version-info 2:0:0 $(AM_LDFLAGS)
+ libmpc_la_SOURCES = mpc-impl.h abs.c acos.c acosh.c add.c add_fr.c         \
+   add_ui.c arg.c asin.c asinh.c atan.c atanh.c clear.c cmp.c cmp_si_si.c   \
+   conj.c cos.c cosh.c div_2exp.c div.c div_fr.c div_ui.c exp.c fr_div.c    \
+Index: tests/Makefile.am
+===================================================================
+--- tests/Makefile.am	(revision 815)
++++ tests/Makefile.am	(working copy)
+@@ -1,11 +1,11 @@
+ ## Makefile.am -- Process this file with automake to produce Makefile.in
+ AM_CFLAGS=@WARNINGCFLAGS@
+-AM_CPPFLAGS = -I$(top_srcdir)/src
++AM_CPPFLAGS = -I$(top_srcdir)/src @MPC_CPPFLAGS@
+ LDADD = libmpc-tests.la $(top_builddir)/src/libmpc.la
+ # LOADLIBES (documented in the "GNU make" manual and equivalent to LDLIBS)
+ # enables to compile a program foo.c in the test directory by simply doing
+ # "make foo".
+-LOADLIBES=$(DEFS) -I$(top_srcdir)/src -I$(top_builddir) $(CPPFLAGS) $(CFLAGS) $(top_builddir)/tests/.libs/libmpc-tests.a $(top_builddir)/src/.libs/libmpc.a $(LIBS)
++LOADLIBES=$(DEFS) -I$(top_srcdir)/src -I$(top_builddir) $(CPPFLAGS) $(CFLAGS) $(top_builddir)/tests/.libs/libmpc-tests.a $(top_builddir)/src/.libs/libmpc.a @MPC_LDFLAGS@ $(LIBS)
+ 
+ check_PROGRAMS = tabs tacos tacosh tadd tadd_fr tadd_ui targ tasin tasinh     \
+ tatan tatanh tconj tcos tcosh tdiv tdiv_2exp tdiv_fr tdiv_ui texp tfr_div     \
+Index: configure.ac
+===================================================================
+--- configure.ac	(revision 815)
++++ configure.ac	(working copy)
+@@ -37,18 +37,18 @@
+ AC_ARG_WITH([mpfr_include],
+             [AC_HELP_STRING([--with-mpfr-include=DIR],
+                             [MPFR include directory])],
+-            [CPPFLAGS="-I$withval $CPPFLAGS"])
++            [extra_cppflags="-I$withval $extra_cppflags"])
+ AC_ARG_WITH([mpfr_lib],
+             [AC_HELP_STRING([--with-mpfr-lib=DIR],
+                             [MPFR lib directory])],
+-            [LDFLAGS="-L$withval $LDFLAGS"])
++            [extra_ldflags="-L$withval $extra_ldflags"])
+ AC_ARG_WITH([mpfr],
+             [AC_HELP_STRING([--with-mpfr=DIR],
+                            [MPFR install directory])],
+             [
+             if test -z "$with_mpfr_include" -a -z "$with_mpfr_lib" ; then
+-               CPPFLAGS="-I$withval/include $CPPFLAGS"
+-               LDFLAGS="-L$withval/lib $LDFLAGS"
++               extra_cppflags="-I$withval/include $extra_cppflags"
++               extra_ldflags="-L$withval/lib $extra_ldflags"
+             else
+                AC_MSG_FAILURE([Do not use --with-mpfr and --with-mpfr-include/--with-mpfr-lib options simultaneously.])
+             fi
+@@ -56,23 +56,26 @@
+ AC_ARG_WITH([gmp_include],
+             [AC_HELP_STRING([--with-gmp-include=DIR],
+                             [GMP include directory])],
+-            [CPPFLAGS="-I$withval $CPPFLAGS"])
++            [extra_cppflags="-I$withval $extra_cppflags"])
+ AC_ARG_WITH([gmp_lib],
+             [AC_HELP_STRING([--with-gmp-lib=DIR],
+                             [GMP lib directory])],
+-            [LDFLAGS="-L$withval $LDFLAGS"])
++            [extra_ldflags="-L$withval $extra_ldflags"])
+ AC_ARG_WITH([gmp],
+             [AC_HELP_STRING([--with-gmp=DIR],
+                            [GMP install directory])],
+             [
+             if test -z "$with_gmp_lib" -a -z "$with_gmp_include" ; then
+-               CPPFLAGS="-I$withval/include $CPPFLAGS"
+-               LDFLAGS="-L$withval/lib $LDFLAGS"
++               extra_cppflags="-I$withval/include $extra_cppflags"
++               extra_ldflags="-L$withval/lib $extra_ldflags"
+             else
+                AC_MSG_FAILURE([Do not use --with-gmp and --with-gmp-include/--with-gmp-lib options simultaneously.])
+             fi
+             ])
+ 
++AC_SUBST([MPC_CPPFLAGS],[$extra_cppflags])
++AC_SUBST([MPC_LDFLAGS],[$extra_ldflags])
++
+ dnl Setup CC and CFLAGS
+ 
+ dnl Check for user specification of CC or CFLAGS
+@@ -87,6 +90,12 @@
+ AC_PROG_SED
+ AC_LANG(C)
+ 
++# Backup variables for tests
++mpc_temp_cppflags=$CPPFLAGS
++mpc_temp_lflags=$LDFLAGS
++CPPFLAGS=$extra_cppflags
++LDFLAGS=$extra_ldflags
++
+ dnl Check GMP Header
+ AC_MSG_CHECKING(for gmp.h)
+ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+@@ -101,14 +110,12 @@
+    MPC_GMP_CC_CFLAGS
+ fi
+ 
+-
+ dnl Configs for Windows DLLs
+ case $host in
+   *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2*)
+      MPC_WINDOWS
+ esac
+ 
+-
+ dnl Finally set up LibTool
+ AC_PROG_LIBTOOL
+ 
+@@ -165,6 +172,10 @@
+          AC_MSG_ERROR([MPFR version >= 2.3.1 required])
+          ])
+ 
++# Restore variables
++CPPFLAGS=$mpc_temp_cppflags
++LDFLAGS=$mpc_temp_lflags
++
+ # Checks for header files.
+ AC_HEADER_STDC
+ AC_CHECK_HEADERS([locale.h inttypes.h limits.h unistd.h sys/time.h])
