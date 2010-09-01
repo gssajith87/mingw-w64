@@ -12,9 +12,6 @@ AM_MAINTAINER_MODE
 
 AC_CANONICAL_HOST
 
-#AM_CONDITIONAL([WITHSYSROOT],[test $with_sysroot != no])
-#AC_SUBST([TARGET_SYSTEM_ROOT])
-
 #AC_CHECK_HEADER([_mingw_mac.h], [], [AC_MSG_ERROR([Please check if the mingw-w64 header set and the build/host option are set properly.])])
 
 # Checks for programs.
