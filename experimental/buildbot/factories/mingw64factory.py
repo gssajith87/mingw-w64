@@ -321,25 +321,26 @@ class Mingw64Factory(factory.BuildFactory):
     pass
 
   def _step_Archive(self):
+    command=["tar",
+      "cjf",
+      WithProperties("../../%(filename)s"),
+      "--owner", "0",
+      "--group", "0",
+      "--checkpoint",
+      "--exclude=.svn",
+      "."]
     # OSX Snow Leopard (10.6) has tar which is bsdtar
     # make it use gnutar, this is also availible on Leopard (10.5)
+    # OSX also has some issues with files changing during mkdist
     if self.host_os == "darwin":
-      tar = "gnutar"
-    else:
-      tar = "tar"
+      command[0]="gnutar"
+      command.append("--ignore-failed-read")
     # make the tarball
     self.addStep(ShellCommand,
                  name="makedist",
                  description=["tarball", "package"],
                  workdir="build/build/root",
-                 command=[tar,
-                          "cjf",
-                          WithProperties("../../%(filename)s"),
-                          "--owner", "0",
-                          "--group", "0",
-                          "--checkpoint",
-                          "--exclude=.svn",
-                          "."],
+                 command=command,
                  haltOnFailure=True)
                 
 
