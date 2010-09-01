@@ -2177,7 +2177,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 ac_aux_dir=
-for ac_dir in build "$srcdir"/build; do
+for ac_dir in build-aux "$srcdir"/build-aux; do
   for ac_t in install-sh install.sh shtool; do
     if test -f "$ac_dir/$ac_t"; then
       ac_aux_dir=$ac_dir
@@ -2187,7 +2187,7 @@ for ac_dir in build "$srcdir"/build; do
   done
 done
 if test -z "$ac_aux_dir"; then
-  as_fn_error "cannot find install-sh, install.sh, or shtool in build \"$srcdir\"/build" "$LINENO" 5
+  as_fn_error "cannot find install-sh, install.sh, or shtool in build-aux \"$srcdir\"/build-aux" "$LINENO" 5
 fi
 
 # These three variables are undocumented and unsupported,
@@ -2776,9 +2776,6 @@ IFS=$ac_save_IFS
 case $host_os in *\ *) host_os=`echo "$host_os" | sed 's/ /-/g'`;; esac
 
 
-
-#AM_CONDITIONAL([WITHSYSROOT],[test $with_sysroot != no])
-#AC_SUBST([TARGET_SYSTEM_ROOT])
 
 #AC_CHECK_HEADER([_mingw_mac.h], [], [AC_MSG_ERROR([Please check if the mingw-w64 header set and the build/host option are set properly.])])
 

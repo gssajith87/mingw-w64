@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.65])
 AC_INIT([widl],[1.0],[mingw-w64-public@lists.sourceforge.net])
-AC_CONFIG_AUX_DIR([build])
+AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/widl.c])
 AC_CONFIG_HEADERS([include/config.h])
 

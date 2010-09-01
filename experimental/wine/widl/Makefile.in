@@ -38,8 +38,9 @@ bin_PROGRAMS = widl$(EXEEXT)
 subdir = .
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure \
-	$(top_srcdir)/include/config.h.in build/config.guess \
-	build/config.sub build/depcomp build/install-sh build/missing
+	$(top_srcdir)/include/config.h.in build-aux/config.guess \
+	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
+	build-aux/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -66,7 +67,7 @@ am_widl_OBJECTS = src/client.$(OBJEXT) src/expr.$(OBJEXT) \
 widl_OBJECTS = $(am_widl_OBJECTS)
 widl_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include
-depcomp = $(SHELL) $(top_srcdir)/build/depcomp
+depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
