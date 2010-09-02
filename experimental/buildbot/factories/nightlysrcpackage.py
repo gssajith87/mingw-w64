@@ -116,7 +116,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                               "GCC_BRANCH"  : WithProperties("%(gcc_branch)s")}))
     self.addStep(ShellCommandConditional,
                  name="gcc-patch",
-                 workdir="build/src/gcc/gcc",
+                 workdir="build/src/gcc/src",
                  description=["patch", "gcc"],
                  condprop="scheduler",
                  condvalue="try",
@@ -143,7 +143,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     # Fix gmp (fails to find m4 for flex)
     self.addStep(ShellCommand,
                  name="gmp-patch",
-                 workdir="build/src/gcc",
+                 workdir="build/src/gcc/src/gmp",
                  description=["patch", "gmp"],
                  command=["bash", "-c",
                           """if [ -n "$( ls ../patches/gmp/*.patch )" ] ; then
@@ -167,7 +167,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
 
     self.addStep(ShellCommandConditional,
                  name="mpfr-patch",
-                 workdir="build/src/gcc/gcc/mpfr",
+                 workdir="build/src/gcc/src/mpfr",
                  description=["patch", "mpfr"],
                  condprop="scheduler",
                  condvalue="try",
@@ -194,7 +194,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
 
     self.addStep(ShellCommandConditional,
                  name="mpc-patch",
-                 workdir="build/src/gcc/gcc/mpc",
+                 workdir="build/src/gcc/src/mpc",
                  description=["patch", "mpc"],
                  condprop="scheduler",
                  condvalue="try",
