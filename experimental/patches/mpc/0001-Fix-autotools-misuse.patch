@@ -1,0 +1,152 @@
+From 6adaa0399924a567cfd10b3caba71639abbb42cb Mon Sep 17 00:00:00 2001
+From: Jonathan Yong <jon_y@users.sourceforge.net>
+Date: Thu, 2 Sep 2010 12:24:18 +0800
+Subject: [PATCH 1/2] Fix autotools misuse.
+
+---
+ acinclude.m4      |    3 ++-
+ configure.ac      |   31 +++++++++++++++++++++----------
+ src/Makefile.am   |    5 +++--
+ tests/Makefile.am |    2 +-
+ 4 files changed, 27 insertions(+), 14 deletions(-)
+
+diff --git a/acinclude.m4 b/acinclude.m4
+index 6309618..b18d2fa 100644
+--- a/acinclude.m4
++++ b/acinclude.m4
+@@ -196,7 +196,8 @@ MPC_WINDOWS
+ AC_DEFUN([MPC_WINDOWS], [
+    AC_MSG_CHECKING(for DLL/static GMP)
+    if test "$enable_shared" = yes; then
+-     LDFLAGS="$LDFLAGS -no-undefined"
++     MPC_NO_UNDEFINED="-no-undefined"
++     AC_SUBST([MPC_NO_UNDEFINED])
+      AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+ #include "gmp.h"
+ #if !__GMP_LIBGMP_DLL
+diff --git a/configure.ac b/configure.ac
+index b171774..431a3f2 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -36,18 +36,18 @@ dnl Extra arguments to configure
+ AC_ARG_WITH([mpfr_include],
+             [AC_HELP_STRING([--with-mpfr-include=DIR],
+                             [MPFR include directory])],
+-            [CPPFLAGS="-I$withval $CPPFLAGS"])
++            [extra_cppflags="-I$withval $extra_cppflags"])
+ AC_ARG_WITH([mpfr_lib],
+             [AC_HELP_STRING([--with-mpfr-lib=DIR],
+                             [MPFR lib directory])],
+-            [LDFLAGS="-L$withval $LDFLAGS"])
++            [extra_ldflags="-L$withval $extra_ldflags"])
+ AC_ARG_WITH([mpfr],
+             [AC_HELP_STRING([--with-mpfr=DIR],
+                            [MPFR install directory])],
+             [
+             if test -z "$with_mpfr_include" -a -z "$with_mpfr_lib" ; then
+-               CPPFLAGS="-I$withval/include $CPPFLAGS"
+-               LDFLAGS="-L$withval/lib $LDFLAGS"
++               extra_cppflags="-I$withval/include $extra_cppflags"
++               extra_ldflags="-L$withval/lib $extra_ldflags"
+             else
+                AC_MSG_FAILURE([Do not use --with-mpfr and --with-mpfr-include/--with-mpfr-lib options simultaneously.])
+             fi
+@@ -55,23 +55,26 @@ AC_ARG_WITH([mpfr],
+ AC_ARG_WITH([gmp_include],
+             [AC_HELP_STRING([--with-gmp-include=DIR],
+                             [GMP include directory])],
+-            [CPPFLAGS="-I$withval $CPPFLAGS"])
++            [extra_cppflags="-I$withval $extra_cppflags"])
+ AC_ARG_WITH([gmp_lib],
+             [AC_HELP_STRING([--with-gmp-lib=DIR],
+                             [GMP lib directory])],
+-            [LDFLAGS="-L$withval $LDFLAGS"])
++            [extra_ldflags="-L$withval $extra_ldflags"])
+ AC_ARG_WITH([gmp],
+             [AC_HELP_STRING([--with-gmp=DIR],
+                            [GMP install directory])],
+             [
+             if test -z "$with_gmp_lib" -a -z "$with_gmp_include" ; then
+-               CPPFLAGS="-I$withval/include $CPPFLAGS"
+-               LDFLAGS="-L$withval/lib $LDFLAGS"
++               extra_cppflags="-I$withval/include $extra_cppflags"
++               extra_ldflags="-L$withval/lib $extra_ldflags"
+             else
+                AC_MSG_FAILURE([Do not use --with-gmp and --with-gmp-include/--with-gmp-lib options simultaneously.])
+             fi
+             ])
+ 
++AC_SUBST([MPC_CPPFLAGS],[$extra_cppflags])
++AC_SUBST([MPC_LDFLAGS],[$extra_ldflags])
++
+ dnl Setup CC and CFLAGS
+ 
+ dnl Check for user specification of CC or CFLAGS
+@@ -86,19 +89,23 @@ AC_PROG_EGREP
+ AC_PROG_SED
+ AC_LANG(C)
+ 
++# Backup variables for tests
++mpc_temp_cppflags=$CPPFLAGS
++mpc_temp_lflags=$LDFLAGS
++CPPFLAGS=$extra_cppflags
++LDFLAGS=$extra_ldflags
++
+ dnl Check for GMP CFLAGS in gmp.h
+ if test -z "$user_redefine_cc" ; then
+    MPC_GMP_CC_CFLAGS
+ fi
+ 
+-
+ dnl Configs for Windows DLLs
+ case $host in
+   *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2*)
+      MPC_WINDOWS
+ esac
+ 
+-
+ dnl Finally set up LibTool
+ AC_PROG_LIBTOOL
+ 
+@@ -155,6 +162,10 @@ error
+          AC_MSG_ERROR([MPFR version >= 2.3.1 required])
+          ])
+ 
++# Restore variables
++CPPFLAGS=$mpc_temp_cppflags
++LDFLAGS=$mpc_temp_lflags
++
+ # Checks for header files.
+ AC_HEADER_STDC
+ AC_CHECK_HEADERS([locale.h inttypes.h limits.h unistd.h sys/time.h])
+diff --git a/src/Makefile.am b/src/Makefile.am
+index d4bc8b2..e86fa93 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -1,8 +1,9 @@
+ ## src/Makefile.am -- Process this file with automake to produce Makefile.in
+-AM_CFLAGS=@WARNINGCFLAGS@
++AM_CPPFLAGS=@MPC_CPPFLAGS@ @WARNINGCFLAGS@
++AM_LDFLAGS=@MPC_LDFLAGS@ @MPC_NO_UNDEFINED@
+ 
+ lib_LTLIBRARIES = libmpc.la
+-libmpc_la_LDFLAGS = -version-info 2:0:0
++libmpc_la_LDFLAGS = -version-info 2:0:0 $(AM_LDFLAGS)
+ libmpc_la_SOURCES = mpc-impl.h abs.c acos.c acosh.c add.c add_fr.c         \
+   add_ui.c arg.c asin.c asinh.c atan.c atanh.c clear.c cmp.c cmp_si_si.c   \
+   conj.c cos.c cosh.c div_2exp.c div.c div_fr.c div_ui.c exp.c fr_div.c    \
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 8ccf8f8..787dd1a 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -1,6 +1,6 @@
+ ## Makefile.am -- Process this file with automake to produce Makefile.in
+ AM_CFLAGS=@WARNINGCFLAGS@
+-AM_CPPFLAGS = -I$(top_srcdir)/src
++AM_CPPFLAGS = -I$(top_srcdir)/src @MPC_CPPFLAGS@
+ LDADD = libmpc-tests.la $(top_builddir)/src/libmpc.la
+ LOADLIBES=$(DEFS) -I$(top_srcdir)/src $(CPPFLAGS) $(CFLAGS) $(top_builddir)/src/.libs/libmpc.a $(LIBS)
+ 
+-- 
+1.7.1
+
