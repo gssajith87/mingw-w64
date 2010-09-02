@@ -103,7 +103,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  command=["bash", "-c",
                           """if [ -n "$( ls ../patches/binutils/*.patch )" ] ; then
                                for i in ../patches/binutils/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
+                                 patch -p1 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
  
@@ -124,7 +124,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  command=["bash", "-c",
                           """if [ -n "$( ls ../../patches/gcc/*.patch )" ] ; then
                                for i in ../../patches/gcc/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
+                                 patch -p1 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
  
@@ -148,7 +148,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  command=["bash", "-c",
                           """if [ -n "$( ls ../patches/gmp/*.patch )" ] ; then
                                for i in ../patches/gmp/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
+                                 patch -p1 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
 
@@ -175,7 +175,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  command=["bash", "-c",
                           """if [ -n "$( ls ../../../patches/mpfr/*.patch )" ] ; then
                                for i in ../../../patches/mpfr/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
+                                 patch -p1 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
 
@@ -202,7 +202,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  command=["bash", "-c",
                           """if [ -n "$( ls ../../../patches/mpc/*.patch )" ] ; then
                                for i in ../../../patches/mpc/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
+                                 patch -p1 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
 
@@ -224,7 +224,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  command=["bash", "-c",
                           """if [ -n "$( ls ../patches/mingw/*.patch )" ] ; then
                                for i in ../patches/mingw/*.patch ; do
-                                 patch -p0 -f -i "$i" ;
+                                 patch -p1 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
 
