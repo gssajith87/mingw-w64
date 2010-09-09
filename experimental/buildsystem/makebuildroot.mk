@@ -287,9 +287,9 @@ BUILD_DIR := build
 # Extract source tarball
 ########################################
 src-extract:: \
-    build/.extract.marker
+    ${BUILD_DIR}/.extract.marker
 
-build/.extract.marker: \
+${BUILD_DIR}/.extract.marker: \
     ${SRC_ARCHIVE}
 	-mkdir -p $(dir $@)
 	$(TAR) -C $(dir $@) -xvjpf $<
@@ -297,7 +297,7 @@ build/.extract.marker: \
 
 ${BUILD_DIR}/root/.root.init.marker: \
     ${BUILD_DIR}/root/${TARGET_ARCH}/.mkdir.marker \
-    build/.extract.marker
+    ${BUILD_DIR}/.extract.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
 	test -e ${BUILD_DIR}/root/mingw  || \
 	  junction ${BUILD_DIR}/root/mingw "${BUILD_DIR}/root/${TARGET_ARCH}"
@@ -381,9 +381,9 @@ ${BUILD_DIR}/binutils/obj/.install.marker: \
 # GCC cross compiling support - winsup
 ########################################
 gcc-winsup: \
-    build/gcc/.winsup.marker
+    ${BUILD_DIR}/gcc/.winsup.marker
 
-build/gcc/gcc/.winsup.marker: \
+${BUILD_DIR}/gcc/gcc/.winsup.marker: \
     ${BUILD_DIR}/.extract.marker \
     ${BUILD_DIR}/root/.root.init.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
@@ -426,10 +426,10 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
 # Compile GCC stage 1
 ########################################
 gcc-bootstrap-compile: \
-    build/gcc/obj/.bootstrap.compile.marker
+    ${BUILD_DIR}/gcc/obj/.bootstrap.compile.marker
 
-build/gcc/obj/.bootstrap.compile.marker: \
-    build/gcc/obj/.config.marker
+${BUILD_DIR}/gcc/obj/.bootstrap.compile.marker: \
+    ${BUILD_DIR}/gcc/obj/.config.marker
 	${MAKE} -C $(dir $@) all-gcc
 	@touch $@
 
@@ -437,10 +437,10 @@ build/gcc/obj/.bootstrap.compile.marker: \
 # Install GCC stage 1
 ########################################
 gcc-bootstrap-install: \
-    build/gcc/obj/.bootstrap.install.marker
+    ${BUILD_DIR}/gcc/obj/.bootstrap.install.marker
 
-build/gcc/obj/.bootstrap.install.marker: \
-    build/gcc/obj/.bootstrap.compile.marker
+${BUILD_DIR}/gcc/obj/.bootstrap.install.marker: \
+    ${BUILD_DIR}/gcc/obj/.bootstrap.compile.marker
 	${MAKE} -C $(dir $@) install-gcc
 	@touch $@
 
@@ -451,7 +451,7 @@ crt-configure: \
     ${BUILD_DIR}/mingw/obj/.config.marker
 
 ${BUILD_DIR}/mingw/obj/.config.marker: \
-    build/gcc/obj/.bootstrap.install.marker \
+    ${BUILD_DIR}/gcc/obj/.bootstrap.install.marker \
     ${BUILD_DIR}/mingw/obj/.mkdir.marker
 	cd $(dir $@) && \
 	PATH=$(realpath build/root/bin):$$PATH \
