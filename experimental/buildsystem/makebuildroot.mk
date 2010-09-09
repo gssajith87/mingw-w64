@@ -343,6 +343,7 @@ binutils-configure: \
     ${BUILD_DIR}/binutils/obj/.config.marker
 
 ${BUILD_DIR}/binutils/obj/.config.marker: \
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker
     ${BUILD_DIR}/binutils/obj/.mkdir.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
@@ -428,8 +429,7 @@ gcc-bootstrap-compile: \
     build/gcc/obj/.bootstrap.compile.marker
 
 build/gcc/obj/.bootstrap.compile.marker: \
-    build/gcc/obj/.config.marker \
-    ${BUILD_DIR}/mingw-headers/obj/.install.marker
+    build/gcc/obj/.config.marker
 	found_asm=yes make -C $(dir $@) all-gcc
 	@touch $@
 
