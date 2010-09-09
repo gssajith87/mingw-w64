@@ -430,7 +430,7 @@ gcc-bootstrap-compile: \
 
 build/gcc/obj/.bootstrap.compile.marker: \
     build/gcc/obj/.config.marker
-	found_asm=yes make -C $(dir $@) all-gcc
+	make -C $(dir $@) all-gcc
 	@touch $@
 
 ########################################

@@ -806,7 +806,7 @@ gcc-bootstrap-compile: \
 
 ${BUILD_DIR}/gcc/obj/.bootstrap.compile.marker: \
     ${BUILD_DIR}/gcc/obj/.config.marker
-	found_asm=yes ${MAKE} ${MAKE_OPTS} -C $(dir $@) all-gcc
+	${MAKE} ${MAKE_OPTS} -C $(dir $@) all-gcc
 	@touch $@
 
 ########################################
