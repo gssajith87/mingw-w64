@@ -343,7 +343,7 @@ binutils-configure: \
     ${BUILD_DIR}/binutils/obj/.config.marker
 
 ${BUILD_DIR}/binutils/obj/.config.marker: \
-    ${BUILD_DIR}/mingw-headers/obj/.install.marker
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
     ${BUILD_DIR}/binutils/obj/.mkdir.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
