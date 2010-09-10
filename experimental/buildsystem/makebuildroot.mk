@@ -185,7 +185,7 @@ gmp-extract: \
 src/.gmp.extract.marker: \
     src/gmp.tar.bz2 \
     src/gcc/src/gmp/.mkdir.marker
-	$(TAR) -C $(dir $@)/gcc/src/gmp --strip-components=1 -xjvf $<
+	$(TAR) -C $(dir $@)/gcc/src/gmp --no-same-owner --strip-components=1 -xjvf $<
 	@touch $@
 
 ########################################
@@ -209,7 +209,7 @@ mpfr-extract: \
 src/.mpfr.extract.marker: \
     src/mpfr.tar.bz2 \
     src/gcc/src/mpfr/.mkdir.marker
-	$(TAR) -C $(dir $@)/gcc/src/mpfr --strip-components=1 -xjvf $<
+	$(TAR) -C $(dir $@)/gcc/src/mpfr --no-same-owner --strip-components=1 -xjvf $<
 	@touch $@
 
 ########################################
@@ -233,7 +233,7 @@ mpc-extract: \
 src/.mpc.extract.marker: \
     src/mpc.tar.gz \
     src/gcc/src/mpc/.mkdir.marker
-	$(TAR) -C $(dir $@)/gcc/src/mpc --strip-components=1 -xzvf $<
+	$(TAR) -C $(dir $@)/gcc/src/mpc --no-same-owner --strip-components=1 -xzvf $<
 	@touch $@
 
 ########################################
