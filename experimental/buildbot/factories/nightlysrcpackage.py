@@ -146,8 +146,8 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  workdir="build/src/gcc/src/gmp",
                  description=["patch", "gmp"],
                  command=["bash", "-c",
-                          """if [ -n "$( ls ../patches/gmp/*.patch )" ] ; then
-                               for i in ../patches/gmp/*.patch ; do
+                          """if [ -n "$( ls ../../../patches/gmp/*.patch )" ] ; then
+                               for i in ../../../patches/gmp/*.patch ; do
                                  patch -p1 -f -i "$i" ;
                                done ;
                              fi""".replace("\n", " ")])
