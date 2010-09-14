@@ -523,10 +523,10 @@ ${BIN_ARCHIVE}: \
 ifeq (windows,${HOST_TYPE})
 	cd ${BUILD_DIR}/root && \
 	zip -r -9 ../../$(patsubst %.tar.bz2,%.zip,$@) \
-	     . -x .*.marker *.*.marker
+	     . -x .*.marker *.*.marker *.la
 else
 	$(TAR) vcjf $@ -C ${BUILD_DIR}/root --owner 0 --group 0 \
-	    --exclude=CVS --exclude=.svn --exclude=.*.marker \
+	    --exclude=CVS --exclude=.svn --exclude=.*.marker --exclude=*.la \
             .
 endif
 
