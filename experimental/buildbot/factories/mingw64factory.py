@@ -331,10 +331,8 @@ class Mingw64Factory(factory.BuildFactory):
       "."]
     # OSX Snow Leopard (10.6) has tar which is bsdtar
     # make it use gnutar, this is also availible on Leopard (10.5)
-    # OSX also has some issues with files changing during mkdist
     if self.host_os == "darwin":
       command[0]="gnutar"
-      command.append("--ignore-failed-read")
     # make the tarball
     self.addStep(ShellCommand,
                  name="makedist",
