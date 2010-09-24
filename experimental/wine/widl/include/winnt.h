@@ -1314,13 +1314,14 @@ typedef struct _CONTEXT {
 	ULONG R8;
 	ULONG R9;
 	ULONG R10;
-	ULONG R11;
-	ULONG R12;
+	ULONG Fp;
+	ULONG Ip;
 
+	/* These are selected by CONTEXT_CONTROL */
 	ULONG Sp;
 	ULONG Lr;
 	ULONG Pc;
-	ULONG Psr;
+	ULONG Cpsr;
 } CONTEXT;
 
 #endif /* __arm__ */
@@ -2772,6 +2773,7 @@ typedef struct _IMAGE_VXD_HEADER {
 #define	IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER	12
 #define	IMAGE_SUBSYSTEM_EFI_ROM			13
 #define	IMAGE_SUBSYSTEM_XBOX			14
+#define	IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION	16
 
 /* DLL Characteristics */
 #define IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE          0x0040
