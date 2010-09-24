@@ -18,7 +18,9 @@ import_header() {
         sed -i 's/\bWINELIB_NAME_AW\b/__MINGW_NAME_AW/g' $2/$1
         sed -i 's/\bDECL_WINELIB_TYPE_AW\b/__MINGW_TYPEDEF_AW/g' $2/$1
     fi
+    sed -i 's/\bBOOL    /WINBOOL /g' $2/$1
     sed -i 's/\bBOOL\b/WINBOOL/g' $2/$1
+    sed -i 's/WIDL [0-9].[0-9].[0-9]*/WIDL/g' $2/$1
 }
 
 # headers
@@ -33,12 +35,12 @@ for f in fusion mscoree optary wincodec xmllite; do
 done
 
 # DirectX headers
-for f in d3d10effect.h d3d10misc.h d3d10shader.h xinput.h; do
+for f in d3d10effect.h d3d10misc.h d3d10shader.h d3d8.h d3d8caps.h d3d8types.h d3d9.h d3d9caps.h d3d9types.h xinput.h; do
     import_header $f direct-x/include
 done
 
 # DirectX IDLs
-for f in d3d10 dxgi dxgitype; do
+for f in amstream austream d3d10 d3dcommon ddstream dxgi dxgitype mmstream; do
     cp $WINE_DIR/include/$f.idl direct-x/include
     import_header $f.h direct-x/include
 done
