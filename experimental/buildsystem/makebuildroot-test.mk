@@ -41,8 +41,16 @@ BIN_ARCHIVE ?= mingw-w64-bin_$(shell uname -s).tar.bz2
 ########################################
 # ENABLE_MULTILIB - Set to Y to use Multi-lib
 # GCC_ADA - Set to Y to build ADA
+# GCC_CPP - C++ support
+# GCC_FORTRAN - Fortran support
+# GCC_OBJC - Objective C support
+# GCC_JAVA - Java support
 ENABLE_MULTILIB ?= N
 GCC_ADA ?= N
+GCC_CPP ?= Y
+GCC_FORTRAN ?= Y
+GCC_OBJC ?= Y
+GCC_JAVA ?= N
 
 ########################################
 # Version number variables
@@ -100,6 +108,14 @@ MINGW_CONFIG_EXTRA_ARGS_MULTI_N :=
 
 GCC_ADA_Y := ",ada"
 GCC_ADA_N :=
+GCC_CPP_Y := ",c++"
+GCC_CPP_N :=
+GCC_FORTRAN_Y := ",fortran"
+GCC_FORTRAN_N :=
+GCC_OBJC_Y := ",objc,obj-c++"
+GCC_OBJC_N :=
+GCC_JAVA_Y := ",java"
+GCC_JAVA_N :=
 
 ########################################
 # Configure
@@ -793,7 +809,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
             --with-ppl=${CURDIR}/${BUILD_DIR}/ppl/install \
             --with-cloog=${CURDIR}/${BUILD_DIR}/cloog/install \
             --with-host-libstdcxx="-lstdc++ -lsupc++ -lm" \
-        --enable-languages=all,obj-c++${GCC_ADA_${GCC_ADA}} \
+        --enable-languages=c${GCC_CPP_${GCC_CPP}}${GCC_FORTRAN_${GCC_FORTRAN}}${GCC_OBJC_${GCC_OBJC}}${GCC_JAVA_${GCC_JAVA}}{GCC_ADA_${GCC_ADA}} \
         ${GCC_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
         ${GCC_CONFIG_EXTRA_ARGS}
 	@touch $@
