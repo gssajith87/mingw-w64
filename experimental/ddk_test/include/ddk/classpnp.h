@@ -130,7 +130,7 @@
 
 #ifdef ALLOCATE_SRB_FROM_POOL
 
-#define ClasspAllocateSrb(ext)
+#define ClasspAllocateSrb(ext)                      \
   ExAllocatePoolWithTag(NonPagedPool,               \
                         sizeof(SCSI_REQUEST_BLOCK), \
                         'sBRS')
