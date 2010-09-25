@@ -435,10 +435,6 @@ ${BUILD_DIR}/.extract.marker: \
 	$(TAR) -C $(dir $@) -xvjpf $<
 	@touch $@
 
-${BUILD_DIR}/root/${TARGET_ARCH}/.mkdir.marker:
-	-mkdir -p $(dir $@)
-	@touch $@
-
 ${BUILD_DIR}/root/.root.init.marker: \
     ${BUILD_DIR}/root/${TARGET_ARCH}/.mkdir.marker \
     ${BUILD_DIR}/.extract.marker
