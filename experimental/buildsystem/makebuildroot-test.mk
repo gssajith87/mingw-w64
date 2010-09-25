@@ -809,7 +809,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
             --with-ppl=${CURDIR}/${BUILD_DIR}/ppl/install \
             --with-cloog=${CURDIR}/${BUILD_DIR}/cloog/install \
             --with-host-libstdcxx="-lstdc++ -lsupc++ -lm" \
-        --enable-languages=c${GCC_CPP_${GCC_CPP}}${GCC_FORTRAN_${GCC_FORTRAN}}${GCC_OBJC_${GCC_OBJC}}${GCC_JAVA_${GCC_JAVA}}{GCC_ADA_${GCC_ADA}} \
+        --enable-languages=c${GCC_CPP_${GCC_CPP}}${GCC_FORTRAN_${GCC_FORTRAN}}${GCC_OBJC_${GCC_OBJC}}${GCC_JAVA_${GCC_JAVA}}${GCC_ADA_${GCC_ADA}} \
         ${GCC_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
         ${GCC_CONFIG_EXTRA_ARGS}
 	@touch $@
