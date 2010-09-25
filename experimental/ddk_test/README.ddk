@@ -6,7 +6,7 @@ the definition of the macro MINGW_HAS_DDK_H.
 
 The DDK headers are from the ReactOS project, from their svn repo
 svn://svn.reactos.org/reactos/trunk/reactos/include/ddk/
-... revision 48868.  Many of the files have some local edits.
+... revision 48878.  Many of the files have some local edits.
 
 This is an optional SDK. Some of the headers are public domain and
 some of them are under LGPL license. You can obtain the original
