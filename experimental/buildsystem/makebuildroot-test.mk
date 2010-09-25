@@ -61,6 +61,7 @@ GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
 # Download URLs
 ########################################
 PTHREADS_CVS_PULL ?= :pserver:anoncvs@sourceware.org:/cvs/pthreads-win32
+PTHREADS_CVS_DATE ?= '5/11/2010'
 
 ########################################
 # Configure options
@@ -232,7 +233,7 @@ pthreads-download: \
 
 src/pthreads/.pthreads.download.marker: \
     src/.mkdir.marker
-	cd src && cvs -z9 -d ${PTHREADS_CVS_PULL} checkout pthreads
+	cd src && cvs -z9 -d ${PTHREADS_CVS_PULL} checkout -D ${PTHREADS_CVS_DATE} pthreads
 	@touch $@
 
 ifneq (,$(strip ${PTHREADS_UPDATE}))
