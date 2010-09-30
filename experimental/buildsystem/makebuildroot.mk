@@ -233,7 +233,7 @@ mpc-extract: \
 src/.mpc.extract.marker: \
     src/mpc.tar.gz \
     src/gcc/src/mpc/.mkdir.marker
-	$(TAR) -C $(dir $@)/gcc/src/mpc --no-same-owner --strip-components=1 -xzvf $<
+	$(TAR) -C $(dir $@)/gcc/src/mpc --no-same-owner --strip-components=1 -xvf $<
 	@touch $@
 
 ########################################
