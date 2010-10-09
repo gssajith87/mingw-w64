@@ -14947,11 +14947,11 @@ typedef enum _ENLISTMENT_INFORMATION_CLASS {
 } ENLISTMENT_INFORMATION_CLASS;
 
 typedef struct _TRANSACTION_LIST_ENTRY {
-#if defined(__cplusplus)
-  ::UOW UOW;
-#else
-  UOW UOW;
-#endif
+/* UOW is typedef'ed as GUID just above.  Changed type of UOW
+ * member from UOW to GUID for C++ compat.  Using ::UOW for C++
+ * works too but we were reported some problems in corner cases
+ */
+  GUID UOW;
 } TRANSACTION_LIST_ENTRY, *PTRANSACTION_LIST_ENTRY;
 
 typedef struct _TRANSACTION_LIST_INFORMATION {
