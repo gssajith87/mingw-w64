@@ -23,7 +23,7 @@ widl_SOURCES = \
   src/wpp/preproc.c \
   src/wpp/wpp.c
 
-widl_CFLAGS = -O3 -g -std=gnu99 -Wall -Wextra -Wshadow -Wformat -Wpacked -Wredundant-decls -Winline -pedantic -Wno-pedantic-ms-format -Wmissing-declarations -Wredundant-decls -Wimplicit-function-declaration -Wmissing-noreturn -Wmissing-prototypes -Wstrict-aliasing=2
+widl_CFLAGS = -O3 -g -Wall -Wformat -Wpacked -Wno-pedantic-ms-format -Wmissing-declarations -Wimplicit-function-declaration -Wmissing-prototypes -Wstrict-aliasing=2
 
 DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
 
