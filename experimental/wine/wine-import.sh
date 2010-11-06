@@ -35,12 +35,13 @@ for f in fusion mscoree optary wincodec xmllite; do
 done
 
 # DirectX headers
-for f in d3d10effect.h d3d10misc.h d3d10shader.h d3d8.h d3d8caps.h d3d8types.h d3d9.h d3d9caps.h d3d9types.h xinput.h; do
+for f in d3d10effect.h d3d10misc.h d3d10shader.h d3d8.h d3d8caps.h d3d8types.h d3d9.h d3d9caps.h d3d9types.h d3dhal.h \
+	d3dtypes.h d3dx9core.h d3dx9tex.h dxerr8.h dxerr9.h errors.h xinput.h; do
     import_header $f direct-x/include
 done
 
 # DirectX IDLs
-for f in amstream austream d3d10 d3dcommon ddstream dxgi dxgitype mmstream; do
+for f in amstream amvideo austream d3d10 d3dcommon ddstream dxgi dxgitype mmstream; do
     cp $WINE_DIR/include/$f.idl direct-x/include
     import_header $f.h direct-x/include
 done
