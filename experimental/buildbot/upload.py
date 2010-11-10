@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
-from ConfigParser import RawConfigParser as ConfigParser
+from configparser import RawConfigParser as ConfigParser
 import optparse, os, re, stat, subprocess, sys, datetime
-import cookielib, urllib, urllib2
 
 def main(argv):
   config = ConfigParser()
@@ -34,7 +33,7 @@ def main(argv):
       value = value[len(section) + 1:]
       key = value[:value.index("=")]
       value = value[len(key) + 1:]
-    except ValueError,e:
+    except ValueError as e:
       raise optparse.OptionValueError(
         "invalid configuration value:\n  %s\nformat is <section>.<key>=<value>" % (value))
     if not args[0].has_section(section):
@@ -105,16 +104,16 @@ def upload(srcfile, destfile, config, opts):
   assert destfile.find(" ") == -1, "destination file name cannot contain spaces!"
 
   if opts.verbose > 0:
-    print "processing upload of %s to OldFiles/%s..." % (srcfile, destfile)
+    print("processing upload of %s to OldFiles/%s..." % (srcfile, destfile))
   temppath = "/home/frs/project/%s/%s/%s/OldFiles/%s" % (
              group_id[0], group_id[0:2], group_id, destfile)
   command = ["rsync", "-zvtPc", "--bwlimit=100", "-e", "ssh -i %s -o UserKnownHostsFile=%s", srcfile,
              "%%s,%s@frs.sourceforge.net:%s" % (group_id, temppath)]
-  print " ".join(command)
+  print(" ".join(command))
   command[4] = command[4] % (config.get("sourceforge", "sshkey"), "ssh_known_hosts")
   command[6] = command[6] % (config.get("sourceforge", "user"))
   if opts.dry_run:
-    print "(rsync skipped due to dry-run)"
+    print("(rsync skipped due to dry-run)")
     return temppath
   else:
     for attempt in range(0, 5):  # 5 tries
@@ -134,14 +133,14 @@ def publish(temppath, filename, config, opts):
   destpath = "/home/frs/project/%s/%s/%s/%s/%s" % (
     group_id[0], group_id[0:2], group_id, destpath, filename)
   if opts.verbose > 0:
-    print 'renaming file "%s" to "%s"...' % (temppath, destpath)
+    print('renaming file "%s" to "%s"...' % (temppath, destpath))
   command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%%s,%s@frs.sourceforge.net" % (group_id)]
   batch = 'rename "%s" "%s"' % (temppath, destpath)
-  print "%s | %s" % (batch, " ".join(command))
+  print("%s | %s" % (batch, " ".join(command)))
   command[4] = command[4] % (config.get("sourceforge", "sshkey"))
   command[5] = command[5] % (config.get("sourceforge", "user"))
   if opts.dry_run:
-    print "(publish skipped due to dry-run)"
+    print("(publish skipped due to dry-run)")
     return destpath
   else:
     for attempt in range(0, 5):  # 5 tries
@@ -155,14 +154,14 @@ def publish(temppath, filename, config, opts):
 def cleanup(destpath, filename, config, opts):
   group_id = config.get("sourceforge", "group_id")
   if opts.verbose > 0:
-    print "processing cleanup of %s..." % (filename)
+    print("processing cleanup of %s..." % (filename))
 
   if opts.datestamp is not None and filename.find(opts.datestamp) != -1:
     prefix = filename[:filename.find(opts.datestamp)]
   else:
     # we don't have enough information to clean anything up
     if opts.verbose > 0:
-      print "no datestamp given or not found in file %s" % (filename)
+      print("no datestamp given or not found in file %s" % (filename))
     return
 
   command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%%s,%s@frs.sourceforge.net" % (group_id)]
@@ -172,13 +171,13 @@ def cleanup(destpath, filename, config, opts):
     'cd "%s"' % (dir),
     'ls %s*' % (prefix)])
 
-  print "%s | %s" % (list_batch, " ".join(command))
+  print("%s | %s" % (list_batch, " ".join(command)))
   command[4] = command[4] % (config.get("sourceforge", "sshkey"))
   command[5] = command[5] % (config.get("sourceforge", "user"))
 
   sftp = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   (stdout, stderr) = sftp.communicate(list_batch)
-  print stderr
+  print(stderr)
   assert sftp.returncode == 0, "failed to get list of existing files"
 
   items = []
@@ -192,11 +191,11 @@ def cleanup(destpath, filename, config, opts):
     filename = line.strip()
     if not filename.startswith(prefix):
       if opts.verbose > 0:
-        print 'item "%s" does not start with the correct prefix "%s"' % (filename, prefix)
+        print('item "%s" does not start with the correct prefix "%s"' % (filename, prefix))
       continue
     if filename.find('"') != -1:
       if opts.verbose > 0:
-        print 'deletion of item "%s" skipped due to unsafe characters' % (filename)
+        print('deletion of item "%s" skipped due to unsafe characters' % (filename))
       continue
     match = re.match("_*(\d{8})", filename[len(prefix):])
     if match is not None:
@@ -206,7 +205,7 @@ def cleanup(destpath, filename, config, opts):
                     "file_name": filename})
     else:
       if opts.verbose > 0:
-        print "file %s does not seem to have a date" % (filename)
+        print("file %s does not seem to have a date" % (filename))
       continue
 
   items.sort(None, lambda x:x["datestamp"])
@@ -218,15 +217,15 @@ def cleanup(destpath, filename, config, opts):
   for item in items[:-days_to_keep]:
     file_to_delete = "%s/%s" % (dir, item["file_name"])
     if opts.dry_run:
-      print 'deleting item "%s" skipped due to dry-run' % (file_to_delete)
+      print('deleting item "%s" skipped due to dry-run' % (file_to_delete))
     else:
       delete_batch = 'rm "%s"' % (file_to_delete)
       sftp =  subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
       sftp.communicate(delete_batch)
       assert sftp.returncode == 0, "failed to delete file %s" % (file_to_delete)
-      print "item %s deleted" % (file_to_delete)
+      print("item %s deleted" % (file_to_delete))
 
-  print "Done"
+  print("Done")
 
 if __name__ == "__main__":
   main(sys.argv)
