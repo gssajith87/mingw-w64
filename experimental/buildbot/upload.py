@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from configparser import RawConfigParser as ConfigParser
 import optparse, os, re, stat, subprocess, sys, datetime
@@ -145,7 +145,7 @@ def publish(temppath, filename, config, opts):
   else:
     for attempt in range(0, 5):  # 5 tries
       sftp = subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
-      sftp.communicate(batch)
+      sftp.communicate(batch.encode("utf-8"))
       if sftp.returncode == 0:
         return destpath
     assert(sftp.returncode == 0)
@@ -176,12 +176,12 @@ def cleanup(destpath, filename, config, opts):
   command[5] = command[5] % (config.get("sourceforge", "user"))
 
   sftp = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  (stdout, stderr) = sftp.communicate(list_batch)
-  print(stderr)
+  (stdout, stderr) = sftp.communicate(list_batch.encode("utf-8"))
+  print(stderr.decode("utf-8", "replace"))
   assert sftp.returncode == 0, "failed to get list of existing files"
 
   items = []
-  for line in stdout.split("\n"):
+  for line in stdout.decode("utf-8", "replace").split("\n"):
     if line.startswith("sftp>"):
       # echoing input
       continue
