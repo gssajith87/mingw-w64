@@ -208,7 +208,7 @@ def cleanup(destpath, filename, config, opts):
         print("file %s does not seem to have a date" % (filename))
       continue
 
-  items.sort(None, lambda x:x["datestamp"])
+  items.sort(lambda x:x["datestamp"])
 
   days_to_keep = 7
   if config.has_option("sourceforge", "history"):
