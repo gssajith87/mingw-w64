@@ -208,7 +208,7 @@ def cleanup(destpath, filename, config, opts):
         print("file %s does not seem to have a date" % (filename))
       continue
 
-  items.sort(lambda x:x["datestamp"])
+  items.sort(key=lambda x:x["datestamp"])
 
   days_to_keep = 7
   if config.has_option("sourceforge", "history"):
@@ -221,7 +221,7 @@ def cleanup(destpath, filename, config, opts):
     else:
       delete_batch = 'rm "%s"' % (file_to_delete)
       sftp =  subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
-      sftp.communicate(delete_batch)
+      sftp.communicate(delete_batch.encode("utf-8"))
       assert sftp.returncode == 0, "failed to delete file %s" % (file_to_delete)
       print("item %s deleted" % (file_to_delete))
 
