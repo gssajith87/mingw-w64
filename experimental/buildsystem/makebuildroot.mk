@@ -319,7 +319,7 @@ ${BUILD_DIR}/mingw-headers/obj/.config.marker: \
     ${BUILD_DIR}/root/.root.init.marker \
     ${BUILD_DIR}/mingw-headers/obj/.mkdir.marker
 	cd $(dir $@) && \
-	  ${CURDIR}/${BUILD_DIR}/mingw/mingw-w64-headers/configure \
+	  ../../mingw/mingw-w64-headers/configure \
 	  --prefix=${CURDIR}/${BUILD_DIR}/root \
 	  --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
 	  --host=${TARGET_ARCH}
