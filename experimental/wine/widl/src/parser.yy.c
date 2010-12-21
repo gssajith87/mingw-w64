@@ -73,7 +73,6 @@ typedef int flex_int32_t;
 typedef unsigned char flex_uint8_t; 
 typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
-#endif /* ! C99 */
 
 /* Limits of integral types. */
 #ifndef INT8_MIN
@@ -103,6 +102,8 @@ typedef unsigned int flex_uint32_t;
 #ifndef UINT32_MAX
 #define UINT32_MAX             (4294967295U)
 #endif
+
+#endif /* ! C99 */
 
 #endif /* ! FLEXINT_H */
 
@@ -160,7 +161,15 @@ typedef unsigned int flex_uint32_t;
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k.
+ * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
+ * Ditto for the __ia64__ case accordingly.
+ */
+#define YY_BUF_SIZE 32768
+#else
 #define YY_BUF_SIZE 16384
+#endif /* __ia64__ */
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
@@ -741,7 +750,7 @@ UUID *parse_uuid(const char *u)
  * The flexer starts here
  **************************************************************************
  */
-#line 745 "parser.yy.c"
+#line 754 "parser.yy.c"
 
 #define INITIAL 0
 #define QUOTE 1
@@ -833,7 +842,12 @@ static int input (void );
     
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k */
+#define YY_READ_BUF_SIZE 16384
+#else
 #define YY_READ_BUF_SIZE 8192
+#endif /* __ia64__ */
 #endif
 
 /* Copy whatever the last rule matched to the standard output. */
@@ -841,7 +855,7 @@ static int input (void );
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define ECHO fwrite( parser_text, parser_leng, 1, parser_out )
+#define ECHO do { if (fwrite( parser_text, parser_leng, 1, parser_out )) {} } while (0)
 #endif
 
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
@@ -852,7 +866,7 @@ static int input (void );
 	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
 		{ \
 		int c = '*'; \
-		int n; \
+		size_t n; \
 		for ( n = 0; n < max_size && \
 			     (c = getc( parser_in )) != EOF && c != '\n'; ++n ) \
 			buf[n] = (char) c; \
@@ -939,7 +953,7 @@ YY_DECL
     
 #line 127 "parser.l"
 
-#line 943 "parser.yy.c"
+#line 957 "parser.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -1255,7 +1269,7 @@ YY_RULE_SETUP
 #line 210 "parser.l"
 ECHO;
 	YY_BREAK
-#line 1259 "parser.yy.c"
+#line 1273 "parser.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1974,8 +1988,8 @@ YY_BUFFER_STATE parser__scan_string (yyconst char * yystr )
 
 /** Setup the input buffer state to scan the given bytes. The next call to parser_lex() will
  * scan from a @e copy of @a bytes.
- * @param bytes the byte buffer to scan
- * @param len the number of bytes in the buffer pointed to by @a bytes.
+ * @param yybytes the byte buffer to scan
+ * @param _yybytes_len the number of bytes in the buffer pointed to by @a bytes.
  * 
  * @return the newly allocated buffer state object.
  */
@@ -2338,11 +2352,13 @@ static const struct keyword attr_keywords[] =
         {"aggregatable",                tAGGREGATABLE},
         {"allocate",                    tALLOCATE},
         {"annotation",                  tANNOTATION},
+        {"apartment",                   tAPARTMENT},
         {"appobject",                   tAPPOBJECT},
         {"async",                       tASYNC},
         {"async_uuid",                  tASYNCUUID},
         {"auto_handle",                 tAUTOHANDLE},
         {"bindable",                    tBINDABLE},
+        {"both",                        tBOTH},
         {"broadcast",                   tBROADCAST},
         {"byte_count",                  tBYTECOUNT},
         {"call_as",                     tCALLAS},
@@ -2353,15 +2369,23 @@ static const struct keyword attr_keywords[] =
         {"context_handle_noserialize",  tCONTEXTHANDLENOSERIALIZE},
         {"context_handle_serialize",    tCONTEXTHANDLENOSERIALIZE},
         {"control",                     tCONTROL},
+        {"decode",                      tDECODE},
+        {"defaultbind",                 tDEFAULTBIND},
         {"defaultcollelem",             tDEFAULTCOLLELEM},
         {"defaultvalue",                tDEFAULTVALUE},
         {"defaultvtable",               tDEFAULTVTABLE},
+        {"disable_consistency_check",   tDISABLECONSISTENCYCHECK},
         {"displaybind",                 tDISPLAYBIND},
         {"dllname",                     tDLLNAME},
         {"dual",                        tDUAL},
+        {"enable_allocate",             tENABLEALLOCATE},
+        {"encode",                      tENCODE},
         {"endpoint",                    tENDPOINT},
         {"entry",                       tENTRY},
         {"explicit_handle",             tEXPLICITHANDLE},
+        {"fault_status",                tFAULTSTATUS},
+        {"force_allocate",              tFORCEALLOCATE},
+        {"free",                        tFREE},
         {"handle",                      tHANDLE},
         {"helpcontext",                 tHELPCONTEXT},
         {"helpfile",                    tHELPFILE},
@@ -2371,6 +2395,7 @@ static const struct keyword attr_keywords[] =
         {"hidden",                      tHIDDEN},
         {"id",                          tID},
         {"idempotent",                  tIDEMPOTENT},
+        {"ignore",                      tIGNORE},
         {"iid_is",                      tIIDIS},
         {"immediatebind",               tIMMEDIATEBIND},
         {"implicit_handle",             tIMPLICITHANDLE},
@@ -2379,42 +2404,67 @@ static const struct keyword attr_keywords[] =
         {"input_sync",                  tINPUTSYNC},
         {"lcid",                        tLCID},
         {"length_is",                   tLENGTHIS},
+        {"licensed",                    tLICENSED},
         {"local",                       tLOCAL},
+        {"maybe",                       tMAYBE},
+        {"message",                     tMESSAGE},
+        {"neutral",                     tNEUTRAL},
+        {"nocode",                      tNOCODE},
         {"nonbrowsable",                tNONBROWSABLE},
         {"noncreatable",                tNONCREATABLE},
         {"nonextensible",               tNONEXTENSIBLE},
+        {"notify",                      tNOTIFY},
+        {"notify_flag",                 tNOTIFYFLAG},
         {"object",                      tOBJECT},
         {"odl",                         tODL},
         {"oleautomation",               tOLEAUTOMATION},
+        {"optimize",                    tOPTIMIZE},
         {"optional",                    tOPTIONAL},
         {"out",                         tOUT},
+        {"partial_ignore",              tPARTIALIGNORE},
         {"pointer_default",             tPOINTERDEFAULT},
+        {"progid",                      tPROGID},
         {"propget",                     tPROPGET},
         {"propput",                     tPROPPUT},
         {"propputref",                  tPROPPUTREF},
+        {"proxy",                       tPROXY},
         {"ptr",                         tPTR},
         {"public",                      tPUBLIC},
         {"range",                       tRANGE},
         {"readonly",                    tREADONLY},
         {"ref",                         tREF},
+        {"represent_as",                tREPRESENTAS},
         {"requestedit",                 tREQUESTEDIT},
         {"restricted",                  tRESTRICTED},
         {"retval",                      tRETVAL},
+        {"single",                      tSINGLE},
         {"size_is",                     tSIZEIS},
         {"source",                      tSOURCE},
         {"strict_context_handle",       tSTRICTCONTEXTHANDLE},
         {"string",                      tSTRING},
         {"switch_is",                   tSWITCHIS},
         {"switch_type",                 tSWITCHTYPE},
+        {"threading",                   tTHREADING},
         {"transmit_as",                 tTRANSMITAS},
+        {"uidefault",                   tUIDEFAULT},
         {"unique",                      tUNIQUE},
+        {"user_marshal",                tUSERMARSHAL},
+        {"usesgetlasterror",            tUSESGETLASTERROR},
         {"uuid",                        tUUID},
         {"v1_enum",                     tV1ENUM},
         {"vararg",                      tVARARG},
         {"version",                     tVERSION},
+        {"vi_progid",                   tVIPROGID},
         {"wire_marshal",                tWIREMARSHAL},
 };
 
+/* attributes TODO:
+    custom
+    first_is
+    last_is
+    max_is
+    min_is
+*/
 
 #define KWP(p) ((const struct keyword *)(p))
 

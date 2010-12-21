@@ -11,6 +11,7 @@ widl_SOURCES = \
   src/parser.yy.c \
   src/port/port.c \
   src/proxy.c \
+  src/register.c \
   src/server.c \
   src/typegen.c \
   src/typelib.c \

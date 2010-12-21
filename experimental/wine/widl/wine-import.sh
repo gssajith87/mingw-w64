@@ -10,7 +10,7 @@ if test -z $WINE_DIR; then
 fi
 
 for f in client.c expr.c expr.h hash.c hash.h header.c header.h parser.h parser.l parser.tab.c parser.tab.h parser.y \
-	parser.yy.c proxy.c server.c typegen.c typegen.h typelib.c typelib.h typelib_struct.h typetree.c typetree.h \
+	parser.yy.c proxy.c register.c server.c typegen.c typegen.h typelib.c typelib.h typelib_struct.h typetree.c typetree.h \
 	utils.c utils.h widl.c widl.h widltypes.h write_msft.c
 do
 	cp $WINE_DIR/tools/widl/$f src

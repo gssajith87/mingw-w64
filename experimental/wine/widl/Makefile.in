@@ -58,12 +58,12 @@ am_widl_OBJECTS = src/widl-client.$(OBJEXT) src/widl-expr.$(OBJEXT) \
 	src/widl-hash.$(OBJEXT) src/widl-header.$(OBJEXT) \
 	src/widl-parser.tab.$(OBJEXT) src/widl-parser.yy.$(OBJEXT) \
 	src/port/widl-port.$(OBJEXT) src/widl-proxy.$(OBJEXT) \
-	src/widl-server.$(OBJEXT) src/widl-typegen.$(OBJEXT) \
-	src/widl-typelib.$(OBJEXT) src/widl-typetree.$(OBJEXT) \
-	src/widl-utils.$(OBJEXT) src/widl-widl.$(OBJEXT) \
-	src/widl-write_msft.$(OBJEXT) src/wpp/widl-ppl.yy.$(OBJEXT) \
-	src/wpp/widl-ppy.tab.$(OBJEXT) src/wpp/widl-preproc.$(OBJEXT) \
-	src/wpp/widl-wpp.$(OBJEXT)
+	src/widl-register.$(OBJEXT) src/widl-server.$(OBJEXT) \
+	src/widl-typegen.$(OBJEXT) src/widl-typelib.$(OBJEXT) \
+	src/widl-typetree.$(OBJEXT) src/widl-utils.$(OBJEXT) \
+	src/widl-widl.$(OBJEXT) src/widl-write_msft.$(OBJEXT) \
+	src/wpp/widl-ppl.yy.$(OBJEXT) src/wpp/widl-ppy.tab.$(OBJEXT) \
+	src/wpp/widl-preproc.$(OBJEXT) src/wpp/widl-wpp.$(OBJEXT)
 widl_OBJECTS = $(am_widl_OBJECTS)
 widl_LDADD = $(LDADD)
 widl_LINK = $(CCLD) $(widl_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
@@ -197,6 +197,7 @@ widl_SOURCES = \
   src/parser.yy.c \
   src/port/port.c \
   src/proxy.c \
+  src/register.c \
   src/server.c \
   src/typegen.c \
   src/typelib.c \
@@ -331,6 +332,8 @@ src/port/widl-port.$(OBJEXT): src/port/$(am__dirstamp) \
 	src/port/$(DEPDIR)/$(am__dirstamp)
 src/widl-proxy.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/widl-register.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/widl-server.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/widl-typegen.$(OBJEXT): src/$(am__dirstamp) \
@@ -373,6 +376,7 @@ mostlyclean-compile:
 	-rm -f src/widl-parser.tab.$(OBJEXT)
 	-rm -f src/widl-parser.yy.$(OBJEXT)
 	-rm -f src/widl-proxy.$(OBJEXT)
+	-rm -f src/widl-register.$(OBJEXT)
 	-rm -f src/widl-server.$(OBJEXT)
 	-rm -f src/widl-typegen.$(OBJEXT)
 	-rm -f src/widl-typelib.$(OBJEXT)
@@ -395,6 +399,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/widl-parser.tab.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/widl-parser.yy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/widl-proxy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/widl-register.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/widl-server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/widl-typegen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/widl-typelib.Po@am__quote@
@@ -535,6 +540,20 @@ src/widl-proxy.obj: src/proxy.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/proxy.c' object='src/widl-proxy.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(widl_CFLAGS) $(CFLAGS) -c -o src/widl-proxy.obj `if test -f 'src/proxy.c'; then $(CYGPATH_W) 'src/proxy.c'; else $(CYGPATH_W) '$(srcdir)/src/proxy.c'; fi`
+
+src/widl-register.o: src/register.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(widl_CFLAGS) $(CFLAGS) -MT src/widl-register.o -MD -MP -MF src/$(DEPDIR)/widl-register.Tpo -c -o src/widl-register.o `test -f 'src/register.c' || echo '$(srcdir)/'`src/register.c
+@am__fastdepCC_TRUE@	$(am__mv) src/$(DEPDIR)/widl-register.Tpo src/$(DEPDIR)/widl-register.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/register.c' object='src/widl-register.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(widl_CFLAGS) $(CFLAGS) -c -o src/widl-register.o `test -f 'src/register.c' || echo '$(srcdir)/'`src/register.c
+
+src/widl-register.obj: src/register.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(widl_CFLAGS) $(CFLAGS) -MT src/widl-register.obj -MD -MP -MF src/$(DEPDIR)/widl-register.Tpo -c -o src/widl-register.obj `if test -f 'src/register.c'; then $(CYGPATH_W) 'src/register.c'; else $(CYGPATH_W) '$(srcdir)/src/register.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) src/$(DEPDIR)/widl-register.Tpo src/$(DEPDIR)/widl-register.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/register.c' object='src/widl-register.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(widl_CFLAGS) $(CFLAGS) -c -o src/widl-register.obj `if test -f 'src/register.c'; then $(CYGPATH_W) 'src/register.c'; else $(CYGPATH_W) '$(srcdir)/src/register.c'; fi`
 
 src/widl-server.o: src/server.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(widl_CFLAGS) $(CFLAGS) -MT src/widl-server.o -MD -MP -MF src/$(DEPDIR)/widl-server.Tpo -c -o src/widl-server.o `test -f 'src/server.c' || echo '$(srcdir)/'`src/server.c
