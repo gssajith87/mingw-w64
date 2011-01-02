@@ -1,5 +1,0 @@
-2009-01-29  JonY  <jon_y@users.sourceforge.net>
-
-	*ms_demangler.c: Add reference demangler.
-	*ms_demangler.txt: Document ms_demangler and
-	UnDecorateSymbolName() usage.

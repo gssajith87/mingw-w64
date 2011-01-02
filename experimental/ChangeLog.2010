@@ -1,0 +1,3 @@
+2009-11-28  Tor Lillqvist  <tml@iki.fi>
+
+	* termio_api/include/sys/ioctl.h: Moved from trunk.

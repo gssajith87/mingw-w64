@@ -1,0 +1,26 @@
+2009-12-07  Kai Tietz  <kai.tietz@onevision.com>
+
+	* include/icrt.h: Add include of icrt_thread.h header.
+	* include/icrt_thread.h: Add intial header for TLS/FLS stuff.
+	* include/icrt_memory.h: Add prototypes for noerrno versions of
+	realloc, malloc, free, and calloc.
+	* memory/: Add noerrno versions of realloc, malloc, free, and calloc.
+	* Rename w64crt to iCrt.
+
+2009-11-29  Kai Tietz  <kai.tietz@onevision.com>
+
+	* memory/: Add initial set of file.
+	* include/w64memory.h: Add prototypes and other heap related definitions.
+	* include/w64crt.h: Add automatic include of w64string.h and w64memory.h
+	headers.
+
+2009-11-26  Kai Tietz  <kai.tietz@onevision.com>
+
+	* misc/osdata.c: New.
+	* misc/maperr.c: New.
+	* include/w64crt_map.h: New.
+	* include/w64crt.h: Add use of w64crt_map.h header.
+	(__w64crt_get_errno_from_oserr_0_0): New prototype.
+
+Start of project.
+
