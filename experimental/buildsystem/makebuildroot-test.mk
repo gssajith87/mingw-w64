@@ -500,6 +500,7 @@ ${BUILD_DIR}/binutils/obj/.config.marker: \
 	../../../${BUILD_DIR}/binutils/src/configure \
 	    --target=${TARGET_ARCH} \
 	    ${BINUTILS_CONFIG_HOST_ARGS} \
+	    ${CONFIG_BUILD_ARGS} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
 	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
 	    ${BINUTILS_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
