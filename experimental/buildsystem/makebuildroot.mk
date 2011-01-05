@@ -30,6 +30,8 @@ GCC_UPDATE ?= ${ALL_UPDATE} # force update gcc
 GMP_VERSION ?= 5.0.1 # GMP release version
 MPFR_VERSION ?= 2.4.2 # MPFR release version
 MPC_VERSION ?= 0.8.2 # MPC release version
+CLOOG_VERSION ?= 0.15.9 
+PPL_VERSION ?= 0.10.2
 MINGW_BRANCH ?= trunk # ... not that we have any!
 MINGW_REVISION ?= HEAD
 MINGW_UPDATE ?= ${ALL_UPDATE} # force update mingw
@@ -178,11 +180,11 @@ src/gmp.tar.bz2: \
 ########################################
 # Extract gmp
 ########################################
-
+EXTRACT_GMP = src/.gmp.extract.marker
 gmp-extract: \
-    src/.gmp.extract.marker
+    $(EXTRACT_GMP)
 
-src/.gmp.extract.marker: \
+$(EXTRACT_GMP): \
     src/gmp.tar.bz2 \
     src/gcc/src/gmp/.mkdir.marker
 	$(TAR) -C $(dir $@)/gcc/src/gmp --no-same-owner --strip-components=1 -xjvf $<
@@ -235,6 +237,46 @@ src/.mpc.extract.marker: \
     src/gcc/src/mpc/.mkdir.marker
 	$(TAR) -C $(dir $@)/gcc/src/mpc --no-same-owner --strip-components=1 -xvf $<
 	@touch $@
+
+########################################
+# Download extras - only download, nothing else
+#   cloog
+#   ppl
+#   pthreads TODO
+#   isl TODO
+########################################
+
+cloog-download: \
+    src/cloog.tar.gz
+
+src/cloog.tar.gz: \
+    src/.mkdir.marker
+        $(WGET) $@ ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-ppl-$(strip ${CLOOG_VERSION}).tar.gz
+
+cloog-extract: \
+    src/cloog/.cloog.extract.marker
+
+src/cloog/.cloog.extract.marker: \
+    src/cloog.tar.gz \
+    src/cloog/src/.mkdir.marker
+        $(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
+        @touch $@
+
+ppl-download: \
+    src/ppl.tar.gz
+
+src/ppl.tar.gz: \
+    src/.mkdir.marker
+        $(WGET) $@ ftp://gcc.gnu.org/pub/gcc/infrastructure/ppl-$(strip ${PPL_VERSION}).tar.gz
+
+ppl-extract: \
+    src/ppl/.ppl.extract.marker
+
+src/ppl/.ppl.extract.marker: \
+    src/ppl.tar.gz \
+    src/ppl/src/.mkdir.marker
+        $(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
+        @touch $@
 
 ########################################
 # Pull mingw
