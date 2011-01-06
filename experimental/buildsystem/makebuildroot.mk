@@ -251,7 +251,7 @@ cloog-download: \
 
 src/cloog.tar.gz: \
     src/.mkdir.marker
-        $(WGET) $@ ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-ppl-$(strip ${CLOOG_VERSION}).tar.gz
+	$(WGET) $@ ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-ppl-$(strip ${CLOOG_VERSION}).tar.gz
 
 cloog-extract: \
     src/cloog/.cloog.extract.marker
@@ -259,15 +259,15 @@ cloog-extract: \
 src/cloog/.cloog.extract.marker: \
     src/cloog.tar.gz \
     src/cloog/src/.mkdir.marker
-        $(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
-        @touch $@
+	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
+	@touch $@
 
 ppl-download: \
     src/ppl.tar.gz
 
 src/ppl.tar.gz: \
     src/.mkdir.marker
-        $(WGET) $@ ftp://gcc.gnu.org/pub/gcc/infrastructure/ppl-$(strip ${PPL_VERSION}).tar.gz
+	$(WGET) $@ ftp://gcc.gnu.org/pub/gcc/infrastructure/ppl-$(strip ${PPL_VERSION}).tar.gz
 
 ppl-extract: \
     src/ppl/.ppl.extract.marker
@@ -275,8 +275,8 @@ ppl-extract: \
 src/ppl/.ppl.extract.marker: \
     src/ppl.tar.gz \
     src/ppl/src/.mkdir.marker
-        $(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
-        @touch $@
+	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
+	@touch $@
 
 ########################################
 # Pull mingw
