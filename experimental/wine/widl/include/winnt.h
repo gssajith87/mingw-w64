@@ -230,6 +230,44 @@ extern "C" {
 #define DUMMYUNIONNAME8  u8
 #endif /* !defined(NONAMELESSUNION) */
 
+#ifndef __C89_NAMELESSSTRUCT
+# if !defined(__WINESRC__) && !defined(WINE_NO_NAMELESS_EXTENSION)
+#  ifdef __GNUC__
+    /* Anonymous structs support starts with gcc 2.96/g++ 2.95 */
+#   if (__GNUC__ > 2) || ((__GNUC__ == 2) && ((__GNUC_MINOR__ > 95) || ((__GNUC_MINOR__ == 95) && defined(__cplusplus))))
+#    define __C89_NAMELESSSTRUCT __extension__
+#   endif
+#  elif defined(_MSC_VER)
+#   define __C89_NAMELESSSTRUCT
+#  endif
+# endif
+# ifdef __C89_NAMELESSSTRUCT
+#   define __C89_NAMELESSSTRUCTNAME
+# else
+#   define __C89_NAMELESSSTRUCT
+#   define __C89_NAMELESSSTRUCTNAME DUMMYSTRUCTNAME
+# endif
+#endif
+
+#ifndef __C89_NAMELESSUNION
+# if !defined(__WINESRC__) && !defined(WINE_NO_NAMELESS_EXTENSION)
+#  ifdef __GNUC__
+    /* Anonymous unions support starts with gcc 2.96/g++ 2.95 */
+#   if (__GNUC__ > 2) || ((__GNUC__ == 2) && ((__GNUC_MINOR__ > 95) || ((__GNUC_MINOR__ == 95) && defined(__cplusplus))))
+#    define __C89_NAMELESSUNION __extension__
+#   endif
+#  elif defined(_MSC_VER)
+#   define __C89_NAMELESSUNION
+#  endif
+# endif
+# ifdef __C89_NAMELESSUNION
+#   define __C89_NAMELESSUNIONNAME
+# else
+#   define __C89_NAMELESSUNION
+#   define __C89_NAMELESSUNIONNAME DUMMYUNIONNAME
+# endif
+#endif
+
 /* C99 restrict support */
 
 #if defined(ENABLE_RESTRICTED) && !defined(MIDL_PASS) && !defined(RC_INVOKED)
@@ -5414,6 +5452,11 @@ NTSYSAPI ULONGLONG WINAPI VerSetConditionMask(ULONGLONG,DWORD,BYTE);
 #define	VER_SUITE_SINGLEUSERTS			0x00000100
 #define	VER_SUITE_PERSONAL			0x00000200
 #define	VER_SUITE_BLADE				0x00000400
+#define	VER_SUITE_EMBEDDED_RESTRICTED		0x00000800
+#define	VER_SUITE_SECURITY_APPLIANCE		0x00001000
+#define VER_SUITE_STORAGE_SERVER                0x00002000
+#define VER_SUITE_COMPUTE_SERVER                0x00004000
+#define VER_SUITE_WH_SERVER                     0x00008000
 
 #define	VER_EQUAL				1
 #define	VER_GREATER				2
