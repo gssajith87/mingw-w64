@@ -352,6 +352,7 @@ src/gmp/.gmp.extract.marker: \
     src/gmp/src/.mkdir.marker \
     src/patches/.patches.pull.marker
 	$(TAR) -C $(dir $@)/src --strip-components=1 -xjvf $<
+	cd $(dir $@)src && patch -Np0 -i ../../patches/gmp/gmp-compilers.patch
 	@touch $@
 
 ########################################
