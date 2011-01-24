@@ -1046,14 +1046,14 @@ _Decimal32 __cdecl frexpd32(_Decimal32 _X, int *_Y);
 
 /*** quantum ***/
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/quantized64.3m.htm */
-_Decimal64 __cdecl quantized64(_Decimal64 _X, _Decimal64 y);
-_Decimal128 __cdecl quantized128(_Decimal128 _X, _Decimal128 y);
-_Decimal32 __cdecl quantized32(_Decimal32 _X, _Decimal32 y);
+_Decimal64 __cdecl quantized64(_Decimal64 _X, _Decimal64 _Y);
+_Decimal128 __cdecl quantized128(_Decimal128 _X, _Decimal128 _Y);
+_Decimal32 __cdecl quantized32(_Decimal32 _X, _Decimal32 _Y);
 
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/samequantumd64.3m.htm */
-_Bool __cdecl samequantumd64(_Decimal64 _X, _Decimal64 y);
-_Bool __cdecl samequantumd128(_Decimal128 _X, _Decimal128 y);
-_Bool __cdecl samequantumd32(_Decimal32 _X, _Decimal32 y);
+_Bool __cdecl samequantumd64(_Decimal64 _X, _Decimal64 _Y);
+_Bool __cdecl samequantumd128(_Decimal128 _X, _Decimal128 _Y);
+_Bool __cdecl samequantumd32(_Decimal32 _X, _Decimal32 _Y);
 
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/quantexpd64.3m.htm */
 int __cdecl quantexpd64(_Decimal64 _X);
@@ -1130,20 +1130,20 @@ long long int __cdecl llrintd32(_Decimal32 _X);
 
 /*** integral and fractional parts ***/
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/modfd64.3m.htm */
-_Decimal64 __cdecl modfd64(_Decimal64 _X, _Decimal64 *iptr);
-_Decimal128 __cdecl modfd128(_Decimal128 _X, _Decimal128 *iptr);
-_Decimal32 __cdecl modfd32(_Decimal32 _X, _Decimal32 _X *iptr);
+_Decimal64 __cdecl modfd64(_Decimal64 _X, _Decimal64 *_Y);
+_Decimal128 __cdecl modfd128(_Decimal128 _X, _Decimal128 *_Y);
+_Decimal32 __cdecl modfd32(_Decimal32 _X, _Decimal32 _X *_Y);
 
 /** remainder/mod ***/
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/remainderd64.3m.htm */
-_Decimal64 __cdecl remainderd64(_Decimal64 _X, _Decimal64 y);
-_Decimal128 __cdecl remainderd128(_Decimal128 _X, _Decimal128 y);
-_Decimal32 __cdecl remainderd32(_Decimal32 _X, _Decimal32 y);
+_Decimal64 __cdecl remainderd64(_Decimal64 _X, _Decimal64 _Y);
+_Decimal128 __cdecl remainderd128(_Decimal128 _X, _Decimal128 _Y);
+_Decimal32 __cdecl remainderd32(_Decimal32 _X, _Decimal32 _Y);
 
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/fmodd64.3m.htm */
-_Decimal64 __cdecl fmodd64(_Decimal64 _X, _Decimal64 y);
-_Decimal128 __cdecl fmodd128(_Decimal128 _X, _Decimal128 y);
-_Decimal32 __cdecl fmodd32(_Decimal32 _X, _Decimal32 y);
+_Decimal64 __cdecl fmodd64(_Decimal64 _X, _Decimal64 _Y);
+_Decimal128 __cdecl fmodd128(_Decimal128 _X, _Decimal128 _Y);
+_Decimal32 __cdecl fmodd32(_Decimal32 _X, _Decimal32 _Y);
 
 /*** error functions ***/
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/erfd64.3m.htm */
