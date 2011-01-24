@@ -1111,7 +1111,7 @@ _Decimal32 __cdecl nearbyintd32(_Decimal32 _X);
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/lroundd64.3m.htm */
 long int __cdecl lroundd64(_Decimal64 _X);
 long int __cdecl lroundd128(_Decimal128 _X);
-long int __cdec lroundd32(_Decimal32 _X);
+long int __cdecl lroundd32(_Decimal32 _X);
 
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/llroundd64.3m.htm */
 long long int __cdecl llroundd64(_Decimal64 _X);
@@ -1132,7 +1132,7 @@ long long int __cdecl llrintd32(_Decimal32 _X);
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/modfd64.3m.htm */
 _Decimal64 __cdecl modfd64(_Decimal64 _X, _Decimal64 *_Y);
 _Decimal128 __cdecl modfd128(_Decimal128 _X, _Decimal128 *_Y);
-_Decimal32 __cdecl modfd32(_Decimal32 _X, _Decimal32 _X *_Y);
+_Decimal32 __cdecl modfd32(_Decimal32 _X, _Decimal32 *_Y);
 
 /** remainder/mod ***/
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/remainderd64.3m.htm */
@@ -1203,10 +1203,9 @@ _Decimal32 __cdecl fdimd32(_Decimal32 _X, _Decimal32 _Y);
 
 /*** not-a-number ***/
 /* http://h21007.www2.hp.com/portal/download/files/unprot/fp/manpages/nand64.3m.htm */
-_Decimal64 __cdecl nand64(const char *);
-_Decimal128 __cdecl nand128(const char *);
-_Decimal32 __cdecl nand32(const char *);
-
+_Decimal64 __cdecl nand64(__UNUSED_PARAM(const char *_X));
+_Decimal128 __cdecl nand128(__UNUSED_PARAM(const char *_X));
+_Decimal32 __cdecl nand32(__UNUSED_PARAM(const char *_X));
 
 #endif /* __STDC_WANT_DEC_FP__ */
 
