@@ -71,6 +71,127 @@ typedef union t128 {
  } b;
 } t128;
 
+#pragma pack(push,1)
+
+/* We need to check the BID encoding format
+
+_Decimal32:
+MSB-----------------------------------------------------------------LSB
+s         | 00eeeeee                      |(0)TTTtttttttttttttttttttt |
+[sign bit]|[ proble bits must not be "11"]|[Implicit "0" MSB]         |
+          |[ 8-bit exponent, "00" probed ]|[23-bit True Siginifcant  ]|
+
+s         | 11 00eeeeee       |(100) Ttttttttttttttttttttt |
+[sign bit]|["11" proble bits ]|                            |
+          |[ 10-bit exponent ]|[Implicit "100" MSB]        |
+          |                   |[21-bit True Significant   ]|
+
+DFP = -1^s x tttt x [ 10 ^ (eeee - (101(base10))]
+
+Examples:
+
+s 00eeeeee (0)TTTtttttttttttttttttttt
+s 01eeeeee (0)TTTtttttttttttttttttttt
+s 10eeeeee (0)TTTtttttttttttttttttttt
+s 11 01eeeeee (100)Ttttttttttttttttttttt
+s 11 10eeeeee (100)Ttttttttttttttttttttt
+
+NAN types:
+
+s 11110 xxxxxxxxxxxxxxxxxxxxxxxxxx
+s 111110 xxxxxxxxxxxxxxxxxxxxxxxxx
+s 111111 xxxxxxxxxxxxxxxxxxxxxxxxx
+
+_Decimal64:
+
+s 00eeeeeeee TTTtttttttttttttttttttt tttttttttttttttttttttttttttttt
+s 01eeeeeeee TTTtttttttttttttttttttt tttttttttttttttttttttttttttttt
+s 10eeeeeeee TTTtttttttttttttttttttt tttttttttttttttttttttttttttttt
+s 11 00eeeeeeee (100)Ttttttttttttttttttttt tttttttttttttttttttttttttttttt
+s 11 01eeeeeeee (100)Ttttttttttttttttttttt tttttttttttttttttttttttttttttt
+s 11 10eeeeeeee (100)Ttttttttttttttttttttt tttttttttttttttttttttttttttttt
+
+DFP = -1^s x tttt x [ 10 ^ (eeee - (398(base10))]
+
+_Decimal128:
+
+s 00eeeeeeeeeeee TTTtttttttttttttttttttt tttttttttttttttttttttttttttttt tttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+s 01eeeeeeeeeeee TTTtttttttttttttttttttt tttttttttttttttttttttttttttttt tttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+s 10eeeeeeeeeeee TTTtttttttttttttttttttt tttttttttttttttttttttttttttttt tttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+s 11 00eeeeeeeeeeee (100)Ttttttttttttttttttttt tttttttttttttttttttttttttttttt tttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+s 11 01eeeeeeeeeeee (100)Ttttttttttttttttttttt tttttttttttttttttttttttttttttt tttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+s 11 10eeeeeeeeeeee (100)Ttttttttttttttttttttt tttttttttttttttttttttttttttttt tttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+
+DFP = -1^s x tttt x [ 10 ^ (eeee - (6176(base10))]
+
+*/
+
+typedef struct type0d32 {
+  unsigned long long blob:29;
+  unsigned long bits:2;
+  unsigned long sign:1;
+} type0d32;
+
+typedef struct type1d32 {
+  unsigned long long mantissa:23;
+  unsigned long exponent:8;
+  unsigned long sign:1;
+} type1d32;
+
+typedef struct type2d32 {
+  unsigned long long mantissa:21;
+  unsigned long exponent:10;
+  unsigned long sign:1;
+} type2d32;
+
+typedef struct type0d64 {
+  unsigned long long blob:61;
+  unsigned long bits:2;
+  unsigned long sign:1;
+} type0d64;
+
+typedef struct type1d64 {;
+  unsigned long long mantissa:53;
+  unsigned long exponent:10;
+  unsigned long sign:1;
+} type1d64;
+
+typedef struct type2d64 {
+  unsigned long long mantissa:51;
+  unsigned long exponent:12;
+  unsigned long sign:1;
+} type2d64;
+
+typedef struct type0d128 {
+  unsigned long long blobL:64;
+  unsigned long long blobH:61;
+  unsigned long bits:2;
+  unsigned long sign:1;
+} type0d128;
+
+typedef struct type1d128 {
+  unsigned long long mantissaL:64;
+  unsigned long long mantissaH:59;
+  unsigned long exponent:14;
+  unsigned long sign:1;
+} type1d128;
+
+typedef struct type2d128 {
+  unsigned long long mantissaL:64;
+  unsigned long long mantissaH:57;
+  unsigned long exponent:16;
+  unsigned long sign:1;
+} type2d128;
+#pragma pack(pop)
+
+typedef union ud32 {
+  _Decimal32 d;
+  type0d32 t0;
+  type1d32 t1;
+  type2d32 t2;
+  unsigned char b[sizeof(_Decimal32)];
+} ud32;
+
 /* Some more helpers.  */
 #define M_PI_3_4  (M_PI - M_PI_4)
 #define M_PI_3_4l (M_PIl - M_PI_4l)
