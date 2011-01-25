@@ -1,0 +1,18 @@
+#include "dfp_internal.h"
+
+__FLT_TYPE __FLT_ABI(fabs) (__FLT_TYPE _X){
+  union {
+  __FLT_TYPE d;
+  unsigned char b[sizeof(__FLT_TYPE)];
+  } u;
+  u.d = _X;
+#if (IS_BIG_ENDIAN)
+  u.b[0] = u.b[0] & (~DECNEG);
+#elif (IS_LITTLE_ENDIAN)
+  u.b[sizeof(__FLT_TYPE)-1] = u.b[sizeof(__FLT_TYPE)-1] & (~DECNEG);
+#else
+#error Unsupported endian
+#endif
+  return u.d;
+}
+
