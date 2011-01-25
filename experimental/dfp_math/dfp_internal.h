@@ -44,6 +44,8 @@
 
 #define __STDC_WANT_DEC_FP__
 #include <math.h>
+#include <fenv.h>
+#include <errno.h>
 
 /* Define some PI constants for long double, as they are not defined in math.h  */
 #ifndef M_PI_4l
@@ -101,9 +103,9 @@ s 11 10eeeeee (100)Ttttttttttttttttttttt
 
 NAN types:
 
-s 11110 xxxxxxxxxxxxxxxxxxxxxxxxxx
-s 111110 xxxxxxxxxxxxxxxxxxxxxxxxx
-s 111111 xxxxxxxxxxxxxxxxxxxxxxxxx
+s 11110 xxxxxxxxxxxxxxxxxxxxxxxxxx   +-Infinity
+s 111110 xxxxxxxxxxxxxxxxxxxxxxxxx   quiet NaN
+s 111111 xxxxxxxxxxxxxxxxxxxxxxxxx   signaling NaN
 
 _Decimal64:
 
