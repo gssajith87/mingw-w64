@@ -4,7 +4,11 @@
 #define _RET_TYPE long int
 #endif
 
-_RET_TYPE __FLT_ABI(lround) (__FLT_TYPE _X){
+#ifndef _FUNCTNAME
+#define _FUNCTNAME lroundd32
+#endif
+
+_RET_TYPE _FUNCTNAME (__FLT_TYPE _X){
   __FLT_TYPE val;
 
   if(__FLT_ABI(isnan)(_X)) {
