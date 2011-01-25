@@ -81,12 +81,15 @@ s         | 00eeeeee                      |(0)TTTtttttttttttttttttttt |
 [sign bit]|[ proble bits must not be "11"]|[Implicit "0" MSB]         |
           |[ 8-bit exponent, "00" probed ]|[23-bit True Siginifcant  ]|
 
+If probed bits form "11" exponent is 10-bits instead of 8-bits.
 s         | 11 00eeeeee       |(100) Ttttttttttttttttttttt |
 [sign bit]|["11" proble bits ]|                            |
-          |[ 10-bit exponent ]|[Implicit "100" MSB]        |
+          |[ 10-bit exponent ]|[Implicit "100" as MSB]     |
           |                   |[21-bit True Significant   ]|
 
 DFP = -1^s x tttt x [ 10 ^ (eeee - (101(base10))]
+
+Use type0d32 to probe the 2 bits, if not 11, use type1d32, else use type2d32.
 
 Examples:
 
