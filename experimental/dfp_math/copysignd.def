@@ -1,0 +1,26 @@
+#include "dfp_internal.h"
+
+__FLT_TYPE __FLT_ABI(copysign) (__FLT_TYPE _X, __FLT_TYPE _Y){
+  union {
+  __FLT_TYPE d;
+  unsigned char b[sizeof(__FLT_TYPE)];
+  } u,v;
+  u.d = _X;
+  v.d = _Y;
+#if (IS_BIG_ENDIAN)
+  if(DECNEG & v.b[0]) {
+    u.b[0] = u.b[0] | DECNEG; /* Is negative */
+  } else {
+    u.b[0] = u.b[0] & ~DECNEG; /* Is positive */
+  }
+#elif (IS_LITTLE_ENDIAN)
+  if(DECNEG & v.b[sizeof(__FLT_TYPE)-1]) {
+    u.b[sizeof(__FLT_TYPE)-1] = u.b[sizeof(__FLT_TYPE)-1] | DECNEG; /* Is negative */
+  } else {
+    u.b[sizeof(__FLT_TYPE)-1] = u.b[sizeof(__FLT_TYPE)-1] & ~DECNEG; /* Is positive */
+  }
+#else
+#error Unsupported endian
+#endif
+  return u.d;
+}
