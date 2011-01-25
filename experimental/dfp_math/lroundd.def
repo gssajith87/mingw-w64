@@ -1,0 +1,24 @@
+#include "dfp_internal.h"
+
+#ifndef _RET_TYPE
+#define _RET_TYPE long int
+#endif
+
+_RET_TYPE __FLT_ABI(lround) (__FLT_TYPE _X){
+  __FLT_TYPE val;
+
+  if(__FLT_ABI(isnan)(_X)) {
+    _set_errno(EDOM);
+    feraiseexcept(FE_INVALID);
+    return __LONG_MAX__;
+  }
+
+  if(__FLT_ABI(isinf)(_X)) {
+    _set_errno(ERANGE);
+    feraiseexcept(FE_INVALID);
+    return __LONG_MAX__;
+  }
+
+  val = (__FLT_CST(0.5) + _X);
+  return (_RET_TYPE)val;
+}
