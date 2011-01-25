@@ -1,6 +1,7 @@
 #define _DFP32_FLOAT /* Dummy */
 #include "dfp_internal.h"
 #include <stdio.h>
+#include <decimal32.h>
 
 _Decimal64 __cdecl nand64(__UNUSED_PARAM(const char *_X)){
   const t64 v = {.b = 0x7c00000000000000ULL};
@@ -8,7 +9,7 @@ _Decimal64 __cdecl nand64(__UNUSED_PARAM(const char *_X)){
 }
 
 _Decimal128 __cdecl nand128(__UNUSED_PARAM(const char *_X)){
-  const t128 v = {.b = {.b = 0x7c00000000000000ULL, .a = 0}};
+  const t128 v = {.b = {.b = 0x7c00000000000000ULL, .a = 0ULL}};
   return v.a;
 }
 

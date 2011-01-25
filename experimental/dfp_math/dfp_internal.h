@@ -75,6 +75,10 @@ typedef union t128 {
 #define M_PI_3_4  (M_PI - M_PI_4)
 #define M_PI_3_4l (M_PIl - M_PI_4l)
 
+#define DECIMAL_NaN     0x7c	/* 0 11111 00 NaN	      */
+#define DECIMAL_sNaN    0x7e	/* 0 11111 10 sNaN	      */
+#define DECIMAL_Inf     0x78	/* 0 11110 00 Infinity	      */
+
 #if defined(_DFP32_FLOAT)
 # define __FLT_TYPE	_Decimal32
 # define __FLT_ABI(N)	N##d32

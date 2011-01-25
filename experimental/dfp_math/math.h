@@ -1207,6 +1207,14 @@ _Decimal64 __cdecl nand64(__UNUSED_PARAM(const char *_X));
 _Decimal128 __cdecl nand128(__UNUSED_PARAM(const char *_X));
 _Decimal32 __cdecl nand32(__UNUSED_PARAM(const char *_X));
 
+/*** classifiers ***/
+int __cdecl isinfd64(_Decimal64 _X);
+int __cdecl isinfd128(_Decimal128 _X);
+int __cdecl isinfd32(_Decimal32 _X);
+int __cdecl isnand64(_Decimal64 _X);
+int __cdecl isnand128(_Decimal128 _X);
+int __cdecl isnand32(_Decimal32 _X);
+
 #endif /* __STDC_WANT_DEC_FP__ */
 
 #ifdef __cplusplus
