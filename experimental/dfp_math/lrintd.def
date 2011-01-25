@@ -1,0 +1,59 @@
+#include "dfp_internal.h"
+
+#ifndef _RET_TYPE
+#define _RET_TYPE long int
+#endif
+
+#ifndef _FUNCTNAME
+#define _FUNCTNAME lrintd32
+#endif
+
+_RET_TYPE _FUNCTNAME (__FLT_TYPE _X){
+  __FLT_TYPE val;
+  _RET_TYPE ret, t1, t2;
+  int rmode;
+
+  if(__FLT_ABI(isnan)(_X)) {
+    _set_errno(EDOM);
+    feraiseexcept(FE_INVALID);
+    return __LONG_MAX__;
+  }
+
+  if(__FLT_ABI(isinf)(_X)) {
+    _set_errno(ERANGE);
+    feraiseexcept(FE_INVALID);
+    return __LONG_MAX__;
+  }
+
+  rmode = fegetround();
+
+  switch(rmode) {
+    case FE_DOWNWARD: /* Towards more negative number */
+      if (_X > 0) { ret = (_RET_TYPE)_X; } else
+      if (_X < 0) { ret = (_RET_TYPE)(_X - __FLT_CST(0.5)); } else
+      ret = 0;
+      break;
+    case FE_UPWARD: /* Towards more positive number */
+      if (_X > 0) { ret = (_RET_TYPE)(_X + __FLT_CST(0.5)); } else
+      if (_X < 0) { ret = (_RET_TYPE)_X; } else
+      ret = 0;
+      break;
+    case FE_TOWARDZERO:
+      ret = (_RET_TYPE)_X;
+      break;
+    case FE_TONEAREST:
+    default:
+      t1 = (_RET_TYPE)(_X + __FLT_CST(0.5));
+      t2 = (_RET_TYPE)(_X - __FLT_CST(0.5));
+      if (__FLT_ABI(fabs)(t1 - _X) > (__FLT_ABI(fabs)(t2 - _X))) { ret = t2; } else
+      if (__FLT_ABI(fabs)(t1 - _X) < (__FLT_ABI(fabs)(t2 - _X))) { ret = t1; } else
+      if (__FLT_ABI(fabs)(t1 - _X) == (__FLT_ABI(fabs)(t2 - _X))) { ret = ((t1 % 2) == 0) ? t1 : t2;} else
+      ret = 0; /* Unlikely */
+      break;
+  }
+
+  if(__FLT_ABI(fabs)((__FLT_TYPE)ret - _X) > __FLT_EPSILON) feraiseexcept(FE_INEXACT);
+
+  return ret;
+}
+
