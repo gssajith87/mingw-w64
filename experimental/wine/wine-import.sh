@@ -29,7 +29,7 @@ for f in corerror.h mscat.h winhttp.h winineti.h; do
 done
 
 # IDLs
-for f in fusion mscoree optary wincodec xmllite; do
+for f in fusion mscoree optary propsys wincodec xmllite; do
     cp $WINE_DIR/include/$f.idl idl
     import_header $f.h include
 done
