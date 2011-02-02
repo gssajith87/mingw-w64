@@ -698,9 +698,10 @@ ${BUILD_DIR}/ppl/obj/.config.marker: \
         ${GCC_CONFIG_HOST_ARGS} \
         $(CONFIG_BUILD_ARGS) \
         --enable-static --disable-shared \
+        --enable-pch \
         --prefix=${CURDIR}/${BUILD_DIR}/ppl/install \
-        --with-libgmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
-        --with-libgmpxx-prefix=${CURDIR}/${BUILD_DIR}/gmp/install
+        --with-gmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
+        CPPFLAGS=-fexceptions
 	@touch $@
 
 ########################################
