@@ -697,15 +697,11 @@ ${BUILD_DIR}/ppl/obj/.config.marker: \
 	../../../${BUILD_DIR}/ppl/src/configure \
         ${GCC_CONFIG_HOST_ARGS} \
         $(CONFIG_BUILD_ARGS) \
-        CPPFLAGS="-D__GMP_BITS_PER_MP_LIMB=GMP_LIMB_BITS" \
         --enable-static --disable-shared \
         --prefix=${CURDIR}/${BUILD_DIR}/ppl/install \
         --with-libgmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
         --with-libgmpxx-prefix=${CURDIR}/${BUILD_DIR}/gmp/install
 	@touch $@
-
-# CPPFLAGS="-D__GMP_BITS_PER_MP_LIMB=GMP_LIMB_BITS"
-# This is used to work around PPL not detecting gmp-5.0.0 properly
 
 ########################################
 # Compile PPL
