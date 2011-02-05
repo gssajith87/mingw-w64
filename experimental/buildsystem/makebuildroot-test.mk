@@ -834,6 +834,7 @@ gcc-bootstrap-install: \
 ${BUILD_DIR}/gcc/obj/.bootstrap.install.marker: \
     ${BUILD_DIR}/gcc/obj/.bootstrap.compile.marker
 	${MAKE} -C $(dir $@) install-gcc
+	${MAKE} -C $(dir $@) install-lto-plugin || true
 	@touch $@
 
 ########################################
