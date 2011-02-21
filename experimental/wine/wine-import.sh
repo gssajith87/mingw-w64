@@ -10,17 +10,25 @@ if test -z $WINE_DIR; then
 fi
 
 import_header() {
-    if test -z "$(grep WINELIB_NAME_AW\\\|DECL_WINELIB_TYPE_AW $WINE_DIR/include/$1)"; then
-        cp $WINE_DIR/include/$1 $2
-    else
-        echo '#include <_mingw_unicode.h>' >$2/$1
-        cat $WINE_DIR/include/$1 >>$2/$1
-        sed -i 's/\bWINELIB_NAME_AW\b/__MINGW_NAME_AW/g' $2/$1
-        sed -i 's/\bDECL_WINELIB_TYPE_AW\b/__MINGW_TYPEDEF_AW/g' $2/$1
+    dstfile=$2/$1
+    srcfile=$WINE_DIR/include/$1
+    rm -f $dstfile
+    unicode_fix=
+    if test -n "$(grep WINELIB_NAME_AW\\\|DECL_WINELIB_TYPE_AW $srcfile)"; then
+        unicode_fix="yes"
+        echo '#include <_mingw_unicode.h>' >>$dstfile
     fi
-    sed -i 's/\bBOOL    /WINBOOL /g' $2/$1
-    sed -i 's/\bBOOL\b/WINBOOL/g' $2/$1
-    sed -i 's/WIDL [0-9].[0-9].[0-9]*/WIDL/g' $2/$1
+    if test -n "$(grep -w INTERFACE $srcfile)"; then
+        echo '#undef INTERFACE' >>$dstfile
+    fi
+    cat $srcfile >>$dstfile
+    if test -n "$(grep WINELIB_NAME_AW\\\|DECL_WINELIB_TYPE_AW $srcfile)"; then
+        sed -i 's/\bWINELIB_NAME_AW\b/__MINGW_NAME_AW/g' $dstfile
+        sed -i 's/\bDECL_WINELIB_TYPE_AW\b/__MINGW_TYPEDEF_AW/g' $dstfile
+    fi
+    sed -i 's/\bBOOL    /WINBOOL /g' $dstfile
+    sed -i 's/\bBOOL\b/WINBOOL/g' $dstfile
+    sed -i 's/WIDL [0-9].[0-9].[0-9]*/WIDL/g' $dstfile
 }
 
 # headers
