@@ -4,8 +4,8 @@ from buildbot.master import BuildMaster
 
 basedir = r'/opt/buildbot/mingw-w64/master'
 configfile = r'master.cfg'
-rotateLength = 1000000
-maxRotatedFiles = 20
+rotateLength = 500000
+maxRotatedFiles = 10
 
 application = service.Application('buildmaster')
 
