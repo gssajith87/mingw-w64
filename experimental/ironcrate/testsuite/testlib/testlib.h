@@ -18,5 +18,7 @@ extern void ic_test_reset_internal_vars (void);
 #define IC_TEST_RSLT_FAILED  1
 #define IC_TEST_RSLT_UNSUPPORTED 2
 
+#define IC_TEST_CHECK(COND)	ic_test_show_test ((COND), #COND)
+
 #endif
 

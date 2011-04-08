@@ -26,6 +26,19 @@ static void catchSigSegV( int sig )
  longjmp(buf, 1);
 }
 
+static int ic_test_subtest_cnt = 0;
+static int ic_test_subtest_failed = 0;
+
+static int ic_test_show_test (int cond, const char *expr)
+{
+  fprintf (stderr, "  Sub test %d of %s: \"%s\" %s\n",
+	ic_test_subtest_cnt + 1, ic_test_testname,
+	expr, (cond ? "OK" : "FAILED"));
+  ic_test_subtest_cnt++;
+  if (!cond) ic_test_subtest_failed++;
+  return 1;
+}
+
 void ic_test_reset_internal_vars (void)
 {
   ic_test_segfault = 0;
@@ -89,7 +102,11 @@ int main(int argc, char **argv)
     }
     ++no;
   }
-  fprintf (stderr, "TEST %s: ", ic_test_testname);
+  if (ic_test_subtest_failed != 0) r = IC_TEST_RSLT_FAILED;
+  if (ic_test_subtest_cnt == 0) r = IC_TEST_RSLT_UNSUPPORTED;
+  fprintf (stderr, "TEST %s (%d of %d): ", ic_test_testname,
+	(r == IC_TEST_RSLT_SUCCESS ? ic_test_subtest_cnt : ic_test_subtest_failed),
+	ic_test_subtest_cnt);
   switch (r)
   {
     case IC_TEST_RSLT_SUCCESS: fprintf (stderr, "OK"); break;

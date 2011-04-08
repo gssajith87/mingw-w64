@@ -29,18 +29,17 @@ ic_test_main (int seq, int flags)
   {
     case 0:
       ic_test_reset_internal_vars ();
-      if ((*fct)(buf, 20, "test", 0) != 0) break;
-      if ((*fct)(NULL, 0, NULL, 0) != 0) break;
-      if (ic_test_segfault || ic_test_invalid_parameter_called)
-	break;
-      if ((*fct)(NULL, 0, NULL, 4) != EINVAL) break;
+      IC_TEST_CHECK ((*fct)(buf, 20, "test", 0) == 0);
+      IC_TEST_CHECK ((*fct)(NULL, 0, NULL, 0) == 0);
+      IC_TEST_CHECK (!ic_test_segfault && !ic_test_invalid_parameter_called);
+      IC_TEST_CHECK ((*fct)(NULL, 0, NULL, 4) == EINVAL);
       ic_test_reset_internal_vars ();
-      if ((*fct)(NULL, 4, NULL, 4) != EINVAL) break;
+      IC_TEST_CHECK ((*fct)(NULL, 4, NULL, 4) == EINVAL);
       ic_test_reset_internal_vars ();
-      if ((*fct)(buf, 3, "test", 4) != ERANGE) break;
+      IC_TEST_CHECK ((*fct)(buf, 3, "test", 4) == ERANGE);
       ic_test_reset_internal_vars ();
-      if ((*fct)(buf, 4, "test", 4) != 0) break;
-      if ((*fct)(buf, 5, "test", 4) != 0) break;
+      IC_TEST_CHECK ((*fct)(buf, 4, "test", 4) == 0);
+      IC_TEST_CHECK ((*fct)(buf, 5, "test", 4) == 0);
       return IC_TEST_RSLT_SUCCESS;
     default:
       break;
