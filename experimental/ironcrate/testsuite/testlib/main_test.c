@@ -6,14 +6,10 @@
 #include <signal.h>
 #include "testlib.h"
 
-#define IC_TEST_NO_INVALID_PARA_HANDLER	1
-
-extern int ic_test_main (int seq, int flags);
-extern void *ic_test_getsymbol (const char *name);
-
 int ic_test_invalid_parameter_called = 0;
 int ic_test_segfault = 0;
 const char *ic_test_msvcrt_name = "msvcrt";
+const char *ic_test_testname = NULL;
 
 static jmp_buf buf;
 
@@ -30,12 +26,21 @@ static void catchSigSegV( int sig )
  longjmp(buf, 1);
 }
 
+void ic_test_reset_internal_vars (void)
+{
+  ic_test_segfault = 0;
+  ic_test_invalid_parameter_called = 0;
+}
+
+#ifdef TEST_APP
 int ic_test_main (int seq, int flags)
 {
   if (seq == 0) memcpy ((void *) (intptr_t) 1, "ab", 2);
-  else  return 0;
-  return 1;
+  else if (seq == 1) return IC_TEST_RSLT_OK;
+  else return IC_TEST_RSLT_SUCCESS;
+  return IC_TEST_RSLT_FAILED;
 }
+#endif
 
 void *ic_test_getsymbol (const char *name)
 {
@@ -45,9 +50,20 @@ void *ic_test_getsymbol (const char *name)
 
 int main(int argc, char **argv)
 {
-  int r, no = 0;
+  int r = IC_TEST_RSLT_OK, no = 0;
   int flags = 0;
   void (*ipfh)(_invalid_parameter_handler);
+  const char *n1, *n2;
+
+  /* Get test's name.  */
+  n1 = strrchr (argv[0], '\\');
+  n2 = strrchr (argv[0], '/');
+  if (!n1 && !n2) ic_test_testname = argv[0];
+  else if (!n1) ic_test_testname = n2 + 1;
+  else if (!n2) ic_test_testname = n1 + 1;
+  else if (n1 < n2) ic_test_testname = n2 + 1;
+  else ic_test_testname = n1 + 1;
+
   if (argc > 1)
     ic_test_msvcrt_name = argv[1];
 
@@ -55,16 +71,23 @@ int main(int argc, char **argv)
   signal (SIGSEGV, catchSigSegV);
   if (ipfh) (*ipfh) (my_invalid_parameter_handler);
   else flags |= IC_TEST_NO_INVALID_PARA_HANDLER;
-  while (1) {
-  if (!setjmp (buf))
+  while (r == IC_TEST_RSLT_OK)
   {
-    r = ic_test_main (no, flags);
-    break;
+    if (!setjmp (buf))
+    {
+      r = ic_test_main (no, flags);
+    }
+    ++no;
   }
-  else
-   ++no;
+  fprintf (stderr, "TEST %s: ", ic_test_testname);
+  switch (r)
+  {
+    case IC_TEST_RSLT_SUCCESS: fprintf (stderr, "OK"); break;
+    case IC_TEST_RSLT_FAILED: fprintf (stderr, "FAILED"); break;
+    case IC_TEST_RSLT_UNSUPPORTED: fprintf (stderr, "UNSUPPORTED"); break;
+    default: fprintf (stderr, "???%d???", r); break;
   }
-  fprintf (stderr, "TEST: %s\n", (r == 0 ? "OK" : (r == -1 ? "SKIP" : "FAILED")));
+  fprintf (stderr, "\n");
 
   return r;
 }
