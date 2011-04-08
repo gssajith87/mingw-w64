@@ -44,8 +44,18 @@ int ic_test_main (int seq, int flags)
 
 void *ic_test_getsymbol (const char *name)
 {
+  static HMODULE hmod = NULL;
   if (!name || *name == 0) return NULL;
-  return GetProcAddress (GetModuleHandle (ic_test_msvcrt_name), name);
+  if (!hmod)
+    hmod = GetModuleHandle (ic_test_msvcrt_name);
+  if (!hmod)
+    hmod = LoadLibrary (ic_test_msvcrt_name);
+  if (!hmod)
+  {
+    fprintf (stderr, "Failed to open ,%s'\n", ic_test_msvcrt_name);
+    return NULL;
+  }
+  return GetProcAddress (hmod, name);
 }
 
 int main(int argc, char **argv)
