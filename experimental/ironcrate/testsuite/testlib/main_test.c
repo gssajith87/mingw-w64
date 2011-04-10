@@ -100,6 +100,7 @@ int main(int argc, char **argv)
     {
       r = ic_test_main (no, flags);
     }
+    else signal (SIGSEGV, catchSigSegV);
     ++no;
   }
   if (ic_test_subtest_failed != 0) r = IC_TEST_RSLT_FAILED;
