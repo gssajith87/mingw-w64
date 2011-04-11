@@ -1,7 +1,7 @@
 #include "../testlib/main_test.c"
 #include <errno.h>
 
-/* size_t __cdecl strnlen (const char *s, size_t n).
+/* size_t __cdecl __strncnt (const char *s, size_t n).
 
    Flow-graph:
    (1): Iterate through s until n characters are checked, or *s == 0.
@@ -18,7 +18,7 @@ int
 ic_test_main (int seq, int flags)
 {
   size_t (*fct)(const char *, size_t) =
-	ic_test_getsymbol ("strnlen");
+	ic_test_getsymbol ("__strncnt");
   if (!fct)
     return IC_TEST_RSLT_UNSUPPORTED;
   switch (seq)
