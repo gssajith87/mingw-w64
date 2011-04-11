@@ -1,7 +1,7 @@
 #include "../testlib/main_test.c"
 #include <errno.h>
 
-/* void * __cdecl _memicmp_l (const void *s1, const void *s2, size_t n, _locale_t pli).
+/* int __cdecl _memicmp_l (const void *s1, const void *s2, size_t n, _locale_t pli).
 
    Flow-graph:
    (1): If n != 0 and s1 or s2 are NULL and the locale wasn't changed, then set errno to EINVAL,
