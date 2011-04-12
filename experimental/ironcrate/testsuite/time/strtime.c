@@ -1,12 +1,12 @@
 #include "../testlib/main_test.c"
 #include <errno.h>
 
-/* char * __cdecl _strdate (char *d);
+/* char * __cdecl _strtime (char *d);
 
    Flow-graph:
    (1): If d == NULL set errno to EINVAL, raise optional invalid parameter
    	handler, and return NULL.
-   (2): Get local time via GetLocalTime Win32 API and format string d as MM/DD/YY.
+   (2): Get local time via GetLocalTime Win32 API and format string d as HH:MM:SS.
    (3): Return d.
 
 Tests:
@@ -20,14 +20,14 @@ ic_test_main (int seq, int flags)
 {
   char buf[20];
   char * (*fct)(char *) =
-	ic_test_getsymbol ("_strdate");
+	ic_test_getsymbol ("_strtime");
   if (!fct)
     return IC_TEST_RSLT_UNSUPPORTED;
   switch (seq)
   {
     case 0:
       ic_test_reset_internal_vars ();
-      IC_TEST_CHECK ((*fct)(buf) == buf && strlen (buf) == 8 && buf[2] == '/' && buf[5] == '/');
+      IC_TEST_CHECK ((*fct)(buf) == buf && strlen (buf) == 8 && buf[2] == ':' && buf[5] == ':');
       IC_TEST_CHECK ((*fct)(NULL) == NULL && errno == EINVAL);
       IC_TEST_CHECK ((*fct)((void *) (size_t) 1) == 0);
       return IC_TEST_RSLT_FAILED;

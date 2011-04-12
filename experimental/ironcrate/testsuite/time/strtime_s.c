@@ -1,7 +1,7 @@
 #include "../testlib/main_test.c"
 #include <errno.h>
 
-/* errno_t __cdecl _strdate_s (char *d,size_t n)
+/* errno_t __cdecl _strtime_s (char *d,size_t n)
 
    Flow-graph:
    (1): If d == NULL and/or n == 0 set errno to EINVAL, raise optional invalid
@@ -9,7 +9,7 @@
    (2): Set d[0] = 0
    (2): If n < 9 then set errno to ERANGE, raise optional invalid parameter
    	handler, and return ERANGE.
-   (2): Get local time via GetLocalTime Win32 API and format string d as MM/DD/YY.
+   (2): Get local time via GetLocalTime Win32 API and format string d as HH:MM:SS.
    (3): Return 0.
 
 Tests:
@@ -25,15 +25,15 @@ ic_test_main (int seq, int flags)
 {
   char buf[20];
   errno_t (*fct)(char *, size_t) =
-	ic_test_getsymbol ("_strdate_s");
+	ic_test_getsymbol ("_strtime_s");
   if (!fct)
     return IC_TEST_RSLT_UNSUPPORTED;
   switch (seq)
   {
     case 0:
       ic_test_reset_internal_vars ();
-      IC_TEST_CHECK ((*fct)(buf, 10) == 0 && strlen (buf) == 8 && buf[2] == '/' && buf[5] == '/');
-      IC_TEST_CHECK ((*fct)(buf, 9) == 0 && strlen (buf) == 8 && buf[2] == '/' && buf[5] == '/');
+      IC_TEST_CHECK ((*fct)(buf, 10) == 0 && strlen (buf) == 8 && buf[2] == ':' && buf[5] == ':');
+      IC_TEST_CHECK ((*fct)(buf, 9) == 0 && strlen (buf) == 8 && buf[2] == ':' && buf[5] == ':');
       IC_TEST_CHECK ((*fct)(buf, 8) == ERANGE && errno == ERANGE && strlen (buf) == 0);
       strcpy (buf, "1");
       IC_TEST_CHECK ((*fct)(buf, 0) == EINVAL && errno == EINVAL && strlen (buf) == 1);
