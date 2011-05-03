@@ -43,9 +43,38 @@ for f in fusion mscoree optary propsys wincodec xmllite; do
 done
 
 # DirectX headers
-for f in d3d10effect.h d3d10misc.h d3d10shader.h d3d8.h d3d8caps.h d3d8types.h d3d9.h d3d9caps.h d3d9types.h d3dhal.h \
-	d3dtypes.h d3dx9.h d3dx9core.h d3dx9effect.h d3dx9math.h d3dx9math.inl d3dx9mesh.h d3dx9shader.h d3dx9shape.h \
-        d3dx9tex.h dplay.h dplobby.h dsdriver.h dsound.h dvdmedia.h dxerr8.h dxerr9.h errors.h xinput.h; do
+for f in \
+	d3d10effect.h \
+	d3d10misc.h \
+	d3d10shader.h \
+	d3d8.h \
+	d3d8caps.h \
+	d3d8types.h \
+	d3d9.h \
+	d3d9caps.h \
+	d3d9types.h \
+	d3dhal.h \
+	d3dtypes.h \
+	d3dx9.h \
+	d3dx9anim.h \
+	d3dx9core.h \
+	d3dx9effect.h \
+	d3dx9math.h \
+	d3dx9math.inl \
+	d3dx9mesh.h \
+	d3dx9shader.h \
+	d3dx9shape.h \
+	d3dx9tex.h \
+	d3dx9xof.h \
+	dplay.h \
+	dplobby.h \
+	dsdriver.h \
+	dsound.h \
+	dvdmedia.h \
+	dxerr8.h \
+	dxerr9.h \
+	errors.h \
+	xinput.h; do
     import_header $f direct-x/include
 done
 
