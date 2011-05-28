@@ -44,6 +44,9 @@ done
 
 # DirectX headers
 for f in \
+	amaudio.h \
+	audevcod.h \
+	d3d.h \
 	d3d10effect.h \
 	d3d10misc.h \
 	d3d10shader.h \
@@ -53,7 +56,11 @@ for f in \
 	d3d9.h \
 	d3d9caps.h \
 	d3d9types.h \
+	d3dcaps.h \
 	d3dhal.h \
+	d3drm.h \
+	d3drmdef.h \
+	d3drmobj.h \
 	d3dtypes.h \
 	d3dx9.h \
 	d3dx9anim.h \
@@ -66,20 +73,43 @@ for f in \
 	d3dx9shape.h \
 	d3dx9tex.h \
 	d3dx9xof.h \
+	d3dvec.inl \
+	dls1.h \
+	dls2.h \
+	dmerror.h \
+	dmo.h \
+	dmoreg.h \
+	dmort.h \
+	dmplugin.h \
+	dmusbuff.h \
+	dmusicc.h \
+	dmusicf.h \
+	dmusici.h \
+	dmusics.h \
+	dpaddr.h \
 	dplay.h \
+	dplay8.h \
 	dplobby.h \
+	dplobby8.h \
+	dpnathlp.h \
 	dsdriver.h \
+	dshow.h \
 	dsound.h \
 	dvdmedia.h \
+	dxdiag.h \
 	dxerr8.h \
 	dxerr9.h \
+	dxfile.h \
 	errors.h \
+	evcode.h \
+	mediaerr.h \
+	vfwmsgs.h \
 	xinput.h; do
     import_header $f direct-x/include
 done
 
 # DirectX IDLs
-for f in amstream amvideo austream d3d10 d3dcommon ddstream dxgi dxgitype mmstream; do
+for f in amstream amvideo austream d3d10 d3dcommon ddstream dxgi dxgitype mediaobj mmstream qedit vmr9; do
     cp $WINE_DIR/include/$f.idl direct-x/include
     import_header $f.h direct-x/include
 done
