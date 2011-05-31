@@ -452,8 +452,12 @@ arg:	  attributes decl_spec m_any_declarator	{ if ($2->stgclass != STG_NONE && $
 						}
 	;
 
-array:	  '[' m_expr ']'			{ $$ = $2; }
+array:	  '[' expr ']'				{ $$ = $2;
+						  if (!$$->is_const)
+						      error_loc("array dimension is not an integer constant\n");
+						}
 	| '[' '*' ']'				{ $$ = make_expr(EXPR_VOID); }
+	| '[' ']'				{ $$ = make_expr(EXPR_VOID); }
 	;
 
 m_attributes:					{ $$ = NULL; }
@@ -637,16 +641,6 @@ enumdef: tENUM t_ident '{' enums '}'		{ $$ = type_new_enum($2, TRUE, $4); }
 m_exprs:  m_expr                                { $$ = append_expr( NULL, $1 ); }
 	| m_exprs ',' m_expr                    { $$ = append_expr( $1, $3 ); }
 	;
-
-/*
-exprs:						{ $$ = make_expr(EXPR_VOID); }
-	| expr_list
-	;
-
-expr_list: expr
-	| expr_list ',' expr			{ LINK($3, $1); $$ = $3; }
-	;
-*/
 
 m_expr:						{ $$ = make_expr(EXPR_VOID); }
 	| expr
@@ -2560,11 +2554,14 @@ static void check_remoting_args(const var_t *func)
                 error_loc_info(&arg->loc_info, "out interface pointer \'%s\' of function \'%s\' is not a double pointer\n", arg->name, funcname);
                 break;
             case TGT_STRING:
-                if (is_ptr(type) ||
-                    (is_array(type) &&
-                     (!type_array_has_conformance(type) ||
-                      type_array_get_conformance(type)->type == EXPR_VOID)))
-                    error_loc_info(&arg->loc_info, "out parameter \'%s\' of function \'%s\' cannot be an unsized string\n", arg->name, funcname);
+                if (is_array(type))
+                {
+                    /* needs conformance or fixed dimension */
+                    if (type_array_has_conformance(type) &&
+                        type_array_get_conformance(type)->type != EXPR_VOID) break;
+                    if (!type_array_has_conformance(type) && type_array_get_dim(type)) break;
+                }
+                error_loc_info(&arg->loc_info, "out parameter \'%s\' of function \'%s\' cannot be an unsized string\n", arg->name, funcname);
                 break;
             case TGT_INVALID:
                 /* already error'd before we get here */
