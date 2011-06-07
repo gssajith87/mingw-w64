@@ -1,5 +1,3 @@
-AM_CFLAGS=-I$(top_srcdir)/include
-	
 bin_PROGRAMS = widl
 
 widl_SOURCES = \
@@ -24,7 +22,7 @@ widl_SOURCES = \
   src/wpp/preproc.c \
   src/wpp/wpp.c
 
-widl_CFLAGS = -O3 -g -Wall -Wformat -Wpacked -Wno-pedantic-ms-format -Wmissing-declarations -Wimplicit-function-declaration -Wmissing-prototypes -Wstrict-aliasing=2
+widl_CFLAGS = -I$(top_srcdir)/include -O3 -g -Wall -Wformat -Wpacked -Wno-pedantic-ms-format -Wmissing-declarations -Wimplicit-function-declaration -Wmissing-prototypes -Wstrict-aliasing=2
 
 DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
 
