@@ -439,6 +439,46 @@ static int generic_handle_registered(const char *name)
   return 0;
 }
 
+unsigned int get_context_handle_offset( const type_t *type )
+{
+    context_handle_t *ch;
+    unsigned int index = 0;
+
+    while (!is_attr( type->attrs, ATTR_CONTEXTHANDLE ))
+    {
+        if (type_is_alias( type )) type = type_alias_get_aliasee( type );
+        else if (is_ptr( type )) type = type_pointer_get_ref( type );
+        else error( "internal error: %s is not a context handle\n", type->name );
+    }
+    LIST_FOR_EACH_ENTRY( ch, &context_handle_list, context_handle_t, entry )
+    {
+        if (!strcmp( type->name, ch->name )) return index;
+        index++;
+    }
+    error( "internal error: %s is not registered as a context handle\n", type->name );
+    return index;
+}
+
+unsigned int get_generic_handle_offset( const type_t *type )
+{
+    generic_handle_t *gh;
+    unsigned int index = 0;
+
+    while (!is_attr( type->attrs, ATTR_HANDLE ))
+    {
+        if (type_is_alias( type )) type = type_alias_get_aliasee( type );
+        else if (is_ptr( type )) type = type_pointer_get_ref( type );
+        else error( "internal error: %s is not a generic handle\n", type->name );
+    }
+    LIST_FOR_EACH_ENTRY( gh, &generic_handle_list, generic_handle_t, entry )
+    {
+        if (!strcmp( type->name, gh->name )) return index;
+        index++;
+    }
+    error( "internal error: %s is not registered as a generic handle\n", type->name );
+    return index;
+}
+
 /* check for types which require additional prototypes to be generated in the
  * header */
 void check_for_additional_prototype_types(const var_list_t *list)
@@ -615,23 +655,6 @@ static void write_library(FILE *header, const typelib_t *typelib)
 }
 
 
-const var_t* get_explicit_handle_var(const var_t *func)
-{
-    const var_t* var;
-
-    if (!type_get_function_args(func->type))
-        return NULL;
-
-    LIST_FOR_EACH_ENTRY( var, type_get_function_args(func->type), const var_t, entry )
-    {
-        const type_t *type = var->type;
-        if (type_get_type(type) == TYPE_BASIC && type_basic_get_type(type) == TYPE_BASIC_HANDLE)
-            return var;
-    }
-
-    return NULL;
-}
-
 const type_t* get_explicit_generic_handle_type(const var_t* var)
 {
     const type_t *t;
@@ -644,31 +667,44 @@ const type_t* get_explicit_generic_handle_type(const var_t* var)
     return NULL;
 }
 
-const var_t* get_explicit_generic_handle_var(const var_t *func)
+const var_t *get_func_handle_var( const type_t *iface, const var_t *func,
+                                  unsigned char *explicit_fc, unsigned char *implicit_fc )
 {
-    const var_t* var;
+    const var_t *var;
+    const var_list_t *args = type_get_function_args( func->type );
 
-    if (!type_get_function_args(func->type))
-        return NULL;
-
-    LIST_FOR_EACH_ENTRY( var, type_get_function_args(func->type), const var_t, entry )
-        if (get_explicit_generic_handle_type(var))
+    *explicit_fc = *implicit_fc = 0;
+    if (args) LIST_FOR_EACH_ENTRY( var, args, const var_t, entry )
+    {
+        if (!is_attr( var->attrs, ATTR_IN ) && is_attr( var->attrs, ATTR_OUT )) continue;
+        if (type_get_type( var->type ) == TYPE_BASIC && type_basic_get_type( var->type ) == TYPE_BASIC_HANDLE)
+        {
+            *explicit_fc = RPC_FC_BIND_PRIMITIVE;
             return var;
-
-    return NULL;
-}
-
-const var_t* get_context_handle_var(const var_t *func)
-{
-    const var_t* var;
-
-    if (!type_get_function_args(func->type))
-        return NULL;
-
-    LIST_FOR_EACH_ENTRY( var, type_get_function_args(func->type), const var_t, entry )
-        if (is_attr(var->attrs, ATTR_IN) && is_context_handle(var->type))
+        }
+        if (get_explicit_generic_handle_type( var ))
+        {
+            *explicit_fc = RPC_FC_BIND_GENERIC;
             return var;
+        }
+        if (is_context_handle( var->type ))
+        {
+            *explicit_fc = RPC_FC_BIND_CONTEXT;
+            return var;
+        }
+    }
 
+    if ((var = get_attrp( iface->attrs, ATTR_IMPLICIT_HANDLE )))
+    {
+        if (type_get_type( var->type ) == TYPE_BASIC &&
+            type_basic_get_type( var->type ) == TYPE_BASIC_HANDLE)
+            *implicit_fc = RPC_FC_BIND_PRIMITIVE;
+        else
+            *implicit_fc = RPC_FC_BIND_GENERIC;
+        return var;
+    }
+
+    *implicit_fc = RPC_FC_AUTO_HANDLE;
     return NULL;
 }
 
@@ -1078,14 +1114,19 @@ static void write_com_interface_end(FILE *header, type_t *iface)
 static void write_rpc_interface_start(FILE *header, const type_t *iface)
 {
   unsigned int ver = get_attrv(iface->attrs, ATTR_VERSION);
-  const char *var = get_attrp(iface->attrs, ATTR_IMPLICIT_HANDLE);
+  const var_t *var = get_attrp(iface->attrs, ATTR_IMPLICIT_HANDLE);
 
   fprintf(header, "/*****************************************************************************\n");
   fprintf(header, " * %s interface (v%d.%d)\n", iface->name, MAJORVERSION(ver), MINORVERSION(ver));
   fprintf(header, " */\n");
   fprintf(header,"#ifndef __%s_INTERFACE_DEFINED__\n", iface->name);
   fprintf(header,"#define __%s_INTERFACE_DEFINED__\n\n", iface->name);
-  if (var) fprintf(header, "extern handle_t %s;\n", var);
+  if (var)
+  {
+      fprintf(header, "extern ");
+      write_type_decl( header, var->type, var->name );
+      fprintf(header, ";\n");
+  }
   if (old_names)
   {
       fprintf(header, "extern RPC_IF_HANDLE %s%s_ClientIfHandle;\n", prefix_client, iface->name);
