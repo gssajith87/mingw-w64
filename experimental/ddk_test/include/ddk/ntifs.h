@@ -7333,7 +7333,7 @@ FsRtlAddBaseMcbEntry(
   IN LONGLONG SectorCount);
 
 NTKERNELAPI
-VOID
+BOOLEAN
 NTAPI
 FsRtlRemoveBaseMcbEntry(
   IN PBASE_MCB Mcb,
