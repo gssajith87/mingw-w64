@@ -32,12 +32,12 @@ import_header() {
 }
 
 # headers
-for f in corerror.h mscat.h winhttp.h winineti.h; do
+for f in corerror.h mscat.h propkeydef.h winhttp.h winineti.h; do
     import_header $f include
 done
 
 # IDLs
-for f in fusion mscoree optary propsys wincodec xmllite; do
+for f in fusion mscoree optary propsys structuredquerycondition wincodec xmllite; do
     cp $WINE_DIR/include/$f.idl idl
     import_header $f.h include
 done
@@ -47,9 +47,11 @@ for f in \
 	amaudio.h \
 	audevcod.h \
 	d3d.h \
+	d3d10_1shader.h \
 	d3d10effect.h \
 	d3d10misc.h \
 	d3d10shader.h \
+	d3d11shader.h \
 	d3d8.h \
 	d3d8caps.h \
 	d3d8types.h \
@@ -109,7 +111,7 @@ for f in \
 done
 
 # DirectX IDLs
-for f in amstream amvideo austream d3d10 d3dcommon ddstream dxgi dxgitype mediaobj mmstream qedit vmr9; do
+for f in amstream amvideo austream d3d10 d3d10_1 d3d11 d3dcommon ddstream dxgi dxgitype mediaobj mmstream qedit vmr9; do
     cp $WINE_DIR/include/$f.idl direct-x/include
     import_header $f.h direct-x/include
 done
