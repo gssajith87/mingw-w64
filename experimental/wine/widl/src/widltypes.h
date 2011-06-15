@@ -533,6 +533,7 @@ typedef enum {
 
 extern syskind_t typelib_kind;
 extern user_type_list_t user_type_list;
+extern context_handle_list_t context_handle_list;
 extern generic_handle_list_t generic_handle_list;
 void check_for_additional_prototype_types(const var_list_t *list);
 
@@ -543,8 +544,6 @@ void clear_all_offsets(void);
 
 int is_ptr(const type_t *t);
 int is_array(const type_t *t);
-int is_var_ptr(const var_t *v);
-int cant_be_null(const var_t *v);
 
 #define tsENUM   1
 #define tsSTRUCT 2

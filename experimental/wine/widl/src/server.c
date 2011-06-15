@@ -270,7 +270,7 @@ static void write_dispatchtable(type_t *iface)
     {
         var_t *func = stmt->u.var;
         if (is_interpreted_func( iface, func ))
-            print_server("%s,\n", stub_mode == MODE_Oif ? "NdrServerCall2" : "NdrServerCall");
+            print_server("%s,\n", get_stub_mode() == MODE_Oif ? "NdrServerCall2" : "NdrServerCall");
         else
             print_server("%s_%s,\n", iface->name, get_name(func));
         method_count++;
@@ -301,6 +301,26 @@ static void write_routinetable(type_t *iface)
         var_t *func = stmt->u.var;
         if (is_local( func->attrs )) continue;
         print_server( "(SERVER_ROUTINE)%s%s,\n", prefix_server, get_name(func));
+    }
+    indent--;
+    print_server( "};\n\n" );
+}
+
+
+static void write_rundown_routines(void)
+{
+    context_handle_t *ch;
+    int count = list_count( &context_handle_list );
+
+    if (!count) return;
+    print_server( "static const NDR_RUNDOWN RundownRoutines[] =\n" );
+    print_server( "{\n" );
+    indent++;
+    LIST_FOR_EACH_ENTRY( ch, &context_handle_list, context_handle_t, entry )
+    {
+        print_server( "%s_rundown", ch->name );
+        if (--count) fputc( ',', server );
+        fputc( '\n', server );
     }
     indent--;
     print_server( "};\n\n" );
@@ -345,7 +365,10 @@ static void write_stubdescriptor(type_t *iface, int expr_eval_routines)
     print_server("0,\n");
     indent--;
     print_server("},\n");
-    print_server("0,\n");
+    if (!list_empty( &context_handle_list ))
+        print_server("RundownRoutines,\n");
+    else
+        print_server("0,\n");
     print_server("0,\n");
     if (expr_eval_routines)
         print_server("ExprEvalRoutines,\n");
@@ -354,7 +377,7 @@ static void write_stubdescriptor(type_t *iface, int expr_eval_routines)
     print_server("0,\n");
     print_server("__MIDL_TypeFormatString.Format,\n");
     print_server("1, /* -error bounds_check flag */\n");
-    print_server("0x%x, /* Ndr library version */\n", stub_mode == MODE_Oif ? 0x50002 : 0x10001);
+    print_server("0x%x, /* Ndr library version */\n", get_stub_mode() == MODE_Oif ? 0x50002 : 0x10001);
     print_server("0,\n");
     print_server("0x50100a4, /* MIDL Version 5.1.164 */\n");
     print_server("0,\n");
@@ -505,6 +528,7 @@ static void write_server_routines(const statement_list_t *stmts)
     if (expr_eval_routines)
         write_expr_eval_routine_list(server, server_token);
     write_user_quad_list(server);
+    write_rundown_routines();
 
     write_server_stmts(stmts, expr_eval_routines, &proc_offset);
 

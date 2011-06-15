@@ -39,7 +39,7 @@
 static int indentation = 0;
 static int is_object_interface = 0;
 user_type_list_t user_type_list = LIST_INIT(user_type_list);
-static context_handle_list_t context_handle_list = LIST_INIT(context_handle_list);
+context_handle_list_t context_handle_list = LIST_INIT(context_handle_list);
 generic_handle_list_t generic_handle_list = LIST_INIT(generic_handle_list);
 
 static void write_type_def_or_decl(FILE *f, type_t *t, int field, const char *name);
@@ -994,10 +994,10 @@ static void write_function_proto(FILE *header, const type_t *iface, const var_t 
 {
   const char *callconv = get_attrp(fun->type->attrs, ATTR_CALLCONV);
 
+  if (!callconv) callconv = "__cdecl";
   /* FIXME: do we need to handle call_as? */
   write_type_decl_left(header, type_function_get_rettype(fun->type));
-  fprintf(header, " ");
-  if (callconv) fprintf(header, "%s ", callconv);
+  fprintf(header, " %s ", callconv);
   fprintf(header, "%s%s(\n", prefix, get_name(fun));
   if (type_get_function_args(fun->type))
     write_args(header, type_get_function_args(fun->type), iface->name, 0, TRUE);
