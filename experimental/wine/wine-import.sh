@@ -37,7 +37,15 @@ for f in corerror.h mscat.h propkeydef.h winhttp.h winineti.h; do
 done
 
 # IDLs
-for f in fusion mscoree optary propsys structuredquerycondition wincodec xmllite; do
+for f in \
+	fusion \
+	mscoree \
+	optary \
+	propsys \
+	structuredquerycondition \
+	wincodec \
+	wpcapi \
+	xmllite; do
     cp $WINE_DIR/include/$f.idl idl
     import_header $f.h include
 done
@@ -102,6 +110,8 @@ for f in \
 	dxerr8.h \
 	dxerr9.h \
 	dxfile.h \
+	dxgiformat.h \
+	dxgitype.h \
 	errors.h \
 	evcode.h \
 	mediaerr.h \
@@ -111,7 +121,7 @@ for f in \
 done
 
 # DirectX IDLs
-for f in amstream amvideo austream d3d10 d3d10_1 d3d11 d3dcommon ddstream dxgi dxgitype mediaobj mmstream qedit vmr9; do
+for f in amstream amvideo austream d3d10 d3d10_1 d3d11 d3dcommon ddstream dxgi mediaobj mmstream qedit vmr9; do
     cp $WINE_DIR/include/$f.idl direct-x/include
     import_header $f.h direct-x/include
 done
