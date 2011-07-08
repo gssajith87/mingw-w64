@@ -29,17 +29,29 @@ import_header() {
     sed -i 's/\bBOOL    /WINBOOL /g' $dstfile
     sed -i 's/\bBOOL\b/WINBOOL/g' $dstfile
     sed -i 's/WIDL [0-9].[0-9].[0-9]*/WIDL/g' $dstfile
+    sed -i 's/DECLSPEC_HIDDEN//g' $dstfile
 }
 
 # headers
-for f in corerror.h mscat.h propkeydef.h winhttp.h winineti.h; do
+for f in \
+	corerror.h \
+	mscat.h \
+	propkey.h \
+	propkeydef.h \
+	propvarutil.h \
+	winhttp.h \
+	winineti.h; do
     import_header $f include
 done
 
 # IDLs
 for f in \
+	audioclient \
+	audiopolicy \
 	fusion \
+	mmdeviceapi \
 	mscoree \
+	objectarray \
 	optary \
 	propsys \
 	structuredquerycondition \
