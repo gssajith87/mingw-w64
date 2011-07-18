@@ -3946,28 +3946,28 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 591 "parser.y"
-    { (yyval.str) = (yyvsp[(1) - (1)].str); }
+    { (yyval.str) = xstrdup("__cdecl"); }
     break;
 
   case 166:
 
 /* Line 1806 of yacc.c  */
 #line 592 "parser.y"
-    { (yyval.str) = (yyvsp[(1) - (1)].str); }
+    { (yyval.str) = xstrdup("__fastcall"); }
     break;
 
   case 167:
 
 /* Line 1806 of yacc.c  */
 #line 593 "parser.y"
-    { (yyval.str) = (yyvsp[(1) - (1)].str); }
+    { (yyval.str) = xstrdup("__pascal"); }
     break;
 
   case 168:
 
 /* Line 1806 of yacc.c  */
 #line 594 "parser.y"
-    { (yyval.str) = (yyvsp[(1) - (1)].str); }
+    { (yyval.str) = xstrdup("__stdcall"); }
     break;
 
   case 169:
