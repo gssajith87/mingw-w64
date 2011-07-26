@@ -73,6 +73,10 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                        "https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/experimental/buildsystem/makebuildroot.mk"],
                               haltOnFailure=True))
 
+#    self.addStep(SVN(mode="export",
+#                     svnurl="https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/experimental/buildsystem",
+#                     extra_args=["--trust-server-cert"]))
+
     self.addStep(FileUpload(masterdest="mingw-makefile",
                             slavesrc="mingw-makefile",
                             maxsize=102400,
