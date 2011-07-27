@@ -165,7 +165,7 @@ class M64NightlyRev(SetPropertyConditional):
                    'svn://gcc.gnu.org/svn/gcc/trunk']
         self.setCommand(command)
 
-        # substract one from datestamp because we we want te rev before that
+        # substract one from datestamp because we want the rev before that
         yesterday = now - datetime.timedelta(1)
         self.datestamp = yesterday.strftime("%Y%m%d")
 
