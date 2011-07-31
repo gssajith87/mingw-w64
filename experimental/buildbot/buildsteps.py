@@ -228,16 +228,13 @@ class WithPropertiesRecursive(WithProperties):
     This is a version of WithProperties that knows to recursively expand
     """
 
-    def __init__(self, fmtstring, *args, **lambda_subs):
-        WithProperties.__init__(self, fmtstring, *args, **lambda_subs)
-
-    def render(self, pmap):
+    def getRenderingFor(self, build):
         origfmtstring = self.fmtstring
         if isinstance(origfmtstring, WithProperties):
-            self.fmtstring = origfmtstring.render(pmap)
+            self.fmtstring = origfmtstring.getRenderingFor(build)
 
         try:
-            ret = WithProperties.render(self, pmap)
+            ret = WithProperties.getRenderingFor(self, build)
         finally:
             self.fmtstring = origfmtstring
 
