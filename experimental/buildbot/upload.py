@@ -107,7 +107,7 @@ def upload(srcfile, destfile, config, opts):
     print("processing upload of %s to OldFiles/%s..." % (srcfile, destfile))
   temppath = "/home/frs/project/%s/%s/%s/OldFiles/%s" % (
              group_id[0], group_id[0:2], group_id, destfile)
-  command = ["rsync", "-zvtPc", "--bwlimit=100", "-e", "ssh -i %s -o UserKnownHostsFile=%s", srcfile,
+  command = ["rsync", "-zvtPc", "", "-e", "ssh -i %s -o UserKnownHostsFile=%s", srcfile,
              "%%s,%s@frs.sourceforge.net:%s" % (group_id, temppath)]
   print(" ".join(command))
   command[4] = command[4] % (config.get("sourceforge", "sshkey"), "ssh_known_hosts")
