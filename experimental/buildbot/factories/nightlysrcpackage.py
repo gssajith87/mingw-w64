@@ -261,10 +261,9 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                  workdir="build/src/gcc/src/gcc",
                  description=["writing", "version", "string"],
                  descriptionDone=["version", "string", "written"],
-                 doStepIf=lambda step: ("release_build" in step.build.getProperties()) and
-                                       step.getProperty("release_build"),
+                 doStepIf=lambda step: ( (step.build.getProperties().has_key("release_build")) and (step.getProperty("release_build")) ),
                  command=["bash", "-c", 
-                          WithProperties("""echo '%(release_gcc_ver)s' > BASE-VER && echo > DEV-PHASE """)])
+                          WithProperties("""echo '%(release_gcc_ver:-)s' > BASE-VER && echo > DEV-PHASE """)])
     # make the tarball
     self.addStep(SetProperty(property="destname",
                              command=["echo", WithPropertiesRecursive(WithProperties("%(srcname_format)s"))]))
