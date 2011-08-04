@@ -10,7 +10,7 @@ from buildbot.steps.source import CVS, SVN
 from buildbot.steps.shell import Configure, Compile, ShellCommand, WithProperties, SetProperty
 from buildbot.steps.transfer import FileDownload, FileUpload
 from buildbot.steps.trigger import Trigger
-from scripts.buildsteps import M64CVS, M64NightlyRev, ShellCommandConditional, SetPropertyConditional, WithPropertiesRecursive
+from scripts.buildsteps import M64CVS, M64NightlyRev, WithPropertiesRecursive
 import re
 
 class Mingw64Factory(factory.BuildFactory):
@@ -90,26 +90,18 @@ class Mingw64Factory(factory.BuildFactory):
 
     self._step_AdditionalProperties()
 
-    self.addStep(SetPropertyConditional,
-                 condprop="filename_format",
-                 condinvert=True,
-                 command=["echo", "mingw-%(target-os)s-bin_%(host_cpu)s-%(host_os)s.%(file_extension)s"],
-                 property="filename_format")
-    self.addStep(SetPropertyConditional,
-                 condprop="destname_format",
-                 condinvert=True,
-                 command=["echo", WithProperties("mingw-%(target-os)s-bin_%(host_cpu)s-%(host_os)s%(host-extra:-)s%(datestamp:-)s.%(file_extension)s")],
-                 property="destname")
-    self.addStep(SetPropertyConditional,
-                 condprop="filename",
-                 condinvert=True,
-                 property="filename",
-                 command=["echo", WithPropertiesRecursive(WithProperties("%(filename_format)s"))])
-    self.addStep(SetPropertyConditional,
-                 condprop="destname",
-                 condinvert=True,
-                 property="destname",
-                 command=["echo", WithPropertiesRecursive(WithProperties("%(destname_format)s"))])
+    self.addStep(SetProperty(property="filename_format",
+                             command=["echo", "mingw-%(target-os)s-bin_%(host_cpu)s-%(host_os)s.%(file_extension)s"],
+                             doStepIf=lambda step: (not step.build.getProperties().has_key("filename_format")) ))
+    self.addStep(SetProperty(property="filename",
+                             command=["echo", WithPropertiesRecursive(WithProperties("%(filename_format)s"))],
+                             doStepIf=lambda step: (not step.build.getProperties().has_key("filename")) ))
+    self.addStep(SetProperty(property="destname_format",
+                             command=["echo", WithProperties("mingw-%(target-os)s-bin_%(host_cpu)s-%(host_os)s%(host-extra:-)s%(datestamp:-)s.%(file_extension)s")],
+                             doStepIf=lambda step: (not step.build.getProperties().has_key("destname_format")) ))
+    self.addStep(SetProperty(property="destname",
+                             command=["echo", WithPropertiesRecursive(WithProperties("%(destname_format)s"))],
+                             doStepIf=lambda step: (not step.build.getProperties().has_key("destname")) ))
 
     # dump info about this slave
     self.addStep(ShellCommand(name="sys-info",
