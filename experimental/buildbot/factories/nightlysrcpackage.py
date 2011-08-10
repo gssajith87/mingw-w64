@@ -29,18 +29,15 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              command=["echo", os.getcwd()]))
     self.addStep(SetProperty(property="basedir",
                              command=["bash", "-c", "builtin pwd"]))
-    self.addStep(SetPropertyConditional(property="gmp_version",
-                                        command=["echo", gConfig.get("libraries", "gmp")],
-                                        condprop="gmp_version",
-                                        condinvert=True))
-    self.addStep(SetPropertyConditional(property="mpfr_version",
-                                        command=["echo", gConfig.get("libraries", "mpfr")],
-                                        condprop="mpfr_version",
-                                        condinvert=True))
-    self.addStep(SetPropertyConditional(property="mpc_version",
-                                        command=["echo", gConfig.get("libraries", "mpc")],
-                                        condprop="mpc_version",
-                                        condinvert=True))
+    self.addStep(SetProperty(property="gmp_version",
+                             command=["echo", gConfig.get("libraries", "gmp")],
+                             doStepIf=lambda step: (not step.build.getProperties().has_key("gmp_version")) ))
+    self.addStep(SetProperty(property="mpfr_version",
+                             command=["echo", gConfig.get("libraries", "mpfr")],
+                             doStepIf=lambda step: (not step.build.getProperties().has_key("mpfr_version")) ))
+    self.addStep(SetProperty(property="mpc_version",
+                             command=["echo", gConfig.get("libraries", "mpc")],
+                             doStepIf=lambda step: (not step.build.getProperties().has_key("mpc_version")) ))
     self.addStep(SetProperty(property="binutils_branch",
                              command=["echo", WithProperties("%(binutils_branch:-trunk)s")]))
     self.addStep(SetProperty(property="gcc_branch",
@@ -49,13 +46,10 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              command=["echo", WithProperties("%(mingw_branch:-trunk)s")]))
     self.addStep(SetProperty(property="filename",
                              command=["echo", WithProperties("%(src_archive:-mingw-w64-src.tar.bz2)s")]))
+    self.addStep(SetProperty(property="srcname_format",
+                             command=["echo", "mingw-w64-src%(datestamp:-)s.tar.bz2"],
+                             doStepIf=lambda step: (not step.build.getProperties().has_key("srcname_format")) ))
     #self.addStep(M64NightlyRev)
-
-    self.addStep(SetPropertyConditional,
-                 condprop="srcname_format",
-                 condinvert=True,
-                 command=["echo", "mingw-w64-src%(datestamp:-)s.tar.bz2"],
-                 property="srcname_format")
 
     if self.clobber:
       self.addStep(ShellCommand(name="clobber",
