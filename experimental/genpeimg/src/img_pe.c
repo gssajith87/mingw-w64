@@ -172,6 +172,7 @@ peimg_show (pe_image *ppeimg, FILE *outfp)
     }
 }
 
+#if 0
 int main(int argc, char **argv)
 {
   pe_image *pe;
@@ -185,3 +186,4 @@ int main(int argc, char **argv)
   peimg_free (pe);
   return 1;
 }
+#endif
