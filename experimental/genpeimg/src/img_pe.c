@@ -95,6 +95,26 @@ fill_pe_info (pe_image *pe)
       fprintf (stderr, "PE image for machince 0x%x not supported\n", pe->pe_filehdr.machine);
       return 0;
     }
+  pe->optional_hdr_pos = 24;
+  switch (PEIMG_GET_USHORT (pe, 24))
+    {
+    case 0x10b:
+      if (pe->is_64bit == 0)
+        break;
+      fprintf (stderr, "PE+ image has invalid 32-bit optional header.\n");
+      return 0;
+    case 0x20b:
+      if (pe->is_64bit)
+        break;
+      fprintf (stderr, "PE image has invalid 64-bit optional header.\n");
+      return 0;
+    default:
+      fprintf (stderr, "PE image has unknown optional header with magic 0x%x.\n",
+        PEIMG_GET_USHORT (pe, 24));
+      return 0;
+    }
+  pe->section_list = pe->optional_hdr_pos + pe->pe_filehdr.szOptHdr;
+  pe->section_list_sz = ((size_t) pe->pe_filehdr.numsecs) * (4 * 9);
   return 1;
 }
 
@@ -185,6 +205,92 @@ peimg_show (pe_image *ppeimg, FILE *outfp)
       hdr_cha &= 0x40;
       if (hdr_cha != 0)
         fprintf (outfp, " unknown-flag-0x40");
+      fprintf (outfp, "\n");
+    }
+  fprintf (outfp, "PE+ optional header information\n"
+    "  Linker version %u.%u, Code size: 0x%x, Intialized Data size: 0x%x\n"
+    "  Uninitialized Data size: 0x%x, Entry-point 0x%x\n",
+      PEIMG_GET_UCHAR (ppeimg, ppeimg->optional_hdr_pos + 2),
+      PEIMG_GET_UCHAR (ppeimg, ppeimg->optional_hdr_pos + 3),
+      PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 4),
+      PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 8),
+      PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 12),
+      PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 16));
+  if (ppeimg->is_64bit)
+    {
+      fprintf (outfp,
+        "  Bases: Code=0x%x ImageBase=0x%I64x\n",
+        PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 20),
+        PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 24));
+    }
+  else
+    {
+      fprintf (outfp,
+        "  Bases: Code=0x%x Data=0x%x ImageBase=0x%x\n",
+        PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 20),
+        PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 24),
+        PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 28));
+    }
+  fprintf (outfp, "  Alignments: Section: 0x%x File:0x%x\n",
+    PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 32),
+    PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 36));
+  fprintf (outfp, "  Versions: OS:%u.%u Image:%u.%u SubSystem:%u.%u, win32:0x%x\n",
+    PEIMG_GET_USHORT (ppeimg, ppeimg->optional_hdr_pos + 40),
+    PEIMG_GET_USHORT (ppeimg, ppeimg->optional_hdr_pos + 42),
+    PEIMG_GET_USHORT (ppeimg, ppeimg->optional_hdr_pos + 44),
+    PEIMG_GET_USHORT (ppeimg, ppeimg->optional_hdr_pos + 46),
+    PEIMG_GET_USHORT (ppeimg, ppeimg->optional_hdr_pos + 48),
+    PEIMG_GET_USHORT (ppeimg, ppeimg->optional_hdr_pos + 50),
+    PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 52));
+  fprintf (outfp, "  Size of:  Image:0x%x Headers:0x%x\n",
+    PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 56),
+    PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 60));
+  fprintf (outfp, "  Checksum: 0x%x\n",
+    PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 64));
+  fprintf (outfp, "  SubSystem: ");
+  switch (PEIMG_GET_USHORT (ppeimg, ppeimg->optional_hdr_pos + 68))
+    {
+    case 0: fprintf (outfp, "Unknown (0)\n"); break;
+    case 1: fprintf (outfp, "Native (1)\n"); break;
+    case 2: fprintf (outfp, "Windows GUI (2)\n"); break;
+    case 3: fprintf (outfp, "Windows CUI (3)\n"); break;
+    case 5: fprintf (outfp, "OS/2 CUI (5)\n"); break;
+    case 7: fprintf (outfp, "Posix CUI (4)\n"); break;
+    case 8: fprintf (outfp, "Native Windows (8)\n"); break;
+    case 9: fprintf (outfp, "Windows CE GUI (9)\n"); break;
+    case 10: fprintf (outfp, "EFI Application (10)\n"); break;
+    case 11: fprintf (outfp, "EFI Service Driver (11)\n"); break;
+    case 12: fprintf (outfp, "EFI Runtime Driver (12)\n"); break;
+    case 13: fprintf (outfp, "EFI ROM (13)\n"); break;
+    case 14: fprintf (outfp, "XBOX\n"); break;
+    case 16: fprintf (outfp, "Windows Boot Application (16)\n"); break;
+    default:
+      fprintf (outfp, "Unkown (%u)\n", PEIMG_GET_USHORT (ppeimg, ppeimg->optional_hdr_pos + 68));
+      break;
+    }
+  hdr_cha = PEIMG_GET_USHORT (ppeimg, ppeimg->optional_hdr_pos + 70);
+  if (hdr_cha != 0)
+    {
+      fprintf (outfp, "  Optional Characteristics:\n   ");
+      if ((hdr_cha & 0x40) != 0)
+        fprintf (outfp, " dynamic-base");
+      if ((hdr_cha & 0x80) != 0)
+        fprintf (outfp, " force-integrity");
+      if ((hdr_cha & 0x100) != 0)
+        fprintf (outfp, " nx-compatible");
+      if ((hdr_cha & 0x200) != 0)
+        fprintf (outfp, " no-isolation");
+      if ((hdr_cha & 0x400) != 0)
+        fprintf (outfp, " no-SEH");
+      if ((hdr_cha & 0x800) != 0)
+        fprintf (outfp, " no-BIND");
+      if ((hdr_cha & 0x2000) != 0)
+        fprintf (outfp, " wdm-Driver");
+      if ((hdr_cha & 0x8000) != 0)
+        fprintf (outfp, " terminal-server-aware");
+      hdr_cha &= ~(0x63f);
+      if (hdr_cha)
+        fprintf (outfp, " unknown(0x%x)", hdr_cha);
       fprintf (outfp, "\n");
     }
 }
