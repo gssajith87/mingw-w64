@@ -145,6 +145,10 @@ int main (int argc, char **argv)
 
   if (dump_information)
     peimg_show (pe, stdout);
+  /* First we need to do actions which aren't modifying image's size.  */
+  peimg_set_hdr_characeristics (pe, set_pe_hdr_chara, mask_pe_hdr_chara);
+  if (pe->pimg->is_modified)
+    pe->pimg->want_save = 1;
   peimg_free (pe);
   return 0;
 }

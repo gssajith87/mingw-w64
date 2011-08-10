@@ -53,6 +53,23 @@ find_pe_hdr (file_image *fi)
   return (size_t) lfanew;
 }
 
+void
+peimg_set_hdr_characeristics (pe_image *pe, unsigned short set, unsigned short mask)
+{
+  unsigned short flgs;
+  if (pe->is_64bit && (mask & 0x20) == 0)
+    {
+      fprintf (stderr, " Can't remove for PE+ the large-address-aware flag\n");
+      mask |= 0x20;
+    }
+  flgs = pe->pe_filehdr.characteristics;
+  flgs &= mask;
+  flgs |= set;
+  if (flgs == pe->pe_filehdr.characteristics)
+    return;
+  PEIMG_SET_USHORT (pe, 22, flgs);
+}
+
 static int
 fill_pe_info (pe_image *pe)
 {

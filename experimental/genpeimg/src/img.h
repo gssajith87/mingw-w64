@@ -56,6 +56,8 @@ pe_image *peimg_load (const char *fname);
 void peimg_free (pe_image *ppeimg);
 void peimg_show (pe_image *ppeimg, FILE *outfp);
 
+void peimg_set_hdr_characeristics (pe_image *pe, unsigned short set, unsigned short mask);
+
 #define PEIMG_GET_UCHAR(PEIMG, POS)  fimg_get_uchar_at ((PEIMG)->pimg, ((PEIMG)->start_pe + (POS)))
 #define PEIMG_GET_USHORT(PEIMG, POS)  fimg_get_ushort_at ((PEIMG)->pimg, ((PEIMG)->start_pe + (POS)), (PEIMG)->is_bigendian)
 #define PEIMG_GET_UINT(PEIMG, POS)  fimg_get_uint_at ((PEIMG)->pimg, ((PEIMG)->start_pe + (POS)), (PEIMG)->is_bigendian)
