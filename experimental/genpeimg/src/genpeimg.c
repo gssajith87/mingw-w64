@@ -7,6 +7,8 @@
 
 unsigned short set_pe_hdr_chara = 0;
 unsigned short mask_pe_hdr_chara = 0xffff;
+unsigned short set_pe_opt_hdr_dll_chara = 0;
+unsigned short mask_pe_opt_hdr_dll_chara = 0xffff;
 int dump_information = 0;
 static char *file_name = NULL;
 
@@ -15,9 +17,9 @@ show_usage (void)
 {
   fprintf (stderr, "genpeimg [options] files...\n");
   fprintf (stderr, "\nOptions:\n"
-    " --set-pe-characteristics -p  Takes as addition argument one or more of the following\n"
-    "                              options:\n"
-    "  +<flags> or -<flags>\n"
+    " -p  Takes as addition argument one or more of the following\n"
+    "     options:\n"
+    "  +<flags> and/or -<flags>\n"
     "  flags are: l, r, n, s, u\n"
     "    l: large-address-aware (only valid for 32-bit)\n"
     "    r: removable-run-from-swap\n"
@@ -25,8 +27,21 @@ show_usage (void)
     "    s: system\n"
     "    u: up-system-only\n");
   fprintf (stderr,
-    " --help, -h: Show this page.\n"
-    " --dump-image-information, -d:  Dump image information to stdout\n");
+    " -d  Takes as addition argument one or more of the following\n"
+    "     options:\n"
+    "  +<flags> and/or -<flags>\n"
+    "  flags are: d, f, n, i, s, b, w, t\n"
+    "    d: dynamic base\n"
+    "    f: force integrity\n"
+    "    n: nx compatible\n"
+    "    i: no-isolation\n"
+    "    s: no-SEH\n"
+    "    b: no-bind\n"
+    "    w: WDM-driver\n"
+    "    t: terminal-server-aware\n");
+  fprintf (stderr,
+    " -h: Show this page.\n"
+    " -x: Dump image information to stdout\n");
   exit (0);
 }
 
@@ -104,6 +119,61 @@ pass_args (int argc, char **argv)
 	    }
 	  break;
 	case 'd':
+	  if (h[2] != 0)
+	    goto error_point;
+	  if (argc == 0)
+	    {
+	      fprintf (stderr, "Missing argument for -d\n");
+	      show_usage ();
+	    }
+	  h = *argv++; argc--;
+	  while (*h != 0)
+	    {
+	      switch (*h)
+	        {
+		case '-': is_pos = 0; break;
+		case '+': is_pos = 1; break;
+		case 'd':
+		  if (is_pos) set_pe_opt_hdr_dll_chara |= 0x40;
+		  else mask_pe_opt_hdr_dll_chara &= ~0x40;
+		  break;
+		case 'f':
+		  if (is_pos) set_pe_opt_hdr_dll_chara |= 0x80;
+		  else mask_pe_opt_hdr_dll_chara &= ~0x80;
+		  break;
+		case 'n':
+		  if (is_pos) set_pe_opt_hdr_dll_chara |= 0x100;
+		  else mask_pe_opt_hdr_dll_chara &= ~0x100;
+		  break;
+		case 'i':
+		  if (is_pos) set_pe_opt_hdr_dll_chara |= 0x200;
+		  else mask_pe_opt_hdr_dll_chara &= ~0x200;
+		  break;
+		case 's':
+		  if (is_pos) set_pe_opt_hdr_dll_chara |= 0x400;
+		  else mask_pe_opt_hdr_dll_chara &= ~0x400;
+		  break;
+		case 'b':
+		  if (is_pos) set_pe_opt_hdr_dll_chara |= 0x800;
+		  else mask_pe_opt_hdr_dll_chara &= ~0x800;
+		  break;
+		case 'w':
+		  if (is_pos) set_pe_opt_hdr_dll_chara |= 0x2000;
+		  else mask_pe_opt_hdr_dll_chara &= ~0x2000;
+		  break;
+		case 't':
+		  if (is_pos) set_pe_opt_hdr_dll_chara |= 0x8000;
+		  else mask_pe_opt_hdr_dll_chara &= ~0x8000;
+		  break;
+		default:
+		  fprintf (stderr, "Unknown flag-option '%c' for -d\n", *h);
+		  has_error = 1;
+		  break;
+		}
+	      ++h;
+	    }
+	  break;
+	case 'x':
 	  if (h[2] == 0)
 	    {
 	      dump_information = 1;
@@ -147,6 +217,7 @@ int main (int argc, char **argv)
     peimg_show (pe, stdout);
   /* First we need to do actions which aren't modifying image's size.  */
   peimg_set_hdr_characeristics (pe, set_pe_hdr_chara, mask_pe_hdr_chara);
+  peimg_set_hdr_opt_dll_characteristics (pe, set_pe_opt_hdr_dll_chara, mask_pe_opt_hdr_dll_chara);
   if (pe->pimg->is_modified)
     pe->pimg->want_save = 1;
   peimg_free (pe);

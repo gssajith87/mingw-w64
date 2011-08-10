@@ -319,6 +319,19 @@ peimg_show (pe_image *ppeimg, FILE *outfp)
     }
 }
 
+void
+peimg_set_hdr_opt_dll_characteristics (pe_image *pe, unsigned short set, unsigned short mask)
+{
+  unsigned short flgs;
+
+  flgs = PEIMG_GET_USHORT (pe, pe->optional_hdr_pos + 70);
+  flgs &= mask;
+  flgs |= set;
+  if (flgs == PEIMG_GET_USHORT (pe, pe->optional_hdr_pos + 70))
+    return;
+  PEIMG_SET_USHORT (pe, pe->optional_hdr_pos + 70, flgs);
+}
+
 #if 0
 int main(int argc, char **argv)
 {
