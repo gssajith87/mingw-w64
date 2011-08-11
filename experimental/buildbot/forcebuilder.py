@@ -91,7 +91,7 @@ class ForceBuilderBase(HtmlResource):
             builder_name))
         continue
       try:
-        bc.submitBuildRequest(source_stamp, reason, properties, now=True)
+        bc.submitBuildRequest(source_stamp, reason, properties)
       except interfaces.NoSlaveError:
         failed_builders.append((builder_name, "No slave available"))
     
