@@ -168,7 +168,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                             for i in ../../../patches/mpfr/*.patch ; do
                                               patch -p1 -f -i "$i" ;
                                                          done ;
-                                          fi""".replace("\n", " ")])
+                                          fi""".replace("\n", " ")]))
 
     # download mpc
     self.addStep(Compile(name="mpc-download",
@@ -193,7 +193,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                             for i in ../../../patches/mpc/*.patch ; do
                                               patch -p1 -f -i "$i" ;
                                             done ;
-                                          fi""".replace("\n", " ")])
+                                          fi""".replace("\n", " ")]))
 
     # download mingw-w64 crt and headers
     self.addStep(Compile(name="mingw-pull",
@@ -213,7 +213,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                             for i in ../patches/mingw/*.patch ; do
                                               patch -p1 -f -i "$i" ;
                                             done ;
-                                          fi""".replace("\n", " ")])
+                                          fi""".replace("\n", " ")]))
 
     # update the build stamp
     self.addStep(SubversionRevProperty(name="gcc-svnrev",
