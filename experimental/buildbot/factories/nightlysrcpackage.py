@@ -90,21 +90,18 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          env={"BINUTILS_REVISION": WithProperties("%(binutils_revision:-head)s"),
                               "BINUTILS_BRANCH"  : WithProperties("%(binutils_branch)s")}))
 
-    self.addStep(ShellCommandConditional,
-                 name="binutils-patch",
-                 workdir="build/src/binutils",
-                 description=["patch", "binutils"],
-                 descriptionDone=["binutils", "patched"],
-                 condprop="scheduler",
-                 condvalue="try",
-                 condinvert=True,
-                 command=["bash", "-c",
-                          """if [ -n "$( ls ../patches/binutils/*.patch )" ] ; then
-                               for i in ../patches/binutils/*.patch ; do
-                                 patch -p1 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
- 
+    self.addStep(ShellCommand(name="binutils-patch",
+                              description=["patch", "binutils"],
+                              descriptionDone=["binutils", "patched"],
+                              doStepIf=lambda step: (step.getProperty("scheduler") != "try"),
+                              workdir="build/src/binutils",
+                              command=["bash", "-c",
+                                       """if [ -n "$( ls ../patches/binutils/*.patch )" ] ; then
+                                            for i in ../patches/binutils/*.patch ; do
+                                              patch -p1 -f -i "$i" ;
+                                            done ;
+                                          fi""".replace("\n", " ")]))
+
     # download gcc
     self.addStep(Compile(name="gcc-pull",
                          description=["gcc", "pull"],
@@ -112,19 +109,17 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          command=["make", "-f", "mingw-makefile", "gcc-pull"],
                          env={"GCC_REVISION": WithProperties("%(gcc_revision:-head)s"),
                               "GCC_BRANCH"  : WithProperties("%(gcc_branch)s")}))
-    self.addStep(ShellCommandConditional,
-                 name="gcc-patch",
-                 workdir="build/src/gcc/src",
-                 description=["patch", "gcc"],
-                 condprop="scheduler",
-                 condvalue="try",
-                 condinvert=True,
-                 command=["bash", "-c",
-                          """if [ -n "$( ls ../../patches/gcc/*.patch )" ] ; then
-                               for i in ../../patches/gcc/*.patch ; do
-                                 patch -p1 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
+    self.addStep(ShellCommand(name="gcc-patch",
+                              description=["patch", "gcc"],
+                              descriptionDone=["gcc", "patched"],
+                              doStepIf=lambda step: (step.getProperty("scheduler") != "try"),
+                              workdir="build/src/gcc/src",
+                              command=["bash", "-c",
+                                       """if [ -n "$( ls ../../patches/gcc/*.patch )" ] ; then
+                                            for i in ../../patches/gcc/*.patch ; do
+                                              patch -p1 -f -i "$i" ;
+                                            done ;
+                                          fi""".replace("\n", " ")]))
  
     # download gmp
     self.addStep(Compile(name="gmp-download",
