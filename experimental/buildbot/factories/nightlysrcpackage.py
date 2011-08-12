@@ -10,7 +10,7 @@ from buildbot.steps.source import CVS, SVN
 from buildbot.steps.shell import Configure, Compile, ShellCommand, WithProperties, SetProperty
 from buildbot.steps.transfer import FileDownload, FileUpload
 from buildbot.steps.trigger import Trigger
-from scripts.buildsteps import M64CVS, M64NightlyRev, ShellCommandConditional, SubversionRevProperty, TriggerBuilders, WithPropertiesRecursive
+from scripts.buildsteps import M64CVS, M64NightlyRev, SubversionRevProperty, TriggerBuilders, WithPropertiesRecursive
 
 from ConfigParser import RawConfigParser as ConfigParser
 gConfig = ConfigParser()
@@ -158,19 +158,17 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          command=["make", "-f", "mingw-makefile", "mpfr-extract"],
                          env={"MPFR_VERSION": WithProperties("%(mpfr_version)s")}))
 
-    self.addStep(ShellCommandConditional,
-                 name="mpfr-patch",
-                 workdir="build/src/gcc/src/mpfr",
-                 description=["patch", "mpfr"],
-                 condprop="scheduler",
-                 condvalue="try",
-                 condinvert=True,
-                 command=["bash", "-c",
-                          """if [ -n "$( ls ../../../patches/mpfr/*.patch )" ] ; then
-                               for i in ../../../patches/mpfr/*.patch ; do
-                                 patch -p1 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
+    self.addStep(ShellCommand(name="mpfr-patch",
+                              description=["patch", "mpfr"],
+                              descriptionDone=["patched", "mpfr"],
+                              doStepIf=lambda step: (step.getProperty("scheduler") != "try"),
+                              workdir="build/src/gcc/src/mpfr",
+                              command=["bash", "-c",
+                                       """if [ -n "$( ls ../../../patches/mpfr/*.patch )" ] ; then
+                                            for i in ../../../patches/mpfr/*.patch ; do
+                                              patch -p1 -f -i "$i" ;
+                                                         done ;
+                                          fi""".replace("\n", " ")])
 
     # download mpc
     self.addStep(Compile(name="mpc-download",
@@ -185,19 +183,17 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          command=["make", "-f", "mingw-makefile", "mpc-extract"],
                          env={"MPC_VERSION": WithProperties("%(mpc_version)s")}))
 
-    self.addStep(ShellCommandConditional,
-                 name="mpc-patch",
-                 workdir="build/src/gcc/src/mpc",
-                 description=["patch", "mpc"],
-                 condprop="scheduler",
-                 condvalue="try",
-                 condinvert=True,
-                 command=["bash", "-c",
-                          """if [ -n "$( ls ../../../patches/mpc/*.patch )" ] ; then
-                               for i in ../../../patches/mpc/*.patch ; do
-                                 patch -p1 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
+    self.addStep(ShellCommand(name="mpc-patch",
+                              description=["patch", "mpc"],
+                              descriptionDone=["patched", "mpc"],
+                              doStepIf=lambda step: (step.getProperty("scheduler") != "try"),
+                              workdir="build/src/gcc/src/mpc",
+                              command=["bash", "-c",
+                                       """if [ -n "$( ls ../../../patches/mpc/*.patch )" ] ; then
+                                            for i in ../../../patches/mpc/*.patch ; do
+                                              patch -p1 -f -i "$i" ;
+                                            done ;
+                                          fi""".replace("\n", " ")])
 
     # download mingw-w64 crt and headers
     self.addStep(Compile(name="mingw-pull",
@@ -207,19 +203,17 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          env={"MINGW_REVISION": WithProperties("%(mingw_revision:-head)s"),
                               "MINGW_BRANCH"  : WithProperties("%(mingw_branch)s")}))
 
-    self.addStep(ShellCommandConditional,
-                 name="mingw-patch",
-                 workdir="build/src/mingw",
-                 description=["patch", "mingw"],
-                 condprop="scheduler",
-                 condvalue="try",
-                 condinvert=True,
-                 command=["bash", "-c",
-                          """if [ -n "$( ls ../patches/mingw/*.patch )" ] ; then
-                               for i in ../patches/mingw/*.patch ; do
-                                 patch -p1 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
+    self.addStep(ShellCommand(name="mingw-patch",
+                              description=["patch", "mingw"],
+                              descriptionDone=["patched", "mingw"],
+                              workdir="build/src/mingw",
+                              doStepIf=lambda step: (step.getProperty("scheduler") != "try"),
+                              command=["bash", "-c",
+                                       """if [ -n "$( ls ../patches/mingw/*.patch )" ] ; then
+                                            for i in ../patches/mingw/*.patch ; do
+                                              patch -p1 -f -i "$i" ;
+                                            done ;
+                                          fi""".replace("\n", " ")])
 
     # update the build stamp
     self.addStep(SubversionRevProperty(name="gcc-svnrev",
