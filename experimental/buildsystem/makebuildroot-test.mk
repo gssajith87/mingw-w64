@@ -24,6 +24,7 @@ all:: # default target
 # Build configurable variables
 ########################################
 # TARGET_ARCH - Toolchain default target arch
+# MAKE_OPTS - pass -j4 to make gcc/binutils build faster
 TARGET_ARCH ?= x86_64-w64-mingw32
 BUILD_ARCH ?=
 HOST_ARCH ?= ${BUILD_ARCH}
