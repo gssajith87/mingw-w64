@@ -39,6 +39,9 @@ MINGW_CONFIG_EXTRA_ARGS ?=
 SRC_ARCHIVE ?= mingw-w64-src.tar.bz2
 BIN_ARCHIVE ?= mingw-w64-bin_$(shell uname -s).tar.bz2
 
+# MAKE_OPTS - pass -j4 to make gcc/binutils build faster
+MAKE_OPTS ?=
+
 ########################################
 # Configure
 ########################################
@@ -405,7 +408,7 @@ binutils-compile: \
 
 ${BUILD_DIR}/binutils/obj/.compile.marker: \
     ${BUILD_DIR}/binutils/obj/.config.marker
-	${MAKE} -C $(dir $@)
+	${MAKE} ${MAKE_OPTS} -C $(dir $@)
 	@touch $@
 
 ########################################
@@ -472,7 +475,7 @@ gcc-bootstrap-compile: \
 
 ${BUILD_DIR}/gcc/obj/.bootstrap.compile.marker: \
     ${BUILD_DIR}/gcc/obj/.config.marker
-	${MAKE} -C $(dir $@) all-gcc
+	${MAKE} ${MAKE_OPTS} -C $(dir $@) all-gcc
 	@touch $@
 
 ########################################
@@ -526,7 +529,7 @@ crt-install: \
 ${BUILD_DIR}/mingw/obj/.install.marker: \
     ${BUILD_DIR}/mingw/obj/.compile.marker
 	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -C $(dir $@) install
+	${MAKE} ${MAKE_OPTS} -C $(dir $@) install
 	@touch $@
 
 ########################################
@@ -540,7 +543,7 @@ ${BUILD_DIR}/gcc/obj/.compile.marker: \
     ${BUILD_DIR}/gcc/obj/.config.marker \
     ${BUILD_DIR}/mingw/obj/.install.marker
 	PATH=$(realpath build/root/bin):$$PATH \
-	${MAKE} -C $(dir $@)
+	${MAKE} ${MAKE_OPTS} -C $(dir $@)
 	@touch $@
 
 ########################################
