@@ -2542,7 +2542,14 @@ static void save_all_changes(msft_typelib_t *typelib)
     ctl2_write_segment( typelib, MSFT_SEG_CUSTDATAGUID );
 
     ctl2_write_typeinfos(typelib);
-    flush_output_buffer( typelib->typelib->filename );
+
+    if (strendswith( typelib_name, ".res" ))  /* create a binary resource file */
+    {
+        add_output_to_resources( "TYPELIB", "#1" );
+        output_typelib_regscript( typelib->typelib );
+        flush_output_resources( typelib_name );
+    }
+    else flush_output_buffer( typelib_name );
 }
 
 int create_msft_typelib(typelib_t *typelib)
