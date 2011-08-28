@@ -23,7 +23,7 @@ widl_SOURCES = \
   src/wpp/preproc.c \
   src/wpp/wpp.c
 
-widl_CFLAGS = -I$(top_srcdir)/include -O3 -g -Wall -Wformat -Wpacked -Wno-pedantic-ms-format -Wmissing-declarations -Wimplicit-function-declaration -Wmissing-prototypes -Wstrict-aliasing=2
+widl_CFLAGS = -I$(top_srcdir)/include -O3 -g -Wall -Wformat -Wpacked -Wmissing-declarations -Wimplicit-function-declaration -Wmissing-prototypes -Wstrict-aliasing=2
 
 mingw_w64_widl_SOURCES = $(widl_SOURCES)
 mingw_w64_widl_CFLAGS = $(widl_CFLAGS)

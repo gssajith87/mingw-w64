@@ -18,6 +18,7 @@ AC_PROG_CC
 case $host in
   *-mingw32)
     widl_bin_name=widl
+    CFLAGS="$CFLAGS -Wno-pedantic-ms-format"
     ;;
   *)
     widl_bin_name=mingw-w64-widl
