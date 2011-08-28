@@ -12,10 +12,19 @@ AM_MAINTAINER_MODE
 
 AC_CANONICAL_HOST
 
-#AC_CHECK_HEADER([_mingw_mac.h], [], [AC_MSG_ERROR([Please check if the mingw-w64 header set and the build/host option are set properly.])])
-
 # Checks for programs.
 AC_PROG_CC
+
+case $host in
+  *-mingw32)
+    widl_bin_name=widl
+    ;;
+  *)
+    widl_bin_name=mingw-w64-widl
+    ;;
+esac
+
+AC_SUBST(WIDL_BIN_NAME,[$widl_bin_name])
 
 # Checks for libraries.
 
@@ -47,4 +56,3 @@ AH_TOP([#define __WINE_CONFIG_H])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
-

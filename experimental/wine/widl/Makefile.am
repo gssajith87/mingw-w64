@@ -1,4 +1,5 @@
-bin_PROGRAMS = widl
+bin_PROGRAMS = @WIDL_BIN_NAME@
+EXTRA_PROGRAMS = widl mingw-w64-widl
 
 widl_SOURCES = \
   src/client.c \
@@ -23,6 +24,9 @@ widl_SOURCES = \
   src/wpp/wpp.c
 
 widl_CFLAGS = -I$(top_srcdir)/include -O3 -g -Wall -Wformat -Wpacked -Wno-pedantic-ms-format -Wmissing-declarations -Wimplicit-function-declaration -Wmissing-prototypes -Wstrict-aliasing=2
+
+mingw_w64_widl_SOURCES = $(widl_SOURCES)
+mingw_w64_widl_CFLAGS = $(widl_CFLAGS)
 
 DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
 

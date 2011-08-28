@@ -610,6 +610,7 @@ LIBOBJS
 EGREP
 GREP
 CPP
+WIDL_BIN_NAME
 am__fastdepCC_FALSE
 am__fastdepCC_TRUE
 CCDEPMODE
@@ -2919,8 +2920,6 @@ case $host_os in *\ *) host_os=`echo "$host_os" | sed 's/ /-/g'`;; esac
 
 
 
-#AC_CHECK_HEADER([_mingw_mac.h], [], [AC_MSG_ERROR([Please check if the mingw-w64 header set and the build/host option are set properly.])])
-
 # Checks for programs.
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -3900,6 +3899,18 @@ else
   am__fastdepCC_FALSE=
 fi
 
+
+
+case $host in
+  *-mingw32)
+    widl_bin_name=widl
+    ;;
+  *)
+    widl_bin_name=mingw-w64-widl
+    ;;
+esac
+
+WIDL_BIN_NAME=$widl_bin_name
 
 
 # Checks for libraries.
@@ -6322,5 +6333,4 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
-
 
