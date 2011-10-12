@@ -114,7 +114,6 @@ for f in \
 	dplobby.h \
 	dplobby8.h \
 	dpnathlp.h \
-	dsdriver.h \
 	dshow.h \
 	dsound.h \
 	dvdmedia.h \
