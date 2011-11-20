@@ -980,7 +980,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
         --enable-libstdcxx-time --enable-libstdcxx-debug \
         --enable-fully-dynamic-string --enable-libgomp \
         --with-dwarf2 --enable-sjlj-exceptions \
-        --enable-version-specific-runtime-libs
+        --enable-version-specific-runtime-libs \
         --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
             --with-mpfr=${CURDIR}/${BUILD_DIR}/mpfr/install \
@@ -1072,7 +1072,7 @@ ${BUILD_DIR}/winpthreads/obj.N/.config.marker: \
 	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/winpthreads/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
-	    --prefix=${BUILD_DIR}/root/${TARGET_ARCH}
+	    --prefix=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH}
 	@touch $@
 
 ${BUILD_DIR}/winpthreads/obj.Y/.config.marker: \
@@ -1083,16 +1083,16 @@ ${BUILD_DIR}/winpthreads/obj.Y/.config.marker: \
 	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/winpthreads/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
-	    --prefix=${BUILD_DIR}/root/${TARGET_ARCH} \
+	    --prefix=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH} \
 	    CFLAGS=-m64 RCFLAGS="-D_WIN64=1 -F pe-x86-64" \
-	    --libdir=${BUILD_DIR}/root/${TARGET_ARCH}/lib64
+	    --libdir=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH}/lib64
 	cd $(dir $@)/i686 && \
 	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/winpthreads/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
-	    --prefix=${BUILD_DIR}/root/${TARGET_ARCH} \
+	    --prefix=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH} \
 	    CFLAGS=-m32 RCFLAGS="-U_WIN64 -F pe-i386" \
-	    --libdir=${BUILD_DIR}/root/${TARGET_ARCH}/lib32
+	    --libdir=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH}/lib32
 	    @touch $@
 
 ########################################
