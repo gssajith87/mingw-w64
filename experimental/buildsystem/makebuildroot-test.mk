@@ -48,12 +48,13 @@ BIN_ARCHIVE ?= mingw-w64-bin_$(shell uname -s).tar.bz2
 # GCC_FORTRAN - Fortran support
 # GCC_OBJC - Objective C support
 # GCC_JAVA - Java support
-ENABLE_MULTILIB ?= N
-GCC_ADA ?= N
+ENABLE_MULTILIB ?= Y
+GCC_ADA ?= Y
 GCC_CPP ?= Y
 GCC_FORTRAN ?= Y
 GCC_OBJC ?= Y
 GCC_JAVA ?= N
+USE_WINPTHREADS ?= Y
 
 ########################################
 # Version number variables
@@ -67,6 +68,7 @@ ISL_VERSION ?= 0.08
 PIPLIB_VERSION ?= 1.4.0
 MINGW_BRANCH ?= trunk
 MINGW_REVISION ?= HEAD
+WINPTHREADS_REVISION ?= HEAD
 GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
 GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
 
@@ -121,6 +123,10 @@ GCC_OBJC_Y := ",objc,obj-c++"
 GCC_OBJC_N :=
 GCC_JAVA_Y := ",java"
 GCC_JAVA_N :=
+GCC_WINPTHREAD_DEP_N := /pthreads/.pthreads.install.${ENABLE_MULTILIB}
+GCC_WINPTHREAD_DEP_Y := /winpthreads/obj.${ENABLE_MULTILIB}/.install.marker
+LIBGCC_WINPTHREAD_DEP_N :=
+LIBGCC_WINPTHREAD_DEP_Y := /winpthreads/obj.${ENABLE_MULTILIB}/.install.marker
 
 ########################################
 # Configure
@@ -260,6 +266,21 @@ src/pthreads/.pthreads.download.marker: \
 
 ifneq (,$(strip ${PTHREADS_UPDATE}))
 .PHONY: src/pthreads/.pthreads.download.marker
+endif
+
+########################################
+# Pull winpthreads from trunk
+########################################
+winpthreads-download: \
+    src/winpthreads/.winpthreads.download.marker
+
+src/winpthreads/.winpthreads.download.marker: \
+    src/.mkdir.marker
+	svn co https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/experimental/winpthreads --revision ${WINPTHREADS_REVISION} src
+	@touch $@
+
+ifneq (,$(strip ${PTHREADS_UPDATE}))
+.PHONY: src/winpthreads/.winpthreads.download.marker
 endif
 ########################################
 # Download gmp
@@ -472,7 +493,8 @@ ${SRC_ARCHIVE}: \
     src/piplib/.piplib.extract.marker \
     src/cloog/.cloog.extract.marker \
     src/mingw/.mingw.pull.marker \
-    src/pthreads/.pthreads.download.marker
+    src/pthreads/.pthreads.download.marker \
+    src/winpthreads/.winpthreads.download.marker
 endif
 
 ${SRC_ARCHIVE}:
@@ -894,13 +916,11 @@ ${BUILD_DIR}/cloog/obj/.config.marker: \
         ${GCC_CONFIG_HOST_ARGS} \
         $(CONFIG_BUILD_ARGS) \
             --enable-static --disable-shared \
+            --with-isl=system \
             --prefix=${CURDIR}/${BUILD_DIR}/cloog/install \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
-            --with-isl=${CURDIR}/${BUILD_DIR}/isl/install \
-            --with-host-libstdcxx="-lstdc++ -lsupc++ -lm"
+            --with-isl=${CURDIR}/${BUILD_DIR}/isl/install
 	@touch $@
-
-# -lm workarounds some weirdness where -lm was missing when linking backends
 
 ########################################
 # Compile CLooG
@@ -1040,6 +1060,76 @@ ${BUILD_DIR}/mingw/obj/.install.marker: \
 	@touch $@
 
 ########################################
+# Configure mingw-w64 winpthreads
+########################################
+winpthreads-configure: \
+    ${BUILD_DIR}/winpthreads/obj.${ENABLE_MULTILIB}/.config.marker
+
+${BUILD_DIR}/winpthreads/obj.N/.config.marker: \
+    ${BUILD_DIR}/gcc/obj/.bootstrap.install.marker \
+    ${BUILD_DIR}/winpthreads/obj.N/.mkdir.marker
+	cd $(dir $@) && \
+	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/winpthreads/configure \
+	    $(CONFIG_BUILD_ARGS) \
+	    --host=${TARGET_ARCH} \
+	    --prefix=${BUILD_DIR}/root/${TARGET_ARCH}
+	@touch $@
+
+${BUILD_DIR}/winpthreads/obj.Y/.config.marker: \
+    ${BUILD_DIR}/gcc/obj/.bootstrap.install.marker \
+    ${BUILD_DIR}/winpthreads/obj.Y/x86_64/.mkdir.marker \
+    ${BUILD_DIR}/winpthreads/obj.Y/i686/.mkdir.marker
+	cd $(dir $@)/x86_64 && \
+	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/winpthreads/configure \
+	    $(CONFIG_BUILD_ARGS) \
+	    --host=${TARGET_ARCH} \
+	    --prefix=${BUILD_DIR}/root/${TARGET_ARCH} \
+	    CFLAGS=-m64 RCFLAGS="-D_WIN64=1 -F pe-x86-64" \
+	    --libdir=${BUILD_DIR}/root/${TARGET_ARCH}/lib64
+	cd $(dir $@)/i686 && \
+	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/winpthreads/configure \
+	    $(CONFIG_BUILD_ARGS) \
+	    --host=${TARGET_ARCH} \
+	    --prefix=${BUILD_DIR}/root/${TARGET_ARCH} \
+	    CFLAGS=-m32 RCFLAGS="-U_WIN64 -F pe-i386" \
+	    --libdir=${BUILD_DIR}/root/${TARGET_ARCH}/lib32
+	    @touch $@
+
+########################################
+# Compile mingw-w64 winpthreads
+########################################
+winpthreads-compile: \
+    ${BUILD_DIR}/winpthreads/obj.${ENABLE_MULTILIB}/.compile.marker
+
+${BUILD_DIR}/winpthreads/obj.N/.compile.marker: \
+    ${BUILD_DIR}/winpthreads/obj.N/.config.marker
+	$(ADD_BIN_PATH) $(MAKE) ${MAKE_OPTS} -C $(dir $@)
+	@touch $@
+
+${BUILD_DIR}/winpthreads/obj.Y/.compile.marker: \
+    ${BUILD_DIR}/winpthreads/obj.Y/.config.marker
+	$(ADD_BIN_PATH) $(MAKE) ${MAKE_OPTS} -C $(dir $@)/x86_64
+	$(ADD_BIN_PATH) $(MAKE) ${MAKE_OPTS} -C $(dir $@)/i686
+	@touch $@
+
+########################################
+# Install mingw-w64 winpthreads
+########################################
+winpthreads-install: \
+    ${BUILD_DIR}/winpthreads/obj.${ENABLE_MULTILIB}/.install.marker
+
+${BUILD_DIR}/winpthreads/obj.N/.install.marker: \
+    ${BUILD_DIR}/winpthreads/obj/.compile.marker
+	$(ADD_BIN_PATH) $(MAKE) -C $(dir $@) install
+	@touch $@
+
+${BUILD_DIR}/winpthreads/obj.Y/.install.marker: \
+    ${BUILD_DIR}/winpthreads/obj/.compile.marker
+	$(ADD_BIN_PATH) $(MAKE) -C $(dir $@)/x86_64 install
+	$(ADD_BIN_PATH) $(MAKE) -C $(dir $@)/i686 install
+	@touch $@
+
+########################################
 # Compile libgcc
 ########################################
 
@@ -1047,7 +1137,8 @@ gcc-libgcc-compile: \
     ${BUILD_DIR}/gcc/obj/.libgcc.compile.marker
 
 ${BUILD_DIR}/gcc/obj/.libgcc.compile.marker: \
-    ${BUILD_DIR}/mingw/obj/.install.marker
+    ${BUILD_DIR}/mingw/obj/.install.marker \
+    ${BUILD_DIR}${LIBGCC_WINPTHREAD_DEP_${$USE_WINPTHREADS}}
 	$(MAKE) ${MAKE_OPTS} -C $(dir $@) all-target-libgcc
 	@touch $@
 
@@ -1188,7 +1279,7 @@ gcc-compile: \
 ${BUILD_DIR}/gcc/obj/.compile.marker: \
     ${BUILD_DIR}/gcc/obj/.config.marker \
     ${BUILD_DIR}/mingw/obj/.install.marker \
-	${BUILD_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB}
+	${BUILD_DIR}${GCC_WINPTHREAD_DEP_${$USE_WINPTHREADS}}
 	$(ADD_BIN_PATH) $(MAKE) ${MAKE_OPTS} -C $(dir $@)
 	@touch $@
 
@@ -1519,7 +1610,9 @@ ${NATIVE_DIR}/cloog/obj/.config.marker: \
     ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
     ${NATIVE_DIR}/cloog/obj/.mkdir.marker \
     ${NATIVE_DIR}/gmp/install/.install.marker \
-    ${NATIVE_DIR}/ppl/install/.install.marker
+    ${NATIVE_DIR}/ppl/install/.install.marker \
+    ${NATIVE_DIR}/piplib/install/.install.marker \
+    ${NATIVE_DIR}/isl/install/.install.marker
 	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
@@ -1548,6 +1641,97 @@ native-cloog-install: \
 
 ${NATIVE_DIR}/cloog/install/.install.marker: \
     ${NATIVE_DIR}/cloog/obj/.compile.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Configure PIPLIB
+########################################
+native-piplib-configure: \
+    ${NATIVE_DIR}/piplib/obj/.config.marker
+
+${NATIVE_DIR}/piplib/obj/.config.marker: \
+    ${BUILD_DIR}/gcc/obj/.install.marker \
+    ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
+    ${NATIVE_DIR}/piplib/obj/.mkdir.marker \
+    ${NATIVE_DIR}/gmp/install/.install.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Compile PIPLIB
+########################################
+native-piplib-compile: \
+    ${NATIVE_DIR}/piplib/obj/.compile.marker
+
+${NATIVE_DIR}/piplib/obj/.compile.marker: \
+    ${NATIVE_DIR}/piplib/obj/.config.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Install PIPLIB
+########################################
+native-piplib-install: \
+    ${NATIVE_DIR}/piplib/install/.install.marker
+
+${NATIVE_DIR}/piplib/install/.install.marker: \
+    ${NATIVE_DIR}/piplib/obj/.compile.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Configure ISL
+########################################
+native-isl-configure: \
+    ${NATIVE_DIR}/isl/obj/.config.marker
+
+${NATIVE_DIR}/isl/obj/.config.marker: \
+    ${BUILD_DIR}/gcc/obj/.install.marker \
+    ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
+    ${NATIVE_DIR}/isl/obj/.mkdir.marker \
+    ${NATIVE_DIR}/piplib/install/.install.marker \
+    ${NATIVE_DIR}/gmp/install/.install.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Compile ISL
+########################################
+native-isl-compile: \
+    ${NATIVE_DIR}/isl/obj/.compile.marker
+
+${NATIVE_DIR}/isl/obj/.compile.marker: \
+    ${NATIVE_DIR}/isl/obj/.config.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Install ISL
+########################################
+native-isl-install: \
+    ${NATIVE_DIR}/isl/install/.install.marker
+
+${NATIVE_DIR}/isl/install/.install.marker: \
+    ${NATIVE_DIR}/isl/obj/.compile.marker
 	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
@@ -1591,6 +1775,8 @@ ${NATIVE_DIR}/gcc/obj/.config.marker: \
     ${NATIVE_DIR}/mpfr/install/.install.marker \
     ${NATIVE_DIR}/mpc/install/.install.marker \
     ${NATIVE_DIR}/ppl/install/.install.marker \
+    ${NATIVE_DIR}/isl/install/.install.marker \
+    ${NATIVE_DIR}/piplib/install/.install.marker \
     ${NATIVE_DIR}/cloog/install/.install.marker \
     ${NATIVE_DIR}/root/.root.init.marker
 	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
@@ -1643,6 +1829,49 @@ ${NATIVE_DIR}/mingw/obj/.install.marker: \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
+# Configure mingw-w64 winpthreads
+########################################
+native-winpthreads-configure: \
+    ${NATIVE_DIR}/winpthreads/obj/.config.marker
+
+${NATIVE_DIR}/winpthreads/obj/.config.marker: \
+    ${BUILD_DIR}/gcc/obj/.bootstrap.install.marker \
+    ${NATIVE_DIR}/winpthreads/obj/.mkdir.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Compile mingw-w64 winpthreads
+########################################
+native-winpthreads-compile: \
+    ${NATIVE_DIR}/winpthreads/obj/.compile.marker
+
+${NATIVE_DIR}/winpthreads/obj/.compile.marker: \
+    ${NATIVE_DIR}/winpthreads/obj/.config.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Install mingw-w64 winpthreads
+########################################
+native-winpthreads-install: \
+    ${NATIVE_DIR}/winpthreads/obj/.install.marker
+
+${NATIVE_DIR}/winpthreads/obj/.install.marker: \
+    ${NATIVE_DIR}/winpthreads/obj/.compile.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+	     HOST_ARCH=${TARGET_ARCH} \
+	     TARGET_ARCH=${TARGET_ARCH} \
+	     BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
 # Compile libgcc
 ########################################
 
@@ -1650,7 +1879,8 @@ native-gcc-libgcc-compile: \
     ${NATIVE_DIR}/gcc/obj/.libgcc.compile.marker
 
 ${NATIVE_DIR}/gcc/obj/.libgcc.compile.marker: \
-    ${NATIVE_DIR}/mingw/obj/.install.marker
+    ${NATIVE_DIR}/mingw/obj/.install.marker \
+    ${NATIVE_DIR}${LIBGCC_WINPTHREAD_DEP_${$USE_WINPTHREADS}}
 	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -C $(dir $@) all-target-libgcc
 	@touch $@
@@ -1795,7 +2025,7 @@ native-gcc-compile: \
 ${NATIVE_DIR}/gcc/obj/.compile.marker: \
     ${NATIVE_DIR}/gcc/obj/.config.marker \
     ${NATIVE_DIR}/mingw/obj/.install.marker \
-	${NATIVE_DIR}/pthreads/.pthreads.install.${ENABLE_MULTILIB}
+	${NATIVE_DIR}${GCC_WINPTHREAD_DEP_${$USE_WINPTHREADS}}
 	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
@@ -1971,6 +2201,13 @@ TARGETS := \
   pthreads-prep \
   pthreads-build \
   pthreads-install \
+  winpthreads-configure \
+  winpthreads-download \
+  winpthreads-compile \
+  winpthreads-install \
+  native-winpthreads-configure \
+  native-winpthreads-compile \
+  native-winpthreads-install \
   gcc-libgcc-compile \
   gcc-libgcc-install \
   native-pthreads-prep \
@@ -1978,6 +2215,20 @@ TARGETS := \
   native-pthreads-install \
   native-gcc-libgcc-compile \
   native-gcc-libgcc-install \
+  isl-configure \
+  isl-download \
+  isl-compile \
+  isl-install \
+  piplib-configure \
+  piplib-download \
+  piplib-compile \
+  piplib-install \
+  native-isl-configure \
+  native-isl-compile \
+  native-isl-install \
+  native-piplib-configure \
+  native-piplib-compile \
+  native-piplib-install \
   pre-pack \
   ${NULL}
 
