@@ -977,7 +977,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
         --enable-graphite --enable-lto \
         --enable-long-long --enable-threads=win32 \
         --enable-c99 --enable-wchar_t \
-        --enable-libstdcxx-time --enable-libstdcxx-debug \
+        --enable-libstdcxx-debug \
         --enable-fully-dynamic-string --enable-libgomp \
         --with-dwarf2 --enable-sjlj-exceptions \
         --enable-version-specific-runtime-libs \
