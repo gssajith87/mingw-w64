@@ -58,11 +58,13 @@ GCC_JAVA ?= N
 ########################################
 # Version number variables
 ########################################
-GMP_VERSION ?= 5.0.1
-MPFR_VERSION ?= 3.0.0
+GMP_VERSION ?= 5.0.2
+MPFR_VERSION ?= 3.1.0
 MPC_VERSION ?= 0.8.2
 PPL_VERSION ?= 0.11
-CLOOG_VERSION ?= 0.15.10
+CLOOG_VERSION ?= 0.16.3
+ISL_VERSION ?= 0.08
+PIPLIB_VERSION ?= 1.4.0
 MINGW_BRANCH ?= trunk
 MINGW_REVISION ?= HEAD
 GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
@@ -78,7 +80,7 @@ PTHREADS_CVS_DATE ?= '5/11/2010'
 # Configure options
 ########################################
 BINUTILS_CONFIG_EXTRA_ARGS ?=
-GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --enable-libgomp --with-dwarf2 --enable-sjlj-exceptions --enable-version-specific-runtime-libs
+GCC_CONFIG_EXTRA_ARGS ?=
 PTHREADS_MAKE_ARGS ?= clean GC
 MINGW_CONFIG_EXTRA_ARGS ?=
 
@@ -238,6 +240,7 @@ src/gcc/gcc/.gcc.pull.marker: \
 	cd $(dir $@) && \
 	svn co --non-interactive --no-auth-cache --revision ${GCC_REVISION} \
 	       svn://gcc.gnu.org/svn/gcc/$(strip ${GCC_BRANCH})/ .
+	$(WGET) ecj.jar ftp://sourceware.org/pub/java/ecj-latest.jar
 	@touch $@
 
   ifneq (,$(strip ${GCC_UPDATE}))
@@ -306,7 +309,7 @@ src/mpfr/.mpfr.extract.marker: \
     src/mpfr/src/.mkdir.marker \
     src/patches/.patches.pull.marker
 	$(TAR) -C $(dir $@)/src --strip-components=1 -xjvf $<
-	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr-3.0.0/allpatches-p3
+	cd $(dir $@)src && patch -Np1 -i ../../patches/mpfr-3.1.0/allpatches-p3
 	@touch $@
 
 ########################################
@@ -367,7 +370,7 @@ cloog-download: \
 
 src/cloog.tar.gz: \
     src/.mkdir.marker
-	$(WGET) $@ ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-ppl-$(strip ${CLOOG_VERSION}).tar.gz
+	$(WGET) $@ http://www.bastoul.net/cloog/pages/download/cloog-$(strip ${CLOOG_VERSION}).tar.gz
 
 ########################################
 # Extract CLooG
@@ -380,6 +383,55 @@ src/cloog/.cloog.extract.marker: \
     src/cloog.tar.gz \
     src/cloog/src/.mkdir.marker
 	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
+	@touch $@
+
+########################################
+# Download ISL
+########################################
+
+isl-download: \
+    src/cloog.tar.gz
+
+src/isl.tar.gz: \
+    src/.mkdir.marker
+#	$(WGET) $@ http://www.kotnet.org/~skimo/isl/isl-$(strip ${ISL_VERSION}).tar.bz2
+
+########################################
+# Extract ISL
+########################################
+
+isl-extract: \
+    src/isl/.isl.extract.marker
+
+src/isl/.isl.extract.marker: \
+    src/isl.tar.gz \
+    src/isl/src/.mkdir.marker
+	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
+	@touch $@
+
+########################################
+# Download PIPLIB
+########################################
+
+piplib-download: \
+    src/cloog.tar.gz
+
+src/piplib.tar.gz: \
+    src/.mkdir.marker
+#	$(WGET) $@ http://www.bastoul.net/cloog/pages/download/piplib-$(strip ${PIPLIB_VERSION}).tar.gz
+
+########################################
+# Extract PIPLIB
+########################################
+
+piplib-extract: \
+    src/piplib/.piplib.extract.marker
+
+src/piplib/.piplib.extract.marker: \
+    src/piplib.tar.gz \
+    src/piplib/src/.mkdir.marker
+	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
+	cd $(dir $@)/src && autoreconf -i
 	@touch $@
 
 ########################################
@@ -416,6 +468,8 @@ ${SRC_ARCHIVE}: \
     src/mpfr/.mpfr.extract.marker \
     src/mpc/.mpc.extract.marker \
     src/ppl/.ppl.extract.marker \
+    src/isl/.isl.extract.marker \
+    src/piplib/.piplib.extract.marker \
     src/cloog/.cloog.extract.marker \
     src/mingw/.mingw.pull.marker \
     src/pthreads/.pthreads.download.marker
@@ -731,6 +785,97 @@ ${BUILD_DIR}/ppl/install/.install.marker: \
 	@touch $@
 
 ########################################
+# Configure PIPLIB
+########################################
+piplib-configure: \
+    ${BUILD_DIR}/piplib/obj/.config.marker
+
+${BUILD_DIR}/piplib/obj/.config.marker: \
+    ${BUILD_DIR}/piplib/obj/.mkdir.marker \
+    ${BUILD_DIR}/root/.root.init.marker \
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
+    ${BUILD_DIR}/gmp/install/.install.marker
+	cd $(dir $@) && \
+	../../../${BUILD_DIR}/piplib/src/configure \
+        ${GCC_CONFIG_HOST_ARGS} \
+        $(CONFIG_BUILD_ARGS) \
+        --enable-static --disable-shared \
+        --prefix=${CURDIR}/${BUILD_DIR}/piplib/install \
+        --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
+        CPPFLAGS=-fexceptions
+	@touch $@
+
+########################################
+# Compile PIPLIB
+########################################
+piplib-compile: \
+    ${BUILD_DIR}/piplib/obj/.compile.marker
+
+${BUILD_DIR}/piplib/obj/.compile.marker: \
+    ${BUILD_DIR}/piplib/obj/.config.marker
+	$(MAKE) -C $(dir $@)
+	@touch $@
+
+########################################
+# Install PIPLIB
+########################################
+piplib-install: \
+    ${BUILD_DIR}/piplib/install/.install.marker
+
+${BUILD_DIR}/piplib/install/.install.marker: \
+    ${BUILD_DIR}/piplib/obj/.compile.marker \
+    ${BUILD_DIR}/piplib/install/.mkdir.marker
+	$(MAKE) -C ${BUILD_DIR}/piplib/obj install
+	@touch $@
+
+########################################
+# Configure ISL
+########################################
+isl-configure: \
+    ${BUILD_DIR}/isl/obj/.config.marker
+
+${BUILD_DIR}/isl/obj/.config.marker: \
+    ${BUILD_DIR}/isl/obj/.mkdir.marker \
+    ${BUILD_DIR}/root/.root.init.marker \
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
+    ${BUILD_DIR}/gmp/install/.install.marker \
+    ${BUILD_DIR}/piplib/install/.install.marker
+	cd $(dir $@) && \
+	../../../${BUILD_DIR}/piplib/src/configure \
+        ${GCC_CONFIG_HOST_ARGS} \
+        $(CONFIG_BUILD_ARGS) \
+        --enable-static --disable-shared \
+        --prefix=${CURDIR}/${BUILD_DIR}/piplib/install \
+        --with-gmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
+        --with-piplib=system \
+        --with-piplib-prefix=${CURDIR}/${BUILD_DIR}/piplib/install \
+        CPPFLAGS=-fexceptions
+	@touch $@
+
+########################################
+# Compile ISL
+########################################
+isl-compile: \
+    ${BUILD_DIR}/isl/obj/.compile.marker
+
+${BUILD_DIR}/isl/obj/.compile.marker: \
+    ${BUILD_DIR}/isl/obj/.config.marker
+	$(MAKE) -C $(dir $@)
+	@touch $@
+
+########################################
+# Install ISL
+########################################
+isl-install: \
+    ${BUILD_DIR}/isl/install/.install.marker
+
+${BUILD_DIR}/isl/install/.install.marker: \
+    ${BUILD_DIR}/isl/obj/.compile.marker \
+    ${BUILD_DIR}/isl/install/.mkdir.marker
+	$(MAKE) -C ${BUILD_DIR}/isl/obj install
+	@touch $@
+
+########################################
 # Configure CLooG
 ########################################
 cloog-configure: \
@@ -741,7 +886,9 @@ ${BUILD_DIR}/cloog/obj/.config.marker: \
     ${BUILD_DIR}/root/.root.init.marker \
     ${BUILD_DIR}/mingw-headers/obj/.install.marker \
     ${BUILD_DIR}/gmp/install/.install.marker \
-    ${BUILD_DIR}/ppl/install/.install.marker
+    ${BUILD_DIR}/ppl/install/.install.marker \
+    ${BUILD_DIR}/piplib/install/.install.marker \
+    ${BUILD_DIR}/isl/install/.install.marker
 	cd $(dir $@) && \
 	../../../${BUILD_DIR}/cloog/src/configure \
         ${GCC_CONFIG_HOST_ARGS} \
@@ -749,7 +896,7 @@ ${BUILD_DIR}/cloog/obj/.config.marker: \
             --enable-static --disable-shared \
             --prefix=${CURDIR}/${BUILD_DIR}/cloog/install \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
-            --with-ppl=${CURDIR}/${BUILD_DIR}/ppl/install \
+            --with-isl=${CURDIR}/${BUILD_DIR}/isl/install \
             --with-host-libstdcxx="-lstdc++ -lsupc++ -lm"
 	@touch $@
 
@@ -796,6 +943,8 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/mpfr/install/.install.marker \
     ${BUILD_DIR}/mpc/install/.install.marker \
     ${BUILD_DIR}/ppl/install/.install.marker \
+    ${BUILD_DIR}/isl/install/.install.marker \
+    ${BUILD_DIR}/piplib/install/.install.marker \
     ${BUILD_DIR}/cloog/install/.install.marker \
     ${BUILD_DIR}/root/.root.init.marker
 	cd $(dir $@) && \
@@ -804,13 +953,22 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
         ${GCC_CONFIG_HOST_ARGS} \
         $(CONFIG_BUILD_ARGS) \
         --prefix=${CURDIR}/${BUILD_DIR}/root \
+        --enable-cloog-backend=isl \
+        --enable-graphite --enable-lto \
+        --enable-long-long --enable-threads=win32 \
+        --enable-c99 --enable-wchar_t \
+        --enable-libstdcxx-time --enable-libstdcxx-debug \
+        --enable-fully-dynamic-string --enable-libgomp \
+        --with-dwarf2 --enable-sjlj-exceptions \
+        --enable-version-specific-runtime-libs
         --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
             --with-mpfr=${CURDIR}/${BUILD_DIR}/mpfr/install \
             --with-mpc=${CURDIR}/${BUILD_DIR}/mpc/install \
             --with-ppl=${CURDIR}/${BUILD_DIR}/ppl/install \
+            --with-isl=${CURDIR}/${BUILD_DIR}/isl/install \
             --with-cloog=${CURDIR}/${BUILD_DIR}/cloog/install \
-            --with-host-libstdcxx="-lstdc++ -lsupc++ -lm" \
+            --with-host-libstdcxx="-L${CURDIR}/${BUILD_DIR}/isl/install/lib -lisl -L${CURDIR}/${BUILD_DIR}/piplib/install/lib -lpiplibMP -L${CURDIR}/${BUILD_DIR}/gmp/install/lib -lgmp -lstdc++ -lsupc++ -lm" \
         --enable-languages=c${GCC_CPP_${GCC_CPP}}${GCC_FORTRAN_${GCC_FORTRAN}}${GCC_OBJC_${GCC_OBJC}}${GCC_JAVA_${GCC_JAVA}}${GCC_ADA_${GCC_ADA}} \
         ${GCC_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
         ${GCC_CONFIG_EXTRA_ARGS}
