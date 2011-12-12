@@ -276,7 +276,7 @@ winpthreads-download: \
 
 src/winpthreads/.winpthreads.download.marker: \
     src/.mkdir.marker
-	svn co https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/experimental/winpthreads --revision ${WINPTHREADS_REVISION} src
+	svn co https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/experimental/winpthreads --revision ${WINPTHREADS_REVISION} src/winpthreads
 	@touch $@
 
 ifneq (,$(strip ${PTHREADS_UPDATE}))
@@ -411,11 +411,11 @@ src/cloog/.cloog.extract.marker: \
 ########################################
 
 isl-download: \
-    src/cloog.tar.gz
+    src/isl.tar.bz2
 
-src/isl.tar.gz: \
+src/isl.tar.bz2: \
     src/.mkdir.marker
-#	$(WGET) $@ http://www.kotnet.org/~skimo/isl/isl-$(strip ${ISL_VERSION}).tar.bz2
+	$(WGET) $@ http://www.kotnet.org/~skimo/isl/isl-$(strip ${ISL_VERSION}).tar.bz2
 
 ########################################
 # Extract ISL
@@ -425,7 +425,7 @@ isl-extract: \
     src/isl/.isl.extract.marker
 
 src/isl/.isl.extract.marker: \
-    src/isl.tar.gz \
+    src/isl.tar.bz2 \
     src/isl/src/.mkdir.marker
 	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
 	@touch $@
@@ -439,7 +439,7 @@ piplib-download: \
 
 src/piplib.tar.gz: \
     src/.mkdir.marker
-#	$(WGET) $@ http://www.bastoul.net/cloog/pages/download/piplib-$(strip ${PIPLIB_VERSION}).tar.gz
+	$(WGET) $@ http://www.bastoul.net/cloog/pages/download/piplib-$(strip ${PIPLIB_VERSION}).tar.gz
 
 ########################################
 # Extract PIPLIB
