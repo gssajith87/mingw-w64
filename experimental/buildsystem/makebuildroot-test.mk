@@ -1080,14 +1080,14 @@ ${BUILD_DIR}/winpthreads/obj.Y/.config.marker: \
     ${BUILD_DIR}/gcc/obj/.bootstrap.install.marker \
     ${BUILD_DIR}/winpthreads/obj.Y/x86_64/.mkdir.marker \
     ${BUILD_DIR}/winpthreads/obj.Y/i686/.mkdir.marker
-	cd $(dir $@)/x86_64 && \
+	cd $(dir $@)x86_64 && \
 	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/winpthreads/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH} \
 	    CFLAGS=-m64 RCFLAGS="-D_WIN64=1 -F pe-x86-64" \
 	    --libdir=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH}/lib64
-	cd $(dir $@)/i686 && \
+	cd $(dir $@)i686 && \
 	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/winpthreads/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
@@ -1109,8 +1109,8 @@ ${BUILD_DIR}/winpthreads/obj.N/.compile.marker: \
 
 ${BUILD_DIR}/winpthreads/obj.Y/.compile.marker: \
     ${BUILD_DIR}/winpthreads/obj.Y/.config.marker
-	$(ADD_BIN_PATH) $(MAKE) ${MAKE_OPTS} -C $(dir $@)/x86_64
-	$(ADD_BIN_PATH) $(MAKE) ${MAKE_OPTS} -C $(dir $@)/i686
+	$(ADD_BIN_PATH) $(MAKE) ${MAKE_OPTS} -C $(dir $@)x86_64
+	$(ADD_BIN_PATH) $(MAKE) ${MAKE_OPTS} -C $(dir $@)i686
 	@touch $@
 
 ########################################
@@ -1120,14 +1120,14 @@ winpthreads-install: \
     ${BUILD_DIR}/winpthreads/obj.${ENABLE_MULTILIB}/.install.marker
 
 ${BUILD_DIR}/winpthreads/obj.N/.install.marker: \
-    ${BUILD_DIR}/winpthreads/obj/.compile.marker
+    ${BUILD_DIR}/winpthreads/obj.N/.compile.marker
 	$(ADD_BIN_PATH) $(MAKE) -C $(dir $@) install
 	@touch $@
 
 ${BUILD_DIR}/winpthreads/obj.Y/.install.marker: \
-    ${BUILD_DIR}/winpthreads/obj/.compile.marker
-	$(ADD_BIN_PATH) $(MAKE) -C $(dir $@)/x86_64 install
-	$(ADD_BIN_PATH) $(MAKE) -C $(dir $@)/i686 install
+    ${BUILD_DIR}/winpthreads/obj.Y/.compile.marker
+	$(ADD_BIN_PATH) $(MAKE) -C $(dir $@)x86_64 install
+	$(ADD_BIN_PATH) $(MAKE) -C $(dir $@)i686 install
 	@touch $@
 
 ########################################
@@ -1139,7 +1139,7 @@ gcc-libgcc-compile: \
 
 ${BUILD_DIR}/gcc/obj/.libgcc.compile.marker: \
     ${BUILD_DIR}/mingw/obj/.install.marker \
-    ${BUILD_DIR}${LIBGCC_WINPTHREAD_DEP_${$USE_WINPTHREADS}}
+    ${BUILD_DIR}${LIBGCC_WINPTHREAD_DEP_${USE_WINPTHREADS}}
 	$(MAKE) ${MAKE_OPTS} -C $(dir $@) all-target-libgcc
 	@touch $@
 
@@ -1280,7 +1280,7 @@ gcc-compile: \
 ${BUILD_DIR}/gcc/obj/.compile.marker: \
     ${BUILD_DIR}/gcc/obj/.config.marker \
     ${BUILD_DIR}/mingw/obj/.install.marker \
-	${BUILD_DIR}${GCC_WINPTHREAD_DEP_${$USE_WINPTHREADS}}
+	${BUILD_DIR}${GCC_WINPTHREAD_DEP_${USE_WINPTHREADS}}
 	$(ADD_BIN_PATH) $(MAKE) ${MAKE_OPTS} -C $(dir $@)
 	@touch $@
 
@@ -1881,7 +1881,7 @@ native-gcc-libgcc-compile: \
 
 ${NATIVE_DIR}/gcc/obj/.libgcc.compile.marker: \
     ${NATIVE_DIR}/mingw/obj/.install.marker \
-    ${NATIVE_DIR}${LIBGCC_WINPTHREAD_DEP_${$USE_WINPTHREADS}}
+    ${NATIVE_DIR}${LIBGCC_WINPTHREAD_DEP_${USE_WINPTHREADS}}
 	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -C $(dir $@) all-target-libgcc
 	@touch $@
@@ -2026,7 +2026,7 @@ native-gcc-compile: \
 ${NATIVE_DIR}/gcc/obj/.compile.marker: \
     ${NATIVE_DIR}/gcc/obj/.config.marker \
     ${NATIVE_DIR}/mingw/obj/.install.marker \
-	${NATIVE_DIR}${GCC_WINPTHREAD_DEP_${$USE_WINPTHREADS}}
+	${NATIVE_DIR}${GCC_WINPTHREAD_DEP_${USE_WINPTHREADS}}
 	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
@@ -2230,12 +2230,10 @@ TARGETS := \
   native-piplib-configure \
   native-piplib-compile \
   native-piplib-install \
-  pre-pack \
-  ${NULL}
+  pre-pack
 
 
 .PHONY: \
   all \
   ${TARGETS} \
-  help \
-  ${NULL}
+  help
