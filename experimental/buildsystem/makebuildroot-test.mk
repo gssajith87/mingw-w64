@@ -452,7 +452,8 @@ src/piplib/.piplib.extract.marker: \
     src/piplib.tar.gz \
     src/piplib/src/.mkdir.marker
 	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
-	cd $(dir $@)/src && autoreconf -i
+	@touch $(dir $@)/src/NEWS $(dir $@)/src/AUTHORS $(dir $@)/src/ChangeLog
+	cd $(dir $@)/src && autoreconf -iv
 	@touch $@
 
 ########################################
