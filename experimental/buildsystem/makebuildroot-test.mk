@@ -435,7 +435,7 @@ src/isl/.isl.extract.marker: \
 ########################################
 
 piplib-download: \
-    src/cloog.tar.gz
+    src/piplib.tar.gz
 
 src/piplib.tar.gz: \
     src/.mkdir.marker
