@@ -864,11 +864,11 @@ ${BUILD_DIR}/isl/obj/.config.marker: \
     ${BUILD_DIR}/gmp/install/.install.marker \
     ${BUILD_DIR}/piplib/install/.install.marker
 	cd $(dir $@) && \
-	../../../${BUILD_DIR}/piplib/src/configure \
+	../../../${BUILD_DIR}/isl/src/configure \
         ${GCC_CONFIG_HOST_ARGS} \
         $(CONFIG_BUILD_ARGS) \
         --enable-static --disable-shared \
-        --prefix=${CURDIR}/${BUILD_DIR}/piplib/install \
+        --prefix=${CURDIR}/${BUILD_DIR}/isl/install \
         --with-gmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
         --with-piplib=system \
         --with-piplib-prefix=${CURDIR}/${BUILD_DIR}/piplib/install \
@@ -989,7 +989,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
             --with-ppl=${CURDIR}/${BUILD_DIR}/ppl/install \
             --with-isl=${CURDIR}/${BUILD_DIR}/isl/install \
             --with-cloog=${CURDIR}/${BUILD_DIR}/cloog/install \
-            --with-host-libstdcxx="-L${CURDIR}/${BUILD_DIR}/isl/install/lib -lisl -L${CURDIR}/${BUILD_DIR}/piplib/install/lib -lpiplibMP -L${CURDIR}/${BUILD_DIR}/gmp/install/lib -lgmp -lstdc++ -lsupc++ -lm" \
+            --with-host-libstdcxx="-L${CURDIR}/${BUILD_DIR}/isl/install/lib -lisl -L${CURDIR}/${BUILD_DIR}/piplib/install/lib -lpiplibMP -L${CURDIR}/${BUILD_DIR}/gmp/install/lib -lgmpxx -lgmp -lstdc++ -lsupc++ -lm" \
         --enable-languages=c${GCC_CPP_${GCC_CPP}}${GCC_FORTRAN_${GCC_FORTRAN}}${GCC_OBJC_${GCC_OBJC}}${GCC_JAVA_${GCC_JAVA}}${GCC_ADA_${GCC_ADA}} \
         ${GCC_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
         ${GCC_CONFIG_EXTRA_ARGS}
