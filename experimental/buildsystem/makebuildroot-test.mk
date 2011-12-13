@@ -873,7 +873,7 @@ ${BUILD_DIR}/isl/obj/.config.marker: \
         --with-piplib=system \
         --with-piplib-prefix=${CURDIR}/${BUILD_DIR}/piplib/install \
         CPPFLAGS="-fexceptions -I${CURDIR}/${BUILD_DIR}/gmp/install/include" \
-        LDFLAGS="-L${CURDIR}/${BUILD_DIR}/gmp/install/lib" \
+        LDFLAGS="-L${CURDIR}/${BUILD_DIR}/gmp/install/lib -L${CURDIR}/${BUILD_DIR}/piplib/install/lib" \
         LIBS="-lpiplibMP -lgmp"
 	@touch $@
 
