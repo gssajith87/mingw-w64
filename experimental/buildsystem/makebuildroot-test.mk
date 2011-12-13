@@ -1081,14 +1081,14 @@ ${BUILD_DIR}/winpthreads/obj.Y/.config.marker: \
     ${BUILD_DIR}/winpthreads/obj.Y/x86_64/.mkdir.marker \
     ${BUILD_DIR}/winpthreads/obj.Y/i686/.mkdir.marker
 	cd $(dir $@)x86_64 && \
-	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/winpthreads/configure \
+	$(ADD_BIN_PATH) ../../../../${BUILD_DIR}/winpthreads/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH} \
 	    CFLAGS=-m64 RCFLAGS="-D_WIN64=1 -F pe-x86-64" \
 	    --libdir=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH}/lib64
 	cd $(dir $@)i686 && \
-	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/winpthreads/configure \
+	$(ADD_BIN_PATH) ../../../../${BUILD_DIR}/winpthreads/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH} \
