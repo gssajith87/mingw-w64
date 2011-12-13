@@ -427,7 +427,7 @@ isl-extract: \
 src/isl/.isl.extract.marker: \
     src/isl.tar.bz2 \
     src/isl/src/.mkdir.marker
-	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
+	$(TAR) zvf -C $(dir $@)/src --strip-components=1 $<
 	@touch $@
 
 ########################################
