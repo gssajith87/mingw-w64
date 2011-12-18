@@ -920,9 +920,10 @@ ${BUILD_DIR}/cloog/obj/.config.marker: \
         $(CONFIG_BUILD_ARGS) \
             --enable-static --disable-shared \
             --with-isl=system \
+            --with-gmp=system \
             --prefix=${CURDIR}/${BUILD_DIR}/cloog/install \
-            --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
-            --with-isl=${CURDIR}/${BUILD_DIR}/isl/install
+            --with-gmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
+            --with-isl-prefix=${CURDIR}/${BUILD_DIR}/isl/install
 	@touch $@
 
 ########################################
