@@ -934,7 +934,7 @@ cloog-compile: \
 
 ${BUILD_DIR}/cloog/obj/.compile.marker: \
     ${BUILD_DIR}/cloog/obj/.config.marker
-	$(MAKE) -C $(dir $@)
+	$(MAKE) -C $(dir $@) V=1
 	@touch $@
 
 ########################################
