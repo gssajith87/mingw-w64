@@ -79,6 +79,7 @@ for f in \
 	d3d9caps.h \
 	d3d9types.h \
 	d3dcaps.h \
+	d3dcompiler.h \
 	d3dhal.h \
 	d3drm.h \
 	d3drmdef.h \
