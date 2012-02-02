@@ -28,7 +28,7 @@ import_header() {
     fi
     sed -i 's/\bBOOL    /WINBOOL /g' $dstfile
     sed -i 's/\bBOOL\b/WINBOOL/g' $dstfile
-    sed -i 's/WIDL [0-9].[0-9].[0-9]*/WIDL/g' $dstfile
+    sed -i 's/WIDL [0-9]\.[0-9][\.-][0-9rc]*/WIDL/g' $dstfile
     sed -i 's/DECLSPEC_HIDDEN//g' $dstfile
 }
 
