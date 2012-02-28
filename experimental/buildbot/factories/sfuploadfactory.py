@@ -41,5 +41,5 @@ class SourceForgeUploadFactory(factory.BuildFactory):
                               descriptionDone=["temporary", "file", "removed"],
                               doStepIf=lambda step: (step.build.getProperties().has_key("is_nightly") and step.build.getProperty("is_nightly") ),
                               workdir=WithProperties("%(masterdir)s"),
-                              command=["rm", "-f", WithProperties("%(filename)s")]))
+                              command=["rm", "-fv", WithProperties("%(filename)s")]))
 
