@@ -38,3 +38,16 @@ void * __cdecl _ic_aligned_malloc (size_t, size_t);
 int __cdecl _ic_callnewh (size_t);
 ic_new_handler_t __cdecl ic_set_new_handler (ic_new_handler_t);
 
+/* Error-management functions.  */
+int * __cdecl _ic_errno (void);
+ic_errno_t __cdecl _ic_set_errno (int);
+ic_errno_t __cdecl _ic_get_errno (int *);
+void __cdecl _ic_mapwinerr (unsigned long);
+int __cdecl _ic_get_errno_from_winerr (unsigned long);
+unsigned long * __cdecl __ic_doserrno (void);
+ic_errno_t __cdecl _ic_set_doserrno (unsigned long );
+ic_errno_t __cdecl _ic_get_doserrno (unsigned long *);
+char ** __cdecl __ic_sys_errlist (void);
+int * __cdecl __ic_sys_nerr (void);
+const char * __cdecl _ic_get_sys_errmsg (int);
+

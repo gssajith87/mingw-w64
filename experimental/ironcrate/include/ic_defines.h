@@ -79,3 +79,9 @@
 #define IC_HEAP_END -5
 #define IC_HEAP_BAD_POINTER -6
 
+/* Errno helpers.  */
+#define ic_errno   (*_ic_errno ())
+#define _ic_doserrno   (*__ic_doserrno ())
+#define _ic_sys_errlist (__ic_sys_errlist ())
+#define _ic_sys_nerr (*__ic_sys_nerr ())
+
