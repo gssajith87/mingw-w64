@@ -99,3 +99,18 @@ typedef struct ic_slocal_t
   ic_tmbinfo_t *mbcinfo;
 } ic_slocal_t;
 
+/* I/O types.  */
+
+typedef struct {
+  intptr_t osfhnd;
+  char osfile;
+  char pipech;
+  int lockinitflag;
+  CRITICAL_SECTION lock;
+  char textmode : 7;
+  char unicode : 1;
+  char pipech2[2];
+  __int64 startpos;
+  WINBOOL utf8translations;
+} ic_ioinfo_t;
+
