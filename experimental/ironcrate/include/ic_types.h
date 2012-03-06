@@ -99,6 +99,42 @@ typedef struct ic_slocal_t
   ic_tmbinfo_t *mbcinfo;
 } ic_slocal_t;
 
+/* TLS data structure.  According to msdn information by omitting
+   none-clear described fields.  */
+
+typedef struct _ic_thrdata_t {
+  unsigned long _tid;
+  uintptr_t _thandle;
+  int _terrno;
+  unsigned long _tdoserrno;
+  unsigned int _fpds;
+  unsigned long _holdrand;
+  char *_token;
+  wchar_t *_wtoken;
+  unsigned char *_mtoken;
+  char *_errmsg;
+  wchar_t *_werrmsg;
+  char *_namebuf0;
+  wchar_t *_wnamebuf0;
+  char *_namebuf1;
+  wchar_t *_wnamebuf1;
+  char *_asctimebuf;
+  wchar_t *_wasctimebuf;
+  void *_gmtimebuf;
+  char *_cvtbuf;
+  unsigned char _con_ch_buf[5];
+  unsigned short _ch_buf_used;
+  void *_initaddr;
+  void *_initarg;
+  void *_pxcptacttab;
+  void *_tpexcptinfoptrs;
+  int _tfpecode;
+  ic_tmbinfo_t *ptmbcinfo;
+  ic_threadlocinfo_t *ptlocinfo;
+  int _ownlocale;
+  _ic_setloc_t _setloc_data;
+} _ic_thrdata_t, *ic_thrdata_t;
+
 /* I/O types.  */
 
 typedef struct {
