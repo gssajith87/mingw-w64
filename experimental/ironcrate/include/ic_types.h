@@ -11,6 +11,16 @@ typedef struct _ic_heapinfo_t
 /* Error types.  */
 typedef int ic_errno_t;
 
+/* Exception-handler types.  */
+typedef void (__cdecl *ic_fhandler_t) (int);
+
+struct _ic_exception_action_t {
+  unsigned long XcptNum;
+  int SigNum;
+  ic_fhandler_t XcptAction;
+};
+
+
 /* Locale related types.  */
 
 struct _ic_ctype_compat
