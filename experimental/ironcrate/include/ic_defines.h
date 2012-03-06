@@ -94,3 +94,20 @@
 #define STATUS_FATAL_APP_EXIT            (0x40000015L)
 #endif
 
+#define IC_SIGINT 2
+#define IC_SIGILL 4
+#define IC_SIGABRT_COMPAT 6
+#define IC_SIGFPE 8
+#define IC_SIGSEGV 11
+#define IC_SIGTERM 15
+#define IC_SIGBREAK 21
+#define IC_SIGABRT 22
+
+#define IC_SIG_DFL (void (__cdecl *)(int)) ((intptr_t) 0)
+#define IC_SIG_IGN (void (__cdecl *)(int)) ((intptr_t) 1)
+#define IC_SIG_GET (void (__cdecl *)(int)) ((intptr_t) 2)
+#define IC_SIG_SGE (void (__cdecl *)(int)) ((intptr_t) 3)
+#define IC_SIG_ACK (void (__cdecl *)(int)) ((intptr_t) 4)
+#define IC_SIG_DIE (void (__cdecl *)(int)) ((intptr_t) 5)
+#define IC_SIG_ERR (void (__cdecl *)(int)) ((intptr_t) -1)
+
