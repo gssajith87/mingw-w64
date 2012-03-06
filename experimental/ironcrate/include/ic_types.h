@@ -19,6 +19,12 @@ struct _ic_ctype_compat
   int is_clike;
 };
 
+typedef struct LC_ID {
+    unsigned short wLanguage;
+    unsigned short wCountry;
+    unsigned short wCodePage;
+} LC_ID;
+
 typedef struct _ic_setloc_t
 {
   char *pchLanguage;
