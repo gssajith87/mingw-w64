@@ -85,3 +85,12 @@
 #define _ic_sys_errlist (__ic_sys_errlist ())
 #define _ic_sys_nerr (*__ic_sys_nerr ())
 
+/* Exception-management.  */
+#ifndef STATUS_INVALID_PARAMETER
+#define STATUS_INVALID_PARAMETER         (0xc000000dL)
+#endif
+
+#ifndef STATUS_FATAL_APP_EXIT
+#define STATUS_FATAL_APP_EXIT            (0x40000015L)
+#endif
+
