@@ -1,3 +1,7 @@
+/* Thread-management prototypes.  */
+uintptr_t __cdecl __ic_threadhandle (void);
+unsigned long __cdecl __ic_threadid (void);
+
 /* Memory-management prototypes.  */
 int __cdecl _ic_heap_init (int);
 void __cdecl _ic_heap_term (void);
