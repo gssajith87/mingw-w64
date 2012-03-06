@@ -93,3 +93,9 @@ typedef struct ic_threadlocinfo_t {
   ic_lc_timedate_t *lc_time_curr;
 } ic_threadlocinfo_t;
 
+typedef struct ic_slocal_t
+{
+  ic_threadlocinfo_t *locinfo;
+  ic_tmbinfo_t *mbcinfo;
+} ic_slocal_t;
+
