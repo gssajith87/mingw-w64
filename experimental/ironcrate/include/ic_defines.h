@@ -85,6 +85,33 @@
 #define _ic_sys_errlist (__ic_sys_errlist ())
 #define _ic_sys_nerr (*__ic_sys_nerr ())
 
+/* I/O base constants.  */
+#define IC_NSTREAM   512
+#define _IC_IOB_ELEMS 20
+
+/* Internal locking constants.  */
+#define _IC_LOCK_SIG 0
+#define _IC_LOCK_IOB_SEEK 1
+#define _IC_LOCK_TMPNAME 2
+#define _IC_LOCK_CONIO 3
+#define _IC_LOCK_HEAP 4
+#define _IC_LOCK_UNDNAME 5
+#define _IC_LOCK_TIME 6
+#define _IC_LOCK_ENV 7
+#define _IC_LOCK_EXIT1 8
+#define _IC_LOCK_POPEN 9
+#define _IC_LOCK_TAB 10
+#define _IC_LOCK_OSHANDLE 11
+#define _IC_LOCK_SETLOCALE 12
+#define _IC_LOCK_MBCODEPAGE 13
+#define _IC_LOCK_TYPEINFO 14
+#define _IC_LOCK_DEBUG 15
+#define _IC_LOCK_STREAMS 16
+
+#define _IC_LOCK_STREAM_LAST (_IC_LOCK_STREAMS + _IC_IOB_ELEMS - 1)
+#define _IC_LOCK_TOTAL (_IC_LOCK_STREAM_LAST + 1)
+#define _IC_LOCK_BITS_IN_INTS (_IC_LOCK_TOTAL / 32) + 1
+
 /* Exception-management.  */
 #ifndef STATUS_INVALID_PARAMETER
 #define STATUS_INVALID_PARAMETER         (0xc000000dL)
