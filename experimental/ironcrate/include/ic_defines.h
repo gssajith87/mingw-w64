@@ -138,3 +138,16 @@
 #define IC_SIG_DIE (void (__cdecl *)(int)) ((intptr_t) 5)
 #define IC_SIG_ERR (void (__cdecl *)(int)) ((intptr_t) -1)
 
+/* C-type and MB-type related defines.  */
+#define _IC_UPPER       0x1
+#define _IC_LOWER	0x2
+#define _IC_DIGIT	0x4
+#define _IC_SPACE	0x8
+#define _IC_PUNCT	0x10
+#define _IC_CONTROL	0x20
+#define _IC_BLANK	0x40
+#define _IC_HEX		0x80
+
+#define _IC_LEADBYTE	0x8000
+#define _IC_ALPHA	(0x0100 | _IC_UPPER | _IC_LOWER)
+
