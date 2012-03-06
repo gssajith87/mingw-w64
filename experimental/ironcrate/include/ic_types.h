@@ -64,14 +64,14 @@ typedef struct ic_tmbinfo_t
 } ic_tmbinfo_t;
 
 typedef struct ic_lc_timedate_t {
-  char *wday_abbr[7];
-  char *wday[7];
-  char *month_abbr[12];
-  char *month[12];
-  char *ampm[2];
-  char *ww_sdatefmt;
-  char *ww_ldatefmt;
-  char *ww_timefmt;
+  const char *wday_abbr[7];
+  const char *wday[7];
+  const char *month_abbr[12];
+  const char *month[12];
+  const char *ampm[2];
+  const char *ww_sdatefmt;
+  const char *ww_ldatefmt;
+  const char *ww_timefmt;
   LCID ww_lcid;
   int  ww_caltype;
   int  refcount;
@@ -144,6 +144,27 @@ typedef struct _ic_thrdata_t {
   int _ownlocale;
   _ic_setloc_t _setloc_data;
 } _ic_thrdata_t, *ic_thrdata_t;
+
+struct ic_lconv_t {
+  char *decimal_point;
+  char *thousands_sep;
+  char *grouping;
+  char *int_curr_symbol;
+  char *currency_symbol;
+  char *mon_decimal_point;
+  char *mon_thousands_sep;
+  char *mon_grouping;
+  char *positive_sign;
+  char *negative_sign;
+  char int_frac_digits;
+  char frac_digits;
+  char p_cs_precedes;
+  char p_sep_by_space;
+  char n_cs_precedes;
+  char n_sep_by_space;
+  char p_sign_posn;
+  char n_sign_posn;
+};
 
 /* I/O types.  */
 
