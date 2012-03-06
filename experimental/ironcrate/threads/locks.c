@@ -95,7 +95,6 @@ int __cdecl
 _ic_init_locknum (int n)
 {
   PCRITICAL_SECTION p;
-  int r = 1;
 
   if (!_ic_theheap)
     {
@@ -134,6 +133,6 @@ _ic_init_locknum (int n)
 
   _ic_unlock (_IC_LOCK_TAB);
 
-  return r;
+  return 1;
 }
 
