@@ -1,3 +1,11 @@
+/* Locale helper functions.  */
+void __cdecl __ic_add_locale_ref (ic_threadlocinfo_t *);
+void * __cdecl __ic_release_locale_ref (ic_threadlocinfo_t *);
+void __cdecl __ic_free_thrdlocinfo (ic_threadlocinfo_t *);
+void __cdecl __ic_free_lconv_mon (struct ic_lconv_t *);
+void __cdecl __ic_free_lconv_num (struct ic_lconv_t *);
+void __cdecl __ic_free_lc_time (ic_lc_timedate_t *);
+
 /* Thread-locking API.  */
 int  __cdecl __ic_initlocks (void);
 void __cdecl __ic_destroylocks (void);
