@@ -55,3 +55,7 @@ char ** __cdecl __ic_sys_errlist (void);
 int * __cdecl __ic_sys_nerr (void);
 const char * __cdecl _ic_get_sys_errmsg (int);
 
+/* Random numer functions.  */
+void __cdecl ic_srand (unsigned int);
+int __cdecl ic_rand (void);
+ic_errno_t __cdecl ic_rand_s (unsigned int *);:
