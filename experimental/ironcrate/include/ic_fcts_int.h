@@ -29,6 +29,7 @@ void __cdecl __ic_destroylocks (void);
 int  __cdecl _ic_init_locknum (int);
 void __cdecl _ic_lock (int);
 void __cdecl _ic_unlock (int);
+int __cdecl __ic_initCritSect (CRITICAL_SECTION *, DWORD);
 
 /* Memory-management internal function prototypes.  */
 ic_new_handler_t __cdecl _ic_query_new_handler (void);
