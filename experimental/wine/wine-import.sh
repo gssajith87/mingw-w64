@@ -39,6 +39,7 @@ for f in \
 	propkey.h \
 	propkeydef.h \
 	propvarutil.h \
+	t2embapi.h \
 	winhttp.h \
 	winineti.h; do
     import_header $f include
@@ -135,6 +136,9 @@ done
 # DirectX IDLs
 for f in amstream amvideo austream d3d10 d3d10_1 d3d11 d3dcommon ddstream dxgi mediaobj mmstream qedit vmr9; do
     cp $WINE_DIR/include/$f.idl direct-x/include
-    import_header $f.h direct-x/include
 done
 
+# DirectX IDL-based headers (temporary)
+for f in amstream.h d3d10.h d3d10_1.h d3d11.h d3dcommon.h dxgi.h qedit.h; do
+    import_header $f direct-x/include
+done
