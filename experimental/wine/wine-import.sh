@@ -28,7 +28,7 @@ import_header() {
     fi
     sed -i 's/\bBOOL    /WINBOOL /g' $dstfile
     sed -i 's/\bBOOL\b/WINBOOL/g' $dstfile
-    sed -i 's/WIDL [0-9]\.[0-9][\.-][0-9rc]*/WIDL/g' $dstfile
+    sed -i 's/WIDL [0-9]\.[0-9]\([\.-][0-9rc]\)*/WIDL/g' $dstfile
     sed -i 's/DECLSPEC_HIDDEN//g' $dstfile
 }
 
@@ -117,7 +117,6 @@ for f in \
 	dplobby8.h \
 	dpnathlp.h \
 	dshow.h \
-	dsound.h \
 	dvdmedia.h \
 	dxdiag.h \
 	dxerr8.h \
