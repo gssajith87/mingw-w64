@@ -58,4 +58,11 @@ const char * __cdecl _ic_get_sys_errmsg (int);
 /* Random numer functions.  */
 void __cdecl ic_srand (unsigned int);
 int __cdecl ic_rand (void);
-ic_errno_t __cdecl ic_rand_s (unsigned int *);:
+ic_errno_t __cdecl ic_rand_s (unsigned int *);
+
+/* Sort/search functions.  */
+void __cdecl ic_qsort_s (void *, size_t, size_t,
+  int (__cdecl *) (void *, const void *, const void *), void *);
+void __cdecl ic_qsort (void *, size_t, size_t,
+  int (__cdecl *) (const void *, const void *));
+
