@@ -65,4 +65,8 @@ void __cdecl ic_qsort_s (void *, size_t, size_t,
   int (__cdecl *) (void *, const void *, const void *), void *);
 void __cdecl ic_qsort (void *, size_t, size_t,
   int (__cdecl *) (const void *, const void *));
+void * __cdecl _ic_lsearch (const void *, void *, unsigned int *, size_t,
+  int (__cdecl *)(const void *, const void *));
+void * __cdecl _ic_lsearch_s (const void *, void *, unsigned int *, size_t,
+  int (__cdecl *)(void *, const void *, const void *), void *);
 
