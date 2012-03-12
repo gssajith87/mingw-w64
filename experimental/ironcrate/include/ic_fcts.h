@@ -72,5 +72,9 @@ void * __cdecl _ic_lsearch_s (const void *, void *, unsigned int *, size_t,
 void * __cdecl _ic_lfind_s (const void *, const void *, unsigned int *, size_t,
   int (__cdecl *)(void *,const void *, const void *), void *);
 void * __cdecl _ic_lfind (const void *, const void *, unsigned int *, size_t,
-	   int (__cdecl *)(const void *, const void *));
+  int (__cdecl *)(const void *, const void *));
+void * __cdecl ic_bsearch (const void *, const void *, size_t, size_t,
+  int (__cdecl *)(const void *, const void *));
+void * __cdecl ic_bsearch_s (const void *, const void *, size_t, size_t,
+  int (__cdecl *)(void *, const void *, const void *), void *);
 
