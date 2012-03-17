@@ -5,6 +5,7 @@ extern ic_threadlocinfo_t __ic_global_locinfo;
 extern ic_slocal_t __ic_global_li;
 extern ic_threadlocinfo_t *__ic_tls_li;
 extern LCID __ic_lc_handle[];
+extern LC_ID __ic_lc_id[];
 extern UINT __ic_lc_codepage;
 extern UINT __ic_lc_collate_cp;
 extern int __ic_lc_clike;
@@ -14,6 +15,7 @@ extern struct ic_lconv_t *__ic_lconv;
 extern ic_lc_category_t ic_lc_category;
 extern int __ic_locale_changed;
 extern int __ic_global_locale_status;
+extern int __ic_mb_cur_max;
 
 /* C-type/MB-type globals.  */
 extern ic_tmbinfo_t __ic_global_mbcinfo;
