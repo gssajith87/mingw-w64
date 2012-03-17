@@ -151,3 +151,20 @@
 #define _IC_LEADBYTE	0x8000
 #define _IC_ALPHA	(0x0100 | _IC_UPPER | _IC_LOWER)
 
+#define IC_LC_MIN	0
+#define IC_LC_MAX	5
+
+#define IC_LC_ALL	0
+#define IC_LC_COLLATE	1
+#define IC_LC_CTYPE	2
+#define IC_LC_MONETARY	3
+#define IC_LC_NUMERIC	4
+#define IC_LC_TIME	5
+
+/* Thread-locale modes.  */
+#define IC_TL 0x1
+#define IC_NO_TL 0x2
+#define IC_TL_GLOBAL 0x10
+#define IC_NO_TL_GLOBAL 0x20
+#define IC_TL_NEW 0x100
+#define IC_NO_TL_NEW 0x200

@@ -11,6 +11,9 @@ extern int __ic_lc_clike;
 extern ic_lc_timedate_t __ic_lc_time_c;
 extern struct ic_lconv_t __ic_lconv_c;
 extern struct ic_lconv_t *__ic_lconv;
+extern ic_lc_category_t ic_lc_category;
+extern int __ic_locale_changed;
+extern int __ic_global_locale_status;
 
 /* C-type/MB-type globals.  */
 extern ic_tmbinfo_t __ic_global_mbcinfo;

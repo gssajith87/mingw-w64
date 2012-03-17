@@ -2,6 +2,11 @@
 uintptr_t __cdecl __ic_threadhandle (void);
 unsigned long __cdecl __ic_threadid (void);
 
+/* Thread locale prototypes  */
+void __cdecl _ic_free_locale (ic_slocal_t *);
+int __cdecl _ic_configthreadlocale (int);
+ic_slocal_t * __cdecl _ic_get_current_locale (void);
+
 /* Memory-management prototypes.  */
 int __cdecl _ic_heap_init (int);
 void __cdecl _ic_heap_term (void);

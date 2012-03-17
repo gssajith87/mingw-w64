@@ -5,6 +5,18 @@ void __cdecl __ic_free_thrdlocinfo (ic_threadlocinfo_t *);
 void __cdecl __ic_free_lconv_mon (struct ic_lconv_t *);
 void __cdecl __ic_free_lconv_num (struct ic_lconv_t *);
 void __cdecl __ic_free_lc_time (ic_lc_timedate_t *);
+ic_tmbinfo_t * __cdecl __ic_update_minfo (void);
+ic_threadlocinfo_t * __cdecl __ic_update_tlocinfo (void);
+
+void ic_lctemp_init (ic_slocal_t *, ic_lctemp_t *);
+void ic_lctemp_dest (ic_lctemp_t *);
+
+int __cdecl __ic_lcmapWCString (LCID, DWORD, const wchar_t *, int, wchar_t *, int);
+int __cdecl __ic_cmpWCString (LCID, DWORD, const wchar_t *, int, const wchar_t *, int);
+int __cdecl __ic_lcmapMBString (ic_slocal_t *, LCID, DWORD, const char *, int, char *, int, int, DWORD);
+int __cdecl __ic_gettypeMBString (ic_slocal_t *, DWORD, const char *, int, LPWORD, int, int, DWORD);
+int __cdecl __ic_getlocaleinfoMBString (ic_slocal_t *, LCID, LCTYPE, char *, int, int);
+int __cdecl __ic_cmpMBString (ic_slocal_t *p, LCID, DWORD, const char *, int, const char *, int, int);
 
 /* TLS internal routines for thread-data.  */
 void * __cdecl __ic_fls_getvalue (DWORD);

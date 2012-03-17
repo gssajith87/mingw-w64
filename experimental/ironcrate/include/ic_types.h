@@ -109,6 +109,14 @@ typedef struct ic_slocal_t
   ic_tmbinfo_t *mbcinfo;
 } ic_slocal_t;
 
+typedef struct ic_lc_category_t
+{
+  const char *catname;
+  char *locale;
+  int (*init) (ic_threadlocinfo_t *);
+} ic_lc_category_t;
+
+
 /* TLS data structure.  According to msdn information by omitting
    none-clear described fields.  */
 
@@ -165,6 +173,15 @@ struct ic_lconv_t {
   char p_sign_posn;
   char n_sign_posn;
 };
+
+/* Helper structure for locale and tls.  */
+
+typedef struct ic_lctemp_t {
+  ic_slocal_t li;
+  ic_thrdata_t ptd;
+  int updated;
+} ic_lctemp_t;
+
 
 /* I/O types.  */
 
