@@ -10,6 +10,7 @@ extern UINT __ic_lc_codepage;
 extern UINT __ic_lc_collate_cp;
 extern int __ic_lc_clike;
 extern ic_lc_timedate_t __ic_lc_time_c;
+extern ic_lc_timedate_t *__ic_lc_time_curr;
 extern struct ic_lconv_t __ic_lconv_c;
 extern struct ic_lconv_t *__ic_lconv;
 extern ic_lc_category_t ic_lc_category;
