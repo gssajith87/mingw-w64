@@ -17,6 +17,7 @@ extern ic_lc_category_t ic_lc_category;
 extern int __ic_locale_changed;
 extern int __ic_global_locale_status;
 extern int __ic_mb_cur_max;
+extern int __ic_is_systemcp;
 
 /* C-type/MB-type globals.  */
 extern ic_tmbinfo_t __ic_global_mbcinfo;
