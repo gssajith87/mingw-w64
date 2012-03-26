@@ -32,6 +32,17 @@ import_header() {
     sed -i 's/DECLSPEC_HIDDEN//g' $dstfile
 }
 
+import_idl() {
+    dstfile=$2/$1
+    srcfile=$WINE_DIR/include/$1
+    cp $srcfile $dstfile
+
+    # HACK:
+    sed -i 's/cpp_quote\(.*\)\bBOOL\b/cpp_quote\1WINBOOL/' $dstfile
+    sed -i 's/cpp_quote\(.*\)\bBOOL\b/cpp_quote\1WINBOOL/' $dstfile
+    sed -i 's/cpp_quote\(.*\)\bBOOL\b/cpp_quote\1WINBOOL/' $dstfile
+}
+
 # headers
 for f in \
 	corerror.h \
@@ -44,6 +55,18 @@ for f in \
 	winineti.h; do
     import_header $f include
 done
+
+# headers generated from IDLs (temporary)
+for f in \
+        audiopolicy \
+        mmdeviceapi \
+        optary \
+        propsys \
+        structuredquerycondition \
+        wincodec; do
+    import_header $f.h include
+done
+
 
 # IDLs
 for f in \
@@ -59,8 +82,7 @@ for f in \
 	wincodec \
 	wpcapi \
 	xmllite; do
-    cp $WINE_DIR/include/$f.idl idl
-    import_header $f.h include
+    import_idl $f.idl include
 done
 
 # DirectX headers
@@ -132,12 +154,13 @@ for f in \
     import_header $f direct-x/include
 done
 
-# DirectX IDLs
-for f in amstream amvideo austream d3d10 d3d10_1 d3d11 d3dcommon ddstream dxgi mediaobj mmstream qedit vmr9; do
-    cp $WINE_DIR/include/$f.idl direct-x/include
+# DirectX IDL-based headers (temporary)
+for f in amstream.h qedit.h; do
+    import_header $f direct-x/include
 done
 
-# DirectX IDL-based headers (temporary)
-for f in amstream.h d3d10.h d3d10_1.h d3d11.h d3dcommon.h dxgi.h qedit.h; do
-    import_header $f direct-x/include
+
+# DirectX IDLs
+for f in amstream amvideo austream d3d10 d3d10_1 d3d11 d3dcommon ddstream dxgi mediaobj mmstream qedit vmr9; do
+    import_idl $f.idl direct-x/include
 done
