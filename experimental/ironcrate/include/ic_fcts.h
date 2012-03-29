@@ -6,6 +6,8 @@ unsigned long __cdecl __ic_threadid (void);
 void __cdecl _ic_free_locale (ic_slocal_t *);
 int __cdecl _ic_configthreadlocale (int);
 ic_slocal_t * __cdecl _ic_get_current_locale (void);
+struct ic_lconv_t * __cdecl _ic_localeconv (void);
+
 
 /* Memory-management prototypes.  */
 int __cdecl _ic_heap_init (int);
