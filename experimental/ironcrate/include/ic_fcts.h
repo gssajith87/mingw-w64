@@ -96,3 +96,12 @@ ic_errno_t __cdecl ic_memcpy_s (void *, size_t, const void *, size_t);
 void * __cdecl _ic_memccpy (void *, const void *, int, size_t);
 int __cdecl _ic_memicmp (const void *, const void *, size_t);
 int __cdecl _ic_memicmp_l (const void *, const void *, size_t, ic_slocal_t *);
+
+wchar_t * __cdecl ic_wmemchr (const wchar_t *, wchar_t, size_t);
+int __cdecl ic_wmemcmp (const wchar_t *, const wchar_t *, size_t);
+wchar_t * __cdecl ic_wmemcpy (wchar_t *, const wchar_t *, size_t);
+wchar_t * __cdecl ic_wmemmove (wchar_t *, const wchar_t *, size_t);
+wchar_t * __cdecl ic_wmemset (wchar_t *, wchar_t, size_t);
+
+ic_errno_t __cdecl ic_wmemcpy_s (wchar_t *, rsize_t, const wchar_t *, rsize_t);
+ic_errno_t __cdecl ic_wmemmove_s (wchar_t *, rsize_t, const wchar_t *, rsize_t);
