@@ -83,3 +83,16 @@ void * __cdecl ic_bsearch (const void *, const void *, size_t, size_t,
 void * __cdecl ic_bsearch_s (const void *, const void *, size_t, size_t,
   int (__cdecl *)(void *, const void *, const void *), void *);
 
+
+/* Memory base manipulation routines.  */
+void * __cdecl ic_memmove (void *, const void *, size_t);
+void * __cdecl ic_memcpy (void *, const void *, size_t);
+void * __cdecl ic_memchr (const void *, int ch, size_t);
+int __cdecl ic_memcmp (const void *, const void *, size_t);
+void * __cdecl ic_memset (void *, int, size_t);
+
+ic_errno_t __cdecl ic_memmove_s (void *, size_t, const void *, size_t);
+ic_errno_t __cdecl ic_memcpy_s (void *, size_t, const void *, size_t);
+void * __cdecl _ic_memccpy (void *, const void *, int, size_t);
+int __cdecl _ic_memicmp (const void *, const void *, size_t);
+int __cdecl _ic_memicmp_l (const void *, const void *, size_t, ic_slocal_t *);
