@@ -58,11 +58,8 @@ done
 
 # headers generated from IDLs (temporary)
 for f in \
-        audiopolicy \
         mmdeviceapi \
-        optary \
         propsys \
-        structuredquerycondition \
         wincodec; do
     import_header $f.h include
 done
@@ -72,6 +69,7 @@ done
 for f in \
 	audioclient \
 	audiopolicy \
+	downloadmgr \
 	fusion \
 	mmdeviceapi \
 	mscoree \
