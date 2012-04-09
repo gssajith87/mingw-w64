@@ -349,7 +349,7 @@ class Mingw64Linux64Factory(Mingw64Factory):
 class Mingw64CygwinFactory(Mingw64Factory):
   host_cpu = "i686"
   host_os = "cygwin"
-  #gccConfigExtraArgs = "--enable-bootstrap"
+  gccConfigExtraArgs = "--disable-nls"
   def __init__(self, **kwargs):
     Mingw64Factory.__init__(self, **kwargs)
 
