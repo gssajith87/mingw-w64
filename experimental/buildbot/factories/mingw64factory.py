@@ -403,6 +403,7 @@ class Mingw32Linux64Factory(Mingw64Linux64Factory):
 
 class Mingw32CygwinFactory(Mingw64CygwinFactory):
   target = "i686-w64-mingw32"
+  gccConfigExtraArgs = "--disable-nls"
   crtConfigExtraArgs = "--enable-lib32 --disable-lib64"
   def __init__(self, **kwargs):
     Mingw64CygwinFactory.__init__(self, **kwargs)
