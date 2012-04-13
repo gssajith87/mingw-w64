@@ -105,10 +105,10 @@ def upload(srcfile, destfile, config, opts):
 
   if opts.verbose > 0:
     print("processing upload of %s to OldFiles/%s..." % (srcfile, destfile))
-  temppath = "/home/frs/project/%s/%s/%s/OldFiles/%s" % (
-             group_id[0], group_id[0:2], group_id, destfile)
+  temppath = "/home/frs/project/%s/OldFiles/%s" % (
+             group_id, destfile)
   command = ["rsync", "-zvtPc", "", "-e", "ssh -i %s -o UserKnownHostsFile=%s", srcfile,
-             "%%s,%s@frs.sourceforge.net:%s" % (group_id, temppath)]
+             "%%s@frs.sourceforge.net:%s" % (temppath)]
   print(" ".join(command))
   command[4] = command[4] % (config.get("sourceforge", "sshkey"), "ssh_known_hosts")
   command[6] = command[6] % (config.get("sourceforge", "user"))
@@ -130,11 +130,11 @@ def publish(temppath, filename, config, opts):
     destpath = config.get("sourceforge", "path-%s" % (opts.os))
   except:
     destpath = "OldFiles/Automated Uploads"
-  destpath = "/home/frs/project/%s/%s/%s/%s/%s" % (
-    group_id[0], group_id[0:2], group_id, destpath, filename)
+  destpath = "/home/frs/project/%s/%s/%s" % (
+    group_id, destpath, filename)
   if opts.verbose > 0:
     print('renaming file "%s" to "%s"...' % (temppath, destpath))
-  command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%%s,%s@frs.sourceforge.net" % (group_id)]
+  command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%%s@frs.sourceforge.net"]
   batch = 'rename "%s" "%s"' % (temppath, destpath)
   print("%s | %s" % (batch, " ".join(command)))
   command[4] = command[4] % (config.get("sourceforge", "sshkey"))
@@ -164,7 +164,7 @@ def cleanup(destpath, filename, config, opts):
       print("no datestamp given or not found in file %s" % (filename))
     return
 
-  command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%%s,%s@frs.sourceforge.net" % (group_id)]
+  command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%%s@frs.sourceforge.net"]
 
   dir = "/".join(destpath.split("/")[:-1])
   list_batch = "\n".join([
