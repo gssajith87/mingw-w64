@@ -134,7 +134,7 @@ def publish(temppath, filename, config, opts):
     group_id, destpath, filename)
   if opts.verbose > 0:
     print('renaming file "%s" to "%s"...' % (temppath, destpath))
-  command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%%s@frs.sourceforge.net"]
+  command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%s@frs.sourceforge.net"]
   batch = 'rename "%s" "%s"' % (temppath, destpath)
   print("%s | %s" % (batch, " ".join(command)))
   command[4] = command[4] % (config.get("sourceforge", "sshkey"))
@@ -164,7 +164,7 @@ def cleanup(destpath, filename, config, opts):
       print("no datestamp given or not found in file %s" % (filename))
     return
 
-  command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%%s@frs.sourceforge.net"]
+  command = ["sftp", "-b", "-", "-o", "IdentityFile=%s", "%s@frs.sourceforge.net"]
 
   dir = "/".join(destpath.split("/")[:-1])
   list_batch = "\n".join([
