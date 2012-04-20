@@ -69,6 +69,7 @@ done
 for f in \
 	audioclient \
 	audiopolicy \
+	axcore \
 	downloadmgr \
 	fusion \
 	mmdeviceapi \
