@@ -56,20 +56,12 @@ for f in \
     import_header $f include
 done
 
-# headers generated from IDLs (temporary)
-for f in \
-        mmdeviceapi \
-        propsys \
-        wincodec; do
-    import_header $f.h include
-done
-
-
 # IDLs
 for f in \
 	audioclient \
 	audiopolicy \
 	axcore \
+	axextend \
 	downloadmgr \
 	fusion \
 	mmdeviceapi \
@@ -152,12 +144,6 @@ for f in \
 	xinput.h; do
     import_header $f direct-x/include
 done
-
-# DirectX IDL-based headers (temporary)
-for f in amstream.h qedit.h; do
-    import_header $f direct-x/include
-done
-
 
 # DirectX IDLs
 for f in amstream amvideo austream d3d10 d3d10_1 d3d11 d3dcommon ddstream dxgi mediaobj mmstream qedit vmr9; do
