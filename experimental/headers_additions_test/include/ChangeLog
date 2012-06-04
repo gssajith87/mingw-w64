@@ -1,0 +1,153 @@
+2012-05-10  Kai Tietz  <ktietz@redhat.com>
+
+	PR 3523077
+	* tmschema.h: Add warning about obsoleted tmschema.h for
+	_WIN32_NT > 0x600.
+
+2012-05-10  Piotr Caban  <piotr@codeweavers.com>
+
+	* vsstyle.h: Wine-version relicensed.
+	* vssym32.h: Likewise.
+
+2012-05-09  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* winuser.h (MAPVK_VK_TO_*): Moved map types for MapVirtualKeyEx
+	out of win7 ifdefs. Protected MAPVK_VK_TO_VSC_EX for vista-only.
+
+2012-05-08  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* uxtheme.h (MAX_INTLIST_COUNT): Define as 402 instead of 10 for
+	vista and newer. (bug #3524667).
+
+2012-05-07  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* dwmapi.h: Fixed all function prototypes to be WINAPI.
+
+2012-05-02  Kai Tietz  <ktietz@redhat.com>
+
+	PR 3523072
+	* commctrl.h:  Add missing button-styles, and messages.
+
+2012-04-28  Jonathan Liu  <net147@users.sourceforge.net>
+
+	* wlanapi.h: Fixed incorrectly nested if blocks.
+
+2012-04-23  Stefan Sundin  <recover89@gmail.com>
+
+	* Fix incorrect references for pVtbl to lpVtbl in these files:
+	audioengineendpoint.h, bdaiface.h, dvbsiparser.h, dwrite.h, dxvahd.h,
+	evr.h, fsrm.h, fsrmquota.h, fsrmreports.h, fsrmscreen.h,
+	functiondiscoveryapi.h, functiondiscoverynotification.h,
+	identitystore.h, locationapi.h, mfapi.h, mfidl.h, mfobjects.h,
+	mfplay.h, mfreadwrite.h, mftransform.h, mpeg2data.h, mpeg2psiparser.h,
+	msrdc.h, ndhelper.h, opmapi.h, portabledeviceconnectapi.h,
+	rdpencomapi.h, strmif.h, strmif.idl, tuner.h, vsadmin.h, vsbackup.h,
+	vsmgmt.h, vsprov.h, vss.h, vswriter.h, winsync.h, wmcontainer.h,
+	wsdattachment.h, wsdbase.h, wsdclient.h, wsddisco.h, wsdhost.h,
+	wsdxml.h.
+	* adhoc.h (IDot11AdHocInterfaceNotificationSink): Fix
+	OnConnectionStatusChange.
+
+2012-04-23  Kai Tietz  <ktietz@redhat.com>
+
+	PR/3520095
+	* endpointvolume.h (IAudioEndpointVolume): Fix.
+
+2012-03-07  Corinna Vinschen <corinna@vinschen.de>
+
+	* winternl.h (struct _LDR_DATA_TABLE_ENTRY): Changed type of Reserved1
+	from BYTE to LPVOID.
+	(InitializeObjectAttributes): New macro.
+	(OBJ_INHERIT, OBJ_PERMANENT, OBJ_EXCLUSIVE, OBJ_CASE_INSENSITIVE,
+	OBJ_OPENIF, OBJ_OPENLINK, OBJ_KERNEL_HANDLE, OBJ_FORCE_ACCESS_CHECK,
+	OBJ_VALID_ATTRIBUTES): New macro-constants.
+	* iptypes.h (PIP_ADAPTER_ADDRESSES_LH): Add type as pointer to
+	IP_ADAPTER_ADDRESSES_LH.
+
+2012-02-07  Rafaël Carré  <funman@videolan.org>
+
+	* dxva2api.h : Add UUIDS and missing error codes
+
+2012-02-04  Rafaël Carré  <funman@videolan.org>
+
+	* d2d1.h (ID2D1HwndRenderTarget): Fix interface
+
+2012-02-03  Rafaël Carré  <funman@videolan.org>
+
+	* shobjidl.h (ApplicationAssociationRegistrationUI): Add missing interface
+
+2012-02-02  Rafaël Carré  <funman@videolan.org>
+
+	* uuids.h (MEDIASUBTYPE_I420): Add GUID.
+
+2012-02-01  Rafaël Carré <funman@videolan.org>
+
+	* dxva2api.h (Direct3DDeviceManager9): Fix COBJMACROS to use lpVtbl.
+	(DirectXVideoDecoder): Likewise.
+	(DirectXVideoAccelerationService): Likewise.
+	(DirectXVideoDecoderService): Likewise.
+
+2012-02-01  Kai Tietz  <ktietz@redhat.com>
+
+	* rpcndr.h (small): Define only if RC_INVOKED is defined.
+
+	* shobjidl.h (THBN_CLICKED): Define constant.
+
+2012-01-29  Jonathan Yong  <jon_y@users.sourceforge.net>
+
+	* strsafe.h (MPRAPI_OBJECT_HEADER): Fix double extern qualifier in
+	_STRSAFE_EXTERN_C. __CRT_INLINE macro already has extern.
+    
+2012-01-26  Kai Tietz  <ktietz@redhat.com>
+
+        * nldef.h (NL_INTERFACE_OFFLOAD_ROD): Remove
+        TlStreamFastPathCompatible and TlDatagramFastPathCompatible
+        members, which are merged into FastPathCompatible.
+        (note msdn is wrong here).
+
+2012-01-26  Jonathan Yong  <jon_y@users.sourceforge.net>
+
+	* mprapi.h (MPRAPI_OBJECT_HEADER): Fix declaration.
+	(MPR_SERVER_EX): New typedef.
+	(MPRAPI_ADMIN_DLL_CALLBACKS): Likewise.
+	(MprConfigServerGetInfoEx): Declare.
+	(MprAdminConnectionEnumEx): Likewise.
+	(MprAdminConnectionGetInfoEx): Likewise.
+	(MprAdminInitializeDllEx): Likewise.
+	(MprAdminIsServiceInitialized): Likewise.
+	(MprAdminServerGetInfoEx): Likewise.
+	(MprAdminServerSetInfoEx): Likewise.
+	* endpointvolume.h (CLSID_MMDeviceEnumerator): Declare.
+	(IID_IMMDeviceEnumerator): Likewise.
+	(IID_IAudioEndpointVolume): Likewise.
+	(IID_IAudioEndpointVolumeCallback): Likewise.
+	(IID_IAudioEndpointVolumeEx): Likewise.
+	* manipulations.h: New.
+	* elscore.h: New.
+	* mfapi.h(MT_ARBITRARY_HEADER): New typedef.
+	* locationapi.h(LOCATION_DESIRED_ACCURACY): New typedef.
+	* lmaccess.h(MSA_INFO_STATE): New typedef.
+	(MSA_INFO_0): Likewise.
+
+2012-01-26  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* mprapi.h (MprAdminConnectionRemoveQuarantine): Revert
+	to old definition which is correct by marking the function
+	as WINAPI.
+
+2012-01-25  Kai Tietz  <ktietz@redhat.com>
+
+	* iprtrmib.h (MIB_TCP_STATE): New typedef.
+
+	* mprapi.h (MprAdminConnectionRemoveQuarantine): Remove
+	double definition.
+
+2012-01-19  Kai Tietz  <ktietz@redhat.com>
+
+	PR 3474190
+	* windef.h (STRICT): Regard definition of NO_STRICT.
+
+2012-01-18  Kai TIetz  <ktietz@redhat.com>
+
+	* unknwn.h: Remove sepecial-case for Obj-C.
+	* windows.h: and move it here.

@@ -1,0 +1,10 @@
+2012-02-02  Rafaël Carré <funman@videolan.org>
+
+	* configure.ac: Give a warning if DDK headers are not present.
+	* configure.ac: Enable DDK by default only if the headers are present.
+	* configure: Regenerate.
+2012-02-01  Rafaël Carré <funman@videolan.org>
+
+	* configure.ac: Move IDL generation option from --enable-sdk=idl to --enable-idl.
+	* configure.ac: Enable DirectX / DDK headers by default.
+	* configure: Regenerate.
