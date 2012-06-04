@@ -5,7 +5,7 @@ sharedlibdir=${prefix}/bin
 includedir=${prefix}/include/ddk
 
 Name: mingw-w64-headers-ddk
-Description: mingw-w64 Driver Development Kit headers
+Description: mingw-w64 Driver Development Kit headers from ReactOS
 Version: @PACKAGE_VERSION@
 
 Requires:
