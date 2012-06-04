@@ -16,7 +16,7 @@ secsyshead_HEADERS = @SECSYSHEAD_LIST@
 glhead_HEADERS = @GLHEAD_LIST@
 gdiplushead_HEADERS = @GDIPLUSHEAD_LIST@
 mingwhelperhead_HEADERS = @MINGWHELPERHEAD_LIST@
-sdkshead_HEADERS = _mingw_directx.h _mingw_ddk.h
+sdkshead_HEADERS = crt/sdks/_mingw_directx.h crt/sdks/_mingw_ddk.h
 
 ddkheaddir = $(baseheaddir)/ddk
 dxheaddir = $(baseheaddir)
@@ -29,6 +29,7 @@ idlhead_HEADERS = @IDLHEAD_LIST@
 EXTRA_DIST = ChangeLog-2009
 pkgconfig_DATA =
 DISTCHECK_CONFIGURE_FLAGS = --enable-sdk=all
+BUILT_SOURCES =
 
 EXTRA_HEADERS = \
   include/*.dlg \
@@ -48,10 +49,6 @@ EXTRA_HEADERS = \
   direct-x/include/*.h \
   direct-x/include/*.idl \
   ddk/include/ddk/*.h
-
-BUILT_SOURCES = \
-  _mingw_directx.h \
-  _mingw_ddk.h
 
 if HAVE_WIDL
 
@@ -111,12 +108,6 @@ BUILT_SOURCES += $(IDL_SRCS:.idl=.h)
 	$(WIDL) -DBOOL=WINBOOL -I$(srcdir)/include -I$(srcdir)/direct-x/include -Icrt -I$(srcdir)/crt -h -o $(srcdir)/$@ $<
 
 endif
-
-_mingw_directx.h: $(srcdir)/crt/sdks/_mingw_directx.h.in
-	$(SED) s/MINGW_HAS_DX$$/@MINGW_HAS_DX@/ $< > $@ || /bin/rm $@
-
-_mingw_ddk.h: $(srcdir)/crt/sdks/_mingw_ddk.h.in
-	$(SED) s/MINGW_HAS_DDK$$/@MINGW_HAS_DDK@/ $< > $@ || /bin/rm $@
 
 if HAVE_DDK
   pkgconfig_DATA += mingw-w64-headers-ddk.pc

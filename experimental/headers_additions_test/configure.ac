@@ -13,7 +13,7 @@ AM_MAINTAINER_MODE
 AC_CANONICAL_HOST
 
 # Checks for programs.
-AC_PROG_SED
+# AC_PROG_SED
 
 AC_ARG_WITH([widl],
   AS_HELP_STRING([--with-widl=PATH],
@@ -162,5 +162,7 @@ AC_CONFIG_FILES([
   Makefile
   crt/_mingw.h
 ])
+AC_CONFIG_FILES([crt/sdks/_mingw_directx.h])
+AC_CONFIG_FILES([crt/sdks/_mingw_ddk.h])
 AC_OUTPUT
 
