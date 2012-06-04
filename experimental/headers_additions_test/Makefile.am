@@ -7,6 +7,7 @@ glheaddir = $(baseheaddir)/GL
 gdiplusheaddir = $(baseheaddir)/gdiplus
 mingwhelperheaddir = $(baseheaddir)/psdk_inc
 sdksheaddir = $(baseheaddir)/sdks
+pkgconfigdir = $(includedir)/../$(host)/lib/pkg-config
 
 basehead_HEADERS = @BASEHEAD_LIST@
 syshead_HEADERS = @SYSHEAD_LIST@
@@ -26,6 +27,7 @@ dxhead_HEADERS = @DXHEAD_LIST@
 idlhead_HEADERS = @IDLHEAD_LIST@
 
 EXTRA_DIST = ChangeLog-2009
+pkgconfig_DATA =
 DISTCHECK_CONFIGURE_FLAGS = --enable-sdk=all
 
 EXTRA_HEADERS = \
@@ -111,7 +113,11 @@ BUILT_SOURCES += $(IDL_SRCS:.idl=.h)
 endif
 
 _mingw_directx.h: $(srcdir)/crt/sdks/_mingw_directx.h.in
-	$(SED) s/MINGW_HAS_DX$$/@MINGW_HAS_DX@/ $< > $@
+	$(SED) s/MINGW_HAS_DX$$/@MINGW_HAS_DX@/ $< > $@ || /bin/rm $@
 
 _mingw_ddk.h: $(srcdir)/crt/sdks/_mingw_ddk.h.in
-	$(SED) s/MINGW_HAS_DDK$$/@MINGW_HAS_DDK@/ $< > $@
+	$(SED) s/MINGW_HAS_DDK$$/@MINGW_HAS_DDK@/ $< > $@ || /bin/rm $@
+
+if HAVE_DDK
+  pkgconfig_DATA += mingw-w64-headers-ddk.pc
+endif

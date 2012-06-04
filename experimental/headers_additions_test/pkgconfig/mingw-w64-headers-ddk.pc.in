@@ -1,0 +1,13 @@
+prefix=@PKGCONFIG_DDK_PATH@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+sharedlibdir=${prefix}/bin
+includedir=${prefix}/include/ddk
+
+Name: mingw-w64-headers-ddk
+Description: mingw-w64 Driver Development Kit headers
+Version: @PACKAGE_VERSION@
+
+Requires:
+Libs:
+Cflags: -I${includedir}

@@ -53,7 +53,7 @@ AC_ARG_ENABLE([crt],
     [Do not use the default crt headers])],
   [],
   [enable_crt=yes])
-AM_CONDITIONAL([ENABLE_CRT],[test x$enable_crt=xyes])
+AM_CONDITIONAL([ENABLE_CRT],[test x$enable_crt = xyes])
 AC_MSG_RESULT([$enable_crt])
 AS_VAR_IF([enable_crt],[yes],[
   BASEHEAD_LIST="$BASEHEAD_LIST "$srcdir/crt/*.h
@@ -119,15 +119,18 @@ AS_VAR_IF([enable_directx],[yes],[
   ])
 AC_SUBST([DXHEAD_LIST])
 AC_SUBST([MINGW_HAS_DX])
+AC_SUBST([PKGCONFIG_DDK_PATH],["${prefix}/${host}"])
 
 AS_VAR_IF([enable_ddk],[yes],[
     DDKHEAD_LIST=$srcdir/ddk/include/ddk/*.h
     MINGW_HAS_DDK=1
+    AC_CONFIG_FILES([mingw-w64-headers-ddk.pc:pkgconfig/mingw-w64-headers-ddk.pc.in])
   ],[
     MINGW_HAS_DDK=0
   ])
 AC_SUBST([DDKHEAD_LIST])
 AC_SUBST([MINGW_HAS_DDK])
+AM_CONDITIONAL([HAVE_DDK],[test x${enable_ddk} = xyes])
 
 AC_MSG_CHECKING([if installing idl files is enabled])
 AC_ARG_ENABLE([idl],
