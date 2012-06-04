@@ -14,6 +14,7 @@ AC_CANONICAL_HOST
 
 # Checks for programs.
 # AC_PROG_SED
+AC_PROG_AWK
 
 AC_ARG_WITH([widl],
   AS_HELP_STRING([--with-widl=PATH],
@@ -88,7 +89,7 @@ fi
 AC_MSG_CHECKING([for optional sdk headers])
 AC_ARG_ENABLE([sdk],
   [AS_HELP_STRING([--enable-sdk=ARG],
-    [Add the desired SDK, where ARG can be one of ddk, directx, no or all])],
+    [Add the comma seperated desired SDKs, where ARG can be any combination of ddk, directx, ndk, or all])],
   [],
   [
   if test "${ddk_present}" = no
@@ -98,18 +99,28 @@ AC_ARG_ENABLE([sdk],
     enable_sdk=all
   fi
   ])
-AS_CASE([$enable_sdk],
+
+for enabled_sdk_token in $(echo $enable_sdk | $AWK 'BEGIN {FS = ","} {for (i=1; i <= NF; i++) printf "%s ", $i}')
+do
+AS_CASE([$enabled_sdk_token],
   [all|yes],[
-    enable_sdk="ddk,directx"
+    AS_ECHO_N([all ])
     enable_ddk=yes
+    enable_ndk=yes
     enable_directx=yes],
   [ddk],[
+    AS_ECHO_N([DDK ])
     enable_ddk=yes],
+  [ndk],[
+    AS_ECHO_N([NDK ])
+    enable_ndk=yes],
   [directx],[
+    AS_ECHO_N([DirectX])
     enable_directx=yes],
   [no],[],
-  [AC_MSG_ERROR([Invalid option: $enable_sdk.  Please choose one of ddk, directx, no or all.])])
-AC_MSG_RESULT([$enable_sdk])
+  [AC_MSG_ERROR([Invalid --enable-sdk option: $enabled_sdk_token.])])
+done
+AS_ECHO([])
 
 AS_VAR_IF([enable_directx],[yes],[
     DXHEAD_LIST=$srcdir/direct-x/include/*.[[hi]]*
@@ -119,8 +130,8 @@ AS_VAR_IF([enable_directx],[yes],[
   ])
 AC_SUBST([DXHEAD_LIST])
 AC_SUBST([MINGW_HAS_DX])
-AC_SUBST([PKGCONFIG_DDK_PATH],["${prefix}/${host}"])
 
+AC_SUBST([PKGCONFIG_DDK_PATH],["${prefix}/${host}"])
 AS_VAR_IF([enable_ddk],[yes],[
     DDKHEAD_LIST=$srcdir/ddk/include/ddk/*.h
     MINGW_HAS_DDK=1
@@ -132,11 +143,35 @@ AC_SUBST([DDKHEAD_LIST])
 AC_SUBST([MINGW_HAS_DDK])
 AM_CONDITIONAL([HAVE_DDK],[test x${enable_ddk} = xyes])
 
+AC_SUBST([PKGCONFIG_NDK_PATH],["${prefix}/${host}"])
+AS_VAR_IF([enable_ndk],[yes],[
+    NDKHEAD_LIST=${srcdir}/ndk/*.*
+    NDKHEAD_AMD64=${srcdir}/ndk/amd64/*
+    NDKHEAD_ARCH=${srcdir}/ndk/arch/*
+    NDKHEAD_ARM=${srcdir}/ndk/arm/*
+    NDKHEAD_i386=${srcdir}/ndk/i386/*
+    NDKHEAD_PPC=${srcdir}/ndk/powerpc/*
+    NDKHEAD_TESTS=${srcdir}/ndk/tests/*
+    MINGW_HAS_NDK=1
+    AC_CONFIG_FILES([mingw-w64-headers-ndk.pc:pkgconfig/mingw-w64-headers-ndk.pc.in])
+  ],[
+    MINGW_HAS_NDK=1
+  ])
+AC_SUBST([NDKHEAD_LIST])
+AC_SUBST([NDKHEAD_AMD64])
+AC_SUBST([NDKHEAD_ARCH])
+AC_SUBST([NDKHEAD_ARM])
+AC_SUBST([NDKHEAD_i386])
+AC_SUBST([NDKHEAD_PPC])
+AC_SUBST([NDKHEAD_TESTS])
+AC_SUBST([MINGW_HAS_NDK])
+AM_CONDITIONAL([HAVE_NDK],[test x${enable_ndk} = xyes])
+
 AC_MSG_CHECKING([if installing idl files is enabled])
 AC_ARG_ENABLE([idl],
     [AS_HELP_STRING([--enable-idl],
         [Enable installing idl files (default disabled)])],
-    [enable_idl=yes])
+    [enable_idl=yes],[enable_idl=no])
 AC_MSG_RESULT([$enable_idl])
 AS_VAR_IF([enable_idl],[yes],
     [IDLHEAD_LIST=$srcdir/include/*.idl],
@@ -147,7 +182,7 @@ AC_MSG_CHECKING([whether to enable the secure API])
 AC_ARG_ENABLE([secure-api],
   [AS_HELP_STRING([--enable-secure-api],
     [Enable secure API by default])],
-  [enable_secure_api=yes])
+  [enable_secure_api=yes],[enable_secure_api=no])
 AC_MSG_RESULT([$enable_secure_api])
 AS_VAR_IF([enable_secure_api],[yes],
   [MINGW_HAS_SECURE_API="#define MINGW_HAS_SECURE_API 1"],

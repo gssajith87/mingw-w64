@@ -54,11 +54,14 @@ build_triplet = @build@
 host_triplet = @host@
 @HAVE_WIDL_TRUE@am__append_1 = $(IDL_SRCS:.idl=.h)
 @HAVE_DDK_TRUE@am__append_2 = mingw-w64-headers-ddk.pc
+@HAVE_NDK_TRUE@am__append_3 = mingw-w64-headers-ndk.pc
 subdir = .
 DIST_COMMON = $(am__configure_deps) $(basehead_HEADERS) \
 	$(ddkhead_HEADERS) $(dxhead_HEADERS) $(gdiplushead_HEADERS) \
 	$(glhead_HEADERS) $(idlhead_HEADERS) \
-	$(mingwhelperhead_HEADERS) $(sdkshead_HEADERS) \
+	$(mingwhelperhead_HEADERS) $(ndkamd64_HEADERS) \
+	$(ndkarch_HEADERS) $(ndkarm_HEADERS) $(ndkhead_HEADERS) \
+	$(ndki386_HEADERS) $(ndkppc_HEADERS) $(sdkshead_HEADERS) \
 	$(sechead_HEADERS) $(secsyshead_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in $(syshead_HEADERS) \
 	$(top_srcdir)/build-aux/config.guess \
@@ -68,7 +71,8 @@ DIST_COMMON = $(am__configure_deps) $(basehead_HEADERS) \
 	$(top_srcdir)/crt/_mingw.h.in \
 	$(top_srcdir)/crt/sdks/_mingw_ddk.h.in \
 	$(top_srcdir)/crt/sdks/_mingw_directx.h.in \
-	$(top_srcdir)/pkgconfig/mingw-w64-headers-ddk.pc.in ChangeLog \
+	$(top_srcdir)/pkgconfig/mingw-w64-headers-ddk.pc.in \
+	$(top_srcdir)/pkgconfig/mingw-w64-headers-ndk.pc.in ChangeLog \
 	build-aux/config.guess build-aux/config.sub \
 	build-aux/install-sh build-aux/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -79,8 +83,8 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES = mingw-w64-headers-ddk.pc crt/_mingw.h \
-	crt/sdks/_mingw_directx.h crt/sdks/_mingw_ddk.h
+CONFIG_CLEAN_FILES = mingw-w64-headers-ddk.pc mingw-w64-headers-ndk.pc \
+	crt/_mingw.h crt/sdks/_mingw_directx.h crt/sdks/_mingw_ddk.h
 CONFIG_CLEAN_VPATH_FILES =
 SOURCES =
 DIST_SOURCES =
@@ -120,13 +124,18 @@ am__installdirs = "$(DESTDIR)$(pkgconfigdir)" \
 	"$(DESTDIR)$(baseheaddir)" "$(DESTDIR)$(ddkheaddir)" \
 	"$(DESTDIR)$(dxheaddir)" "$(DESTDIR)$(gdiplusheaddir)" \
 	"$(DESTDIR)$(glheaddir)" "$(DESTDIR)$(idlheaddir)" \
-	"$(DESTDIR)$(mingwhelperheaddir)" "$(DESTDIR)$(sdksheaddir)" \
+	"$(DESTDIR)$(mingwhelperheaddir)" "$(DESTDIR)$(ndkamd64dir)" \
+	"$(DESTDIR)$(ndkarchdir)" "$(DESTDIR)$(ndkarmdir)" \
+	"$(DESTDIR)$(ndkheaddir)" "$(DESTDIR)$(ndki386dir)" \
+	"$(DESTDIR)$(ndkppcdir)" "$(DESTDIR)$(sdksheaddir)" \
 	"$(DESTDIR)$(secheaddir)" "$(DESTDIR)$(secsysheaddir)" \
 	"$(DESTDIR)$(sysheaddir)"
 DATA = $(pkgconfig_DATA)
 HEADERS = $(basehead_HEADERS) $(ddkhead_HEADERS) $(dxhead_HEADERS) \
 	$(gdiplushead_HEADERS) $(glhead_HEADERS) $(idlhead_HEADERS) \
-	$(mingwhelperhead_HEADERS) $(sdkshead_HEADERS) \
+	$(mingwhelperhead_HEADERS) $(ndkamd64_HEADERS) \
+	$(ndkarch_HEADERS) $(ndkarm_HEADERS) $(ndkhead_HEADERS) \
+	$(ndki386_HEADERS) $(ndkppc_HEADERS) $(sdkshead_HEADERS) \
 	$(sechead_HEADERS) $(secsyshead_HEADERS) $(syshead_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -179,8 +188,16 @@ MAKEINFO = @MAKEINFO@
 MINGWHELPERHEAD_LIST = @MINGWHELPERHEAD_LIST@
 MINGW_HAS_DDK = @MINGW_HAS_DDK@
 MINGW_HAS_DX = @MINGW_HAS_DX@
+MINGW_HAS_NDK = @MINGW_HAS_NDK@
 MINGW_HAS_SECURE_API = @MINGW_HAS_SECURE_API@
 MKDIR_P = @MKDIR_P@
+NDKHEAD_AMD64 = @NDKHEAD_AMD64@
+NDKHEAD_ARCH = @NDKHEAD_ARCH@
+NDKHEAD_ARM = @NDKHEAD_ARM@
+NDKHEAD_LIST = @NDKHEAD_LIST@
+NDKHEAD_PPC = @NDKHEAD_PPC@
+NDKHEAD_TESTS = @NDKHEAD_TESTS@
+NDKHEAD_i386 = @NDKHEAD_i386@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -190,6 +207,7 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKGCONFIG_DDK_PATH = @PKGCONFIG_DDK_PATH@
+PKGCONFIG_NDK_PATH = @PKGCONFIG_NDK_PATH@
 SECHEAD_LIST = @SECHEAD_LIST@
 SECSYSHEAD_LIST = @SECSYSHEAD_LIST@
 SET_MAKE = @SET_MAKE@
@@ -269,8 +287,20 @@ idlheaddir = $(baseheaddir)
 ddkhead_HEADERS = @DDKHEAD_LIST@
 dxhead_HEADERS = @DXHEAD_LIST@
 idlhead_HEADERS = @IDLHEAD_LIST@
-EXTRA_DIST = ChangeLog-2009
-pkgconfig_DATA = $(am__append_2)
+ndkheaddir = $(baseheaddir)/ros/ndk
+ndkamd64dir = $(baseheaddir)/ros/ndk/amd64
+ndkarchdir = $(baseheaddir)/ros/ndk/arch
+ndkarmdir = $(baseheaddir)/ros/ndk/arm
+ndki386dir = $(baseheaddir)/ros/ndk/i386
+ndkppcdir = $(baseheaddir)/ros/ndk/ppc
+ndkhead_HEADERS = @NDKHEAD_LIST@
+ndkamd64_HEADERS = @NDKHEAD_AMD64@
+ndkarch_HEADERS = @NDKHEAD_ARCH@
+ndkarm_HEADERS = @NDKHEAD_ARM@
+ndki386_HEADERS = @NDKHEAD_i386@
+ndkppc_HEADERS = @NDKHEAD_PPC@
+EXTRA_DIST = ChangeLog-2009 @NDKHEAD_TESTS@
+pkgconfig_DATA = $(am__append_2) $(am__append_3)
 DISTCHECK_CONFIGURE_FLAGS = --enable-sdk=all
 BUILT_SOURCES = $(am__append_1)
 EXTRA_HEADERS = \
@@ -397,6 +427,8 @@ $(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 distclean-hdr:
 	-rm -f config.h stamp-h1
 mingw-w64-headers-ddk.pc: $(top_builddir)/config.status $(top_srcdir)/pkgconfig/mingw-w64-headers-ddk.pc.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+mingw-w64-headers-ndk.pc: $(top_builddir)/config.status $(top_srcdir)/pkgconfig/mingw-w64-headers-ndk.pc.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 crt/_mingw.h: $(top_builddir)/config.status $(top_srcdir)/crt/_mingw.h.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
@@ -572,6 +604,132 @@ uninstall-mingwhelperheadHEADERS:
 	@list='$(mingwhelperhead_HEADERS)'; test -n "$(mingwhelperheaddir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(mingwhelperheaddir)'; $(am__uninstall_files_from_dir)
+install-ndkamd64HEADERS: $(ndkamd64_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(ndkamd64_HEADERS)'; test -n "$(ndkamd64dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(ndkamd64dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(ndkamd64dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(ndkamd64dir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(ndkamd64dir)" || exit $$?; \
+	done
+
+uninstall-ndkamd64HEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(ndkamd64_HEADERS)'; test -n "$(ndkamd64dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(ndkamd64dir)'; $(am__uninstall_files_from_dir)
+install-ndkarchHEADERS: $(ndkarch_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(ndkarch_HEADERS)'; test -n "$(ndkarchdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(ndkarchdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(ndkarchdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(ndkarchdir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(ndkarchdir)" || exit $$?; \
+	done
+
+uninstall-ndkarchHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(ndkarch_HEADERS)'; test -n "$(ndkarchdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(ndkarchdir)'; $(am__uninstall_files_from_dir)
+install-ndkarmHEADERS: $(ndkarm_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(ndkarm_HEADERS)'; test -n "$(ndkarmdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(ndkarmdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(ndkarmdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(ndkarmdir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(ndkarmdir)" || exit $$?; \
+	done
+
+uninstall-ndkarmHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(ndkarm_HEADERS)'; test -n "$(ndkarmdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(ndkarmdir)'; $(am__uninstall_files_from_dir)
+install-ndkheadHEADERS: $(ndkhead_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(ndkhead_HEADERS)'; test -n "$(ndkheaddir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(ndkheaddir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(ndkheaddir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(ndkheaddir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(ndkheaddir)" || exit $$?; \
+	done
+
+uninstall-ndkheadHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(ndkhead_HEADERS)'; test -n "$(ndkheaddir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(ndkheaddir)'; $(am__uninstall_files_from_dir)
+install-ndki386HEADERS: $(ndki386_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(ndki386_HEADERS)'; test -n "$(ndki386dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(ndki386dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(ndki386dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(ndki386dir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(ndki386dir)" || exit $$?; \
+	done
+
+uninstall-ndki386HEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(ndki386_HEADERS)'; test -n "$(ndki386dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(ndki386dir)'; $(am__uninstall_files_from_dir)
+install-ndkppcHEADERS: $(ndkppc_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(ndkppc_HEADERS)'; test -n "$(ndkppcdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(ndkppcdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(ndkppcdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(ndkppcdir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(ndkppcdir)" || exit $$?; \
+	done
+
+uninstall-ndkppcHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(ndkppc_HEADERS)'; test -n "$(ndkppcdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(ndkppcdir)'; $(am__uninstall_files_from_dir)
 install-sdksheadHEADERS: $(sdkshead_HEADERS)
 	@$(NORMAL_INSTALL)
 	@list='$(sdkshead_HEADERS)'; test -n "$(sdksheaddir)" || list=; \
@@ -894,7 +1052,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(DATA) $(HEADERS) config.h
 installdirs:
-	for dir in "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(baseheaddir)" "$(DESTDIR)$(ddkheaddir)" "$(DESTDIR)$(dxheaddir)" "$(DESTDIR)$(gdiplusheaddir)" "$(DESTDIR)$(glheaddir)" "$(DESTDIR)$(idlheaddir)" "$(DESTDIR)$(mingwhelperheaddir)" "$(DESTDIR)$(sdksheaddir)" "$(DESTDIR)$(secheaddir)" "$(DESTDIR)$(secsysheaddir)" "$(DESTDIR)$(sysheaddir)"; do \
+	for dir in "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(baseheaddir)" "$(DESTDIR)$(ddkheaddir)" "$(DESTDIR)$(dxheaddir)" "$(DESTDIR)$(gdiplusheaddir)" "$(DESTDIR)$(glheaddir)" "$(DESTDIR)$(idlheaddir)" "$(DESTDIR)$(mingwhelperheaddir)" "$(DESTDIR)$(ndkamd64dir)" "$(DESTDIR)$(ndkarchdir)" "$(DESTDIR)$(ndkarmdir)" "$(DESTDIR)$(ndkheaddir)" "$(DESTDIR)$(ndki386dir)" "$(DESTDIR)$(ndkppcdir)" "$(DESTDIR)$(sdksheaddir)" "$(DESTDIR)$(secheaddir)" "$(DESTDIR)$(secsysheaddir)" "$(DESTDIR)$(sysheaddir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -953,7 +1111,10 @@ info-am:
 install-data-am: install-baseheadHEADERS install-ddkheadHEADERS \
 	install-dxheadHEADERS install-gdiplusheadHEADERS \
 	install-glheadHEADERS install-idlheadHEADERS \
-	install-mingwhelperheadHEADERS install-pkgconfigDATA \
+	install-mingwhelperheadHEADERS install-ndkamd64HEADERS \
+	install-ndkarchHEADERS install-ndkarmHEADERS \
+	install-ndkheadHEADERS install-ndki386HEADERS \
+	install-ndkppcHEADERS install-pkgconfigDATA \
 	install-sdksheadHEADERS install-secheadHEADERS \
 	install-secsysheadHEADERS install-sysheadHEADERS
 
@@ -1004,7 +1165,10 @@ ps-am:
 uninstall-am: uninstall-baseheadHEADERS uninstall-ddkheadHEADERS \
 	uninstall-dxheadHEADERS uninstall-gdiplusheadHEADERS \
 	uninstall-glheadHEADERS uninstall-idlheadHEADERS \
-	uninstall-mingwhelperheadHEADERS uninstall-pkgconfigDATA \
+	uninstall-mingwhelperheadHEADERS uninstall-ndkamd64HEADERS \
+	uninstall-ndkarchHEADERS uninstall-ndkarmHEADERS \
+	uninstall-ndkheadHEADERS uninstall-ndki386HEADERS \
+	uninstall-ndkppcHEADERS uninstall-pkgconfigDATA \
 	uninstall-sdksheadHEADERS uninstall-secheadHEADERS \
 	uninstall-secsysheadHEADERS uninstall-sysheadHEADERS
 
@@ -1022,7 +1186,10 @@ uninstall-am: uninstall-baseheadHEADERS uninstall-ddkheadHEADERS \
 	install-exec-am install-gdiplusheadHEADERS \
 	install-glheadHEADERS install-html install-html-am \
 	install-idlheadHEADERS install-info install-info-am \
-	install-man install-mingwhelperheadHEADERS install-pdf \
+	install-man install-mingwhelperheadHEADERS \
+	install-ndkamd64HEADERS install-ndkarchHEADERS \
+	install-ndkarmHEADERS install-ndkheadHEADERS \
+	install-ndki386HEADERS install-ndkppcHEADERS install-pdf \
 	install-pdf-am install-pkgconfigDATA install-ps install-ps-am \
 	install-sdksheadHEADERS install-secheadHEADERS \
 	install-secsysheadHEADERS install-strip install-sysheadHEADERS \
@@ -1032,7 +1199,10 @@ uninstall-am: uninstall-baseheadHEADERS uninstall-ddkheadHEADERS \
 	uninstall-baseheadHEADERS uninstall-ddkheadHEADERS \
 	uninstall-dxheadHEADERS uninstall-gdiplusheadHEADERS \
 	uninstall-glheadHEADERS uninstall-idlheadHEADERS \
-	uninstall-mingwhelperheadHEADERS uninstall-pkgconfigDATA \
+	uninstall-mingwhelperheadHEADERS uninstall-ndkamd64HEADERS \
+	uninstall-ndkarchHEADERS uninstall-ndkarmHEADERS \
+	uninstall-ndkheadHEADERS uninstall-ndki386HEADERS \
+	uninstall-ndkppcHEADERS uninstall-pkgconfigDATA \
 	uninstall-sdksheadHEADERS uninstall-secheadHEADERS \
 	uninstall-secsysheadHEADERS uninstall-sysheadHEADERS
 

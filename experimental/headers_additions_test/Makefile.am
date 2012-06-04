@@ -26,7 +26,21 @@ ddkhead_HEADERS = @DDKHEAD_LIST@
 dxhead_HEADERS = @DXHEAD_LIST@
 idlhead_HEADERS = @IDLHEAD_LIST@
 
-EXTRA_DIST = ChangeLog-2009
+ndkheaddir = $(baseheaddir)/ros/ndk
+ndkamd64dir = $(baseheaddir)/ros/ndk/amd64
+ndkarchdir = $(baseheaddir)/ros/ndk/arch
+ndkarmdir = $(baseheaddir)/ros/ndk/arm
+ndki386dir = $(baseheaddir)/ros/ndk/i386
+ndkppcdir = $(baseheaddir)/ros/ndk/ppc
+
+ndkhead_HEADERS = @NDKHEAD_LIST@
+ndkamd64_HEADERS = @NDKHEAD_AMD64@
+ndkarch_HEADERS = @NDKHEAD_ARCH@
+ndkarm_HEADERS = @NDKHEAD_ARM@
+ndki386_HEADERS = @NDKHEAD_i386@
+ndkppc_HEADERS = @NDKHEAD_PPC@
+
+EXTRA_DIST = ChangeLog-2009 @NDKHEAD_TESTS@
 pkgconfig_DATA =
 DISTCHECK_CONFIGURE_FLAGS = --enable-sdk=all
 BUILT_SOURCES =
@@ -111,4 +125,8 @@ endif
 
 if HAVE_DDK
   pkgconfig_DATA += mingw-w64-headers-ddk.pc
+endif
+
+if HAVE_NDK
+  pkgconfig_DATA += mingw-w64-headers-ndk.pc
 endif
