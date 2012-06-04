@@ -1,4 +1,4 @@
-#if MINGW_HAS_DX
+#if @MINGW_HAS_DX@
 
 #define __MINGW_HAS_DXSDK 1
 
