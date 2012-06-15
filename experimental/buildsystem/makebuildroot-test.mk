@@ -551,7 +551,6 @@ ${BUILD_DIR}/mingw-headers/obj/.config.marker: \
 	cd $(dir $@) && \
 	  ${CURDIR}/${BUILD_DIR}/mingw/mingw-w64-headers/configure \
 	  --prefix=${CURDIR}/${BUILD_DIR}/root \
-	  --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
 	  --host=${TARGET_ARCH} \
 	  ${CONFIG_BUILD_ARGS}
 	@touch $@
