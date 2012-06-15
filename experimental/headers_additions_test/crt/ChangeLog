@@ -1,3 +1,9 @@
+2012-06-15 niXman <i.nixman@gmail.com>
+
+	* wchar.h (wmemcmp): Add missing __cdecl to prototype.
+
+	* math.h (fabs, fabsf): Fix typo.
+
 2012-05-31  Kai Tietz  <ktietz@redhat.com>
 
 	* crtdefs.h (errcode): Don't define it by default.
