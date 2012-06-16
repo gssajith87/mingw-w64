@@ -976,6 +976,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
         ${GCC_CONFIG_HOST_ARGS} \
         $(CONFIG_BUILD_ARGS) \
         --prefix=${CURDIR}/${BUILD_DIR}/root \
+        --with-gnu-ld --with-gnu-as \
         --enable-cloog-backend=isl \
         --enable-graphite --enable-lto \
         --enable-long-long --enable-threads=win32 \

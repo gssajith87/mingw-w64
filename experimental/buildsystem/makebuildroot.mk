@@ -463,6 +463,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
 	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
 	    --enable-languages=all,obj-c++ \
+	    --with-gnu-ld --with-gnu-as \
 	    ${GCC_CONFIG_EXTRA_ARGS}
 	@touch $@
 
