@@ -171,7 +171,7 @@ AC_MSG_CHECKING([if installing idl files is enabled])
 AC_ARG_ENABLE([idl],
     [AS_HELP_STRING([--enable-idl],
         [Enable installing idl files (default disabled)])],
-    [enable_idl=yes],[enable_idl=no])
+    [enable_idl=yes])
 AC_MSG_RESULT([$enable_idl])
 AS_VAR_IF([enable_idl],[yes],
     [IDLHEAD_LIST=$srcdir/include/*.idl],
@@ -182,7 +182,7 @@ AC_MSG_CHECKING([whether to enable the secure API])
 AC_ARG_ENABLE([secure-api],
   [AS_HELP_STRING([--enable-secure-api],
     [Enable secure API by default])],
-  [enable_secure_api=yes],[enable_secure_api=no])
+  [enable_secure_api=yes])
 AC_MSG_RESULT([$enable_secure_api])
 AS_VAR_IF([enable_secure_api],[yes],
   [MINGW_HAS_SECURE_API="#define MINGW_HAS_SECURE_API 1"],

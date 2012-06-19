@@ -2718,8 +2718,6 @@ $as_echo_n "checking if installing idl files is enabled... " >&6; }
 # Check whether --enable-idl was given.
 if test "${enable_idl+set}" = set; then :
   enableval=$enable_idl; enable_idl=yes
-else
-  enable_idl=no
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $enable_idl" >&5
@@ -2736,8 +2734,6 @@ $as_echo_n "checking whether to enable the secure API... " >&6; }
 # Check whether --enable-secure-api was given.
 if test "${enable_secure_api+set}" = set; then :
   enableval=$enable_secure_api; enable_secure_api=yes
-else
-  enable_secure_api=no
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $enable_secure_api" >&5
