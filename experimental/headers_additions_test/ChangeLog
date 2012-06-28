@@ -1,3 +1,20 @@
+2012-06-27  Corinna Vinschen  <vinschen@redhat.com>
+
+	* configure.ac (BASEHEAD_LIST): Add crt/_bsd_types.h, crt/_timeval.h,
+	and crt/excpt.h.
+	(SECHEAD_LIST): Define to include crt/sec_api/stralign_s.h by default.
+	* configure: Regenerate.
+
+2012-06-26  Corinna Vinschen  <vinschen@redhat.com>
+
+	* configure.ac (BASEHEAD_LIST): Add _cygwin.h.
+	* configure: Regenerate.
+
+2012-06-25  Kai Tietz  <ktietz@redhat.com>
+
+	* configure.ac (BASEHEAD_LIST): Add additional required basic-
+	headers.
+
 2012-02-02  Rafaël Carré <funman@videolan.org>
 
 	* configure.ac: Give a warning if DDK headers are not present.
