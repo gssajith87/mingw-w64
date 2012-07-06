@@ -365,7 +365,7 @@ ${BUILD_DIR}/mingw-headers/obj/.config.marker: \
     ${BUILD_DIR}/mingw-headers/obj/.mkdir.marker
 	cd $(dir $@) && \
 	  ../../mingw/mingw-w64-headers/configure \
-	  --prefix=${CURDIR}/${BUILD_DIR}/root \
+	  --prefix=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH} \
 	  --host=${TARGET_ARCH}
 	@touch $@
 
