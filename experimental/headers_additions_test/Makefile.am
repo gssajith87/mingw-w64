@@ -1,5 +1,5 @@
 
-baseheaddir = $(includedir)/../$(host)/include
+baseheaddir = $(includedir)
 sysheaddir = $(baseheaddir)/sys
 secheaddir = $(baseheaddir)/sec_api
 secsysheaddir = $(baseheaddir)/sec_api/sys
@@ -42,7 +42,7 @@ ndkppc_HEADERS = @NDKHEAD_PPC@
 
 EXTRA_DIST = ChangeLog-2009 @NDKHEAD_TESTS@
 pkgconfig_DATA =
-DISTCHECK_CONFIGURE_FLAGS = --enable-sdk=all
+DISTCHECK_CONFIGURE_FLAGS = --enable-idl
 BUILT_SOURCES =
 
 EXTRA_HEADERS = \

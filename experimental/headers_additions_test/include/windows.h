@@ -1,6 +1,6 @@
 /**
  * This file has no copyright assigned and is placed in the Public Domain.
- * This file is part of the w64 mingw-runtime package.
+ * This file is part of the mingw-w64 runtime package.
  * No warranty is given; refer to the file DISCLAIMER.PD within this package.
  */
 #ifndef _WINDOWS_
@@ -88,7 +88,9 @@
 #include <rpc.h>
 #include <shellapi.h>
 #include <winperf.h>
+#if defined(__USE_W32_SOCKETS) || !defined(__CYGWIN__)
 #include <winsock.h>
+#endif
 #ifndef NOCRYPT
 #include <wincrypt.h>
 #include <winefs.h>

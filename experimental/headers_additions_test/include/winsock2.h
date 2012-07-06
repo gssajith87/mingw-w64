@@ -1,6 +1,6 @@
 /**
  * This file has no copyright assigned and is placed in the Public Domain.
- * This file is part of the w64 mingw-runtime package.
+ * This file is part of the mingw-w64 runtime package.
  * No warranty is given; refer to the file DISCLAIMER.PD within this package.
  */
 
@@ -55,44 +55,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-extern int WINAPI __WSAFDIsSet(SOCKET,fd_set *);
-
-#define FD_CLR(fd,set)							\
-  do {									\
-	u_int __i;							\
-	for(__i = 0; __i < ((fd_set *)(set))->fd_count; __i++) {	\
-		if (((fd_set *)(set))->fd_array[__i] == fd) {		\
-			while (__i < ((fd_set *)(set))->fd_count - 1) {	\
-				((fd_set *)(set))->fd_array[__i] =	\
-				 ((fd_set *)(set))->fd_array[__i + 1];	\
-				__i++;					\
-			}						\
-			((fd_set *)(set))->fd_count--;			\
-			break;						\
-		}							\
-	}								\
-} while(0)
-
-#define FD_ZERO(set)		(((fd_set *)(set))->fd_count = 0)
-
-#define FD_ISSET(fd,set)	__WSAFDIsSet((SOCKET)(fd),(fd_set *)(set))
-
-#define FD_SET(fd,set)							\
-  do {									\
-	u_int __i;							\
-	for(__i = 0; __i < ((fd_set *)(set))->fd_count; __i++) {	\
-		if (((fd_set *)(set))->fd_array[__i] == (fd)) {		\
-			break;						\
-		}							\
-	}								\
-	if (__i == ((fd_set *)(set))->fd_count) {			\
-		if (((fd_set *)(set))->fd_count < FD_SETSIZE) {		\
-			((fd_set *)(set))->fd_array[__i] = (fd);	\
-			((fd_set *)(set))->fd_count++;			\
-		}							\
-	}								\
-} while(0)
 
 #define IOCPARM_MASK 0x7f
 #define IOC_VOID 0x20000000
@@ -1001,16 +963,22 @@ typedef unsigned int GROUP;
   WINSOCK_API_LINKAGE int WSAAPI getpeername(SOCKET s,struct sockaddr *name,int *namelen);
   WINSOCK_API_LINKAGE int WSAAPI getsockname(SOCKET s,struct sockaddr *name,int *namelen);
   WINSOCK_API_LINKAGE int WSAAPI getsockopt(SOCKET s,int level,int optname,char *optval,int *optlen);
+#ifndef __INSIDE_CYGWIN__
   WINSOCK_API_LINKAGE u_long WSAAPI htonl(u_long hostlong);
   WINSOCK_API_LINKAGE u_short WSAAPI htons(u_short hostshort);
+#endif /* !__INSIDE_CYGWIN__ */
   WINSOCK_API_LINKAGE unsigned long WSAAPI inet_addr(const char *cp);
   WINSOCK_API_LINKAGE char *WSAAPI inet_ntoa(struct in_addr in);
   WINSOCK_API_LINKAGE int WSAAPI listen(SOCKET s,int backlog);
+#ifndef __INSIDE_CYGWIN__
   WINSOCK_API_LINKAGE u_long WSAAPI ntohl(u_long netlong);
   WINSOCK_API_LINKAGE u_short WSAAPI ntohs(u_short netshort);
+#endif /* !__INSIDE_CYGWIN__ */
   WINSOCK_API_LINKAGE int WSAAPI recv(SOCKET s,char *buf,int len,int flags);
   WINSOCK_API_LINKAGE int WSAAPI recvfrom(SOCKET s,char *buf,int len,int flags,struct sockaddr *from,int *fromlen);
+#ifndef __INSIDE_CYGWIN__
   WINSOCK_API_LINKAGE int WSAAPI select(int nfds,fd_set *readfds,fd_set *writefds,fd_set *exceptfds,const struct timeval *timeout);
+#endif /* !__INSIDE_CYGWIN__ */
   WINSOCK_API_LINKAGE int WSAAPI send(SOCKET s,const char *buf,int len,int flags);
   WINSOCK_API_LINKAGE int WSAAPI sendto(SOCKET s,const char *buf,int len,int flags,const struct sockaddr *to,int tolen);
   WINSOCK_API_LINKAGE int WSAAPI setsockopt(SOCKET s,int level,int optname,const char *optval,int optlen);

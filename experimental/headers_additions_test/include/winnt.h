@@ -1,6 +1,6 @@
 /**
  * This file has no copyright assigned and is placed in the Public Domain.
- * This file is part of the w64 mingw-runtime package.
+ * This file is part of the mingw-w64 runtime package.
  * No warranty is given; refer to the file DISCLAIMER.PD within this package.
  */
 #ifndef _WINNT_
@@ -175,8 +175,13 @@ extern "C" {
 #define FASTCALL
 #endif
 #define NTAPI __stdcall
+#if !defined(_NTSYSTEM_)
 #define NTSYSAPI DECLSPEC_IMPORT
 #define NTSYSCALLAPI DECLSPEC_IMPORT
+#else
+#define NTSYSAPI
+#define NTSYSCALLAPI
+#endif
 
 #ifndef VOID
 #define VOID void
@@ -1860,7 +1865,6 @@ inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((i
   }
 #endif
 
-#ifndef __CRT__NO_INLINE
   __CRT_INLINE VOID MemoryBarrier(VOID)
   {
     LONG Barrier = 0;
@@ -1890,7 +1894,6 @@ inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((i
 	: "=r" (ret));
     return ret;
   }
-#endif /* !__CRT__NO_INLINE */
 #endif /* defined(__i386__) && !defined(__x86_64) */
 
 #define EXCEPTION_READ_FAULT 0
@@ -6606,11 +6609,14 @@ typedef struct _ACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION {
   COMPATIBILITY_CONTEXT_ELEMENT Elements[];
 } ACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION, *PACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION;
 
+#ifndef ___PROCESSOR_NUMBER_DEFINED
+#define ___PROCESSOR_NUMBER_DEFINED
 typedef struct _PROCESSOR_NUMBER {
   WORD Group;
   BYTE Number;
   BYTE Reserved;
 } PROCESSOR_NUMBER, *PPROCESSOR_NUMBER;
+#endif /* !___PROCESSOR_NUMBER_DEFINED */
 
 typedef struct _PROCESSOR_GROUP_INFO {
   BYTE      MaximumProcessorCount;
@@ -6626,11 +6632,14 @@ typedef struct _GROUP_RELATIONSHIP {
   PROCESSOR_GROUP_INFO GroupInfo[];
 } GROUP_RELATIONSHIP, *PGROUP_RELATIONSHIP;
 
+#ifndef ___GROUP_AFFINITY_DEFINED
+#define ___GROUP_AFFINITY_DEFINED
 typedef struct _GROUP_AFFINITY {
   KAFFINITY Mask;
   WORD      Group;
   WORD      Reserved[3];
 } GROUP_AFFINITY, *PGROUP_AFFINITY;
+#endif /* !___GROUP_AFFINITY_DEFINED */
 
 typedef struct _CACHE_RELATIONSHIP {
   BYTE                 Level;

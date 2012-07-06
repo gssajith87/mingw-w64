@@ -1,6 +1,6 @@
 /**
  * This file has no copyright assigned and is placed in the Public Domain.
- * This file is part of the w64 mingw-runtime package.
+ * This file is part of the mingw-w64 runtime package.
  * No warranty is given; refer to the file DISCLAIMER.PD within this package.
  */
 #include <rpc.h>
@@ -11,8 +11,13 @@
 
 #include <pshpack8.h>
 
+#ifdef _OLE32_
+#define WINOLEAPI EXTERN_C HRESULT WINAPI
+#define WINOLEAPI_(type) EXTERN_C type WINAPI
+#else
 #define WINOLEAPI EXTERN_C DECLSPEC_IMPORT HRESULT WINAPI
 #define WINOLEAPI_(type) EXTERN_C DECLSPEC_IMPORT type WINAPI
+#endif
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
 

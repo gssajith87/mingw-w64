@@ -1,3 +1,114 @@
+2012-07-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* stralign.h (ua_wcscpy): Define as macro when building on Cygwin.
+
+2012-07-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* in6addr.h (s6_addr16): Define when building Cygwin.
+
+2012-07-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* winbase.h (ZAWPROXYAPI): Define as empty if _ZAWPROXY_ is defined.
+	* objbase.h (WINOLEAPI): Define as empty if _OLE32_ is defined.
+	WINOLEAPI_: Ditto.
+	* winnt.h (NTSYSAPI): Define as empty if _NTSYSTEM_ is defined.
+	(NTSYSCALLAPI): Ditto.
+	* winuser.h (WINUSERAPI): Define as empty if _USER32_ is defined.
+	* wingdi.h (WINSPOOLAPI): Define as empty if _SPOOL32_ is defined.
+
+2012-07-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* windows.h: Don't include winsock.h on Cygwin, unless __USE_W32_SOCKETS
+	is defined.
+
+2012-07-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* psdk_inc/_ip_types.h (struct sockaddr): Define always.
+
+2012-07-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* ntdef.h (struct _PROCESSOR_NUMBER): Guard definition with
+	___PROCESSOR_NUMBER_DEFINED.
+	(struct _GROUP_AFFINITY): Guard definition with
+	___GROUP_AFFINITY_DEFINED.
+	* winnt.h: Ditto.
+
+2012-07-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* in6addr.h (struct in6addr): Add u.__s6_addr32 member when
+	building Cygwin.
+	(s6_addr32): Define when building Cygwin.
+
+2012-07-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* winsock2.h (gethostname): Drop __INSIDE_CYGWIN__ guard.
+
+2012-07-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* winnt.h (NtCurrentTeb): Always define inline implementation.
+	(GetCurrentFiber): Ditto.
+	(GetFiberData): Ditto.
+	(MemoryBarrier): Ditto.
+
+2012-07-05  Kai Tietz  <ktietz@redhat.com>
+
+	* ws2tcpip.h: Enable inline-functions always.
+
+2012-06-28  Corinna Vinschen  <vinschen@redhat.com>
+
+	* wincrypt.h (WINBASEAPI): Define as non-import iff
+	_KERNEL32_ was defined.
+
+2012-06-28  Corinna Vinschen  <vinschen@redhat.com>
+
+	* psdk_inc/_ip_types.h (sockaddr_in): Define unconditionally.
+
+2012-06-28  Corinna Vinschen  <vinschen@redhat.com>
+
+	* ntdef.h (FILE_ATTRIBUTE_VALID_FLAGS): Define.
+	(FILE_SHARE_VALID_FLAGS): Define.
+	(FILE_SUPERSEDE, ...): Define native file creation dispositions.
+	(FILE_DIRECTORY_FILE, ...): Define native file open options.
+	(struct _REPARSE_DATA_BUFFER): Define.
+
+2012-06-28  Corinna Vinschen  <vinschen@redhat.com>
+
+	* winsock2.h (__WSAFDIsSet): Move declaration to psdk_inv/_fd_type.h.
+	(FD_CLR): Move definition to psdk_inv/_fd_type.h.
+	(FD_ZERO): Ditto.
+	(FD_ISSET): Ditto.
+	(FD_SET): Ditto.
+	(htonl): Don't declare when building Cygwin.
+	(htons): Ditto.
+	(ntohl): Ditto.
+	(ntohs): Ditto.
+	(gethostname): Ditto.
+	(select): Ditto.
+	* winsock.h: Ditto.
+	* psdk_inc/_fd_types.h: Add Cygwin build environment magic to avoid
+	multiple definition of the select function related datatypes and macros.
+	(__WSAFDIsSet): Declare here.
+	(FD_CLR): Define here.
+	(FD_ZERO): Ditto.
+	(FD_ISSET): Ditto.
+	(FD_SET): Ditto.  Make sure to undef FD_SET first, if it has been
+	defined from winsock.h before.
+	* psdk_inc/_ip_types.h: Rearrange slightly and don't define POSIX
+	compatible datatypes when building Cygwin.
+	* psdk_inc/_ws1_undef.h (FD_CLR): Drop #undef.
+	(FD_ZERO): Ditto.
+	(FD_ISSET): Ditto.
+	(FD_SET): Ditto.
+
+2012-06-28  Rafael Carre  <funman@videolan.org>
+
+	* dxva2api.h: Remove DXVA_* GUIDs and structs ...
+	* dxva.h: ... And put them here.
+
+2012-06-28  Corinna Vinschen  <vinschen@redhat.com>
+
+	* ntdef.h (PHYSICAL_ADDRESS): Define unconditionally.
+
 2012-06-27  Corinna Vinschen  <vinschen@redhat.com>
 
 	* stralign.h: Fix and add #endif comments.

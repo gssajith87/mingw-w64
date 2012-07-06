@@ -1,6 +1,6 @@
 /**
  * This file has no copyright assigned and is placed in the Public Domain.
- * This file is part of the w64 mingw-runtime package.
+ * This file is part of the mingw-w64 runtime package.
  * No warranty is given; refer to the file DISCLAIMER.PD within this package.
  */
 #ifndef _WINBASE_
@@ -16,8 +16,19 @@
 #endif
 #endif
 
+#ifndef WINBASEAPI
+#ifndef _KERNEL32_
 #define WINBASEAPI DECLSPEC_IMPORT
+#else
+#define WINBASEAPI
+#endif
+#endif
+
+#ifndef _ZAWPROXY_
 #define ZAWPROXYAPI DECLSPEC_IMPORT
+#else
+#define ZAWPROXYAPI
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -1077,13 +1088,13 @@ extern "C" {
   __CRT_INLINE PVOID __cdecl
   __InlineInterlockedCompareExchangePointer(PVOID volatile *Destination,PVOID ExChange,PVOID Comperand) {
     return ((PVOID)(LONG_PTR)
-	    InterlockedCompareExchange((LONG volatile *)Destination,(LONG)(LONG_PTR)ExChange,(LONG)(LONG_PTR)Comperand));
+	    InterlockedCompareExchange((LONG volatile *)(LONG_PTR)Destination,(LONG)(LONG_PTR)ExChange,(LONG)(LONG_PTR)Comperand));
   }
 #define InterlockedCompareExchangePointer __InlineInterlockedCompareExchangePointer
 #else
 #define InterlockedCompareExchangePointer(Destination,ExChange,Comperand)	\
 	   (PVOID)(LONG_PTR)							\
-	    InterlockedCompareExchange((LONG volatile *)(Destination),(LONG)(LONG_PTR)(ExChange),(LONG)(LONG_PTR)(Comperand))
+	    InterlockedCompareExchange((LONG volatile *)(LONG_PTR)(Destination),(LONG)(LONG_PTR)(ExChange),(LONG)(LONG_PTR)(Comperand))
 #endif /* __cplusplus */
 
 #define InterlockedIncrementAcquire InterlockedIncrement

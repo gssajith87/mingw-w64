@@ -1,12 +1,12 @@
 /**
  * This file has no copyright assigned and is placed in the Public Domain.
- * This file is part of the w64 mingw-runtime package.
+ * This file is part of the mingw-w64 runtime package.
  * No warranty is given; refer to the file DISCLAIMER.PD within this package.
  */
 #ifndef _INC_PROCESS
 #define _INC_PROCESS
 
-#include <_mingw.h>
+#include <crtdefs.h>
 
 /* Includes a definition of _pid_t and pid_t */
 #include <sys/types.h>

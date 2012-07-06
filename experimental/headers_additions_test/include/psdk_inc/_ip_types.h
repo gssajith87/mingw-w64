@@ -1,6 +1,6 @@
 /**
  * This file has no copyright assigned and is placed in the Public Domain.
- * This file is part of the w64 mingw-runtime package.
+ * This file is part of the mingw-w64 runtime package.
  * No warranty is given; refer to the file DISCLAIMER.PD within this package.
  */
 
@@ -8,6 +8,11 @@
 #define _MINGW_IP_TYPES_H
 
 #include <_bsd_types.h>
+
+#ifndef __INSIDE_CYGWIN__
+
+#include <inaddr.h>
+#include <_timeval.h>
 
 #define h_addr h_addr_list[0]
 
@@ -44,6 +49,30 @@ struct protoent {
 	short	p_proto;
 };
 
+struct sockproto {
+	u_short	sp_family;
+	u_short	sp_protocol;
+};
+
+struct linger {
+	u_short	l_onoff;
+	u_short	l_linger;
+};
+
+#endif /* !__INSIDE_CYGWIN__ */
+
+struct sockaddr {
+	u_short	sa_family;
+	char	sa_data[14];
+};
+
+struct sockaddr_in {
+	short	sin_family;
+	u_short	sin_port;
+	struct in_addr	sin_addr;
+	char	sin_zero[8];
+};
+
 typedef struct hostent		HOSTENT;
 typedef struct hostent		*PHOSTENT;
 typedef struct hostent		*LPHOSTENT;
@@ -56,31 +85,6 @@ typedef struct protoent		PROTOENT;
 typedef struct protoent		*PPROTOENT;
 typedef struct protoent		*LPPROTOENT;
 
-
-#include <inaddr.h>
-
-struct sockaddr_in {
-	short	sin_family;
-	u_short	sin_port;
-	struct in_addr	sin_addr;
-	char	sin_zero[8];
-};
-
-struct sockaddr {
-	u_short	sa_family;
-	char	sa_data[14];
-};
-
-struct sockproto {
-	u_short	sp_family;
-	u_short	sp_protocol;
-};
-
-struct linger {
-	u_short	l_onoff;
-	u_short	l_linger;
-};
-
 typedef struct sockaddr		SOCKADDR;
 typedef struct sockaddr		*PSOCKADDR;
 typedef struct sockaddr		*LPSOCKADDR;
@@ -92,9 +96,6 @@ typedef struct sockaddr_in	*LPSOCKADDR_IN;
 typedef struct linger		LINGER;
 typedef struct linger		*PLINGER;
 typedef struct linger		*LPLINGER;
-
-
-#include <_timeval.h>
 
 typedef struct timeval		TIMEVAL;
 typedef struct timeval		*PTIMEVAL;

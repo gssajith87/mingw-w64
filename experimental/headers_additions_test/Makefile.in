@@ -215,7 +215,6 @@ SHELL = @SHELL@
 STRIP = @STRIP@
 SYSHEAD_LIST = @SYSHEAD_LIST@
 VERSION = @VERSION@
-WIDL = @WIDL@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -264,7 +263,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 widl_prog = @widl_prog@
-baseheaddir = $(includedir)/../$(host)/include
+baseheaddir = $(includedir)
 sysheaddir = $(baseheaddir)/sys
 secheaddir = $(baseheaddir)/sec_api
 secsysheaddir = $(baseheaddir)/sec_api/sys
@@ -301,7 +300,7 @@ ndki386_HEADERS = @NDKHEAD_i386@
 ndkppc_HEADERS = @NDKHEAD_PPC@
 EXTRA_DIST = ChangeLog-2009 @NDKHEAD_TESTS@
 pkgconfig_DATA = $(am__append_2) $(am__append_3)
-DISTCHECK_CONFIGURE_FLAGS = --enable-sdk=all
+DISTCHECK_CONFIGURE_FLAGS = --enable-idl
 BUILT_SOURCES = $(am__append_1)
 EXTRA_HEADERS = \
   include/*.dlg \

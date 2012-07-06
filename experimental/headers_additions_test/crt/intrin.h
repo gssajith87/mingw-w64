@@ -1,13 +1,13 @@
 /**
  * This file has no copyright assigned and is placed in the Public Domain.
- * This file is part of the w64 mingw-runtime package.
+ * This file is part of the mingw-w64 runtime package.
  * No warranty is given; refer to the file DISCLAIMER.PD within this package.
  */
 #ifndef __INTRIN_H_
 #define __INTRIN_H_
 #ifndef RC_INVOKED
 
-#include <_mingw.h>
+#include <crtdefs.h>
 #include <setjmp.h>
 #include <stddef.h>
 

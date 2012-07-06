@@ -1,6 +1,6 @@
 /**
  * This file has no copyright assigned and is placed in the Public Domain.
- * This file is part of the w64 mingw-runtime package.
+ * This file is part of the mingw-w64 runtime package.
  * No warranty is given; refer to the file DISCLAIMER.PD within this package.
  */
 
@@ -166,6 +166,14 @@
 
 #ifndef __MSABI_LONG
 #define __MSABI_LONG(x)  x ## l
+#endif
+
+#if __GNUC__
+#define __MINGW_GCC_VERSION	(__GNUC__	* 10000	+ \
+				 __GNUC_MINOR__	* 100	+ \
+				 __GNUC_PATCHLEVEL__)
+#else
+#define __MINGW_GCC_VERSION				0
 #endif
 
 #if defined (__GNUC__) && defined (__GNUC_MINOR__)
