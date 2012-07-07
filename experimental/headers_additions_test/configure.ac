@@ -16,27 +16,25 @@ AC_CANONICAL_HOST
 # AC_PROG_SED
 AC_PROG_AWK
 
+AC_MSG_CHECKING([if user wants to use widl to rebuild headers])
 AC_ARG_WITH([widl],
   AS_HELP_STRING([--with-widl=PATH],
     [use widl to update idl-based headers]),
-  [with_widl=yes],
-  [with_widl=no])
-AM_CONDITIONAL([HAVE_WIDL],[test "x$with_widl" = xyes])
-AC_MSG_CHECKING([if headers should be rebuilt with widl])
+  [],
+  [AS_VAR_SET([with_widl],[no])])
+AS_CASE([$with_widl],
+  [no],[],
+  [yes],[AS_VAR_SET([with_widl],["mingw-w64-widl widl"])],
+  [])
 AC_MSG_RESULT([$with_widl])
 
 AS_VAR_IF([with_widl],[no],[],[
-  AS_VAR_IF([with_widl],[yes],[
-    AC_MSG_CHECKING([for a usable widl])
-    AC_PATH_PROGS([widl_prog], [mingw-w64-widl widl])
-    AC_MSG_RESULT([$widl_prog])
-    AS_VAR_IF([widl_prog],[],[
-    AC_MSG_ERROR([Could not find widl installation, which is required in maintainer mode])])
-  ],[
-    AS_IF(AC_TRY_COMMAND([$with_widl -V]),
-      [widl_prog=$with_widl],
-      [AC_MSG_ERROR([Specified widl command is not valid])])]
-)])
+  AC_MSG_CHECKING([for a usable widl])
+  AC_PATH_PROGS([WIDL], [$with_widl], [])
+  AC_MSG_RESULT([$WIDL])
+  AS_VAR_IF([WIDL],[],[AC_MSG_ERROR([Could not find widl installation, which is required to rebuild the headers])])])
+
+AM_CONDITIONAL([HAVE_WIDL],[AS_VAR_TEST_SET([WIDL])])
 
 # Checks for libraries.
 
@@ -96,7 +94,7 @@ AS_CASE([$enabled_sdk_token],
     AS_ECHO_N([NDK ])
     AS_VAR_SET([enable_ndk],[yes])],
   [directx],[
-    AS_ECHO_N([DirectX])
+    AS_ECHO_N([DirectX ])
     AS_VAR_SET([enable_directx],[yes])],
   [no],[],
   [AC_MSG_ERROR([Invalid --enable-sdk option: $enabled_sdk_token.])])

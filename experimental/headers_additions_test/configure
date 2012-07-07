@@ -616,9 +616,9 @@ GDIPLUSHEAD_LIST
 BASEHEAD_LIST
 ENABLE_CRT_FALSE
 ENABLE_CRT_TRUE
-widl_prog
 HAVE_WIDL_FALSE
 HAVE_WIDL_TRUE
+WIDL
 host_os
 host_vendor
 host_cpu
@@ -2432,24 +2432,24 @@ fi
 done
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if user wants to use widl to rebuild headers" >&5
+$as_echo_n "checking if user wants to use widl to rebuild headers... " >&6; }
 
 # Check whether --with-widl was given.
 if test "${with_widl+set}" = set; then :
-  withval=$with_widl; with_widl=yes
+  withval=$with_widl;
 else
   with_widl=no
 fi
 
- if test "x$with_widl" = xyes; then
-  HAVE_WIDL_TRUE=
-  HAVE_WIDL_FALSE='#'
-else
-  HAVE_WIDL_TRUE='#'
-  HAVE_WIDL_FALSE=
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if headers should be rebuilt with widl" >&5
-$as_echo_n "checking if headers should be rebuilt with widl... " >&6; }
+case $with_widl in #(
+  no) :
+     ;; #(
+  yes) :
+    with_widl="mingw-w64-widl widl" ;; #(
+  *) :
+     ;;
+esac
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $with_widl" >&5
 $as_echo "$with_widl" >&6; }
 
@@ -2457,22 +2457,20 @@ if test "x$with_widl" = xno; then :
 
 else
 
-  if test "x$with_widl" = xyes; then :
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for a usable widl" >&5
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for a usable widl" >&5
 $as_echo_n "checking for a usable widl... " >&6; }
-    for ac_prog in mingw-w64-widl widl
+  for ac_prog in $with_widl
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_widl_prog+:} false; then :
+if ${ac_cv_path_WIDL+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  case $widl_prog in
+  case $WIDL in
   [\\/]* | ?:[\\/]*)
-  ac_cv_path_widl_prog="$widl_prog" # Let the user override the test with a path.
+  ac_cv_path_WIDL="$WIDL" # Let the user override the test with a path.
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -2482,7 +2480,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_widl_prog="$as_dir/$ac_word$ac_exec_ext"
+    ac_cv_path_WIDL="$as_dir/$ac_word$ac_exec_ext"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -2493,41 +2491,34 @@ IFS=$as_save_IFS
   ;;
 esac
 fi
-widl_prog=$ac_cv_path_widl_prog
-if test -n "$widl_prog"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $widl_prog" >&5
-$as_echo "$widl_prog" >&6; }
+WIDL=$ac_cv_path_WIDL
+if test -n "$WIDL"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $WIDL" >&5
+$as_echo "$WIDL" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
 
 
-  test -n "$widl_prog" && break
+  test -n "$WIDL" && break
 done
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $widl_prog" >&5
-$as_echo "$widl_prog" >&6; }
-    if ${widl_prog:+false} :; then :
-
-    as_fn_error $? "Could not find widl installation, which is required in maintainer mode" "$LINENO" 5
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $WIDL" >&5
+$as_echo "$WIDL" >&6; }
+  if ${WIDL:+false} :; then :
+  as_fn_error $? "Could not find widl installation, which is required to rebuild the headers" "$LINENO" 5
+fi
 fi
 
+ if ${WIDL+:} false; then
+  HAVE_WIDL_TRUE=
+  HAVE_WIDL_FALSE='#'
 else
-
-    if { ac_try='$with_widl -V'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then :
-  widl_prog=$with_widl
-else
-  as_fn_error $? "Specified widl command is not valid" "$LINENO" 5
+  HAVE_WIDL_TRUE='#'
+  HAVE_WIDL_FALSE=
 fi
 
-fi
-fi
 
 # Checks for libraries.
 
