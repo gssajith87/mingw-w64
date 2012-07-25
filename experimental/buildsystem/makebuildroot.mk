@@ -23,7 +23,7 @@ HOST_ARCH ?=
 ALL_UPDATE ?= # force update everything
 BINUTILS_UPDATE ?= ${ALL_UPDATE} # force update binutils
 BINUTILS_CONFIG_EXTRA_ARGS ?=
-GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --disable-multilib
+GCC_CONFIG_EXTRA_ARGS ?= --enable-fully-dynamic-string --disable-multilib --enable-languages=all,obj-c++
 GCC_BRANCH ?= trunk # "tags/gcc_4_4_0_release" or "branches/gcc-4_4-branch"
 GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
 GCC_UPDATE ?= ${ALL_UPDATE} # force update gcc
@@ -462,7 +462,6 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
 	    ${GCC_CONFIG_HOST_ARGS} \
 	    --prefix=${CURDIR}/${BUILD_DIR}/root \
 	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
-	    --enable-languages=all,obj-c++ \
 	    --with-gnu-ld --with-gnu-as \
 	    ${GCC_CONFIG_EXTRA_ARGS}
 	@touch $@
