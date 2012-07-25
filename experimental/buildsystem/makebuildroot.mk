@@ -427,7 +427,7 @@ ${BUILD_DIR}/binutils/obj/.install.marker: \
 gcc-winsup: \
     ${BUILD_DIR}/gcc/.winsup.marker
 
-${BUILD_DIR}/gcc/gcc/.winsup.marker: \
+${BUILD_DIR}/gcc/.winsup.marker: \
     ${BUILD_DIR}/.extract.marker \
     ${BUILD_DIR}/root/.root.init.marker
 ifneq (,$(filter MINGW%,$(shell uname -s)))
@@ -449,7 +449,7 @@ gcc-configure: \
 
 ifneq (,$(filter %-mingw32,${HOST_ARCH}))
 ${BUILD_DIR}/gcc/obj/.config.marker: \
-    ${BUILD_DIR}/gcc/src/.winsup.marker
+    ${BUILD_DIR}/gcc/.winsup.marker
 endif
 
 ${BUILD_DIR}/gcc/obj/.config.marker: \
