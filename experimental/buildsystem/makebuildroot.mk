@@ -503,8 +503,8 @@ ${BUILD_DIR}/mingw/obj/.config.marker: \
 	PATH=$(realpath build/root/bin):$$PATH \
 	../../../build/mingw/mingw-w64-crt/configure \
 	    --host=${TARGET_ARCH} \
-	    --prefix=${CURDIR}/${BUILD_DIR}/root \
-	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
+	    --prefix=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH} \
+	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH} \
 	    ${MINGW_CONFIG_EXTRA_ARGS}
 	@touch $@
 
