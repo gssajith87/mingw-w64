@@ -28,7 +28,6 @@ import_header() {
     fi
     sed -i 's/\bBOOL    /WINBOOL /g' $dstfile
     sed -i 's/\bBOOL\b/WINBOOL/g' $dstfile
-    sed -i 's/WIDL [0-9]\.[0-9]\([\.-][0-9rc]\)*/WIDL/g' $dstfile
     sed -i 's/DECLSPEC_HIDDEN//g' $dstfile
 }
 
@@ -70,6 +69,7 @@ for f in \
 	optary \
 	propsys \
 	structuredquerycondition \
+	urlhist \
 	wincodec \
 	wpcapi \
 	xmllite; do
@@ -146,6 +146,18 @@ for f in \
 done
 
 # DirectX IDLs
-for f in amstream amvideo austream d3d10 d3d10_1 d3d11 d3dcommon ddstream dxgi mediaobj mmstream qedit vmr9; do
+for f in \
+	amstream \
+	amvideo \
+	austream \
+	d3d10 \
+	d3d10_1 \
+	d3d11 \
+	d3dcommon \
+	ddstream \
+	dxgi \
+	mediaobj \
+	mmstream \
+	qedit; do
     import_idl $f.idl direct-x/include
 done
