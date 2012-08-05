@@ -608,6 +608,7 @@ interface IBinding {
 };
 
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
 /*** IUnknown methods ***/
 #define IBinding_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define IBinding_AddRef(This) (This)->lpVtbl->AddRef(This)
@@ -619,6 +620,37 @@ interface IBinding {
 #define IBinding_SetPriority(This,nPriority) (This)->lpVtbl->SetPriority(This,nPriority)
 #define IBinding_GetPriority(This,pnPriority) (This)->lpVtbl->GetPriority(This,pnPriority)
 #define IBinding_GetBindResult(This,pclsidProtocol,pdwResult,pszResult,pdwReserved) (This)->lpVtbl->GetBindResult(This,pclsidProtocol,pdwResult,pszResult,pdwReserved)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT IBinding_QueryInterface(IBinding* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG IBinding_AddRef(IBinding* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG IBinding_Release(IBinding* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** IBinding methods ***/
+static FORCEINLINE HRESULT IBinding_Abort(IBinding* This) {
+    return This->lpVtbl->Abort(This);
+}
+static FORCEINLINE HRESULT IBinding_Suspend(IBinding* This) {
+    return This->lpVtbl->Suspend(This);
+}
+static FORCEINLINE HRESULT IBinding_Resume(IBinding* This) {
+    return This->lpVtbl->Resume(This);
+}
+static FORCEINLINE HRESULT IBinding_SetPriority(IBinding* This,LONG nPriority) {
+    return This->lpVtbl->SetPriority(This,nPriority);
+}
+static FORCEINLINE HRESULT IBinding_GetPriority(IBinding* This,LONG *pnPriority) {
+    return This->lpVtbl->GetPriority(This,pnPriority);
+}
+static FORCEINLINE HRESULT IBinding_GetBindResult(IBinding* This,CLSID *pclsidProtocol,DWORD *pdwResult,LPOLESTR *pszResult,DWORD *pdwReserved) {
+    return This->lpVtbl->GetBindResult(This,pclsidProtocol,pdwResult,pszResult,pdwReserved);
+}
+#endif
 #endif
 
 #endif
@@ -965,6 +997,7 @@ interface IBindStatusCallback {
 };
 
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
 /*** IUnknown methods ***/
 #define IBindStatusCallback_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define IBindStatusCallback_AddRef(This) (This)->lpVtbl->AddRef(This)
@@ -978,6 +1011,43 @@ interface IBindStatusCallback {
 #define IBindStatusCallback_GetBindInfo(This,grfBINDF,pbindinfo) (This)->lpVtbl->GetBindInfo(This,grfBINDF,pbindinfo)
 #define IBindStatusCallback_OnDataAvailable(This,grfBSCF,dwSize,pformatetc,pstgmed) (This)->lpVtbl->OnDataAvailable(This,grfBSCF,dwSize,pformatetc,pstgmed)
 #define IBindStatusCallback_OnObjectAvailable(This,riid,punk) (This)->lpVtbl->OnObjectAvailable(This,riid,punk)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT IBindStatusCallback_QueryInterface(IBindStatusCallback* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG IBindStatusCallback_AddRef(IBindStatusCallback* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG IBindStatusCallback_Release(IBindStatusCallback* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** IBindStatusCallback methods ***/
+static FORCEINLINE HRESULT IBindStatusCallback_OnStartBinding(IBindStatusCallback* This,DWORD dwReserved,IBinding *pib) {
+    return This->lpVtbl->OnStartBinding(This,dwReserved,pib);
+}
+static FORCEINLINE HRESULT IBindStatusCallback_GetPriority(IBindStatusCallback* This,LONG *pnPriority) {
+    return This->lpVtbl->GetPriority(This,pnPriority);
+}
+static FORCEINLINE HRESULT IBindStatusCallback_OnLowResource(IBindStatusCallback* This,DWORD reserved) {
+    return This->lpVtbl->OnLowResource(This,reserved);
+}
+static FORCEINLINE HRESULT IBindStatusCallback_OnProgress(IBindStatusCallback* This,ULONG ulProgress,ULONG ulProgressMax,ULONG ulStatusCode,LPCWSTR szStatusText) {
+    return This->lpVtbl->OnProgress(This,ulProgress,ulProgressMax,ulStatusCode,szStatusText);
+}
+static FORCEINLINE HRESULT IBindStatusCallback_OnStopBinding(IBindStatusCallback* This,HRESULT hresult,LPCWSTR szError) {
+    return This->lpVtbl->OnStopBinding(This,hresult,szError);
+}
+static FORCEINLINE HRESULT IBindStatusCallback_GetBindInfo(IBindStatusCallback* This,DWORD *grfBINDF,BINDINFO *pbindinfo) {
+    return This->lpVtbl->GetBindInfo(This,grfBINDF,pbindinfo);
+}
+static FORCEINLINE HRESULT IBindStatusCallback_OnDataAvailable(IBindStatusCallback* This,DWORD grfBSCF,DWORD dwSize,FORMATETC *pformatetc,STGMEDIUM *pstgmed) {
+    return This->lpVtbl->OnDataAvailable(This,grfBSCF,dwSize,pformatetc,pstgmed);
+}
+static FORCEINLINE HRESULT IBindStatusCallback_OnObjectAvailable(IBindStatusCallback* This,REFIID riid,IUnknown *punk) {
+    return This->lpVtbl->OnObjectAvailable(This,riid,punk);
+}
+#endif
 #endif
 
 #endif
@@ -3180,10 +3250,10 @@ HRESULT __RPC_STUB IBindStatusCallback_OnDataAvailable_Stub(
   extern RPC_IF_HANDLE __MIDL_itf_urlmon_0215_v0_0_c_ifspec;
   extern RPC_IF_HANDLE __MIDL_itf_urlmon_0215_v0_0_s_ifspec;
 
-  unsigned long __RPC_API HWND_UserSize(unsigned long *,unsigned long,HWND *);
-  unsigned char *__RPC_API HWND_UserMarshal(unsigned long *,unsigned char *,HWND *);
-  unsigned char *__RPC_API HWND_UserUnmarshal(unsigned long *,unsigned char *,HWND *);
-  void __RPC_API HWND_UserFree(unsigned long *,HWND *);
+  ULONG __RPC_API HWND_UserSize(ULONG *,ULONG,HWND *);
+  unsigned char *__RPC_API HWND_UserMarshal(ULONG *,unsigned char *,HWND *);
+  unsigned char *__RPC_API HWND_UserUnmarshal(ULONG *,unsigned char *,HWND *);
+  void __RPC_API HWND_UserFree(ULONG *,HWND *);
 
   HRESULT WINAPI IWinInetInfo_QueryOption_Proxy(IWinInetInfo *This,DWORD dwOption,LPVOID pBuffer,DWORD *pcbBuf);
   HRESULT WINAPI IWinInetInfo_QueryOption_Stub(IWinInetInfo *This,DWORD dwOption,BYTE *pBuffer,DWORD *pcbBuf);

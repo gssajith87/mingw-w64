@@ -1009,10 +1009,10 @@ extern "C" {
   };
 
   enum __MIDL___MIDL_itf_mmc_0121_0002 {
-    CCM_INSERTIONALLOWED_TOP = 1L << (CCM_INSERTIONPOINTID_PRIMARY_TOP & CCM_INSERTIONPOINTID_MASK_FLAGINDEX),
-    CCM_INSERTIONALLOWED_NEW = 1L << (CCM_INSERTIONPOINTID_PRIMARY_NEW & CCM_INSERTIONPOINTID_MASK_FLAGINDEX),
-    CCM_INSERTIONALLOWED_TASK = 1L << (CCM_INSERTIONPOINTID_PRIMARY_TASK & CCM_INSERTIONPOINTID_MASK_FLAGINDEX),
-    CCM_INSERTIONALLOWED_VIEW = 1L << (CCM_INSERTIONPOINTID_PRIMARY_VIEW & CCM_INSERTIONPOINTID_MASK_FLAGINDEX)
+    CCM_INSERTIONALLOWED_TOP = 1 << (CCM_INSERTIONPOINTID_PRIMARY_TOP & CCM_INSERTIONPOINTID_MASK_FLAGINDEX),
+    CCM_INSERTIONALLOWED_NEW = 1 << (CCM_INSERTIONPOINTID_PRIMARY_NEW & CCM_INSERTIONPOINTID_MASK_FLAGINDEX),
+    CCM_INSERTIONALLOWED_TASK = 1 << (CCM_INSERTIONPOINTID_PRIMARY_TASK & CCM_INSERTIONPOINTID_MASK_FLAGINDEX),
+    CCM_INSERTIONALLOWED_VIEW = 1 << (CCM_INSERTIONPOINTID_PRIMARY_VIEW & CCM_INSERTIONPOINTID_MASK_FLAGINDEX)
   };
 
   enum __MIDL___MIDL_itf_mmc_0121_0003 {
@@ -3010,26 +3010,26 @@ extern "C" {
   extern RPC_IF_HANDLE __MIDL_itf_mmc_0163_v0_0_c_ifspec;
   extern RPC_IF_HANDLE __MIDL_itf_mmc_0163_v0_0_s_ifspec;
 
-  unsigned long __RPC_API BSTR_UserSize(unsigned long *,unsigned long,BSTR *);
-  unsigned char *__RPC_API BSTR_UserMarshal(unsigned long *,unsigned char *,BSTR *);
-  unsigned char *__RPC_API BSTR_UserUnmarshal(unsigned long *,unsigned char *,BSTR *);
-  void __RPC_API BSTR_UserFree(unsigned long *,BSTR *);
-  unsigned long __RPC_API HBITMAP_UserSize(unsigned long *,unsigned long,HBITMAP *);
-  unsigned char *__RPC_API HBITMAP_UserMarshal(unsigned long *,unsigned char *,HBITMAP *);
-  unsigned char *__RPC_API HBITMAP_UserUnmarshal(unsigned long *,unsigned char *,HBITMAP *);
-  void __RPC_API HBITMAP_UserFree(unsigned long *,HBITMAP *);
-  unsigned long __RPC_API HICON_UserSize(unsigned long *,unsigned long,HICON *);
-  unsigned char *__RPC_API HICON_UserMarshal(unsigned long *,unsigned char *,HICON *);
-  unsigned char *__RPC_API HICON_UserUnmarshal(unsigned long *,unsigned char *,HICON *);
-  void __RPC_API HICON_UserFree(unsigned long *,HICON *);
-  unsigned long __RPC_API HPALETTE_UserSize(unsigned long *,unsigned long,HPALETTE *);
-  unsigned char *__RPC_API HPALETTE_UserMarshal(unsigned long *,unsigned char *,HPALETTE *);
-  unsigned char *__RPC_API HPALETTE_UserUnmarshal(unsigned long *,unsigned char *,HPALETTE *);
-  void __RPC_API HPALETTE_UserFree(unsigned long *,HPALETTE *);
-  unsigned long __RPC_API HWND_UserSize(unsigned long *,unsigned long,HWND *);
-  unsigned char *__RPC_API HWND_UserMarshal(unsigned long *,unsigned char *,HWND *);
-  unsigned char *__RPC_API HWND_UserUnmarshal(unsigned long *,unsigned char *,HWND *);
-  void __RPC_API HWND_UserFree(unsigned long *,HWND *);
+  ULONG __RPC_API BSTR_UserSize(ULONG *,ULONG,BSTR *);
+  unsigned char *__RPC_API BSTR_UserMarshal(ULONG *,unsigned char *,BSTR *);
+  unsigned char *__RPC_API BSTR_UserUnmarshal(ULONG *,unsigned char *,BSTR *);
+  void __RPC_API BSTR_UserFree(ULONG *,BSTR *);
+  ULONG __RPC_API HBITMAP_UserSize(ULONG *,ULONG,HBITMAP *);
+  unsigned char *__RPC_API HBITMAP_UserMarshal(ULONG *,unsigned char *,HBITMAP *);
+  unsigned char *__RPC_API HBITMAP_UserUnmarshal(ULONG *,unsigned char *,HBITMAP *);
+  void __RPC_API HBITMAP_UserFree(ULONG *,HBITMAP *);
+  ULONG __RPC_API HICON_UserSize(ULONG *,ULONG,HICON *);
+  unsigned char *__RPC_API HICON_UserMarshal(ULONG *,unsigned char *,HICON *);
+  unsigned char *__RPC_API HICON_UserUnmarshal(ULONG *,unsigned char *,HICON *);
+  void __RPC_API HICON_UserFree(ULONG *,HICON *);
+  ULONG __RPC_API HPALETTE_UserSize(ULONG *,ULONG,HPALETTE *);
+  unsigned char *__RPC_API HPALETTE_UserMarshal(ULONG *,unsigned char *,HPALETTE *);
+  unsigned char *__RPC_API HPALETTE_UserUnmarshal(ULONG *,unsigned char *,HPALETTE *);
+  void __RPC_API HPALETTE_UserFree(ULONG *,HPALETTE *);
+  ULONG __RPC_API HWND_UserSize(ULONG *,ULONG,HWND *);
+  unsigned char *__RPC_API HWND_UserMarshal(ULONG *,unsigned char *,HWND *);
+  unsigned char *__RPC_API HWND_UserUnmarshal(ULONG *,unsigned char *,HWND *);
+  void __RPC_API HWND_UserFree(ULONG *,HWND *);
 
 #ifdef __cplusplus
 }

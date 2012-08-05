@@ -22,6 +22,134 @@ typedef int errcode;
 #define _CRTRESTRICT
 #endif
 
+#ifndef _RSIZE_T_DEFINED
+typedef size_t rsize_t;
+#define _RSIZE_T_DEFINED
+#endif
+
+#if defined(__cplusplus) && _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_0(__ret,__func,__dsttype,__dst) \
+  extern "C++" { \
+    template <size_t __size> \
+    inline __ret __cdecl __func(__dsttype (&__dst)[__size]) { \
+        return __func(__dst,__size); \
+    } \
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_1(__ret,__func,__dsttype,__dst,__type1,__arg1) \
+  extern "C++" {\
+    template <size_t __size> \
+    inline __ret __cdecl __func(__dsttype (&__dst)[__size], __type1 __arg1) { \
+        return __func(__dst,__size,__arg1);  \
+    }\
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_2(__ret,__func,__dsttype,__dst,__type1,__arg1,__type2,__arg2)\
+  extern "C++" {\
+    template <size_t __size> inline\
+    __ret __cdecl __func(__dsttype (&__dst)[__size], __type1 __arg1, __type2 __arg2) { \
+        return __func(__dst,__size,__arg1,__arg2);  \
+    }\
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_3(__ret,__func,__dsttype,__dst,__type1,__arg1,__type2,__arg2,__type3,__arg3) \
+  extern "C++" { \
+    template <size_t __size> inline \
+    __ret __cdecl __func(__dsttype (&__dst)[__size], __type1 __arg1, __type2 __arg2, __type3 __arg3) { \
+        return __func(__dst,__size,__arg1,__arg2,__arg3); \
+    }\
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_4(__ret,__func,__dsttype,__dst,__type1,__arg1,__type2,__arg2,__type3,__arg3,__type4,__arg4) \
+  extern "C++" { \
+    template <size_t __size> inline \
+    __ret __cdecl __func(__dsttype (&__dst)[__size], __type1 __arg1, __type2 __arg2, __type3 __arg3, __type4 __arg4) { \
+        return __func(__dst,__size,__arg1,__arg2,__arg3,__arg4); \
+    }\
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_1(__ret,__func,__type0,__arg0,__dsttype,__dst,__type1,__arg1) \
+  extern "C++" { \
+    template <size_t __size> inline \
+      __ret __cdecl __func(__type0 __arg0, __dsttype (&__dst)[__size], __type1 __arg1) { \
+      return __func(__arg0, __dst, __size, __arg1); \
+    } \
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_2(__ret,__func,__type0,__arg0,__dsttype,__dst,__type1,__arg1,__type2,__arg2) \
+  extern "C++" { \
+    template <size_t __size> inline \
+    __ret __cdecl __func(__type0 __arg0, __dsttype (&__dst)[__size], __type1 __arg1, __type2 __arg2) { \
+      return __func(__arg0, __dst, __size, __arg1, __arg2); \
+    } \
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_3(__ret,__func,__type0,__arg0,__dsttype,__dst,__type1,__arg1,__type2,__arg2,__type3,__arg3) \
+  extern "C++" { \
+    template <size_t __size> inline \
+      __ret __cdecl __func(__type0 __arg0, __dsttype (&__dst)[__size], __type1 __arg1, __type2 __arg2, __type3 __arg3) { \
+      return __func(__arg0, __dst, __size, __arg1, __arg2, __arg3); \
+    } \
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_2_0(__ret,__func,__type1,__arg1,__type2,__arg2,__dsttype,__dst) \
+  extern "C++" { \
+    template <size_t __size> inline \
+    __ret __cdecl __func(__type1 __arg1, __type2 __arg2, __dsttype (&__dst)[__size]) { \
+      return __func(__arg1, __arg2, __dst, __size); \
+    } \
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_1_ARGLIST(__ret,__func,__vfunc,__dsttype,__dst,__type1,__arg1) \
+  extern "C++" {\
+    template <size_t __size> \
+    inline __ret __cdecl __func(__dsttype (&__dst)[__size], __type1 __arg1, ...) { \
+      va_list __vaargs; \
+      _crt_va_start(__vaargs, __arg1); \
+      __ret __retval = __vfunc(__dst,__size,__arg1,__vaargs); \
+      _crt_va_end(__vaargs); \
+      return __retval; \
+    }\
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_2_ARGLIST(__ret,__func,__vfunc,__dsttype,__dst,__type1,__arg1,__type2,__arg2) \
+  extern "C++" {\
+    template <size_t __size> \
+    inline __ret __cdecl __func(__dsttype (&__dst)[__size], __type1 __arg1, __type2 __arg2, ...) { \
+      va_list __vaargs; \
+      _crt_va_start(__vaargs, __arg2); \
+      __ret __retval = __vfunc(__dst,__size,__arg1,__arg2,__vaargs); \
+      _crt_va_end(__vaargs); \
+      return __retval; \
+    }\
+  }
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(__ret,__func,__dsttype,__src) \
+  extern "C++" { \
+    template <size_t __drive_size, size_t __dir_size, size_t __name_size, size_t __ext_size> inline \
+    __ret __cdecl __func(const __dsttype *__src, __dsttype (&__drive)[__drive_size], __dsttype (&__dir)[__dir_size], __dsttype (&__name)[__name_size], __dsttype (&__ext)[__ext_size]) { \
+        return __func(__src, __drive, __drive_size, __dir, __dir_size, __name, __name_size, __ext, __ext_size); \
+    } \
+  }
+
+#else
+
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_0(__ret,__func,__dsttype,__dst)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_1(__ret,__func,__dsttype,__dst,__type1,__arg1)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_2(__ret,__func,__dsttype,__dst,__type1,__arg1,__type2,__arg2)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_3(__ret,__func,__dsttype,__dst,__type1,__arg1,__type2,__arg2,__type3,__arg3)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_4(__ret,__func,__dsttype,__dst,__type1,__arg1,__type2,__arg2,__type3,__arg3,__type4,__arg4)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_1(__ret,__func,__type0,__arg0,__dsttype,__dst,__type1,__arg1)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_2(__ret,__func,__type0,__arg0,__dsttype,__dst,__type1,__arg1,__type2,__arg2)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_3(__ret,__func,__type0,__arg0,__dsttype,__dst,__type1,__arg1,__type2,__arg2,__type3,__arg3)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_2_0(__ret,__func,__type1,__arg1,__type2,__arg2,__dsttype,__dst)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_1_ARGLIST(__ret,__func,__vfunc,__dsttype,__dst,__type1,__arg1)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_2_ARGLIST(__ret,__func,__vfunc,__dsttype,__dst,__type1,__arg1,__type2,__arg2)
+#define __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(__ret,__func,__dsttype,__src)
+
+#endif
+
 struct threadlocaleinfostruct;
 struct threadmbcinfostruct;
 typedef struct threadlocaleinfostruct *pthreadlocinfo;

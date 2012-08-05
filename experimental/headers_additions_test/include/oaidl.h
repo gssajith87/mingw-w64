@@ -37,6 +37,11 @@ typedef interface ITypeInfo ITypeInfo;
 typedef interface ITypeLib ITypeLib;
 #endif
 
+#ifndef __IRecordInfo_FWD_DEFINED__
+#define __IRecordInfo_FWD_DEFINED__
+typedef interface IRecordInfo IRecordInfo;
+#endif
+
 #ifndef __IErrorLog_FWD_DEFINED__
 #define __IErrorLog_FWD_DEFINED__
 typedef interface IErrorLog IErrorLog;
@@ -1185,6 +1190,7 @@ interface IDispatch {
 };
 
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
 /*** IUnknown methods ***/
 #define IDispatch_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define IDispatch_AddRef(This) (This)->lpVtbl->AddRef(This)
@@ -1194,6 +1200,31 @@ interface IDispatch {
 #define IDispatch_GetTypeInfo(This,iTInfo,lcid,ppTInfo) (This)->lpVtbl->GetTypeInfo(This,iTInfo,lcid,ppTInfo)
 #define IDispatch_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) (This)->lpVtbl->GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
 #define IDispatch_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) (This)->lpVtbl->Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT IDispatch_QueryInterface(IDispatch* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG IDispatch_AddRef(IDispatch* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG IDispatch_Release(IDispatch* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** IDispatch methods ***/
+static FORCEINLINE HRESULT IDispatch_GetTypeInfoCount(IDispatch* This,UINT *pctinfo) {
+    return This->lpVtbl->GetTypeInfoCount(This,pctinfo);
+}
+static FORCEINLINE HRESULT IDispatch_GetTypeInfo(IDispatch* This,UINT iTInfo,LCID lcid,ITypeInfo **ppTInfo) {
+    return This->lpVtbl->GetTypeInfo(This,iTInfo,lcid,ppTInfo);
+}
+static FORCEINLINE HRESULT IDispatch_GetIDsOfNames(IDispatch* This,REFIID riid,LPOLESTR *rgszNames,UINT cNames,LCID lcid,DISPID *rgDispId) {
+    return This->lpVtbl->GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId);
+}
+static FORCEINLINE HRESULT IDispatch_Invoke(IDispatch* This,DISPID dispIdMember,REFIID riid,LCID lcid,WORD wFlags,DISPPARAMS *pDispParams,VARIANT *pVarResult,EXCEPINFO *pExcepInfo,UINT *puArgErr) {
+    return This->lpVtbl->Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr);
+}
+#endif
 #endif
 
 #endif
@@ -1403,6 +1434,7 @@ interface ITypeComp {
 };
 
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
 /*** IUnknown methods ***/
 #define ITypeComp_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define ITypeComp_AddRef(This) (This)->lpVtbl->AddRef(This)
@@ -1410,6 +1442,25 @@ interface ITypeComp {
 /*** ITypeComp methods ***/
 #define ITypeComp_Bind(This,szName,lHashVal,wFlags,ppTInfo,pDescKind,pBindPtr) (This)->lpVtbl->Bind(This,szName,lHashVal,wFlags,ppTInfo,pDescKind,pBindPtr)
 #define ITypeComp_BindType(This,szName,lHashVal,ppTInfo,ppTComp) (This)->lpVtbl->BindType(This,szName,lHashVal,ppTInfo,ppTComp)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT ITypeComp_QueryInterface(ITypeComp* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG ITypeComp_AddRef(ITypeComp* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG ITypeComp_Release(ITypeComp* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** ITypeComp methods ***/
+static FORCEINLINE HRESULT ITypeComp_Bind(ITypeComp* This,LPOLESTR szName,ULONG lHashVal,WORD wFlags,ITypeInfo **ppTInfo,DESCKIND *pDescKind,BINDPTR *pBindPtr) {
+    return This->lpVtbl->Bind(This,szName,lHashVal,wFlags,ppTInfo,pDescKind,pBindPtr);
+}
+static FORCEINLINE HRESULT ITypeComp_BindType(ITypeComp* This,LPOLESTR szName,ULONG lHashVal,ITypeInfo **ppTInfo,ITypeComp **ppTComp) {
+    return This->lpVtbl->BindType(This,szName,lHashVal,ppTInfo,ppTComp);
+}
+#endif
 #endif
 
 #endif
@@ -1706,6 +1757,7 @@ interface ITypeInfo {
 };
 
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
 /*** IUnknown methods ***/
 #define ITypeInfo_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define ITypeInfo_AddRef(This) (This)->lpVtbl->AddRef(This)
@@ -1730,6 +1782,76 @@ interface ITypeInfo {
 #define ITypeInfo_ReleaseTypeAttr(This,pTypeAttr) (This)->lpVtbl->ReleaseTypeAttr(This,pTypeAttr)
 #define ITypeInfo_ReleaseFuncDesc(This,pFuncDesc) (This)->lpVtbl->ReleaseFuncDesc(This,pFuncDesc)
 #define ITypeInfo_ReleaseVarDesc(This,pVarDesc) (This)->lpVtbl->ReleaseVarDesc(This,pVarDesc)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT ITypeInfo_QueryInterface(ITypeInfo* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG ITypeInfo_AddRef(ITypeInfo* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG ITypeInfo_Release(ITypeInfo* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** ITypeInfo methods ***/
+static FORCEINLINE HRESULT ITypeInfo_GetTypeAttr(ITypeInfo* This,TYPEATTR **ppTypeAttr) {
+    return This->lpVtbl->GetTypeAttr(This,ppTypeAttr);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetTypeComp(ITypeInfo* This,ITypeComp **ppTComp) {
+    return This->lpVtbl->GetTypeComp(This,ppTComp);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetFuncDesc(ITypeInfo* This,UINT index,FUNCDESC **ppFuncDesc) {
+    return This->lpVtbl->GetFuncDesc(This,index,ppFuncDesc);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetVarDesc(ITypeInfo* This,UINT index,VARDESC **ppVarDesc) {
+    return This->lpVtbl->GetVarDesc(This,index,ppVarDesc);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetNames(ITypeInfo* This,MEMBERID memid,BSTR *rgBstrNames,UINT cMaxNames,UINT *pcNames) {
+    return This->lpVtbl->GetNames(This,memid,rgBstrNames,cMaxNames,pcNames);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetRefTypeOfImplType(ITypeInfo* This,UINT index,HREFTYPE *pRefType) {
+    return This->lpVtbl->GetRefTypeOfImplType(This,index,pRefType);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetImplTypeFlags(ITypeInfo* This,UINT index,INT *pImplTypeFlags) {
+    return This->lpVtbl->GetImplTypeFlags(This,index,pImplTypeFlags);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetIDsOfNames(ITypeInfo* This,LPOLESTR *rgszNames,UINT cNames,MEMBERID *pMemId) {
+    return This->lpVtbl->GetIDsOfNames(This,rgszNames,cNames,pMemId);
+}
+static FORCEINLINE HRESULT ITypeInfo_Invoke(ITypeInfo* This,PVOID pvInstance,MEMBERID memid,WORD wFlags,DISPPARAMS *pDispParams,VARIANT *pVarResult,EXCEPINFO *pExcepInfo,UINT *puArgErr) {
+    return This->lpVtbl->Invoke(This,pvInstance,memid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetDocumentation(ITypeInfo* This,MEMBERID memid,BSTR *pBstrName,BSTR *pBstrDocString,DWORD *pdwHelpContext,BSTR *pBstrHelpFile) {
+    return This->lpVtbl->GetDocumentation(This,memid,pBstrName,pBstrDocString,pdwHelpContext,pBstrHelpFile);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetDllEntry(ITypeInfo* This,MEMBERID memid,INVOKEKIND invKind,BSTR *pBstrDllName,BSTR *pBstrName,WORD *pwOrdinal) {
+    return This->lpVtbl->GetDllEntry(This,memid,invKind,pBstrDllName,pBstrName,pwOrdinal);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetRefTypeInfo(ITypeInfo* This,HREFTYPE hRefType,ITypeInfo **ppTInfo) {
+    return This->lpVtbl->GetRefTypeInfo(This,hRefType,ppTInfo);
+}
+static FORCEINLINE HRESULT ITypeInfo_AddressOfMember(ITypeInfo* This,MEMBERID memid,INVOKEKIND invKind,PVOID *ppv) {
+    return This->lpVtbl->AddressOfMember(This,memid,invKind,ppv);
+}
+static FORCEINLINE HRESULT ITypeInfo_CreateInstance(ITypeInfo* This,IUnknown *pUnkOuter,REFIID riid,PVOID *ppvObj) {
+    return This->lpVtbl->CreateInstance(This,pUnkOuter,riid,ppvObj);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetMops(ITypeInfo* This,MEMBERID memid,BSTR *pBstrMops) {
+    return This->lpVtbl->GetMops(This,memid,pBstrMops);
+}
+static FORCEINLINE HRESULT ITypeInfo_GetContainingTypeLib(ITypeInfo* This,ITypeLib **ppTLib,UINT *pIndex) {
+    return This->lpVtbl->GetContainingTypeLib(This,ppTLib,pIndex);
+}
+static FORCEINLINE void ITypeInfo_ReleaseTypeAttr(ITypeInfo* This,TYPEATTR *pTypeAttr) {
+    This->lpVtbl->ReleaseTypeAttr(This,pTypeAttr);
+}
+static FORCEINLINE void ITypeInfo_ReleaseFuncDesc(ITypeInfo* This,FUNCDESC *pFuncDesc) {
+    This->lpVtbl->ReleaseFuncDesc(This,pFuncDesc);
+}
+static FORCEINLINE void ITypeInfo_ReleaseVarDesc(ITypeInfo* This,VARDESC *pVarDesc) {
+    This->lpVtbl->ReleaseVarDesc(This,pVarDesc);
+}
+#endif
 #endif
 
 #endif
@@ -2327,6 +2449,7 @@ interface ITypeLib {
 };
 
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
 /*** IUnknown methods ***/
 #define ITypeLib_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define ITypeLib_AddRef(This) (This)->lpVtbl->AddRef(This)
@@ -2342,6 +2465,49 @@ interface ITypeLib {
 #define ITypeLib_IsName(This,szNameBuf,lHashVal,pfName) (This)->lpVtbl->IsName(This,szNameBuf,lHashVal,pfName)
 #define ITypeLib_FindName(This,szNameBuf,lHashVal,ppTInfo,rgMemId,pcFound) (This)->lpVtbl->FindName(This,szNameBuf,lHashVal,ppTInfo,rgMemId,pcFound)
 #define ITypeLib_ReleaseTLibAttr(This,pTLibAttr) (This)->lpVtbl->ReleaseTLibAttr(This,pTLibAttr)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT ITypeLib_QueryInterface(ITypeLib* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG ITypeLib_AddRef(ITypeLib* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG ITypeLib_Release(ITypeLib* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** ITypeLib methods ***/
+static FORCEINLINE UINT ITypeLib_GetTypeInfoCount(ITypeLib* This) {
+    return This->lpVtbl->GetTypeInfoCount(This);
+}
+static FORCEINLINE HRESULT ITypeLib_GetTypeInfo(ITypeLib* This,UINT index,ITypeInfo **ppTInfo) {
+    return This->lpVtbl->GetTypeInfo(This,index,ppTInfo);
+}
+static FORCEINLINE HRESULT ITypeLib_GetTypeInfoType(ITypeLib* This,UINT index,TYPEKIND *pTKind) {
+    return This->lpVtbl->GetTypeInfoType(This,index,pTKind);
+}
+static FORCEINLINE HRESULT ITypeLib_GetTypeInfoOfGuid(ITypeLib* This,REFGUID guid,ITypeInfo **ppTinfo) {
+    return This->lpVtbl->GetTypeInfoOfGuid(This,guid,ppTinfo);
+}
+static FORCEINLINE HRESULT ITypeLib_GetLibAttr(ITypeLib* This,TLIBATTR **ppTLibAttr) {
+    return This->lpVtbl->GetLibAttr(This,ppTLibAttr);
+}
+static FORCEINLINE HRESULT ITypeLib_GetTypeComp(ITypeLib* This,ITypeComp **ppTComp) {
+    return This->lpVtbl->GetTypeComp(This,ppTComp);
+}
+static FORCEINLINE HRESULT ITypeLib_GetDocumentation(ITypeLib* This,INT index,BSTR *pBstrName,BSTR *pBstrDocString,DWORD *pdwHelpContext,BSTR *pBstrHelpFile) {
+    return This->lpVtbl->GetDocumentation(This,index,pBstrName,pBstrDocString,pdwHelpContext,pBstrHelpFile);
+}
+static FORCEINLINE HRESULT ITypeLib_IsName(ITypeLib* This,LPOLESTR szNameBuf,ULONG lHashVal,WINBOOL *pfName) {
+    return This->lpVtbl->IsName(This,szNameBuf,lHashVal,pfName);
+}
+static FORCEINLINE HRESULT ITypeLib_FindName(ITypeLib* This,LPOLESTR szNameBuf,ULONG lHashVal,ITypeInfo **ppTInfo,MEMBERID *rgMemId,USHORT *pcFound) {
+    return This->lpVtbl->FindName(This,szNameBuf,lHashVal,ppTInfo,rgMemId,pcFound);
+}
+static FORCEINLINE void ITypeLib_ReleaseTLibAttr(ITypeLib* This,TLIBATTR *pTLibAttr) {
+    This->lpVtbl->ReleaseTLibAttr(This,pTLibAttr);
+}
+#endif
 #endif
 
 #endif
@@ -2831,63 +2997,191 @@ HRESULT __RPC_STUB ITypeLib_ReleaseTLibAttr_Stub(
   HRESULT WINAPI ITypeMarshal_Free_Proxy(ITypeMarshal *This,PVOID pvType);
   void __RPC_STUB ITypeMarshal_Free_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
 #endif
-
+/*****************************************************************************
+ * IRecordInfo interface
+ */
 #ifndef __IRecordInfo_INTERFACE_DEFINED__
 #define __IRecordInfo_INTERFACE_DEFINED__
-  typedef IRecordInfo *LPRECORDINFO;
 
-  EXTERN_C const IID IID_IRecordInfo;
+typedef IRecordInfo *LPRECORDINFO;
+DEFINE_GUID(IID_IRecordInfo, 0x0000002f, 0x0000, 0x0000, 0xc0,0x00, 0x00,0x00,0x00,0x00,0x00,0x46);
 #if defined(__cplusplus) && !defined(CINTERFACE)
-  struct IRecordInfo : public IUnknown {
-  public:
-    virtual HRESULT WINAPI RecordInit(PVOID pvNew) = 0;
-    virtual HRESULT WINAPI RecordClear(PVOID pvExisting) = 0;
-    virtual HRESULT WINAPI RecordCopy(PVOID pvExisting,PVOID pvNew) = 0;
-    virtual HRESULT WINAPI GetGuid(GUID *pguid) = 0;
-    virtual HRESULT WINAPI GetName(BSTR *pbstrName) = 0;
-    virtual HRESULT WINAPI GetSize(ULONG *pcbSize) = 0;
-    virtual HRESULT WINAPI GetTypeInfo(ITypeInfo **ppTypeInfo) = 0;
-    virtual HRESULT WINAPI GetField(PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField) = 0;
-    virtual HRESULT WINAPI GetFieldNoCopy(PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField,PVOID *ppvDataCArray) = 0;
-    virtual HRESULT WINAPI PutField(ULONG wFlags,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField) = 0;
-    virtual HRESULT WINAPI PutFieldNoCopy(ULONG wFlags,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField) = 0;
-    virtual HRESULT WINAPI GetFieldNames(ULONG *pcNames,BSTR *rgBstrNames) = 0;
-    virtual WINBOOL WINAPI IsMatchingType(IRecordInfo *pRecordInfo) = 0;
-    virtual PVOID WINAPI RecordCreate(void) = 0;
-    virtual HRESULT WINAPI RecordCreateCopy(PVOID pvSource,PVOID *ppvDest) = 0;
-    virtual HRESULT WINAPI RecordDestroy(PVOID pvRecord) = 0;
-  };
+MIDL_INTERFACE("0000002f-0000-0000-c000-000000000046")
+IRecordInfo : public IUnknown
+{
+    virtual HRESULT STDMETHODCALLTYPE RecordInit(
+        PVOID pvNew) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE RecordClear(
+        PVOID pvExisting) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE RecordCopy(
+        PVOID pvExisting,
+        PVOID pvNew) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetGuid(
+        GUID *pguid) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetName(
+        BSTR *pbstrName) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetSize(
+        ULONG *pcbSize) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetTypeInfo(
+        ITypeInfo **ppTypeInfo) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetField(
+        PVOID pvData,
+        LPCOLESTR szFieldName,
+        VARIANT *pvarField) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetFieldNoCopy(
+        PVOID pvData,
+        LPCOLESTR szFieldName,
+        VARIANT *pvarField,
+        PVOID *ppvDataCArray) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PutField(
+        ULONG wFlags,
+        PVOID pvData,
+        LPCOLESTR szFieldName,
+        VARIANT *pvarField) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PutFieldNoCopy(
+        ULONG wFlags,
+        PVOID pvData,
+        LPCOLESTR szFieldName,
+        VARIANT *pvarField) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetFieldNames(
+        ULONG *pcNames,
+        BSTR *rgBstrNames) = 0;
+
+    virtual WINBOOL STDMETHODCALLTYPE IsMatchingType(
+        IRecordInfo *pRecordInfo) = 0;
+
+    virtual PVOID STDMETHODCALLTYPE RecordCreate(
+        ) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE RecordCreateCopy(
+        PVOID pvSource,
+        PVOID *ppvDest) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE RecordDestroy(
+        PVOID pvRecord) = 0;
+
+};
+#ifdef __CRT_UUID_DECL
+__CRT_UUID_DECL(IRecordInfo, 0x0000002f, 0x0000, 0x0000, 0xc0,0x00, 0x00,0x00,0x00,0x00,0x00,0x46)
+#endif
 #else
-  typedef struct IRecordInfoVtbl {
+typedef struct IRecordInfoVtbl {
     BEGIN_INTERFACE
-      HRESULT (WINAPI *QueryInterface)(IRecordInfo *This,REFIID riid,void **ppvObject);
-      ULONG (WINAPI *AddRef)(IRecordInfo *This);
-      ULONG (WINAPI *Release)(IRecordInfo *This);
-      HRESULT (WINAPI *RecordInit)(IRecordInfo *This,PVOID pvNew);
-      HRESULT (WINAPI *RecordClear)(IRecordInfo *This,PVOID pvExisting);
-      HRESULT (WINAPI *RecordCopy)(IRecordInfo *This,PVOID pvExisting,PVOID pvNew);
-      HRESULT (WINAPI *GetGuid)(IRecordInfo *This,GUID *pguid);
-      HRESULT (WINAPI *GetName)(IRecordInfo *This,BSTR *pbstrName);
-      HRESULT (WINAPI *GetSize)(IRecordInfo *This,ULONG *pcbSize);
-      HRESULT (WINAPI *GetTypeInfo)(IRecordInfo *This,ITypeInfo **ppTypeInfo);
-      HRESULT (WINAPI *GetField)(IRecordInfo *This,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField);
-      HRESULT (WINAPI *GetFieldNoCopy)(IRecordInfo *This,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField,PVOID *ppvDataCArray);
-      HRESULT (WINAPI *PutField)(IRecordInfo *This,ULONG wFlags,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField);
-      HRESULT (WINAPI *PutFieldNoCopy)(IRecordInfo *This,ULONG wFlags,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField);
-      HRESULT (WINAPI *GetFieldNames)(IRecordInfo *This,ULONG *pcNames,BSTR *rgBstrNames);
-      WINBOOL (WINAPI *IsMatchingType)(IRecordInfo *This,IRecordInfo *pRecordInfo);
-      PVOID (WINAPI *RecordCreate)(IRecordInfo *This);
-      HRESULT (WINAPI *RecordCreateCopy)(IRecordInfo *This,PVOID pvSource,PVOID *ppvDest);
-      HRESULT (WINAPI *RecordDestroy)(IRecordInfo *This,PVOID pvRecord);
+
+    /*** IUnknown methods ***/
+    HRESULT (STDMETHODCALLTYPE *QueryInterface)(
+        IRecordInfo* This,
+        REFIID riid,
+        void **ppvObject);
+
+    ULONG (STDMETHODCALLTYPE *AddRef)(
+        IRecordInfo* This);
+
+    ULONG (STDMETHODCALLTYPE *Release)(
+        IRecordInfo* This);
+
+    /*** IRecordInfo methods ***/
+    HRESULT (STDMETHODCALLTYPE *RecordInit)(
+        IRecordInfo* This,
+        PVOID pvNew);
+
+    HRESULT (STDMETHODCALLTYPE *RecordClear)(
+        IRecordInfo* This,
+        PVOID pvExisting);
+
+    HRESULT (STDMETHODCALLTYPE *RecordCopy)(
+        IRecordInfo* This,
+        PVOID pvExisting,
+        PVOID pvNew);
+
+    HRESULT (STDMETHODCALLTYPE *GetGuid)(
+        IRecordInfo* This,
+        GUID *pguid);
+
+    HRESULT (STDMETHODCALLTYPE *GetName)(
+        IRecordInfo* This,
+        BSTR *pbstrName);
+
+    HRESULT (STDMETHODCALLTYPE *GetSize)(
+        IRecordInfo* This,
+        ULONG *pcbSize);
+
+    HRESULT (STDMETHODCALLTYPE *GetTypeInfo)(
+        IRecordInfo* This,
+        ITypeInfo **ppTypeInfo);
+
+    HRESULT (STDMETHODCALLTYPE *GetField)(
+        IRecordInfo* This,
+        PVOID pvData,
+        LPCOLESTR szFieldName,
+        VARIANT *pvarField);
+
+    HRESULT (STDMETHODCALLTYPE *GetFieldNoCopy)(
+        IRecordInfo* This,
+        PVOID pvData,
+        LPCOLESTR szFieldName,
+        VARIANT *pvarField,
+        PVOID *ppvDataCArray);
+
+    HRESULT (STDMETHODCALLTYPE *PutField)(
+        IRecordInfo* This,
+        ULONG wFlags,
+        PVOID pvData,
+        LPCOLESTR szFieldName,
+        VARIANT *pvarField);
+
+    HRESULT (STDMETHODCALLTYPE *PutFieldNoCopy)(
+        IRecordInfo* This,
+        ULONG wFlags,
+        PVOID pvData,
+        LPCOLESTR szFieldName,
+        VARIANT *pvarField);
+
+    HRESULT (STDMETHODCALLTYPE *GetFieldNames)(
+        IRecordInfo* This,
+        ULONG *pcNames,
+        BSTR *rgBstrNames);
+
+    WINBOOL (STDMETHODCALLTYPE *IsMatchingType)(
+        IRecordInfo* This,
+        IRecordInfo *pRecordInfo);
+
+    PVOID (STDMETHODCALLTYPE *RecordCreate)(
+        IRecordInfo* This);
+
+    HRESULT (STDMETHODCALLTYPE *RecordCreateCopy)(
+        IRecordInfo* This,
+        PVOID pvSource,
+        PVOID *ppvDest);
+
+    HRESULT (STDMETHODCALLTYPE *RecordDestroy)(
+        IRecordInfo* This,
+        PVOID pvRecord);
+
     END_INTERFACE
-  } IRecordInfoVtbl;
-  struct IRecordInfo {
-    CONST_VTBL struct IRecordInfoVtbl *lpVtbl;
-  };
+} IRecordInfoVtbl;
+interface IRecordInfo {
+    CONST_VTBL IRecordInfoVtbl* lpVtbl;
+};
+
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
+/*** IUnknown methods ***/
 #define IRecordInfo_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define IRecordInfo_AddRef(This) (This)->lpVtbl->AddRef(This)
 #define IRecordInfo_Release(This) (This)->lpVtbl->Release(This)
+/*** IRecordInfo methods ***/
 #define IRecordInfo_RecordInit(This,pvNew) (This)->lpVtbl->RecordInit(This,pvNew)
 #define IRecordInfo_RecordClear(This,pvExisting) (This)->lpVtbl->RecordClear(This,pvExisting)
 #define IRecordInfo_RecordCopy(This,pvExisting,pvNew) (This)->lpVtbl->RecordCopy(This,pvExisting,pvNew)
@@ -2904,41 +3198,215 @@ HRESULT __RPC_STUB ITypeLib_ReleaseTLibAttr_Stub(
 #define IRecordInfo_RecordCreate(This) (This)->lpVtbl->RecordCreate(This)
 #define IRecordInfo_RecordCreateCopy(This,pvSource,ppvDest) (This)->lpVtbl->RecordCreateCopy(This,pvSource,ppvDest)
 #define IRecordInfo_RecordDestroy(This,pvRecord) (This)->lpVtbl->RecordDestroy(This,pvRecord)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT IRecordInfo_QueryInterface(IRecordInfo* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG IRecordInfo_AddRef(IRecordInfo* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG IRecordInfo_Release(IRecordInfo* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** IRecordInfo methods ***/
+static FORCEINLINE HRESULT IRecordInfo_RecordInit(IRecordInfo* This,PVOID pvNew) {
+    return This->lpVtbl->RecordInit(This,pvNew);
+}
+static FORCEINLINE HRESULT IRecordInfo_RecordClear(IRecordInfo* This,PVOID pvExisting) {
+    return This->lpVtbl->RecordClear(This,pvExisting);
+}
+static FORCEINLINE HRESULT IRecordInfo_RecordCopy(IRecordInfo* This,PVOID pvExisting,PVOID pvNew) {
+    return This->lpVtbl->RecordCopy(This,pvExisting,pvNew);
+}
+static FORCEINLINE HRESULT IRecordInfo_GetGuid(IRecordInfo* This,GUID *pguid) {
+    return This->lpVtbl->GetGuid(This,pguid);
+}
+static FORCEINLINE HRESULT IRecordInfo_GetName(IRecordInfo* This,BSTR *pbstrName) {
+    return This->lpVtbl->GetName(This,pbstrName);
+}
+static FORCEINLINE HRESULT IRecordInfo_GetSize(IRecordInfo* This,ULONG *pcbSize) {
+    return This->lpVtbl->GetSize(This,pcbSize);
+}
+static FORCEINLINE HRESULT IRecordInfo_GetTypeInfo(IRecordInfo* This,ITypeInfo **ppTypeInfo) {
+    return This->lpVtbl->GetTypeInfo(This,ppTypeInfo);
+}
+static FORCEINLINE HRESULT IRecordInfo_GetField(IRecordInfo* This,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField) {
+    return This->lpVtbl->GetField(This,pvData,szFieldName,pvarField);
+}
+static FORCEINLINE HRESULT IRecordInfo_GetFieldNoCopy(IRecordInfo* This,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField,PVOID *ppvDataCArray) {
+    return This->lpVtbl->GetFieldNoCopy(This,pvData,szFieldName,pvarField,ppvDataCArray);
+}
+static FORCEINLINE HRESULT IRecordInfo_PutField(IRecordInfo* This,ULONG wFlags,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField) {
+    return This->lpVtbl->PutField(This,wFlags,pvData,szFieldName,pvarField);
+}
+static FORCEINLINE HRESULT IRecordInfo_PutFieldNoCopy(IRecordInfo* This,ULONG wFlags,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField) {
+    return This->lpVtbl->PutFieldNoCopy(This,wFlags,pvData,szFieldName,pvarField);
+}
+static FORCEINLINE HRESULT IRecordInfo_GetFieldNames(IRecordInfo* This,ULONG *pcNames,BSTR *rgBstrNames) {
+    return This->lpVtbl->GetFieldNames(This,pcNames,rgBstrNames);
+}
+static FORCEINLINE WINBOOL IRecordInfo_IsMatchingType(IRecordInfo* This,IRecordInfo *pRecordInfo) {
+    return This->lpVtbl->IsMatchingType(This,pRecordInfo);
+}
+static FORCEINLINE PVOID IRecordInfo_RecordCreate(IRecordInfo* This) {
+    return This->lpVtbl->RecordCreate(This);
+}
+static FORCEINLINE HRESULT IRecordInfo_RecordCreateCopy(IRecordInfo* This,PVOID pvSource,PVOID *ppvDest) {
+    return This->lpVtbl->RecordCreateCopy(This,pvSource,ppvDest);
+}
+static FORCEINLINE HRESULT IRecordInfo_RecordDestroy(IRecordInfo* This,PVOID pvRecord) {
+    return This->lpVtbl->RecordDestroy(This,pvRecord);
+}
 #endif
 #endif
-  HRESULT WINAPI IRecordInfo_RecordInit_Proxy(IRecordInfo *This,PVOID pvNew);
-  void __RPC_STUB IRecordInfo_RecordInit_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_RecordClear_Proxy(IRecordInfo *This,PVOID pvExisting);
-  void __RPC_STUB IRecordInfo_RecordClear_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_RecordCopy_Proxy(IRecordInfo *This,PVOID pvExisting,PVOID pvNew);
-  void __RPC_STUB IRecordInfo_RecordCopy_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_GetGuid_Proxy(IRecordInfo *This,GUID *pguid);
-  void __RPC_STUB IRecordInfo_GetGuid_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_GetName_Proxy(IRecordInfo *This,BSTR *pbstrName);
-  void __RPC_STUB IRecordInfo_GetName_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_GetSize_Proxy(IRecordInfo *This,ULONG *pcbSize);
-  void __RPC_STUB IRecordInfo_GetSize_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_GetTypeInfo_Proxy(IRecordInfo *This,ITypeInfo **ppTypeInfo);
-  void __RPC_STUB IRecordInfo_GetTypeInfo_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_GetField_Proxy(IRecordInfo *This,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField);
-  void __RPC_STUB IRecordInfo_GetField_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_GetFieldNoCopy_Proxy(IRecordInfo *This,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField,PVOID *ppvDataCArray);
-  void __RPC_STUB IRecordInfo_GetFieldNoCopy_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_PutField_Proxy(IRecordInfo *This,ULONG wFlags,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField);
-  void __RPC_STUB IRecordInfo_PutField_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_PutFieldNoCopy_Proxy(IRecordInfo *This,ULONG wFlags,PVOID pvData,LPCOLESTR szFieldName,VARIANT *pvarField);
-  void __RPC_STUB IRecordInfo_PutFieldNoCopy_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_GetFieldNames_Proxy(IRecordInfo *This,ULONG *pcNames,BSTR *rgBstrNames);
-  void __RPC_STUB IRecordInfo_GetFieldNames_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  WINBOOL WINAPI IRecordInfo_IsMatchingType_Proxy(IRecordInfo *This,IRecordInfo *pRecordInfo);
-  void __RPC_STUB IRecordInfo_IsMatchingType_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  PVOID WINAPI IRecordInfo_RecordCreate_Proxy(IRecordInfo *This);
-  void __RPC_STUB IRecordInfo_RecordCreate_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_RecordCreateCopy_Proxy(IRecordInfo *This,PVOID pvSource,PVOID *ppvDest);
-  void __RPC_STUB IRecordInfo_RecordCreateCopy_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
-  HRESULT WINAPI IRecordInfo_RecordDestroy_Proxy(IRecordInfo *This,PVOID pvRecord);
-  void __RPC_STUB IRecordInfo_RecordDestroy_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
+
 #endif
+
+HRESULT STDMETHODCALLTYPE IRecordInfo_RecordInit_Proxy(
+    IRecordInfo* This,
+    PVOID pvNew);
+void __RPC_STUB IRecordInfo_RecordInit_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_RecordClear_Proxy(
+    IRecordInfo* This,
+    PVOID pvExisting);
+void __RPC_STUB IRecordInfo_RecordClear_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_RecordCopy_Proxy(
+    IRecordInfo* This,
+    PVOID pvExisting,
+    PVOID pvNew);
+void __RPC_STUB IRecordInfo_RecordCopy_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_GetGuid_Proxy(
+    IRecordInfo* This,
+    GUID *pguid);
+void __RPC_STUB IRecordInfo_GetGuid_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_GetName_Proxy(
+    IRecordInfo* This,
+    BSTR *pbstrName);
+void __RPC_STUB IRecordInfo_GetName_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_GetSize_Proxy(
+    IRecordInfo* This,
+    ULONG *pcbSize);
+void __RPC_STUB IRecordInfo_GetSize_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_GetTypeInfo_Proxy(
+    IRecordInfo* This,
+    ITypeInfo **ppTypeInfo);
+void __RPC_STUB IRecordInfo_GetTypeInfo_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_GetField_Proxy(
+    IRecordInfo* This,
+    PVOID pvData,
+    LPCOLESTR szFieldName,
+    VARIANT *pvarField);
+void __RPC_STUB IRecordInfo_GetField_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_GetFieldNoCopy_Proxy(
+    IRecordInfo* This,
+    PVOID pvData,
+    LPCOLESTR szFieldName,
+    VARIANT *pvarField,
+    PVOID *ppvDataCArray);
+void __RPC_STUB IRecordInfo_GetFieldNoCopy_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_PutField_Proxy(
+    IRecordInfo* This,
+    ULONG wFlags,
+    PVOID pvData,
+    LPCOLESTR szFieldName,
+    VARIANT *pvarField);
+void __RPC_STUB IRecordInfo_PutField_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_PutFieldNoCopy_Proxy(
+    IRecordInfo* This,
+    ULONG wFlags,
+    PVOID pvData,
+    LPCOLESTR szFieldName,
+    VARIANT *pvarField);
+void __RPC_STUB IRecordInfo_PutFieldNoCopy_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_GetFieldNames_Proxy(
+    IRecordInfo* This,
+    ULONG *pcNames,
+    BSTR *rgBstrNames);
+void __RPC_STUB IRecordInfo_GetFieldNames_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+WINBOOL STDMETHODCALLTYPE IRecordInfo_IsMatchingType_Proxy(
+    IRecordInfo* This,
+    IRecordInfo *pRecordInfo);
+void __RPC_STUB IRecordInfo_IsMatchingType_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+PVOID STDMETHODCALLTYPE IRecordInfo_RecordCreate_Proxy(
+    IRecordInfo* This);
+void __RPC_STUB IRecordInfo_RecordCreate_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_RecordCreateCopy_Proxy(
+    IRecordInfo* This,
+    PVOID pvSource,
+    PVOID *ppvDest);
+void __RPC_STUB IRecordInfo_RecordCreateCopy_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+HRESULT STDMETHODCALLTYPE IRecordInfo_RecordDestroy_Proxy(
+    IRecordInfo* This,
+    PVOID pvRecord);
+void __RPC_STUB IRecordInfo_RecordDestroy_Stub(
+    IRpcStubBuffer* This,
+    IRpcChannelBuffer* pRpcChannelBuffer,
+    PRPC_MESSAGE pRpcMessage,
+    DWORD* pdwStubPhase);
+
+#endif  /* __IRecordInfo_INTERFACE_DEFINED__ */
+
 /*****************************************************************************
  * IErrorLog interface
  */
@@ -2988,12 +3456,29 @@ interface IErrorLog {
 };
 
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
 /*** IUnknown methods ***/
 #define IErrorLog_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define IErrorLog_AddRef(This) (This)->lpVtbl->AddRef(This)
 #define IErrorLog_Release(This) (This)->lpVtbl->Release(This)
 /*** IErrorLog methods ***/
 #define IErrorLog_AddError(This,pszPropName,pExcepInfo) (This)->lpVtbl->AddError(This,pszPropName,pExcepInfo)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT IErrorLog_QueryInterface(IErrorLog* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG IErrorLog_AddRef(IErrorLog* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG IErrorLog_Release(IErrorLog* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** IErrorLog methods ***/
+static FORCEINLINE HRESULT IErrorLog_AddError(IErrorLog* This,LPCOLESTR pszPropName,EXCEPINFO *pExcepInfo) {
+    return This->lpVtbl->AddError(This,pszPropName,pExcepInfo);
+}
+#endif
 #endif
 
 #endif

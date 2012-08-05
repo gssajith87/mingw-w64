@@ -2439,6 +2439,7 @@ interface IPropertyBag2 {
 };
 
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
 /*** IUnknown methods ***/
 #define IPropertyBag2_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define IPropertyBag2_AddRef(This) (This)->lpVtbl->AddRef(This)
@@ -2449,6 +2450,34 @@ interface IPropertyBag2 {
 #define IPropertyBag2_CountProperties(This,pcProperties) (This)->lpVtbl->CountProperties(This,pcProperties)
 #define IPropertyBag2_GetPropertyInfo(This,iProperty,cProperties,pPropBag,pcProperties) (This)->lpVtbl->GetPropertyInfo(This,iProperty,cProperties,pPropBag,pcProperties)
 #define IPropertyBag2_LoadObject(This,pstrName,dwHint,pUnkObject,pErrLog) (This)->lpVtbl->LoadObject(This,pstrName,dwHint,pUnkObject,pErrLog)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT IPropertyBag2_QueryInterface(IPropertyBag2* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG IPropertyBag2_AddRef(IPropertyBag2* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG IPropertyBag2_Release(IPropertyBag2* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** IPropertyBag2 methods ***/
+static FORCEINLINE HRESULT IPropertyBag2_Read(IPropertyBag2* This,ULONG cProperties,PROPBAG2 *pPropBag,IErrorLog *pErrLog,VARIANT *pvarValue,HRESULT *phrError) {
+    return This->lpVtbl->Read(This,cProperties,pPropBag,pErrLog,pvarValue,phrError);
+}
+static FORCEINLINE HRESULT IPropertyBag2_Write(IPropertyBag2* This,ULONG cProperties,PROPBAG2 *pPropBag,VARIANT *pvarValue) {
+    return This->lpVtbl->Write(This,cProperties,pPropBag,pvarValue);
+}
+static FORCEINLINE HRESULT IPropertyBag2_CountProperties(IPropertyBag2* This,ULONG *pcProperties) {
+    return This->lpVtbl->CountProperties(This,pcProperties);
+}
+static FORCEINLINE HRESULT IPropertyBag2_GetPropertyInfo(IPropertyBag2* This,ULONG iProperty,ULONG cProperties,PROPBAG2 *pPropBag,ULONG *pcProperties) {
+    return This->lpVtbl->GetPropertyInfo(This,iProperty,cProperties,pPropBag,pcProperties);
+}
+static FORCEINLINE HRESULT IPropertyBag2_LoadObject(IPropertyBag2* This,LPCOLESTR pstrName,DWORD dwHint,IUnknown *pUnkObject,IErrorLog *pErrLog) {
+    return This->lpVtbl->LoadObject(This,pstrName,dwHint,pUnkObject,pErrLog);
+}
+#endif
 #endif
 
 #endif
@@ -2679,30 +2708,30 @@ void __RPC_STUB IPropertyBag2_LoadObject_Stub(
   void __RPC_STUB IQuickActivate_GetContentExtent_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
 #endif
 
-  unsigned long __RPC_API BSTR_UserSize(unsigned long *,unsigned long,BSTR *);
-  unsigned char *__RPC_API BSTR_UserMarshal(unsigned long *,unsigned char *,BSTR *);
-  unsigned char *__RPC_API BSTR_UserUnmarshal(unsigned long *,unsigned char *,BSTR *);
-  void __RPC_API BSTR_UserFree(unsigned long *,BSTR *);
-  unsigned long __RPC_API HACCEL_UserSize(unsigned long *,unsigned long,HACCEL *);
-  unsigned char *__RPC_API HACCEL_UserMarshal(unsigned long *,unsigned char *,HACCEL *);
-  unsigned char *__RPC_API HACCEL_UserUnmarshal(unsigned long *,unsigned char *,HACCEL *);
-  void __RPC_API HACCEL_UserFree(unsigned long *,HACCEL *);
-  unsigned long __RPC_API HDC_UserSize(unsigned long *,unsigned long,HDC *);
-  unsigned char *__RPC_API HDC_UserMarshal(unsigned long *,unsigned char *,HDC *);
-  unsigned char *__RPC_API HDC_UserUnmarshal(unsigned long *,unsigned char *,HDC *);
-  void __RPC_API HDC_UserFree(unsigned long *,HDC *);
-  unsigned long __RPC_API HFONT_UserSize(unsigned long *,unsigned long,HFONT *);
-  unsigned char *__RPC_API HFONT_UserMarshal(unsigned long *,unsigned char *,HFONT *);
-  unsigned char *__RPC_API HFONT_UserUnmarshal(unsigned long *,unsigned char *,HFONT *);
-  void __RPC_API HFONT_UserFree(unsigned long *,HFONT *);
-  unsigned long __RPC_API HPALETTE_UserSize(unsigned long *,unsigned long,HPALETTE *);
-  unsigned char *__RPC_API HPALETTE_UserMarshal(unsigned long *,unsigned char *,HPALETTE *);
-  unsigned char *__RPC_API HPALETTE_UserUnmarshal(unsigned long *,unsigned char *,HPALETTE *);
-  void __RPC_API HPALETTE_UserFree(unsigned long *,HPALETTE *);
-  unsigned long __RPC_API HWND_UserSize(unsigned long *,unsigned long,HWND *);
-  unsigned char *__RPC_API HWND_UserMarshal(unsigned long *,unsigned char *,HWND *);
-  unsigned char *__RPC_API HWND_UserUnmarshal(unsigned long *,unsigned char *,HWND *);
-  void __RPC_API HWND_UserFree(unsigned long *,HWND *);
+  ULONG __RPC_API BSTR_UserSize(ULONG *,ULONG,BSTR *);
+  unsigned char *__RPC_API BSTR_UserMarshal(ULONG *,unsigned char *,BSTR *);
+  unsigned char *__RPC_API BSTR_UserUnmarshal(ULONG *,unsigned char *,BSTR *);
+  void __RPC_API BSTR_UserFree(ULONG *,BSTR *);
+  ULONG __RPC_API HACCEL_UserSize(ULONG *,ULONG,HACCEL *);
+  unsigned char *__RPC_API HACCEL_UserMarshal(ULONG *,unsigned char *,HACCEL *);
+  unsigned char *__RPC_API HACCEL_UserUnmarshal(ULONG *,unsigned char *,HACCEL *);
+  void __RPC_API HACCEL_UserFree(ULONG *,HACCEL *);
+  ULONG __RPC_API HDC_UserSize(ULONG *,ULONG,HDC *);
+  unsigned char *__RPC_API HDC_UserMarshal(ULONG *,unsigned char *,HDC *);
+  unsigned char *__RPC_API HDC_UserUnmarshal(ULONG *,unsigned char *,HDC *);
+  void __RPC_API HDC_UserFree(ULONG *,HDC *);
+  ULONG __RPC_API HFONT_UserSize(ULONG *,ULONG,HFONT *);
+  unsigned char *__RPC_API HFONT_UserMarshal(ULONG *,unsigned char *,HFONT *);
+  unsigned char *__RPC_API HFONT_UserUnmarshal(ULONG *,unsigned char *,HFONT *);
+  void __RPC_API HFONT_UserFree(ULONG *,HFONT *);
+  ULONG __RPC_API HPALETTE_UserSize(ULONG *,ULONG,HPALETTE *);
+  unsigned char *__RPC_API HPALETTE_UserMarshal(ULONG *,unsigned char *,HPALETTE *);
+  unsigned char *__RPC_API HPALETTE_UserUnmarshal(ULONG *,unsigned char *,HPALETTE *);
+  void __RPC_API HPALETTE_UserFree(ULONG *,HPALETTE *);
+  ULONG __RPC_API HWND_UserSize(ULONG *,ULONG,HWND *);
+  unsigned char *__RPC_API HWND_UserMarshal(ULONG *,unsigned char *,HWND *);
+  unsigned char *__RPC_API HWND_UserUnmarshal(ULONG *,unsigned char *,HWND *);
+  void __RPC_API HWND_UserFree(ULONG *,HWND *);
 
   HRESULT WINAPI IEnumConnections_Next_Proxy(IEnumConnections *This,ULONG cConnections,LPCONNECTDATA rgcd,ULONG *pcFetched);
   HRESULT WINAPI IEnumConnections_Next_Stub(IEnumConnections *This,ULONG cConnections,LPCONNECTDATA rgcd,ULONG *pcFetched);

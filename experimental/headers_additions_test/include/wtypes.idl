@@ -262,7 +262,7 @@ cpp_quote("#define _SECURITY_ATTRIBUTES_")
     typedef struct _SECURITY_ATTRIBUTES {
         DWORD nLength;
         LPVOID lpSecurityDescriptor;
-        WINBOOL bInheritHandle;
+        BOOL bInheritHandle;
     } SECURITY_ATTRIBUTES, *PSECURITY_ATTRIBUTES, *LPSECURITY_ATTRIBUTES;
 cpp_quote("#endif")
 
@@ -666,8 +666,8 @@ cpp_quote("#else")
 
 cpp_quote("  typedef union tagCY {")
 cpp_quote("    __C89_NAMELESS struct {")
-cpp_quote("      unsigned long Lo;")
-cpp_quote("      long Hi;")
+cpp_quote("      ULONG Lo;")
+cpp_quote("      LONG Hi;")
 cpp_quote("    } DUMMYSTRUCTNAME;")
 cpp_quote("    LONGLONG int64;")
 cpp_quote("  } CY;")

@@ -27,6 +27,8 @@
 extern "C" {
 #endif
 
+#pragma push_macro("abort")
+#undef abort
 #ifndef __IXMLDOMImplementation_FWD_DEFINED__
 #define __IXMLDOMImplementation_FWD_DEFINED__
 typedef struct IXMLDOMImplementation IXMLDOMImplementation;
@@ -3374,6 +3376,7 @@ typedef struct XMLDocument XMLDocument;
   class XMLDocument;
 #endif
 #endif
+#pragma pop_macro("abort")
 /* Begin additional prototypes for all interfaces */
 
 

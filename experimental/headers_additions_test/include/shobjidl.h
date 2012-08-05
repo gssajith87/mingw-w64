@@ -5333,6 +5333,7 @@ interface IShellItem {
 };
 
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
 /*** IUnknown methods ***/
 #define IShellItem_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define IShellItem_AddRef(This) (This)->lpVtbl->AddRef(This)
@@ -5343,6 +5344,34 @@ interface IShellItem {
 #define IShellItem_GetDisplayName(This,sigdnName,ppszName) (This)->lpVtbl->GetDisplayName(This,sigdnName,ppszName)
 #define IShellItem_GetAttributes(This,sfgaoMask,psfgaoAttribs) (This)->lpVtbl->GetAttributes(This,sfgaoMask,psfgaoAttribs)
 #define IShellItem_Compare(This,psi,hint,piOrder) (This)->lpVtbl->Compare(This,psi,hint,piOrder)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT IShellItem_QueryInterface(IShellItem* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG IShellItem_AddRef(IShellItem* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG IShellItem_Release(IShellItem* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** IShellItem methods ***/
+static FORCEINLINE HRESULT IShellItem_BindToHandler(IShellItem* This,IBindCtx *pbc,REFGUID bhid,REFIID riid,void **ppv) {
+    return This->lpVtbl->BindToHandler(This,pbc,bhid,riid,ppv);
+}
+static FORCEINLINE HRESULT IShellItem_GetParent(IShellItem* This,IShellItem **ppsi) {
+    return This->lpVtbl->GetParent(This,ppsi);
+}
+static FORCEINLINE HRESULT IShellItem_GetDisplayName(IShellItem* This,SIGDN sigdnName,LPWSTR *ppszName) {
+    return This->lpVtbl->GetDisplayName(This,sigdnName,ppszName);
+}
+static FORCEINLINE HRESULT IShellItem_GetAttributes(IShellItem* This,SFGAOF sfgaoMask,SFGAOF *psfgaoAttribs) {
+    return This->lpVtbl->GetAttributes(This,sfgaoMask,psfgaoAttribs);
+}
+static FORCEINLINE HRESULT IShellItem_Compare(IShellItem* This,IShellItem *psi,SICHINTF hint,int *piOrder) {
+    return This->lpVtbl->Compare(This,psi,hint,piOrder);
+}
+#endif
 #endif
 
 #endif
@@ -6783,6 +6812,7 @@ interface IShellLibrary {
 };
 
 #ifdef COBJMACROS
+#ifndef WIDL_C_INLINE_WRAPPERS
 /*** IUnknown methods ***/
 #define IShellLibrary_QueryInterface(This,riid,ppvObject) (This)->lpVtbl->QueryInterface(This,riid,ppvObject)
 #define IShellLibrary_AddRef(This) (This)->lpVtbl->AddRef(This)
@@ -6805,6 +6835,70 @@ interface IShellLibrary {
 #define IShellLibrary_Commit(This) (This)->lpVtbl->Commit(This)
 #define IShellLibrary_Save(This,psiFolderToSaveIn,pszLibraryName,lsf,ppsiSavedTo) (This)->lpVtbl->Save(This,psiFolderToSaveIn,pszLibraryName,lsf,ppsiSavedTo)
 #define IShellLibrary_SaveInKnownFolder(This,kfidToSaveIn,pszLibraryName,lsf,ppsiSavedTo) (This)->lpVtbl->SaveInKnownFolder(This,kfidToSaveIn,pszLibraryName,lsf,ppsiSavedTo)
+#else
+/*** IUnknown methods ***/
+static FORCEINLINE HRESULT IShellLibrary_QueryInterface(IShellLibrary* This,REFIID riid,void **ppvObject) {
+    return This->lpVtbl->QueryInterface(This,riid,ppvObject);
+}
+static FORCEINLINE ULONG IShellLibrary_AddRef(IShellLibrary* This) {
+    return This->lpVtbl->AddRef(This);
+}
+static FORCEINLINE ULONG IShellLibrary_Release(IShellLibrary* This) {
+    return This->lpVtbl->Release(This);
+}
+/*** IShellLibrary methods ***/
+static FORCEINLINE HRESULT IShellLibrary_LoadLibraryFromItem(IShellLibrary* This,IShellItem *psiLibrary,DWORD grfMode) {
+    return This->lpVtbl->LoadLibraryFromItem(This,psiLibrary,grfMode);
+}
+static FORCEINLINE HRESULT IShellLibrary_LoadLibraryFromKnownFolder(IShellLibrary* This,REFKNOWNFOLDERID kfidLibrary,DWORD grfMode) {
+    return This->lpVtbl->LoadLibraryFromKnownFolder(This,kfidLibrary,grfMode);
+}
+static FORCEINLINE HRESULT IShellLibrary_AddFolder(IShellLibrary* This,IShellItem *psiLocation) {
+    return This->lpVtbl->AddFolder(This,psiLocation);
+}
+static FORCEINLINE HRESULT IShellLibrary_RemoveFolder(IShellLibrary* This,IShellItem *psiLocation) {
+    return This->lpVtbl->RemoveFolder(This,psiLocation);
+}
+static FORCEINLINE HRESULT IShellLibrary_GetFolders(IShellLibrary* This,LIBRARYFOLDERFILTER lff,REFIID riid,void **ppv) {
+    return This->lpVtbl->GetFolders(This,lff,riid,ppv);
+}
+static FORCEINLINE HRESULT IShellLibrary_ResolveFolder(IShellLibrary* This,IShellItem *psiFolderToResolve,DWORD dwTimeout,REFIID riid,void **ppv) {
+    return This->lpVtbl->ResolveFolder(This,psiFolderToResolve,dwTimeout,riid,ppv);
+}
+static FORCEINLINE HRESULT IShellLibrary_GetDefaultSaveFolder(IShellLibrary* This,DEFAULTSAVEFOLDERTYPE dsft,REFIID riid,void **ppv) {
+    return This->lpVtbl->GetDefaultSaveFolder(This,dsft,riid,ppv);
+}
+static FORCEINLINE HRESULT IShellLibrary_SetDefaultSaveFolder(IShellLibrary* This,DEFAULTSAVEFOLDERTYPE dsft,IShellItem *psi) {
+    return This->lpVtbl->SetDefaultSaveFolder(This,dsft,psi);
+}
+static FORCEINLINE HRESULT IShellLibrary_GetOptions(IShellLibrary* This,LIBRARYOPTIONFLAGS *plofOptions) {
+    return This->lpVtbl->GetOptions(This,plofOptions);
+}
+static FORCEINLINE HRESULT IShellLibrary_SetOptions(IShellLibrary* This,LIBRARYOPTIONFLAGS lofMask,LIBRARYOPTIONFLAGS lofOptions) {
+    return This->lpVtbl->SetOptions(This,lofMask,lofOptions);
+}
+static FORCEINLINE HRESULT IShellLibrary_GetFolderType(IShellLibrary* This,FOLDERTYPEID *pftid) {
+    return This->lpVtbl->GetFolderType(This,pftid);
+}
+static FORCEINLINE HRESULT IShellLibrary_SetFolderType(IShellLibrary* This,REFFOLDERTYPEID ftid) {
+    return This->lpVtbl->SetFolderType(This,ftid);
+}
+static FORCEINLINE HRESULT IShellLibrary_GetIcon(IShellLibrary* This,LPWSTR *ppszIcon) {
+    return This->lpVtbl->GetIcon(This,ppszIcon);
+}
+static FORCEINLINE HRESULT IShellLibrary_SetIcon(IShellLibrary* This,LPCWSTR pszIcon) {
+    return This->lpVtbl->SetIcon(This,pszIcon);
+}
+static FORCEINLINE HRESULT IShellLibrary_Commit(IShellLibrary* This) {
+    return This->lpVtbl->Commit(This);
+}
+static FORCEINLINE HRESULT IShellLibrary_Save(IShellLibrary* This,IShellItem *psiFolderToSaveIn,LPCWSTR pszLibraryName,LIBRARYSAVEFLAGS lsf,IShellItem **ppsiSavedTo) {
+    return This->lpVtbl->Save(This,psiFolderToSaveIn,pszLibraryName,lsf,ppsiSavedTo);
+}
+static FORCEINLINE HRESULT IShellLibrary_SaveInKnownFolder(IShellLibrary* This,REFKNOWNFOLDERID kfidToSaveIn,LPCWSTR pszLibraryName,LIBRARYSAVEFLAGS lsf,IShellItem **ppsiSavedTo) {
+    return This->lpVtbl->SaveInKnownFolder(This,kfidToSaveIn,pszLibraryName,lsf,ppsiSavedTo);
+}
+#endif
 #endif
 
 #endif
@@ -7140,46 +7234,46 @@ DEFINE_GUID(CLSID_FileSaveDialog, 0xc0b4e2f3, 0xba21, 0x4773, 0x8d,0xba, 0x33,0x
   extern RPC_IF_HANDLE __MIDL_itf_shobjidl_0263_v0_0_c_ifspec;
   extern RPC_IF_HANDLE __MIDL_itf_shobjidl_0263_v0_0_s_ifspec;
 
-  unsigned long __RPC_API BSTR_UserSize(unsigned long *,unsigned long,BSTR *);
-  unsigned char *__RPC_API BSTR_UserMarshal(unsigned long *,unsigned char *,BSTR *);
-  unsigned char *__RPC_API BSTR_UserUnmarshal(unsigned long *,unsigned char *,BSTR *);
-  void __RPC_API BSTR_UserFree(unsigned long *,BSTR *);
-  unsigned long __RPC_API HBITMAP_UserSize(unsigned long *,unsigned long,HBITMAP *);
-  unsigned char *__RPC_API HBITMAP_UserMarshal(unsigned long *,unsigned char *,HBITMAP *);
-  unsigned char *__RPC_API HBITMAP_UserUnmarshal(unsigned long *,unsigned char *,HBITMAP *);
-  void __RPC_API HBITMAP_UserFree(unsigned long *,HBITMAP *);
-  unsigned long __RPC_API HGLOBAL_UserSize(unsigned long *,unsigned long,HGLOBAL *);
-  unsigned char *__RPC_API HGLOBAL_UserMarshal(unsigned long *,unsigned char *,HGLOBAL *);
-  unsigned char *__RPC_API HGLOBAL_UserUnmarshal(unsigned long *,unsigned char *,HGLOBAL *);
-  void __RPC_API HGLOBAL_UserFree(unsigned long *,HGLOBAL *);
-  unsigned long __RPC_API HICON_UserSize(unsigned long *,unsigned long,HICON *);
-  unsigned char *__RPC_API HICON_UserMarshal(unsigned long *,unsigned char *,HICON *);
-  unsigned char *__RPC_API HICON_UserUnmarshal(unsigned long *,unsigned char *,HICON *);
-  void __RPC_API HICON_UserFree(unsigned long *,HICON *);
-  unsigned long __RPC_API HMENU_UserSize(unsigned long *,unsigned long,HMENU *);
-  unsigned char *__RPC_API HMENU_UserMarshal(unsigned long *,unsigned char *,HMENU *);
-  unsigned char *__RPC_API HMENU_UserUnmarshal(unsigned long *,unsigned char *,HMENU *);
-  void __RPC_API HMENU_UserFree(unsigned long *,HMENU *);
-  unsigned long __RPC_API HWND_UserSize(unsigned long *,unsigned long,HWND *);
-  unsigned char *__RPC_API HWND_UserMarshal(unsigned long *,unsigned char *,HWND *);
-  unsigned char *__RPC_API HWND_UserUnmarshal(unsigned long *,unsigned char *,HWND *);
-  void __RPC_API HWND_UserFree(unsigned long *,HWND *);
-  unsigned long __RPC_API LPCITEMIDLIST_UserSize(unsigned long *,unsigned long,LPCITEMIDLIST *);
-  unsigned char *__RPC_API LPCITEMIDLIST_UserMarshal(unsigned long *,unsigned char *,LPCITEMIDLIST *);
-  unsigned char *__RPC_API LPCITEMIDLIST_UserUnmarshal(unsigned long *,unsigned char *,LPCITEMIDLIST *);
-  void __RPC_API LPCITEMIDLIST_UserFree(unsigned long *,LPCITEMIDLIST *);
-  unsigned long __RPC_API LPITEMIDLIST_UserSize(unsigned long *,unsigned long,LPITEMIDLIST *);
-  unsigned char *__RPC_API LPITEMIDLIST_UserMarshal(unsigned long *,unsigned char *,LPITEMIDLIST *);
-  unsigned char *__RPC_API LPITEMIDLIST_UserUnmarshal(unsigned long *,unsigned char *,LPITEMIDLIST *);
-  void __RPC_API LPITEMIDLIST_UserFree(unsigned long *,LPITEMIDLIST *);
-  unsigned long __RPC_API LPSAFEARRAY_UserSize(unsigned long *,unsigned long,LPSAFEARRAY *);
-  unsigned char *__RPC_API LPSAFEARRAY_UserMarshal(unsigned long *,unsigned char *,LPSAFEARRAY *);
-  unsigned char *__RPC_API LPSAFEARRAY_UserUnmarshal(unsigned long *,unsigned char *,LPSAFEARRAY *);
-  void __RPC_API LPSAFEARRAY_UserFree(unsigned long *,LPSAFEARRAY *);
-  unsigned long __RPC_API VARIANT_UserSize(unsigned long *,unsigned long,VARIANT *);
-  unsigned char *__RPC_API VARIANT_UserMarshal(unsigned long *,unsigned char *,VARIANT *);
-  unsigned char *__RPC_API VARIANT_UserUnmarshal(unsigned long *,unsigned char *,VARIANT *);
-  void __RPC_API VARIANT_UserFree(unsigned long *,VARIANT *);
+  ULONG __RPC_API BSTR_UserSize(ULONG *,ULONG,BSTR *);
+  unsigned char *__RPC_API BSTR_UserMarshal(ULONG *,unsigned char *,BSTR *);
+  unsigned char *__RPC_API BSTR_UserUnmarshal(ULONG *,unsigned char *,BSTR *);
+  void __RPC_API BSTR_UserFree(ULONG *,BSTR *);
+  ULONG __RPC_API HBITMAP_UserSize(ULONG *,ULONG,HBITMAP *);
+  unsigned char *__RPC_API HBITMAP_UserMarshal(ULONG *,unsigned char *,HBITMAP *);
+  unsigned char *__RPC_API HBITMAP_UserUnmarshal(ULONG *,unsigned char *,HBITMAP *);
+  void __RPC_API HBITMAP_UserFree(ULONG *,HBITMAP *);
+  ULONG __RPC_API HGLOBAL_UserSize(ULONG *,ULONG,HGLOBAL *);
+  unsigned char *__RPC_API HGLOBAL_UserMarshal(ULONG *,unsigned char *,HGLOBAL *);
+  unsigned char *__RPC_API HGLOBAL_UserUnmarshal(ULONG *,unsigned char *,HGLOBAL *);
+  void __RPC_API HGLOBAL_UserFree(ULONG *,HGLOBAL *);
+  ULONG __RPC_API HICON_UserSize(ULONG *,ULONG,HICON *);
+  unsigned char *__RPC_API HICON_UserMarshal(ULONG *,unsigned char *,HICON *);
+  unsigned char *__RPC_API HICON_UserUnmarshal(ULONG *,unsigned char *,HICON *);
+  void __RPC_API HICON_UserFree(ULONG *,HICON *);
+  ULONG __RPC_API HMENU_UserSize(ULONG *,ULONG,HMENU *);
+  unsigned char *__RPC_API HMENU_UserMarshal(ULONG *,unsigned char *,HMENU *);
+  unsigned char *__RPC_API HMENU_UserUnmarshal(ULONG *,unsigned char *,HMENU *);
+  void __RPC_API HMENU_UserFree(ULONG *,HMENU *);
+  ULONG __RPC_API HWND_UserSize(ULONG *,ULONG,HWND *);
+  unsigned char *__RPC_API HWND_UserMarshal(ULONG *,unsigned char *,HWND *);
+  unsigned char *__RPC_API HWND_UserUnmarshal(ULONG *,unsigned char *,HWND *);
+  void __RPC_API HWND_UserFree(ULONG *,HWND *);
+  ULONG __RPC_API LPCITEMIDLIST_UserSize(ULONG *,ULONG,LPCITEMIDLIST *);
+  unsigned char *__RPC_API LPCITEMIDLIST_UserMarshal(ULONG *,unsigned char *,LPCITEMIDLIST *);
+  unsigned char *__RPC_API LPCITEMIDLIST_UserUnmarshal(ULONG *,unsigned char *,LPCITEMIDLIST *);
+  void __RPC_API LPCITEMIDLIST_UserFree(ULONG *,LPCITEMIDLIST *);
+  ULONG __RPC_API LPITEMIDLIST_UserSize(ULONG *,ULONG,LPITEMIDLIST *);
+  unsigned char *__RPC_API LPITEMIDLIST_UserMarshal(ULONG *,unsigned char *,LPITEMIDLIST *);
+  unsigned char *__RPC_API LPITEMIDLIST_UserUnmarshal(ULONG *,unsigned char *,LPITEMIDLIST *);
+  void __RPC_API LPITEMIDLIST_UserFree(ULONG *,LPITEMIDLIST *);
+  ULONG __RPC_API LPSAFEARRAY_UserSize(ULONG *,ULONG,LPSAFEARRAY *);
+  unsigned char *__RPC_API LPSAFEARRAY_UserMarshal(ULONG *,unsigned char *,LPSAFEARRAY *);
+  unsigned char *__RPC_API LPSAFEARRAY_UserUnmarshal(ULONG *,unsigned char *,LPSAFEARRAY *);
+  void __RPC_API LPSAFEARRAY_UserFree(ULONG *,LPSAFEARRAY *);
+  ULONG __RPC_API VARIANT_UserSize(ULONG *,ULONG,VARIANT *);
+  unsigned char *__RPC_API VARIANT_UserMarshal(ULONG *,unsigned char *,VARIANT *);
+  unsigned char *__RPC_API VARIANT_UserUnmarshal(ULONG *,unsigned char *,VARIANT *);
+  void __RPC_API VARIANT_UserFree(ULONG *,VARIANT *);
 /* Begin additional prototypes for all interfaces */
 
 

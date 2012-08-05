@@ -78,35 +78,35 @@ extern "C"{
 #endif
 
 #ifndef _NO_DISPATCHEX_CONSTS
-#define fdexNameCaseSensitive 0x00000001L
-#define fdexNameEnsure 0x00000002L
-#define fdexNameImplicit 0x00000004L
-#define fdexNameCaseInsensitive 0x00000008L
-#define fdexNameInternal 0x00000010L
-#define fdexNameNoDynamicProperties 0x00000020L
+#define fdexNameCaseSensitive __MSABI_LONG(0x00000001)
+#define fdexNameEnsure __MSABI_LONG(0x00000002)
+#define fdexNameImplicit __MSABI_LONG(0x00000004)
+#define fdexNameCaseInsensitive __MSABI_LONG(0x00000008)
+#define fdexNameInternal __MSABI_LONG(0x00000010)
+#define fdexNameNoDynamicProperties __MSABI_LONG(0x00000020)
 
-#define fdexPropCanGet 0x00000001L
-#define fdexPropCannotGet 0x00000002L
-#define fdexPropCanPut 0x00000004L
-#define fdexPropCannotPut 0x00000008L
-#define fdexPropCanPutRef 0x00000010L
-#define fdexPropCannotPutRef 0x00000020L
-#define fdexPropNoSideEffects 0x00000040L
-#define fdexPropDynamicType 0x00000080L
-#define fdexPropCanCall 0x00000100L
-#define fdexPropCannotCall 0x00000200L
-#define fdexPropCanConstruct 0x00000400L
-#define fdexPropCannotConstruct 0x00000800L
-#define fdexPropCanSourceEvents 0x00001000L
-#define fdexPropCannotSourceEvents 0x00002000L
+#define fdexPropCanGet __MSABI_LONG(0x00000001)
+#define fdexPropCannotGet __MSABI_LONG(0x00000002)
+#define fdexPropCanPut __MSABI_LONG(0x00000004)
+#define fdexPropCannotPut __MSABI_LONG(0x00000008)
+#define fdexPropCanPutRef __MSABI_LONG(0x00000010)
+#define fdexPropCannotPutRef __MSABI_LONG(0x00000020)
+#define fdexPropNoSideEffects __MSABI_LONG(0x00000040)
+#define fdexPropDynamicType __MSABI_LONG(0x00000080)
+#define fdexPropCanCall __MSABI_LONG(0x00000100)
+#define fdexPropCannotCall __MSABI_LONG(0x00000200)
+#define fdexPropCanConstruct __MSABI_LONG(0x00000400)
+#define fdexPropCannotConstruct __MSABI_LONG(0x00000800)
+#define fdexPropCanSourceEvents __MSABI_LONG(0x00001000)
+#define fdexPropCannotSourceEvents __MSABI_LONG(0x00002000)
 
 #define grfdexPropCanAll (fdexPropCanGet | fdexPropCanPut | fdexPropCanPutRef | fdexPropCanCall | fdexPropCanConstruct | fdexPropCanSourceEvents)
 #define grfdexPropCannotAll (fdexPropCannotGet | fdexPropCannotPut | fdexPropCannotPutRef | fdexPropCannotCall | fdexPropCannotConstruct | fdexPropCannotSourceEvents)
 #define grfdexPropExtraAll (fdexPropNoSideEffects | fdexPropDynamicType)
 #define grfdexPropAll (grfdexPropCanAll | grfdexPropCannotAll | grfdexPropExtraAll)
 
-#define fdexEnumDefault 0x00000001L
-#define fdexEnumAll 0x00000002L
+#define fdexEnumDefault __MSABI_LONG(0x00000001)
+#define fdexEnumAll __MSABI_LONG(0x00000002)
 
 #define DISPATCH_CONSTRUCT 0x4000
 
@@ -344,14 +344,14 @@ extern "C"{
   extern RPC_IF_HANDLE __MIDL_itf_dispex_0268_v0_0_c_ifspec;
   extern RPC_IF_HANDLE __MIDL_itf_dispex_0268_v0_0_s_ifspec;
 
-  unsigned long __RPC_API BSTR_UserSize(unsigned long *,unsigned long,BSTR *);
-  unsigned char *__RPC_API BSTR_UserMarshal(unsigned long *,unsigned char *,BSTR *);
-  unsigned char *__RPC_API BSTR_UserUnmarshal(unsigned long *,unsigned char *,BSTR *);
-  void __RPC_API BSTR_UserFree(unsigned long *,BSTR *);
-  unsigned long __RPC_API VARIANT_UserSize(unsigned long *,unsigned long,VARIANT *);
-  unsigned char *__RPC_API VARIANT_UserMarshal(unsigned long *,unsigned char *,VARIANT *);
-  unsigned char *__RPC_API VARIANT_UserUnmarshal(unsigned long *,unsigned char *,VARIANT *);
-  void __RPC_API VARIANT_UserFree(unsigned long *,VARIANT *);
+  ULONG __RPC_API BSTR_UserSize(ULONG *,ULONG,BSTR *);
+  unsigned char *__RPC_API BSTR_UserMarshal(ULONG *,unsigned char *,BSTR *);
+  unsigned char *__RPC_API BSTR_UserUnmarshal(ULONG *,unsigned char *,BSTR *);
+  void __RPC_API BSTR_UserFree(ULONG *,BSTR *);
+  ULONG __RPC_API VARIANT_UserSize(ULONG *,ULONG,VARIANT *);
+  unsigned char *__RPC_API VARIANT_UserMarshal(ULONG *,unsigned char *,VARIANT *);
+  unsigned char *__RPC_API VARIANT_UserUnmarshal(ULONG *,unsigned char *,VARIANT *);
+  void __RPC_API VARIANT_UserFree(ULONG *,VARIANT *);
 
   HRESULT WINAPI IDispatchEx_InvokeEx_Proxy(IDispatchEx *This,DISPID id,LCID lcid,WORD wFlags,DISPPARAMS *pdp,VARIANT *pvarRes,EXCEPINFO *pei,IServiceProvider *pspCaller);
   HRESULT WINAPI IDispatchEx_InvokeEx_Stub(IDispatchEx *This,DISPID id,LCID lcid,DWORD dwFlags,DISPPARAMS *pdp,VARIANT *pvarRes,EXCEPINFO *pei,IServiceProvider *pspCaller,UINT cvarRefArg,UINT *rgiRefArg,VARIANT *rgvarRefArg);

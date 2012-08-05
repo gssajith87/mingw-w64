@@ -16,23 +16,22 @@ AC_CANONICAL_HOST
 # AC_PROG_SED
 AC_PROG_AWK
 
-AC_MSG_CHECKING([if user wants to use widl to rebuild headers])
+# Search for a usable widl.  If PATH is given, search there.  Otherwise, search
+# in $PATH.  In all cases, search for a canonicalized name first ($host-widl),
+# followed by a non-canonicalized name (widl).  If these fail, error out.
+# NB: $host from this perspective is the same as $target while building widl.
+AC_MSG_CHECKING([whether to rebuild headers with widl])
 AC_ARG_WITH([widl],
   AS_HELP_STRING([--with-widl=PATH],
-    [use widl to update idl-based headers]),
+    [use widl to update idl-based headers.  Optionally search for a compatible widl in PATH]),
   [],
   [AS_VAR_SET([with_widl],[no])])
-AS_CASE([$with_widl],
-  [no],[],
-  [yes],[AS_VAR_SET([with_widl],["mingw-w64-widl widl"])],
-  [])
 AC_MSG_RESULT([$with_widl])
 
+AS_VAR_IF([with_widl],[yes],[AS_VAR_SET([with_widl],["$PATH"])])
 AS_VAR_IF([with_widl],[no],[],[
-  AC_MSG_CHECKING([for a usable widl])
-  AC_PATH_PROGS([WIDL], [$with_widl], [])
-  AC_MSG_RESULT([$WIDL])
-  AS_VAR_IF([WIDL],[],[AC_MSG_ERROR([Could not find widl installation, which is required to rebuild the headers])])])
+  AC_PATH_PROGS([WIDL], [$host-widl widl], [], [$with_widl])
+  AS_VAR_IF([WIDL],[],[AC_MSG_ERROR([--with-widl is specified, but widl installation could not be found.])])])
 
 AM_CONDITIONAL([HAVE_WIDL],[AS_VAR_TEST_SET([WIDL])])
 
@@ -40,7 +39,7 @@ AM_CONDITIONAL([HAVE_WIDL],[AS_VAR_TEST_SET([WIDL])])
 
 # Checks for header files.
 
-BASEHEAD_LIST="crt/_bsd_types.h crt/_cygwin.h crt/_mingw.h crt/_mingw_mac.h crt/_mingw_print_push.h crt/_mingw_print_pop.h crt/_mingw_secapi.h crt/_mingw_unicode.h crt/_timeval.h crt/excpt.h crt/vadefs.h "$srcdir/include/*.h
+BASEHEAD_LIST="crt/_bsd_types.h crt/_cygwin.h crt/_mingw.h crt/_mingw_mac.h crt/_mingw_print_push.h crt/_mingw_print_pop.h crt/_mingw_secapi.h crt/_mingw_unicode.h crt/_timeval.h crt/crtdefs.h crt/excpt.h crt/vadefs.h "$srcdir/include/*.h
 SECHEAD_LIST="$srcdir/crt/sec_api/stralign_s.h"
 for i in dlg h16 hxx rh ver; do
   BASEHEAD_LIST="$BASEHEAD_LIST "$srcdir/include/*.$i

@@ -1,3 +1,346 @@
+2012-08-03  Corinna Vinschen  <vinschen@redhat.com>
+
+	* iads.h: Change long to __LONG32 where appropriate.
+
+2012-08-03  Corinna Vinschen  <vinschen@redhat.com>
+
+	* eventsys.h: Change long to __LONG32 where appropriate.
+	* exdisp.h: Ditto.
+	* gpmgmt.h: Ditto.
+	* iiis.h: Ditto.
+	* ipmsp.h: Ditto.
+
+2012-08-03  Corinna Vinschen  <vinschen@redhat.com>
+
+	* comsvcs.h: Change long to __LONG32 where appropriate.
+	* control.h: Ditto.
+	* dhtmled.h: Ditto.
+	* emostore.h: Ditto.
+
+2012-08-03  Corinna Vinschen  <vinschen@redhat.com>
+
+	* cdoex.h: Change long to __LONG32 where appropriate.
+	* cdoexm.h: Ditto.
+	* cdonts.h: Ditto.
+	* cdosys.h: Ditto.
+	* cluscfgwizard.h: Ditto.
+	* comadmin.h: Ditto.
+
+2012-08-03  Corinna Vinschen  <vinschen@redhat.com>
+
+	* agtsvr.h: Change long to __LONG32 where appropriate.
+	* asptlb.h: Ditto.
+	* azroles.h: Ditto.
+
+2012-08-02  Corinna Vinschen  <vinschen@redhat.com>
+
+	* activscp.h: Change long to __LONG32 where appropriate.
+	* adoctint.h: Ditto.
+	* adoint.h: Ditto.
+	* adojet.h: Ditto.
+	* adomd.h: Ditto.
+	* agtctl.h: Ditto.
+
+2012-08-02  Corinna Vinschen  <vinschen@redhat.com>
+
+	* fsrm.h: Change long to __LONG32 where appropriate.
+	* fsrmquota.h: Ditto.
+	* fsrmreports.h: Ditto.
+	* fsrmscreen.h: Ditto.
+	* guiddef.h: Ditto.
+	* httpfilt.h: Ditto.
+	* iimgctx.h: Ditto.
+	* iiisext.h: Ditto.
+	* ksmedia.h: Ditto.
+	* ksproxy.h: Ditto.
+	* lmsvc.h: Ditto.
+	* mapi.h: Ditto.
+	* mapicode.h: Ditto.
+	* mapidbg.h: Ditto.
+	* lmaccess.h: Ditto.
+	* lmstats.h: Ditto.
+	* mapidefs.h: Ditto.
+	* mapinls.h: Ditto.
+	* mfidl.h: Ditto.
+	* midles.h: Ditto.
+	* mq.h: Ditto.
+	* mqoai.h: Ditto.
+	* msasn1.h: Ditto.
+
+2012-08-02  Corinna Vinschen  <vinschen@redhat.com>
+
+	* basetsd.h: Change long to __LONG32 where appropriate.
+	* basetyps.h: Ditto.
+	* certbase.h: Ditto.
+	* correg.h: Ditto.
+	* dbdaoint.h: Ditto.
+	* esent.h: Ditto.
+	* fci.h: Ditto.
+	* fdi.h: Ditto.
+	* filehc.h: Ditto.
+	* winbase.h: Ditto.
+	* comutil.h: Ditto.
+	(_bstr_t::Data_t::AddRef): Call InterlockedIncrement with argument
+	casted to LONG *.
+	(_bstr_t::Data_t::Release): Call InterlockedDecrement with argument
+	casted to LONG *.
+
+2012-08-02  Corinna Vinschen  <vinschen@redhat.com>
+
+	* Throughout, change prototypes of XXX_UserSize, XXX_UserMarshal,
+	XXX_UserUnmarshal, and XXX_UserFree functions to use ULONG rather
+	than unsigned long.
+	* rpcndr.h (NDR_CHAR_REP_MASK): Use __MSABI_LONG rather than
+	explicit cast to unsigned long.
+	(NDR_INT_REP_MASK): Ditto.
+	(NDR_FLOAT_REP_MASK): Ditto.
+	(NDR_LITTLE_ENDIAN): Ditto.
+	(NDR_BIG_ENDIAN): Ditto.
+	(NDR_IEEE_FLOAT): Ditto.
+	(NDR_VAX_FLOAT): Ditto.
+	(NDR_IBM_FLOAT): Ditto.
+	(NDR_ASCII_CHAR): Ditto.
+	(NDR_EBCDIC_CHAR): Ditto.
+	(NDR_LOCAL_DATA_REPRESENTATION): Ditto.
+	(USER_MARSHAL_SIZING_ROUTINE): Use ULONG rather than unsigned long.
+	(USER_MARSHAL_MARSHALLING_ROUTINE): Ditto.
+	(USER_MARSHAL_UNMARSHALLING_ROUTINE): Ditto.
+	(USER_MARSHAL_FREEING_ROUTINE): Ditto.
+
+2012-08-01  Corinna Vinschen  <vinschen@redhat.com>
+
+	* msxml.idl: Throughout, replace long and unsigned long with LONG and
+	ULONG.
+	* objidl.idl: Ditto.
+	* ocidl.idl: Ditto.
+	* oleidl.idl: Ditto.
+	* propidl.idl: Ditto.
+	* shobjidl.idl: Ditto.
+	* strmif.idl: Ditto.
+	* urlmon.idl: Ditto.
+	* wtypes.idl: Ditto.
+	* msxml.idl: Ditto.
+	* objidl.h: Regenerate.
+	* ocidl.h: Regenerate.
+	* oleidl.h: Regenerate.
+	* propidl.h: Regenerate.
+	* shobjidl.h: Regenerate.
+	* strmif.h: Regenerate.
+	* urlmon.h: Regenerate.
+	* wtypes.h: Regenerate.
+
+2012-08-01  Corinna Vinschen  <vinschen@redhat.com>
+
+	* oleacc.idl: Throughout, replace long and unsigned long with LONG and
+	ULONG.
+	* oleacc.h: Regenerate.
+
+2012-07-31  Corinna Vinschen  <vinschen@redhat.com>
+
+	* windows.h: Don't include stralign.h when build for Cygwin.
+
+2012-07-30  Corinna Vinschen  <vinschen@redhat.com>
+
+	* psdk_inc/_ip_types.h (struct __ms_timeval): Define on LP64 systems.
+	(TIMEVAL): Define based on struct __ms_timeval on LP64, based on
+	struct timeval otherwise.
+	(PTIMEVAL): Ditto.
+	(LPTIMEVAL): Ditto.
+	* winsock.h: Replace all `struct timeval *' usages with PTIMEVAL.
+	* winsock2.h: Ditto.
+	* ws2spi.h: Ditto.
+	* ws2tcpip.h: Ditto.
+
+2012-07-30  Corinna Vinschen  <vinschen@redhat.com>
+
+	* af_irda.h: Temporarily redefine u_long as __ms_u_long on LP64 systems.
+	* in6addr.h: Ditto.
+	* inaddr.h: Ditto.
+	* winsock.h: Ditto.
+	* winsock2.h: Ditto.
+	* psdk_inc/_ip_types.h: Ditto.
+
+2012-07-30  Corinna Vinschen  <vinschen@redhat.com>
+
+	* Throughout, use __MSABI_LONG macro rather than 'L' qualifier
+	for unsigned numerical constants as well.
+
+2012-07-30  Corinna Vinschen  <vinschen@redhat.com>
+
+	* winnt.h: In case of Cygwin, include gcc-provided intrinsic
+	files directly, instead of including intrin.h.
+
+2012-07-30  Corinna Vinschen  <vinschen@redhat.com>
+
+	* ndrtypes.h (NDR_VERSION_1_1): Drop UL qualifier from or'ed
+	minor version value.
+	(NDR_VERSION_2_0): Ditto.
+	(NDR_VERSION_5_0): Ditto.
+	(NDR_VERSION_5_2): Ditto.
+	(NDR_VERSION_5_3): Ditto.
+	(NDR_VERSION_5_4): Ditto.
+	* d2d1.h (DXGI_FORMAT_FORCE_UINT): Drop UL qualifier.
+	* gdiplus/gdipluscolor.h: Ditto for all ARGB symbolic color
+	values.
+
+2012-07-27  Corinna Vinschen  <vinschen@redhat.com>
+
+	* Throughout, use __MSABI_LONG macro rather than 'L' qualifier
+	for numerical constants.
+
+2012-07-27  Corinna Vinschen  <vinschen@redhat.com>
+
+	* cdoex.h: Throughout, drop 'L' qualifier from numerical constants
+	defining const value.
+	* cdosys.h: Ditto.
+	* lmaccess.h: Drop 'L' qualifier from numerical constants casted to
+	unsigned long.
+	* lmstats.h: Ditto.
+	* richole.h: Drop 'L' qualifier from numerical constants casted to
+	ULONG.
+	* dbgeng.h: Drop 'L' qualifier from numerical constants casted to
+	HRESULT (via HRESULT_FROM_NT).
+	* adserr.h: Throughout, drop 'L' qualifier from numerical
+	constants casted to HRESULT (via _HRESULT_TYPEDEF_).
+	* advpub.h: Ditto.
+	* naperror.h: Ditto.
+	* pstore.h: Ditto.
+	* subsmgr.h: Ditto.
+	* urlmon.h: Ditto.
+	* winerror.h: Ditto.
+	Define all WSA error codes based on WSABASEERR.
+	* netmon.h (MAKE_LONG): Drop unnecessary 'L' qualifier from shift
+	value.
+	* pdh.h (IsSuccessSeverity): Drop 'L' qualifier from mask value.
+	Cast result value to DWORD.
+	(IsInformationalSeverity): Ditto.
+	(IsWarningSeverity): Ditto.
+	(IsErrorSeverity): Ditto.
+	* penwin.h (dwDiffAT): Drop unnecessary 'L' qualifier from multiplier.
+	* windowsx.h (HANDLE_WM_CREATE): Drop 'L' qualifer from
+	constant casted to LRESULT and only cast the endresult once.
+	* wingdi.h (HGDI_ERROR): Drop 'L' qualifer.
+	* docobj.h (PAGESET_TOLASTPAGE): Ditto.
+
+2012-07-25  Corinna Vinschen  <vinschen@redhat.com>
+
+	* wmiatlprov.h (CInstanceProviderHelper::CheckInstancePath):
+	Cast first parameter in call to GetInfo to ULONG.
+	* winioctl.h (IsDsmActionNonDestructive): Replace test for == 0L
+	with logical negation operator.
+	* wininet.h (INTERNET_INVALID_STATUS_CALLBACK): Drop 'L' modifier.
+	* lmaccess.h (DEF_MIN_PWAGE): Ditto.
+	* mmsystem.h (MEVT_EVENTPARM): Ditto.
+	* svrapi.h (FRK_INIT):  Ditto.
+	* vfw.h: Throughout, cast all constants in calls to SendMessage and
+	ICSendMessage to the expected type.
+	* prsht.h: Ditto, in calls to SendMessage and PostMessage.
+	* winuser.h: Ditto, in calls to CreateWindowEx, CreateDialogParam,
+	CreateDialogIndirectParam, DialogBoxParam, and DialogBoxIndirectParam.
+	* commctrl.h: Ditto, in calls to SendMessage.
+	(LPSTR_TEXTCALLBACKA): Drop 'L' modifier.
+	(LPSTR_TEXTCALLBACKW): Ditto.
+	* windowsx.h: Throughout, cast all constants in calls to SendMessage
+	and as return value from HANDLE_xxx macro.
+	(IsRestored): Replace test for == 0L with logical negation operator.
+
+2012-07-23  Corinna Vinschen  <vinschen@redhat.com>
+
+	* Throughout, drop 'L' modifier from enumeration values.
+
+2012-07-21  Corinna Vinschen  <vinschen@redhat.com>
+
+	* ws2tcpip.h (EAI_NODATA): Define as int value.
+
+2012-07-20  Corinna Vinschen  <vinschen@redhat.com>
+
+	* kcom.h (STATIC_KoCreateObject): Drop  'L' modifier from Data1
+	member in GUID definition.
+
+2012-07-20  Corinna Vinschen  <vinschen@redhat.com>
+
+	* directx/dxerr8.h (DXTRACE_MSG): Drop long qualifier from
+	empty non-debug definition.
+	* directx/dxerr9.h: Ditto.
+
+2012-07-20  Corinna Vinschen  <vinschen@redhat.com>
+
+	* winuser.h: Convert all HELP_xxx command macros to int macros.
+
+2012-07-19  Corinna Vinschen  <vinschen@redhat.com>
+
+	* ksmedia.h: Throughout, drop 'L' modifier from Data1 member in
+	GUID definitions.
+	* ksproxy.h: Ditto.
+	* ksuuids.h: Ditto.
+	* uuids.h: Ditto.
+
+2012-07-19  Corinna Vinschen  <vinschen@redhat.com>
+
+	* msdasql.h: Throughout, drop 'L' modifier from Data1 member in
+	GUID definitions.
+	* ioevent.h: Ditto.
+	* msdaguid.h: Ditto.
+	* iiis.h: Ditto.
+	* usbiodef.h: Ditto.
+	* tcguid.h: Ditto.
+	* oledb.h: Ditto.
+	* recguids.h: Ditto.
+	* diskguid.h: Ditto.
+	* shlguid.h: Ditto.
+	* msdadc.h: Ditto.
+	* isguids.h: Ditto.
+	* batclass.h: Ditto.
+	* shobjidl.h: Ditto.
+	* devguid.h: Ditto.
+	* ntddscsi.h: Ditto.
+	* identitystore.h: Ditto.
+	* sti.h: Ditto.
+	* sqloledb.h: Ditto.
+	* mstask.h: Ditto.
+	* fwpmu.h: Ditto.
+	* oledbguid.h: Ditto.
+	* winioctl.h: Ditto.
+
+2012-07-19  Corinna Vinschen  <vinschen@redhat.com>
+
+	* Throughout, drop long qualifier in all casted numerical constant
+	expressions.
+
+2012-07-19  Corinna Vinschen  <vinschen@redhat.com>
+
+	* ks.h: Throughout, drop 'L' modifier from Data1 member in GUID
+	definitions.
+	* ntddstor.h: Ditto.
+	* ntddser.h: Ditto.
+
+2012-07-19  Corinna Vinschen  <vinschen@redhat.com>
+
+	* usb.h: Check for _WIN64 instead of WIN64.
+
+2012-07-16  Corinna Vinschen  <vinschen@redhat.com>
+
+	* winbase.h: Use system types in calls to Interlocked functions.
+
+2012-07-12  Corinna Vinschen  <vinschen@redhat.com>
+
+	* winternl.h (NT_SUCCESS): Define.
+	(enum _PROCESSINFOCLASS): Copy from ddk/ntddk.h.
+	(NtSetInformationProcess): Declare.
+
+2012-07-11  Ozkan Sezer  <sezeroz@gmail.com>
+
+	* tapi.h: Move the unicode A/W macros after the function prototypes.
+	(lineAddProvider,lineBlindTransfer,lineConfigDialog,
+	lineConfigDialogEdit,lineDial,lineGatherDigits,lineGenerateDigits,
+	lineGetAddressID,lineGetAppPriority,lineGetDevConfig,lineGetIcon,
+	lineGetID,lineHandoff,lineMakeCall,linePark,linePickup,lineRedirect,
+	lineSetAppPriority,lineSetDevConfig,lineSetTollList,
+	lineTranslateAddress,lineTranslateDialog,lineUnpark,phoneConfigDialog,
+	phoneGetIcon,phoneGetID,tapiGetLocationInfo,tapiRequestMakeCall,
+	tapiRequestMediaCall): Define as *A variant only for TAPI2 or newer,
+	but always define as *W variant when UNICODE is defined.
+
 2012-07-06  Corinna Vinschen  <vinschen@redhat.com>
 
 	* stralign.h (ua_wcscpy): Define as macro when building on Cygwin.
@@ -221,13 +564,13 @@
 
 	* strsafe.h (MPRAPI_OBJECT_HEADER): Fix double extern qualifier in
 	_STRSAFE_EXTERN_C. __CRT_INLINE macro already has extern.
-    
+
 2012-01-26  Kai Tietz  <ktietz@redhat.com>
 
-        * nldef.h (NL_INTERFACE_OFFLOAD_ROD): Remove
-        TlStreamFastPathCompatible and TlDatagramFastPathCompatible
-        members, which are merged into FastPathCompatible.
-        (note msdn is wrong here).
+	* nldef.h (NL_INTERFACE_OFFLOAD_ROD): Remove
+	TlStreamFastPathCompatible and TlDatagramFastPathCompatible
+	members, which are merged into FastPathCompatible.
+	(note msdn is wrong here).
 
 2012-01-26  Jonathan Yong  <jon_y@users.sourceforge.net>
 
@@ -262,7 +605,6 @@
 2012-01-25  Kai Tietz  <ktietz@redhat.com>
 
 	* iprtrmib.h (MIB_TCP_STATE): New typedef.
-
 	* mprapi.h (MprAdminConnectionRemoveQuarantine): Remove
 	double definition.
 
