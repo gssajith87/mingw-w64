@@ -959,6 +959,9 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/gcc/gcc/.winsup.marker
 endif
 
+# --enable-sjlj-exceptions no longer needed for win64 target, SEH is in use
+# SJLJ is still used for win32 by default though
+
 ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/gcc/obj/.mkdir.marker \
     ${BUILD_DIR}/binutils/obj/.install.marker \
@@ -983,7 +986,7 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
         --enable-c99 --enable-wchar_t \
         --enable-libstdcxx-debug \
         --enable-fully-dynamic-string --enable-libgomp \
-        --with-dwarf2 --enable-sjlj-exceptions \
+        --with-dwarf2 \
         --enable-version-specific-runtime-libs \
         --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
