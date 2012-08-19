@@ -1,3 +1,118 @@
+2012-08-14  Kai Tietz  <ktietz@redhat.com>
+
+	* windef.h: Add include of _mingw.h for __LOMG32.
+
+2012-08-07  Kai Tietz  <ktietz@redhat.com>
+
+	* winnt.h (InterlockedIncrement): Add prototype before inline
+	declaration.
+	(InterlockedDecrement): Likewise.
+	(InterlockedExchange): Likewise.
+
+2012-08-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* strsafe.h: Change long to __LONG32 where appropriate.
+
+2012-08-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* wbemdisp.h: Change long to __LONG32 where appropriate.
+	* windef.h: Ditto.
+	* winerror.h: Ditto.
+	* wingdi.h: Ditto.
+	* wininet.h: Ditto.
+	* winnt.h: Ditto.
+	* winsmcrd.h: Ditto.
+	* winsnmp.h: Ditto.
+	* winsock.h: Ditto.
+	* winsock2.h: Ditto.
+	* winuser.h: Ditto.
+	* wmiatlprov.h: Ditto.
+	* wmiutils.h: Ditto.
+	* ws2spi.h: Ditto.
+	* xa.h: Ditto.
+	* xcmc.h: Ditto.
+	* xmltrnsf.h: Ditto.
+
+2012-08-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* mlang.h: Change long to __LONG32 where appropriate.
+	* mtsadmin.h: Ditto.
+	* mtxadmin.h: Ditto.
+	* shldisp.h: Ditto.
+	* shlobj.h: Ditto.
+	* simpdc.h: Ditto.
+	* sqltypes.h: Ditto.
+	* srv.h: Ditto.
+	* sspi.h: Ditto.
+	* svrapi.h: Ditto.
+	* tapi.h: Ditto.
+	* tapi3.h: Ditto.
+	* tapi3cc.h: Ditto.
+	* tapi3if.h: Ditto.
+	* termmgr.h: Ditto.
+	* tom.h: Ditto.
+	* tspi.h: Ditto.
+	* tuner.h: Ditto.
+	* txdtc.h: Ditto.
+	* usp10.h: Ditto.
+	* vfw.h: Ditto.
+	* wabcode.h: Ditto.
+	* wabdefs.h: Ditto.
+	* wbemcli.h: Ditto.
+	* wbemprov.h: Ditto.
+	* wbemtran.h: Ditto.
+
+2012-08-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* rtccore.h: Change long to __LONG32 where appropriate.
+	* scardssp.h: Ditto.
+	* sdoias.h: Ditto.
+
+2012-08-06  Corinna Vinschen  <vinschen@redhat.com>
+
+	* mdhcp.h: Change long to __LONG32 where appropriate.
+	* mergemod.h: Ditto.
+	* mmc.h: Ditto.
+	* mmcobj.h: Ditto.
+	* msclus.h: Ditto.
+	* mshtml.h: Ditto.
+	* mshtmlc.h: Ditto.
+	* msdatsrc.h: Ditto.
+	* msi.h: Ditto.
+	* msimcntl.h: Ditto.
+	* msimcsdk.h: Ditto.
+	* msp.h: Ditto.
+	* mspaddr.h: Ditto.
+	* mspcall.h: Ditto.
+	* mspcoll.h: Ditto.
+	* mspstrm.h: Ditto.
+	* mspterm.h: Ditto.
+	* msptrmac.h: Ditto.
+	* msptrmar.h: Ditto.
+	* msxml.h: Ditto.
+	* msxml2.h: Ditto.
+	* ndattrib.h: Ditto.
+	* ndhelper.h: Ditto.
+	* ndrtypes.h: Ditto.
+	* netcon.h: Ditto.
+	* netmon.h: Ditto.
+	* nspapi.h: Ditto.
+	* ntdef.h: Ditto.
+	* odbcss.h: Ditto.
+	* oleauto.h: Ditto.
+	* olectl.h: Ditto.
+	* oledbguid.h: Ditto.
+	* rdpencomapi.h: Ditto.
+	* rend.h: Ditto.
+	* richedit.h: Ditto.
+	* rpc.h: Ditto.
+	* rpcasync.h: Ditto.
+	* rpcdce.h: Ditto.
+	* rpcdcep.h: Ditto.
+	* rpcndr.h: Ditto.
+	* rpcnsi.h: Ditto.
+	* rpcproxy.h: Ditto.
+
 2012-08-03  Corinna Vinschen  <vinschen@redhat.com>
 
 	* iads.h: Change long to __LONG32 where appropriate.

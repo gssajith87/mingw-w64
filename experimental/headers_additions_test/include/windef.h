@@ -6,6 +6,8 @@
 #ifndef _WINDEF_
 #define _WINDEF_
 
+#include <_mingw.h>
+
 #if !defined (STRICT) && !defined (NO_STRICT)
 #define STRICT 1
 #endif
@@ -20,7 +22,7 @@ extern "C" {
 
 #ifndef BASETYPES
 #define BASETYPES
-typedef unsigned long ULONG;
+typedef unsigned __LONG32 ULONG;
 typedef ULONG *PULONG;
 typedef unsigned short USHORT;
 typedef USHORT *PUSHORT;
@@ -112,7 +114,7 @@ typedef BOOL *LPBOOL;
 
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
-typedef unsigned long DWORD;
+typedef unsigned __LONG32 DWORD;
 typedef float FLOAT;
 typedef FLOAT *PFLOAT;
 typedef BYTE *PBYTE;
@@ -121,7 +123,7 @@ typedef int *PINT;
 typedef int *LPINT;
 typedef WORD *PWORD;
 typedef WORD *LPWORD;
-typedef long *LPLONG;
+typedef __LONG32 *LPLONG;
 typedef DWORD *PDWORD;
 typedef DWORD *LPDWORD;
 typedef void *LPVOID;
