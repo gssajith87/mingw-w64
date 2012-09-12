@@ -307,13 +307,13 @@ peimg_show (pe_image *ppeimg, FILE *outfp)
     }
   else
     {
-      fprintf (outfp, "Sizes Stack: Reserved:0x%I64x Commit:0x%I64x\n",
+      fprintf (outfp, "Sizes Stack: Reserved:%#x Commit:%#x\n",
         PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 72),
         PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 76));
-      fprintf (outfp, "Sizes Heap: Reserved:0x%I64x Commit:0x%I64x\n",
+      fprintf (outfp, "Sizes Heap: Reserved:%#x Commit:%#x\n",
         PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 80),
         PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 84));
-      fprintf (outfp, "LoaderFlags: 0x%x, # of rva&sizes: %u\n",
+      fprintf (outfp, "LoaderFlags: %#x, # of rva&sizes: %u\n",
         PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 88),
         PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 92));
     }
