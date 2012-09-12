@@ -85,7 +85,7 @@ fimg_rename (file_image *pimg, const char *newfname)
   if (newfname)
     {
       n = strdup (newfname);
-      if (!n);
+      if (!n)
         return 0;
     }
   if (pimg->filename)
