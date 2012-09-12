@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -338,7 +339,7 @@ fimg_show_stats (const file_image *pimg)
   fprintf (stderr, "fimg: %p", pimg);
   if (pimg)
     {
-      fprintf (stderr, "{ data:%p, len:0x%I64x, name:\"%s\", mod:%s, want_save:%s }",
+      fprintf (stderr, "{ data:%p, len:%#"PRIxPTR", name:\"%s\", mod:%s, want_save:%s }",
         pimg->data, pimg->data_len, (pimg->filename ? pimg->filename : "<unnamed>"),
         pimg->is_modified ? "yes" : "no",
         pimg->want_save ? "yes" : "no");
@@ -354,7 +355,7 @@ fimg_dump_mem (const file_image *pimg, size_t len, FILE *out)
     return;
   while (off < len)
     {
-      fprintf (out, "0x%08IX:", off);
+      fprintf (out, "%#08"PRIXPTR":", off);
       for (i = 0; i < 16 && off < len; i++, off++)
         {
 	  fprintf (out," %02X", fimg_get_uchar_at (pimg, off));

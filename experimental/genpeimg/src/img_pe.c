@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -160,10 +161,10 @@ peimg_show (pe_image *ppeimg, FILE *outfp)
   unsigned short hdr_cha;
   if (!ppeimg || !outfp)
     return;
-  fprintf (outfp, "PE image \"%s\"\n  found at position 0x%Ix in file-image\n",
+  fprintf (outfp, "PE image \"%s\"\n  found at position %#"PRIxPTR" in file-image\n",
     ppeimg->pimg->filename, ppeimg->start_pe);
-  fprintf (outfp, "  Image has size of 0x%Ix byte(s)\n", ppeimg->size_pe);
-  fprintf (outfp, "  Image machine kind is: 0x%x (%s)\n",
+  fprintf (outfp, "  Image has size of %#"PRIxPTR" byte(s)\n", ppeimg->size_pe);
+  fprintf (outfp, "  Image machine kind is: %#x (%s)\n",
     ppeimg->pe_filehdr.machine, ppeimg->is_64bit ? "64-bit" : "32-bit");
   fprintf (outfp, "  Image contains %u section(s)\n", ppeimg->pe_filehdr.numsecs);
   fprintf (outfp, "  Optional header-size is %u\n", ppeimg->pe_filehdr.szOptHdr);
