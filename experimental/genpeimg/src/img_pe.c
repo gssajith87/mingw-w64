@@ -219,9 +219,9 @@ peimg_show (pe_image *ppeimg, FILE *outfp)
   if (ppeimg->is_64bit)
     {
       fprintf (outfp,
-        "  Bases: Code=0x%x ImageBase=0x%I64x\n",
+        "  Bases: Code=0x%x ImageBase=%#"PRIxPTR"\n",
         PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 20),
-        PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 24));
+        (size_t)PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 24));
     }
   else
     {
@@ -295,12 +295,12 @@ peimg_show (pe_image *ppeimg, FILE *outfp)
     }
   if (ppeimg->is_64bit)
     {
-      fprintf (outfp, "Sizes Stack: Reserved:0x%I64x Commit:0x%I64x\n",
-        PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 72),
-        PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 80));
-      fprintf (outfp, "Sizes Heap: Reserved:0x%I64x Commit:0x%I64x\n",
-        PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 88),
-        PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 96));
+      fprintf (outfp, "Sizes Stack: Reserved:%#"PRIxPTR" Commit:%#"PRIxPTR"\n",
+        (size_t)PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 72),
+        (size_t)PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 80));
+      fprintf (outfp, "Sizes Heap: Reserved:%#"PRIxPTR" Commit:%#"PRIxPTR"\n",
+        (size_t)PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 88),
+        (size_t)PEIMG_GET_UQUAD (ppeimg, ppeimg->optional_hdr_pos + 96));
       fprintf (outfp, "LoaderFlags: 0x%x, # of rva&sizes: %u\n",
         PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 104),
         PEIMG_GET_UINT (ppeimg, ppeimg->optional_hdr_pos + 108));
