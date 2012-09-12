@@ -214,7 +214,6 @@ int
 fimg_remove_at (file_image *pimg, size_t pos, size_t length)
 {
   size_t emax = pos + length;
-  size_t sv_len = length;
   if (!pimg)
     return 0;
   if (pos > pimg->data_len)
