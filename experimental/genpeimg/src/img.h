@@ -12,13 +12,13 @@ typedef struct file_image {
 file_image *fimg_create (void);
 void fimg_free (file_image *pimg);
 void fimg_show_stats (const file_image *pimg);
-void fimg_dump_mem (const file_image *pimg, size_t pos, size_t len, FILE *out);
+void fimg_dump_mem (const file_image *pimg, size_t len, FILE *out);
 int fimg_load (file_image *pimg, const char *fname);
 int fimg_rename (file_image *pimg, const char *newfname);
-int fimg_save_as (file_image *pimg, const char *fname, size_t pos, size_t length);
+int fimg_save_as (file_image *pimg, const char *fname, size_t length);
 int fimg_save (file_image *pimg);
 int fimg_resize (file_image *pimg, size_t new_size);
-file_image *fimg_clone (const file_image *pimg, size_t pos, size_t length);
+file_image *fimg_clone (const file_image *pimg);
 int fimg_replace_at (file_image *pimg, const void *dta, size_t pos, size_t length);
 int fimg_insert_at (file_image *pimg, const void *dta, size_t pos, size_t length);
 int fimg_remove_at (file_image *pimg, size_t pos, size_t length);

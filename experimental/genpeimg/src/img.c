@@ -31,7 +31,7 @@ fimg_free (file_image *pimg)
   if (!pimg)
     return;
   if (pimg->want_save && pimg->is_modified)
-    fimg_save_as (pimg, pimg->filename, 0, pimg->data_len);
+    fimg_save_as (pimg, pimg->filename, pimg->data_len);
   fimg_free_content (pimg);
   free (pimg);
 }
@@ -95,7 +95,7 @@ fimg_rename (file_image *pimg, const char *newfname)
 }
 
 int
-fimg_save_as (file_image *pimg, const char *fname, size_t pos, size_t length)
+fimg_save_as (file_image *pimg, const char *fname, size_t length)
 {
   FILE *fp;
 
@@ -113,11 +113,11 @@ fimg_save_as (file_image *pimg, const char *fname, size_t pos, size_t length)
 
 int fimg_save (file_image *pimg)
 {
-  return fimg_save_as (pimg, pimg->filename, 0, pimg->data_len);
+  return fimg_save_as (pimg, pimg->filename, pimg->data_len);
 }
 
 file_image *
-fimg_clone (const file_image *pimg, size_t pos, size_t length)
+fimg_clone (const file_image *pimg)
 {
   file_image *r = fimg_create ();
 
@@ -347,7 +347,7 @@ fimg_show_stats (const file_image *pimg)
 }
 
 void
-fimg_dump_mem (const file_image *pimg, size_t pos, size_t len, FILE *out)
+fimg_dump_mem (const file_image *pimg, size_t len, FILE *out)
 {
   size_t off = 0, i;
   if (!pimg)
@@ -374,19 +374,19 @@ int main (int argc,char **argv)
       return 0;
     }
   fimg_show_stats (p);
-  fimg_dump_mem (p, 0, 32, stderr);
+  fimg_dump_mem (p, 32, stderr);
   fprintf (stderr, "Remove leading 4 bytes\n");
   fimg_remove_at (p, 0, 4);
   fimg_show_stats (p);
-  fimg_dump_mem (p, 0, 32, stderr);
+  fimg_dump_mem (p, 32, stderr);
   fprintf (stderr, "Remove at pos 2 the next 10 bytes\n");
   fimg_remove_at (p, 2, 10);
   fimg_show_stats (p);
-  fimg_dump_mem (p, 0, 32, stderr);
+  fimg_dump_mem (p, 32, stderr);
   fprintf (stderr, "Remove at end-pos the next 10 bytes\n");
   fimg_remove_at (p, p->data_len, 10);
   fimg_show_stats (p);
-  fimg_dump_mem (p, p->data_len, 32, stderr);
+  fimg_dump_mem (p, 32, stderr);
   fimg_free (p);
   return 1;
 }
