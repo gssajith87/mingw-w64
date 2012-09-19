@@ -61,7 +61,9 @@ for f in \
 	audiopolicy \
 	axcore \
 	axextend \
+	devicetopology \
 	downloadmgr \
+	endpointvolume \
 	fusion \
 	mmdeviceapi \
 	mscoree \
