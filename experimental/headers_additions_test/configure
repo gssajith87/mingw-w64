@@ -638,6 +638,7 @@ AMTAR
 am__leading_dot
 SET_MAKE
 AWK
+mkdir_p
 MKDIR_P
 INSTALL_STRIP_PROGRAM
 STRIP
@@ -1333,7 +1334,8 @@ Optional Features:
                           --disable-crt)
   --disable-crt           Do not use the default crt headers
   --enable-sdk=ARG        Add the comma seperated desired SDKs, where ARG can
-                          be any combination of ddk, directx, ndk, or all
+                          be any combination of ddk, directx, ndk, or all. ndk
+                          must be enabled explicitly.
   --enable-idl            Enable installing idl files (default enabled)
   --enable-secure-api     Enable secure API by default
 
@@ -2279,6 +2281,12 @@ AUTOHEADER=${AUTOHEADER-"${am_missing_run}autoheader"}
 
 MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
 
+# For better backward compatibility.  To be removed once Automake 1.9.x
+# dies out for good.  For more background, see:
+# <http://lists.gnu.org/archive/html/automake/2012-07/msg00001.html>
+# <http://lists.gnu.org/archive/html/automake/2012-07/msg00014.html>
+mkdir_p='$(MKDIR_P)'
+
 # We need awk for the "check" target.  The system "awk" is bad on
 # some platforms.
 # Always define AMTAR for backward compatibility.  Yes, it's still used
@@ -2610,7 +2618,7 @@ case $enabled_sdk_token in #(
   all|yes) :
 
     $as_echo_n all
-    enable_ndk=yes
+    # AS_VAR_SET([enable_ndk],[yes])
     enable_directx=yes
     enable_ddk=yes ;; #(
   ddk) :

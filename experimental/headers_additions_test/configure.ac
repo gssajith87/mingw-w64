@@ -89,7 +89,7 @@ AC_SUBST([SECSYSHEAD_LIST])
 AC_MSG_CHECKING([for optional sdk headers])
 AC_ARG_ENABLE([sdk],
   [AS_HELP_STRING([--enable-sdk=ARG],
-    [Add the comma seperated desired SDKs, where ARG can be any combination of ddk, directx, ndk, or all])],
+    [Add the comma seperated desired SDKs, where ARG can be any combination of ddk, directx, ndk, or all. ndk must be enabled explicitly.])],
   [],
   [AS_VAR_SET([enable_sdk],[all])])
 
@@ -98,7 +98,7 @@ do
 AS_CASE([$enabled_sdk_token],
   [all|yes],[
     AS_ECHO_N([all ])
-    AS_VAR_SET([enable_ndk],[yes])
+    # AS_VAR_SET([enable_ndk],[yes])
     AS_VAR_SET([enable_directx],[yes])
     AS_VAR_SET([enable_ddk],[yes])],
   [ddk],[
