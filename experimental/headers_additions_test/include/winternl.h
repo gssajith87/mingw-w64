@@ -16,11 +16,14 @@
 extern "C" {
 #endif
 
+#ifndef __UNICODE_STRING_DEFINED
+#define __UNICODE_STRING_DEFINED
   typedef struct _UNICODE_STRING {
     USHORT Length;
     USHORT MaximumLength;
     PWSTR Buffer;
   } UNICODE_STRING;
+#endif
 
   typedef struct _PEB_LDR_DATA {
     BYTE Reserved1[8];
@@ -85,11 +88,14 @@ typedef struct _RTL_USER_PROCESS_PARAMETERS {
   typedef LONG NTSTATUS;
   typedef CONST char *PCSZ;
 
+#ifndef __STRING_DEFINED
+#define __STRING_DEFINED
   typedef struct _STRING {
     USHORT Length;
     USHORT MaximumLength;
     PCHAR Buffer;
   } STRING;
+#endif
 
   typedef STRING *PSTRING;
   typedef STRING ANSI_STRING;
@@ -102,6 +108,8 @@ typedef struct _RTL_USER_PROCESS_PARAMETERS {
   typedef UNICODE_STRING *PUNICODE_STRING;
   typedef const UNICODE_STRING *PCUNICODE_STRING;
 
+#ifndef __OBJECT_ATTRIBUTES_DEFINED
+#define __OBJECT_ATTRIBUTES_DEFINED
   typedef struct _OBJECT_ATTRIBUTES {
     ULONG Length;
 #ifdef _WIN64
@@ -116,6 +124,7 @@ typedef struct _RTL_USER_PROCESS_PARAMETERS {
     PVOID SecurityDescriptor;
     PVOID SecurityQualityOfService;
   } OBJECT_ATTRIBUTES, *POBJECT_ATTRIBUTES;
+#endif
 
 /* Values for the Attributes member */
  #define OBJ_INHERIT             0x00000002
@@ -348,14 +357,21 @@ typedef struct _RTL_USER_PROCESS_PARAMETERS {
     ACCESS_MASK AccessFlags;
   } FILE_ACCESS_INFORMATION, *PFILE_ACCESS_INFORMATION;
 
+  typedef struct _FILE_LINK_INFORMATION {
+    BOOLEAN ReplaceIfExists;
+    HANDLE RootDirectory;
+    ULONG FileNameLength;
+    WCHAR FileName[1];
+  } FILE_LINK_INFORMATION, *PFILE_LINK_INFORMATION;
+
   typedef struct _FILE_NAME_INFORMATION {
     ULONG FileNameLength;
     WCHAR FileName[1];
   } FILE_NAME_INFORMATION, *PFILE_NAME_INFORMATION;
 
   typedef struct _FILE_RENAME_INFORMATION {
-    BOOLEAN Replace;
-    HANDLE RootDir;
+    BOOLEAN ReplaceIfExists;
+    HANDLE RootDirectory;
     ULONG FileNameLength;
     WCHAR FileName[1];
   } FILE_RENAME_INFORMATION, *PFILE_RENAME_INFORMATION;
@@ -840,7 +856,7 @@ typedef struct _RTL_USER_PROCESS_PARAMETERS {
   ULONG WINAPI RtlNtStatusToDosError (NTSTATUS Status);
   NTSTATUS WINAPI NtQueryInformationProcess(HANDLE ProcessHandle,PROCESSINFOCLASS ProcessInformationClass,PVOID ProcessInformation,ULONG ProcessInformationLength,PULONG ReturnLength);
   NTSTATUS WINAPI NtQueryInformationThread(HANDLE ThreadHandle,THREADINFOCLASS ThreadInformationClass,PVOID ThreadInformation,ULONG ThreadInformationLength,PULONG ReturnLength);
-  NTSTATUS WINAPI NtQueryInformationFile(HANDLE hFile,PIO_STATUS_BLOCK io,PVOID ptr,LONG len,FILE_INFORMATION_CLASS FileInformationClass);
+  NTSTATUS WINAPI NtQueryInformationFile(HANDLE hFile,PIO_STATUS_BLOCK io,PVOID ptr,ULONG len,FILE_INFORMATION_CLASS FileInformationClass);
   NTSTATUS WINAPI NtQueryObject(HANDLE Handle,OBJECT_INFORMATION_CLASS ObjectInformationClass,PVOID ObjectInformation,ULONG ObjectInformationLength,PULONG ReturnLength);
   NTSTATUS WINAPI NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS SystemInformationClass,PVOID SystemInformation,ULONG SystemInformationLength,PULONG ReturnLength);
   NTSTATUS WINAPI NtQuerySystemTime(PLARGE_INTEGER SystemTime);
