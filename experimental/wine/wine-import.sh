@@ -49,7 +49,10 @@ for f in \
 	propkey.h \
 	propkeydef.h \
 	propvarutil.h \
+	rpcsal.h \
 	t2embapi.h \
+	uiautomation.h \
+	uiautomationcoreapi.h \
 	winhttp.h \
 	winineti.h; do
     import_header $f include
@@ -71,6 +74,8 @@ for f in \
 	optary \
 	propsys \
 	structuredquerycondition \
+	uiautomationclient \
+	uiautomationcore \
 	urlhist \
 	wincodec \
 	wpcapi \
