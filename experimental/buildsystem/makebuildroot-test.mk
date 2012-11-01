@@ -64,7 +64,8 @@ MPFR_VERSION ?= 3.1.0
 MPC_VERSION ?= 0.8.2
 PPL_VERSION ?= 0.11
 CLOOG_VERSION ?= 0.17.0
-ISL_VERSION ?= 0.08
+ISL_VERSION ?= 0.10
+OSL_VERSION ?= 0.8.4
 PIPLIB_VERSION ?= 1.4.0
 MINGW_BRANCH ?= trunk
 MINGW_REVISION ?= HEAD
@@ -75,7 +76,7 @@ GCC_REVISION ?= head # revision id "146782" or date "2009-04-25"
 ########################################
 # Download URLs
 ########################################
-PTHREADS_CVS_PULL ?= :pserver:anoncvs@sourceware.org:/cvs/pthreads-win32
+PTHREADS_CVS_PULL ?= :pserver:anoncvs:anoncvs@sourceware.org:/cvs/pthreads-win32
 PTHREADS_CVS_DATE ?= '5/11/2010'
 
 ########################################
@@ -113,15 +114,15 @@ MINGW_CONFIG_EXTRA_ARGS_MULTI_N :=
 # MISC helper
 ########################################
 
-GCC_ADA_Y := ",ada"
+GCC_ADA_Y := ,ada
 GCC_ADA_N :=
-GCC_CPP_Y := ",c++"
+GCC_CPP_Y := ,c++
 GCC_CPP_N :=
-GCC_FORTRAN_Y := ",fortran"
+GCC_FORTRAN_Y := ,fortran
 GCC_FORTRAN_N :=
-GCC_OBJC_Y := ",objc,obj-c++"
+GCC_OBJC_Y := ,objc,obj-c++
 GCC_OBJC_N :=
-GCC_JAVA_Y := ",java"
+GCC_JAVA_Y := ,java
 GCC_JAVA_N :=
 GCC_WINPTHREAD_DEP_N := /pthreads/.pthreads.install.${ENABLE_MULTILIB}
 GCC_WINPTHREAD_DEP_Y := /winpthreads/obj.${ENABLE_MULTILIB}/.install.marker
@@ -199,14 +200,10 @@ src/binutils/.binutils.pull.marker: \
     src/binutils/.mkdir.marker
 	### XXX Mook: todo: specify revision
 ifeq (,$(strip ${BINUTILS_UPDATE}))
-	cd $(dir $@) && \
-	cvs -d ":pserver:anoncvs@sourceware.org:/cvs/src" -z3 \
-	    checkout -d . -N binutils
+	cd $(dir $@) && cvs -d :pserver:anoncvs:anoncvs@sourceware.org:/cvs/src -z9 checkout -d . -N binutils
 	@touch $@
 else
-	cd $(dir $@) && \
-	cvs -d ":pserver:anoncvs@sourceware.org:/cvs/src" -z3 \
-	    update
+	cd $(dir $@) && cvs -d :pserver:anoncvs:anoncvs@sourceware.org:/cvs/src -z9 update
 	@touch $@
 .PHONY: src/binutils/.binutils.pull.marker
 endif
@@ -405,6 +402,30 @@ src/cloog/.cloog.extract.marker: \
     src/cloog/src/.mkdir.marker
 	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
 	@touch $@
+
+########################################
+# Download OSL
+########################################
+osl-download: \
+    src/osl.tar.gz
+
+src/osl.tar.gz: \
+    src/.mkdir.marker
+	$(WGET) $@ http://www.lri.fr/~bastoul/development/openscop/docs/osl-$(strip ${OSL_VERSION}).tar.gz
+
+########################################
+# Extract OSL
+########################################
+
+osl-extract: \
+    src/osl/.osl.extract.marker
+
+src/osl/.osl.extract.marker: \
+    src/osl.tar.gz \
+    src/osl/src/.mkdir.marker
+	$(TAR) -C $(dir $@)/src --strip-components=1 -xzvf $<
+	@touch $@
+
 
 ########################################
 # Download ISL
@@ -851,6 +872,53 @@ ${BUILD_DIR}/piplib/install/.install.marker: \
 	@touch $@
 
 ########################################
+# Configure OSL
+########################################
+osl-configure: \
+    ${BUILD_DIR}/osl/obj/.config.marker
+
+${BUILD_DIR}/osl/obj/.config.marker: \
+    ${BUILD_DIR}/root/.root.init.marker \
+    ${BUILD_DIR}/osl/obj/.mkdir.marker \
+    ${BUILD_DIR}/mingw-headers/obj/.install.marker \
+    ${BUILD_DIR}/gmp/install/.install.marker
+	cd $(dir $@) && \
+	../../../${BUILD_DIR}/osl/src/configure \
+        ${GCC_CONFIG_HOST_ARGS} \
+        $(CONFIG_BUILD_ARGS) \
+        --enable-static --disable-shared \
+        --prefix=${CURDIR}/${BUILD_DIR}/osl/install \
+        --with-gmp=system \
+        --with-gmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
+        CPPFLAGS="-fexceptions -I${CURDIR}/${BUILD_DIR}/gmp/install/include" \
+        LDFLAGS="-L${CURDIR}/${BUILD_DIR}/gmp/install/lib" \
+        LIBS="-lgmp"
+	@touch $@
+
+########################################
+# Compile OSL
+########################################
+osl-compile: \
+    ${BUILD_DIR}/osl/obj/.compile.marker
+
+${BUILD_DIR}/osl/obj/.compile.marker: \
+    ${BUILD_DIR}/osl/obj/.config.marker
+	$(MAKE) -C $(dir $@) V=1
+	@touch $@
+
+########################################
+# Install OSL
+########################################
+osl-install: \
+    ${BUILD_DIR}/osl/install/.install.marker
+
+${BUILD_DIR}/osl/install/.install.marker: \
+    ${BUILD_DIR}/osl/obj/.compile.marker \
+    ${BUILD_DIR}/osl/install/.mkdir.marker
+	$(MAKE) -C ${BUILD_DIR}/osl/obj install
+	@touch $@
+
+########################################
 # Configure ISL
 ########################################
 isl-configure: \
@@ -868,10 +936,11 @@ ${BUILD_DIR}/isl/obj/.config.marker: \
         $(CONFIG_BUILD_ARGS) \
         --enable-static --disable-shared \
         --prefix=${CURDIR}/${BUILD_DIR}/isl/install \
+        --with-gmp=system \
         --with-gmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
         --with-piplib=system \
         --with-piplib-prefix=${CURDIR}/${BUILD_DIR}/piplib/install \
-        CPPFLAGS="-fexceptions -I${CURDIR}/${BUILD_DIR}/gmp/install/include" \
+        CPPFLAGS="-fexceptions -I${CURDIR}/${BUILD_DIR}/gmp/install/include -I${CURDIR}/${BUILD_DIR}/piplib/install/include" \
         LDFLAGS="-L${CURDIR}/${BUILD_DIR}/gmp/install/lib -L${CURDIR}/${BUILD_DIR}/piplib/install/lib" \
         LIBS="-lpiplibMP -lgmp"
 	@touch $@
@@ -902,6 +971,8 @@ ${BUILD_DIR}/isl/install/.install.marker: \
 ########################################
 # Configure CLooG
 ########################################
+# PPL no longer needed
+# ${BUILD_DIR}/ppl/install/.install.marker
 cloog-configure: \
     ${BUILD_DIR}/cloog/obj/.config.marker
 
@@ -910,19 +981,21 @@ ${BUILD_DIR}/cloog/obj/.config.marker: \
     ${BUILD_DIR}/root/.root.init.marker \
     ${BUILD_DIR}/mingw-headers/obj/.install.marker \
     ${BUILD_DIR}/gmp/install/.install.marker \
-    ${BUILD_DIR}/ppl/install/.install.marker \
     ${BUILD_DIR}/piplib/install/.install.marker \
-    ${BUILD_DIR}/isl/install/.install.marker
+    ${BUILD_DIR}/isl/install/.install.marker \
+    ${BUILD_DIR}/osl/install/.install.marker
 	cd $(dir $@) && \
 	../../../${BUILD_DIR}/cloog/src/configure \
         ${GCC_CONFIG_HOST_ARGS} \
         $(CONFIG_BUILD_ARGS) \
             --enable-static --disable-shared \
             --with-isl=system \
+            --with-osl=system \
             --with-gmp=system \
             --prefix=${CURDIR}/${BUILD_DIR}/cloog/install \
             --with-gmp-prefix=${CURDIR}/${BUILD_DIR}/gmp/install \
-            --with-isl-prefix=${CURDIR}/${BUILD_DIR}/isl/install
+            --with-isl-prefix=${CURDIR}/${BUILD_DIR}/isl/install \
+            --with-osl-prefix=${CURDIR}/${BUILD_DIR}/osl/install
 	@touch $@
 
 ########################################
@@ -939,6 +1012,7 @@ ${BUILD_DIR}/cloog/obj/.compile.marker: \
 ########################################
 # Install CLooG
 ########################################
+# Workaround to make gcc link properly with static deps
 cloog-install: \
     ${BUILD_DIR}/cloog/install/.install.marker
 
@@ -946,11 +1020,19 @@ ${BUILD_DIR}/cloog/install/.install.marker: \
     ${BUILD_DIR}/cloog/obj/.compile.marker \
     ${BUILD_DIR}/cloog/install/.mkdir.marker
 	$(MAKE) -C ${BUILD_DIR}/cloog/obj install
+	@mv ${CURDIR}/${BUILD_DIR}/cloog/install/lib/libcloog-isl.a ${CURDIR}/${BUILD_DIR}/cloog/install/lib/libcloog-isl-real.a
+	@echo SEARCH_DIR\(${CURDIR}/${BUILD_DIR}/cloog/install/lib\) > ${CURDIR}/${BUILD_DIR}/cloog/install/lib/libcloog-isl.a
+	@echo SEARCH_DIR\(${CURDIR}/${BUILD_DIR}/osl/install/lib\) >> ${CURDIR}/${BUILD_DIR}/cloog/install/lib/libcloog-isl.a
+	@echo SEARCH_DIR\(${CURDIR}/${BUILD_DIR}/isl/install/lib\) >> ${CURDIR}/${BUILD_DIR}/cloog/install/lib/libcloog-isl.a
+	@echo SEARCH_DIR\(${CURDIR}/${BUILD_DIR}/piplib/install/lib\) >> ${CURDIR}/${BUILD_DIR}/cloog/install/lib/libcloog-isl.a
+	@echo 'INPUT(-lcloog-isl-real -losl -lisl -lpiplibMP -lmpfr -lgmp)' >> ${CURDIR}/${BUILD_DIR}/cloog/install/lib/libcloog-isl.a
 	@touch $@
 
 ########################################
 # Configure GCC
 ########################################
+# PPL no longer needed
+# ${BUILD_DIR}/ppl/install/.install.marker
 gcc-configure: \
     ${BUILD_DIR}/gcc/obj/.config.marker
 
@@ -968,7 +1050,6 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
     ${BUILD_DIR}/gmp/install/.install.marker \
     ${BUILD_DIR}/mpfr/install/.install.marker \
     ${BUILD_DIR}/mpc/install/.install.marker \
-    ${BUILD_DIR}/ppl/install/.install.marker \
     ${BUILD_DIR}/isl/install/.install.marker \
     ${BUILD_DIR}/piplib/install/.install.marker \
     ${BUILD_DIR}/cloog/install/.install.marker \
@@ -992,10 +1073,8 @@ ${BUILD_DIR}/gcc/obj/.config.marker: \
             --with-gmp=${CURDIR}/${BUILD_DIR}/gmp/install \
             --with-mpfr=${CURDIR}/${BUILD_DIR}/mpfr/install \
             --with-mpc=${CURDIR}/${BUILD_DIR}/mpc/install \
-            --with-ppl=${CURDIR}/${BUILD_DIR}/ppl/install \
             --with-isl=${CURDIR}/${BUILD_DIR}/isl/install \
             --with-cloog=${CURDIR}/${BUILD_DIR}/cloog/install \
-            --with-host-libstdcxx="-L${CURDIR}/${BUILD_DIR}/isl/install/lib -lisl -L${CURDIR}/${BUILD_DIR}/piplib/install/lib -lpiplibMP -L${CURDIR}/${BUILD_DIR}/gmp/install/lib -lgmpxx -lgmp -lstdc++ -lsupc++ -lm" \
         --enable-languages=c${GCC_CPP_${GCC_CPP}}${GCC_FORTRAN_${GCC_FORTRAN}}${GCC_OBJC_${GCC_OBJC}}${GCC_JAVA_${GCC_JAVA}}${GCC_ADA_${GCC_ADA}} \
         ${GCC_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
         ${GCC_CONFIG_EXTRA_ARGS}
@@ -1038,7 +1117,7 @@ ${BUILD_DIR}/mingw/obj/.config.marker: \
 	$(ADD_BIN_PATH) ../../../${BUILD_DIR}/mingw/mingw-w64-crt/configure \
 	    $(CONFIG_BUILD_ARGS) \
 	    --host=${TARGET_ARCH} \
-	    --prefix=${CURDIR}/${BUILD_DIR}/root \
+	    --prefix=${CURDIR}/${BUILD_DIR}/root/${TARGET_ARCH} \
 	    --with-sysroot=${CURDIR}/${BUILD_DIR}/root \
 	    ${MINGW_CONFIG_EXTRA_ARGS_MULTI_${ENABLE_MULTILIB}} \
 	    ${MINGW_CONFIG_EXTRA_ARGS}
@@ -1619,7 +1698,8 @@ ${NATIVE_DIR}/cloog/obj/.config.marker: \
     ${NATIVE_DIR}/gmp/install/.install.marker \
     ${NATIVE_DIR}/ppl/install/.install.marker \
     ${NATIVE_DIR}/piplib/install/.install.marker \
-    ${NATIVE_DIR}/isl/install/.install.marker
+    ${NATIVE_DIR}/isl/install/.install.marker \
+    ${NATIVE_DIR}/osl/install/.install.marker
 	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
 	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
 	     HOST_ARCH=${TARGET_ARCH} \
@@ -1700,6 +1780,51 @@ ${NATIVE_DIR}/piplib/install/.install.marker: \
 	     BUILD_DIR=${NATIVE_DIR} $@
 
 ########################################
+# Configure OSL
+########################################
+native-osl-configure: \
+    ${NATIVE_DIR}/osl/obj/.config.marker
+
+${NATIVE_DIR}/osl/obj/.config.marker: \
+    ${BUILD_DIR}/gcc/obj/.install.marker \
+    ${NATIVE_DIR}/mingw-headers/obj/.install.marker \
+    ${NATIVE_DIR}/osl/obj/.mkdir.marker \
+    ${NATIVE_DIR}/gmp/install/.install.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+             HOST_ARCH=${TARGET_ARCH} \
+             TARGET_ARCH=${TARGET_ARCH} \
+             BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Compile OSL
+########################################
+native-osl-compile: \
+    ${NATIVE_DIR}/osl/obj/.compile.marker
+
+${NATIVE_DIR}/osl/obj/.compile.marker: \
+    ${NATIVE_DIR}/osl/obj/.config.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+             HOST_ARCH=${TARGET_ARCH} \
+             TARGET_ARCH=${TARGET_ARCH} \
+             BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
+# Install OSL
+########################################
+native-osl-install: \
+    ${NATIVE_DIR}/osl/install/.install.marker
+
+${NATIVE_DIR}/osl/install/.install.marker: \
+    ${NATIVE_DIR}/osl/obj/.compile.marker
+	PATH=$(realpath ${BUILD_DIR}/root/bin):$$PATH \
+	$(MAKE) -f $(lastword ${MAKEFILE_LIST}) \
+             HOST_ARCH=${TARGET_ARCH} \
+             TARGET_ARCH=${TARGET_ARCH} \
+             BUILD_DIR=${NATIVE_DIR} $@
+
+########################################
 # Configure ISL
 ########################################
 native-isl-configure: \
@@ -1771,6 +1896,9 @@ endif
 ########################################
 # Configure GCC
 ########################################
+# PPL no longer needed
+# ${NATIVE_DIR}/ppl/install/.install.marker
+
 native-gcc-configure: \
     ${NATIVE_DIR}/gcc/obj/.config.marker
 
@@ -1781,7 +1909,6 @@ ${NATIVE_DIR}/gcc/obj/.config.marker: \
     ${NATIVE_DIR}/gmp/install/.install.marker \
     ${NATIVE_DIR}/mpfr/install/.install.marker \
     ${NATIVE_DIR}/mpc/install/.install.marker \
-    ${NATIVE_DIR}/ppl/install/.install.marker \
     ${NATIVE_DIR}/isl/install/.install.marker \
     ${NATIVE_DIR}/piplib/install/.install.marker \
     ${NATIVE_DIR}/cloog/install/.install.marker \
@@ -2226,6 +2353,10 @@ TARGETS := \
   isl-download \
   isl-compile \
   isl-install \
+  osl-configure \
+  osl-download \
+  osl-compile \
+  osl-install \
   piplib-configure \
   piplib-download \
   piplib-compile \
@@ -2233,6 +2364,9 @@ TARGETS := \
   native-isl-configure \
   native-isl-compile \
   native-isl-install \
+  native-osl-configure \
+  native-osl-compile \
+  native-osl-install \
   native-piplib-configure \
   native-piplib-compile \
   native-piplib-install \
