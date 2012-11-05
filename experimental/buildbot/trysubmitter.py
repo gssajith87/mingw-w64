@@ -3,7 +3,7 @@
 """ buildbot resource for submitting try server patches via HTTP """
 
 from twisted.web.resource import Resource
-from twisted.web.error import ErrorPage
+#from twisted.web.error import ErrorPage
 from twisted.web import http
 import twisted.web.server
 from buildbot.sourcestamp import SourceStamp

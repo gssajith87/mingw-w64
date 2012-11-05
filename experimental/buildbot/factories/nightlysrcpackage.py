@@ -76,11 +76,10 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                             maxsize=102400,
                             mode=0600))
 
-    self.addStep(ShellCommand,
-                 name="patch-pull",
-                 command=["make", "-f", "mingw-makefile", "patch-pull"],
-                 description=["patches", "pull"],
-                 descriptionDone=["pulled", "patches"])
+    self.addStep(ShellCommand(name="patch-pull",
+                              command=["make", "-f", "mingw-makefile", "patch-pull"],
+                              description=["patches", "pull"],
+                              descriptionDone=["pulled", "patches"]))
 
     # download binutils
     self.addStep(Compile(name="binutils-pull",
@@ -134,16 +133,15 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          env={"GMP_VERSION": WithProperties("%(gmp_version)s")}))
 
     # Fix gmp (fails to find m4 for flex)
-    self.addStep(ShellCommand,
-                 name="gmp-patch",
-                 workdir="build/src/gcc/src/gmp",
-                 description=["patch", "gmp"],
-                 command=["bash", "-c",
-                          """if [ -n "$( ls ../../../patches/gmp/*.patch )" ] ; then
-                               for i in ../../../patches/gmp/*.patch ; do
-                                 patch -p1 -f -i "$i" ;
-                               done ;
-                             fi""".replace("\n", " ")])
+    self.addStep(ShellCommand(name="gmp-patch",
+                              workdir="build/src/gcc/src/gmp",
+                              description=["patch", "gmp"],
+                              command=["bash", "-c",
+                                       """if [ -n "$( ls ../../../patches/gmp/*.patch )" ] ; then
+                                            for i in ../../../patches/gmp/*.patch ; do
+                                              patch -p1 -f -i "$i" ;
+                                            done ;
+                                          fi""".replace("\n", " ")]))
 
     # download mpfr
     self.addStep(Compile(name="mpfr-download",
@@ -239,14 +237,12 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                          """ > revstamp.h """)]))
 
     # Set the gcc version strings if this is a formal release
-    self.addStep(ShellCommand,
-                 name="release-information",
-                 workdir="build/src/gcc/src/gcc",
-                 description=["writing", "version", "string"],
-                 descriptionDone=["version", "string", "written"],
-                 doStepIf=lambda step: ( (step.build.getProperties().has_key("release_build")) and (step.getProperty("release_build")) ),
-                 command=["bash", "-c", 
-                          WithProperties("""echo '%(release_gcc_ver:-)s' > BASE-VER && echo > DEV-PHASE """)])
+    self.addStep(ShellCommand(name="release-information",
+                              workdir="build/src/gcc/src/gcc",
+                              description=["writing", "version", "string"],
+                              descriptionDone=["version", "string", "written"],
+                              doStepIf=lambda step: ( (step.build.getProperties().has_key("release_build")) and (step.getProperty("release_build")) ),
+                              command=["bash", "-c", WithProperties("""echo '%(release_gcc_ver:-)s' > BASE-VER && echo > DEV-PHASE """)]))
     # make the tarball
     self.addStep(SetProperty(property="destname",
                              command=["echo", WithPropertiesRecursive(WithProperties("%(srcname_format)s"))]))

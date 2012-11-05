@@ -3,7 +3,7 @@
 """ buildbot resource for submitting forced builds with custom properties """
 
 from twisted.web.resource import Resource
-from twisted.web.error import ErrorPage
+#from twisted.web.error import ErrorPage
 from twisted.web.util import Redirect
 from twisted.web import http
 from twisted.python import log

@@ -46,9 +46,8 @@ class Mingw64Factory(factory.BuildFactory):
       if re.match(os_mask["expr"], self.target) is not None:
         target_os = os_mask["value"]
         break
-    self.addStep(SetProperty,
-                 command=["echo", target_os],
-                 property="target-os")
+    self.addStep(SetProperty(property="target-os",
+                             command=["echo", target_os]))
 
     self.addStep(SetProperty(property="target_arch",
                              command=["echo", self.target]))
@@ -274,9 +273,8 @@ class Mingw64Factory(factory.BuildFactory):
                          env={"SRC_ARCHIVE": WithProperties("%(src_archive)s"),
                               "TARGET_ARCH": WithProperties("%(target_arch)s")}))
 
-    self.addStep(SetProperty,
-                 property="filename",
-                 command=["echo", WithPropertiesRecursive(WithProperties("%(filename_format)s"))])
+    self.addStep(SetProperty(property="filename",
+                             command=["echo", WithPropertiesRecursive(WithProperties("%(filename_format)s"))]))
 
     # make the tarball
     self._step_Archive()
@@ -291,23 +289,21 @@ class Mingw64Factory(factory.BuildFactory):
                          haltOnFailure=True))
 
     # upload the tarball (to the build master)
-    self.addStep(FileUpload,
-                 slavesrc=WithProperties("%(filename)s"),
-                 masterdest=WithProperties("%(filename)s"),
-                 mode=0644,
-                 haltOnFailure=True)
+    self.addStep(FileUpload(slavesrc=WithProperties("%(filename)s"),
+                            masterdest=WithProperties("%(filename)s"),
+                            mode=0644,
+                            haltOnFailure=True))
 
     # tell the master to upload the file to sourceforge
-    self.addStep(Trigger,
-                 schedulerNames=["sourceforge-upload"],
-                 waitForFinish=True,
-                 set_properties={"masterdir":  WithProperties("%(masterdir)s"),
-                                 "target-os":  WithProperties("%(target-os)s"),
-                                 "filename":   WithProperties("%(filename)s"),
-                                 "destname":   WithProperties("%(destname)s"),
-                                 "datestamp":  WithProperties("%(datestamp:-)s"),
-                                 "path":       WithProperties("%(path:-)s"),
-                                 "is_nightly": WithProperties("%(is_nightly:-)s")})
+    self.addStep(Trigger(schedulerNames=["sourceforge-upload"],
+                         waitForFinish=True,
+                         set_properties={"masterdir":  WithProperties("%(masterdir)s"),
+                                         "target-os":  WithProperties("%(target-os)s"),
+                                         "filename":   WithProperties("%(filename)s"),
+                                         "destname":   WithProperties("%(destname)s"),
+                                         "datestamp":  WithProperties("%(datestamp:-)s"),
+                                         "path":       WithProperties("%(path:-)s"),
+                                         "is_nightly": WithProperties("%(is_nightly:-)s")}))
 
   def _step_AdditionalProperties(self):
     pass
@@ -326,13 +322,11 @@ class Mingw64Factory(factory.BuildFactory):
     if self.host_os == "darwin":
       command[0]="gnutar"
     # make the tarball
-    self.addStep(ShellCommand,
-                 name="makedist",
-                 description=["tarball", "package"],
-                 workdir="build/build/root",
-                 command=command,
-                 haltOnFailure=True)
-                
+    self.addStep(ShellCommand(name="makedist",
+                              description=["tarball", "package"],
+                              workdir="build/build/root",
+                              command=command,
+                              haltOnFailure=True))
 
 class Mingw64Linux32Factory(Mingw64Factory):
   host_cpu = "i686"
@@ -368,18 +362,17 @@ class Mingw64MingwFactory(Mingw64Factory):
 
   def _step_Archive(self):
     # make the tarball
-    self.addStep(ShellCommand,
-                 name="makedist",
-                 description=["zipfile", "package"],
-                 workdir="build/build/root",
-                 command=["zip",
-                          "-r",
-                          "-9",
-                          "-v",
-                          WithProperties("../../%(filename)s"),
-                          ".",
-                          "-x", ".svn"],
-                 haltOnFailure=True)
+    self.addStep(ShellCommand(name="makedist",
+                              description=["zipfile", "package"],
+                              workdir="build/build/root",
+                              command=["zip",
+                                       "-r",
+                                       "-9",
+                                       "-v",
+                                       WithProperties("../../%(filename)s"),
+                                       ".",
+                                       "-x", ".svn"],
+                              haltOnFailure=True))
 
 class Mingw64Darwin32Factory(Mingw64Factory):
   host_cpu = "i686"
