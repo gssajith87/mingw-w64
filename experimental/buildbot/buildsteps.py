@@ -35,46 +35,6 @@ class M64CVS(ShellCommand):
         else:
             return [self.cvsmodule + " pulled"]
 
-class ShellCommandConditional(ShellCommand):
-    """Runs a remote command if a property (given by "condprop") is set"""
-    def __init__(self,
-                 condprop=None,
-                 condinvert=False,
-                 condvalue=None,
-                 conddefault=None,
-                 **kwargs):
-        ShellCommand.__init__(self, **kwargs)
-        self.addFactoryArguments(condprop=condprop,
-                                 condinvert=condinvert,
-                                 condvalue=condvalue,
-                                 conddefault=conddefault)
-        self.condProp = condprop
-        self.condInvert = condinvert
-        self.condValue = condvalue
-        self.condDefault = conddefault
-
-    def start(self):
-        if self.condProp is not None:
-            value = self.condDefault
-            matched = False
-            if self.build.getProperties().has_key(self.condProp):
-                value = self.build.getProperty(self.condProp)
-            elif self.condDefault is None:
-                # no value and no default, assume we want to execute
-                matched = True
-
-            if not matched:
-                if self.condValue is None:
-                    matched = bool(value)
-                else:
-                    matched = (value == self.condValue)
-                if self.condInvert:
-                    matched = not matched
-
-            if not matched:
-                return SKIPPED
-        ShellCommand.start(self)
-
 class SetPropertyConditional(SetProperty):
     """Sets a property if a different property (given by "condprop") is set"""
     def __init__(self,
