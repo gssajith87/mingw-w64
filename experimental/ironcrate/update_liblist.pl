@@ -8,12 +8,14 @@ my @src_dir = qw( error except locale memory misc sort threads );
 #flags for tests
 my @test_link_flags = qw( CPPFLAGS CFLAGS LDFLAG LDADD );
 
+die "Rerun in the ironcrate source dir" if(!-f 'error/_ic_errno.c');
+
 foreach my $dir (@src_dir){
-  opendir(my $dh, $dir) || die "Can't open $dir\n";
+  opendir(my $dh, $dir) || die "Can't open $dir";
   my @c_files = grep { m/\.c$/ } readdir($dh);
   close($dh);
 
-  open(my $fh, '>', "$dir/list.am") || die "Can't write fragment for $dir\n";
+  open(my $fh, '>', "$dir/list.am") || die "Can't write fragment for $dir";
   printf $fh "libironcrate_a_SOURCES += \\\n", $dir;
   foreach my $file (@c_files){
     print $fh "$dir/$file";
