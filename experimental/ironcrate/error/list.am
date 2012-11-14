@@ -1,0 +1,14 @@
+libironcrate_a_SOURCES += \
+error/_ic_errno.c \
+error/_ic_get_doserrno.c \
+error/_ic_get_errno.c \
+error/_ic_get_errno_from_winerr.c \
+error/_ic_get_sys_errmsg.c \
+error/_ic_mapwinerr.c \
+error/_ic_set_doserrno.c \
+error/_ic_set_errno.c \
+error/_ic_sys_errlist.c \
+error/_ic_sys_nerr.c \
+error/__ic_doserrno.c \
+error/__ic_sys_errlist.c \
+error/__ic_sys_nerr.c

@@ -1,0 +1,6 @@
+libironcrate_a_SOURCES += \
+threads/locks.c \
+threads/tls.c \
+threads/__ic_initCritSect.c \
+threads/__ic_threadhandle.c \
+threads/__ic_threadid.c

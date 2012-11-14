@@ -1,0 +1,432 @@
+check_PROGRAMS += \
+testsuite/dir/chmkrmdir1 \
+testsuite/dir/wchmkrmdir1 \
+testsuite/mbstring/_ismbbalnum \
+testsuite/mbstring/_ismbbalnum_l \
+testsuite/mbstring/_ismbbalpha \
+testsuite/mbstring/_ismbbalpha_l \
+testsuite/mbstring/_ismbbgraph \
+testsuite/mbstring/_ismbbgraph_l \
+testsuite/mbstring/_ismbbkalnum \
+testsuite/mbstring/_ismbbkalnum_l \
+testsuite/mbstring/_ismbbkana \
+testsuite/mbstring/_ismbbkana_l \
+testsuite/mbstring/_ismbbkprint \
+testsuite/mbstring/_ismbbkprint_l \
+testsuite/mbstring/_ismbbkpunct \
+testsuite/mbstring/_ismbbkpunct_l \
+testsuite/mbstring/_ismbblead \
+testsuite/mbstring/_ismbblead_l \
+testsuite/mbstring/_ismbbprint \
+testsuite/mbstring/_ismbbprint_l \
+testsuite/mbstring/_ismbbpunct \
+testsuite/mbstring/_ismbbpunct_l \
+testsuite/mbstring/_ismbbtrail \
+testsuite/mbstring/_ismbbtrail_l \
+testsuite/mbstring/_mbbtype \
+testsuite/mbstring/_mbbtype_l \
+testsuite/memory/memccpy \
+testsuite/memory/memchr \
+testsuite/memory/memcmp \
+testsuite/memory/memcpy \
+testsuite/memory/memcpy_s \
+testsuite/memory/memicmp \
+testsuite/memory/memicmp_l \
+testsuite/memory/memmove \
+testsuite/memory/memmove_s \
+testsuite/memory/memset \
+testsuite/string/strcat \
+testsuite/string/strcat_s \
+testsuite/string/strchr \
+testsuite/string/strcmp \
+testsuite/string/strcoll \
+testsuite/string/strcoll_l \
+testsuite/string/strcpy \
+testsuite/string/strcpy_s \
+testsuite/string/strcspn \
+testsuite/string/strdup \
+testsuite/string/stricmp \
+testsuite/string/stricmp_l \
+testsuite/string/strlen \
+testsuite/string/strncat \
+testsuite/string/strncat_s \
+testsuite/string/strncmp \
+testsuite/string/strncpy \
+testsuite/string/strncpy_s \
+testsuite/string/strnlen \
+testsuite/string/strpbrk \
+testsuite/string/strrchr \
+testsuite/string/strspn \
+testsuite/string/tolower \
+testsuite/string/toupper \
+testsuite/string/_strdate \
+testsuite/string/_strdate_s \
+testsuite/string/_stricoll \
+testsuite/string/_stricoll_l \
+testsuite/string/_strlwr \
+testsuite/string/_strlwr_s_l \
+testsuite/string/_strncoll \
+testsuite/string/_strncoll_l \
+testsuite/string/_strnicmp \
+testsuite/string/_strnicmp_l \
+testsuite/string/_strnicoll \
+testsuite/string/_strnicoll_l \
+testsuite/string/_strnset \
+testsuite/string/_strnset_s \
+testsuite/string/_strrev \
+testsuite/string/_strset \
+testsuite/string/_strset_s \
+testsuite/string/_strtime \
+testsuite/string/_strtime_s \
+testsuite/string/_strupr \
+testsuite/string/_strupr_s_l \
+testsuite/string/__strncnt \
+testsuite/time/strdate \
+testsuite/time/strdate_s \
+testsuite/time/strtime \
+testsuite/time/strtime_s
+
+testsuite_dir_chmkrmdir1_CPPFLAGS=$(test_cppflags)
+testsuite_dir_wchmkrmdir1_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbalnum_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbalnum_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbalpha_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbalpha_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbgraph_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbgraph_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbkalnum_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbkalnum_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbkana_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbkana_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbkprint_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbkprint_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbkpunct_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbkpunct_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbblead_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbblead_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbprint_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbprint_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbpunct_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbpunct_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbtrail_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__ismbbtrail_l_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__mbbtype_CPPFLAGS=$(test_cppflags)
+testsuite_mbstring__mbbtype_l_CPPFLAGS=$(test_cppflags)
+testsuite_memory_memccpy_CPPFLAGS=$(test_cppflags)
+testsuite_memory_memchr_CPPFLAGS=$(test_cppflags)
+testsuite_memory_memcmp_CPPFLAGS=$(test_cppflags)
+testsuite_memory_memcpy_CPPFLAGS=$(test_cppflags)
+testsuite_memory_memcpy_s_CPPFLAGS=$(test_cppflags)
+testsuite_memory_memicmp_CPPFLAGS=$(test_cppflags)
+testsuite_memory_memicmp_l_CPPFLAGS=$(test_cppflags)
+testsuite_memory_memmove_CPPFLAGS=$(test_cppflags)
+testsuite_memory_memmove_s_CPPFLAGS=$(test_cppflags)
+testsuite_memory_memset_CPPFLAGS=$(test_cppflags)
+testsuite_string_strcat_CPPFLAGS=$(test_cppflags)
+testsuite_string_strcat_s_CPPFLAGS=$(test_cppflags)
+testsuite_string_strchr_CPPFLAGS=$(test_cppflags)
+testsuite_string_strcmp_CPPFLAGS=$(test_cppflags)
+testsuite_string_strcoll_CPPFLAGS=$(test_cppflags)
+testsuite_string_strcoll_l_CPPFLAGS=$(test_cppflags)
+testsuite_string_strcpy_CPPFLAGS=$(test_cppflags)
+testsuite_string_strcpy_s_CPPFLAGS=$(test_cppflags)
+testsuite_string_strcspn_CPPFLAGS=$(test_cppflags)
+testsuite_string_strdup_CPPFLAGS=$(test_cppflags)
+testsuite_string_stricmp_CPPFLAGS=$(test_cppflags)
+testsuite_string_stricmp_l_CPPFLAGS=$(test_cppflags)
+testsuite_string_strlen_CPPFLAGS=$(test_cppflags)
+testsuite_string_strncat_CPPFLAGS=$(test_cppflags)
+testsuite_string_strncat_s_CPPFLAGS=$(test_cppflags)
+testsuite_string_strncmp_CPPFLAGS=$(test_cppflags)
+testsuite_string_strncpy_CPPFLAGS=$(test_cppflags)
+testsuite_string_strncpy_s_CPPFLAGS=$(test_cppflags)
+testsuite_string_strnlen_CPPFLAGS=$(test_cppflags)
+testsuite_string_strpbrk_CPPFLAGS=$(test_cppflags)
+testsuite_string_strrchr_CPPFLAGS=$(test_cppflags)
+testsuite_string_strspn_CPPFLAGS=$(test_cppflags)
+testsuite_string_tolower_CPPFLAGS=$(test_cppflags)
+testsuite_string_toupper_CPPFLAGS=$(test_cppflags)
+testsuite_string__strdate_CPPFLAGS=$(test_cppflags)
+testsuite_string__strdate_s_CPPFLAGS=$(test_cppflags)
+testsuite_string__stricoll_CPPFLAGS=$(test_cppflags)
+testsuite_string__stricoll_l_CPPFLAGS=$(test_cppflags)
+testsuite_string__strlwr_CPPFLAGS=$(test_cppflags)
+testsuite_string__strlwr_s_l_CPPFLAGS=$(test_cppflags)
+testsuite_string__strncoll_CPPFLAGS=$(test_cppflags)
+testsuite_string__strncoll_l_CPPFLAGS=$(test_cppflags)
+testsuite_string__strnicmp_CPPFLAGS=$(test_cppflags)
+testsuite_string__strnicmp_l_CPPFLAGS=$(test_cppflags)
+testsuite_string__strnicoll_CPPFLAGS=$(test_cppflags)
+testsuite_string__strnicoll_l_CPPFLAGS=$(test_cppflags)
+testsuite_string__strnset_CPPFLAGS=$(test_cppflags)
+testsuite_string__strnset_s_CPPFLAGS=$(test_cppflags)
+testsuite_string__strrev_CPPFLAGS=$(test_cppflags)
+testsuite_string__strset_CPPFLAGS=$(test_cppflags)
+testsuite_string__strset_s_CPPFLAGS=$(test_cppflags)
+testsuite_string__strtime_CPPFLAGS=$(test_cppflags)
+testsuite_string__strtime_s_CPPFLAGS=$(test_cppflags)
+testsuite_string__strupr_CPPFLAGS=$(test_cppflags)
+testsuite_string__strupr_s_l_CPPFLAGS=$(test_cppflags)
+testsuite_string___strncnt_CPPFLAGS=$(test_cppflags)
+testsuite_time_strdate_CPPFLAGS=$(test_cppflags)
+testsuite_time_strdate_s_CPPFLAGS=$(test_cppflags)
+testsuite_time_strtime_CPPFLAGS=$(test_cppflags)
+testsuite_time_strtime_s_CPPFLAGS=$(test_cppflags)
+testsuite_dir_chmkrmdir1_CFLAGS=$(test_cflags)
+testsuite_dir_wchmkrmdir1_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbalnum_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbalnum_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbalpha_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbalpha_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbgraph_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbgraph_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbkalnum_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbkalnum_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbkana_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbkana_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbkprint_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbkprint_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbkpunct_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbkpunct_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbblead_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbblead_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbprint_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbprint_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbpunct_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbpunct_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbtrail_CFLAGS=$(test_cflags)
+testsuite_mbstring__ismbbtrail_l_CFLAGS=$(test_cflags)
+testsuite_mbstring__mbbtype_CFLAGS=$(test_cflags)
+testsuite_mbstring__mbbtype_l_CFLAGS=$(test_cflags)
+testsuite_memory_memccpy_CFLAGS=$(test_cflags)
+testsuite_memory_memchr_CFLAGS=$(test_cflags)
+testsuite_memory_memcmp_CFLAGS=$(test_cflags)
+testsuite_memory_memcpy_CFLAGS=$(test_cflags)
+testsuite_memory_memcpy_s_CFLAGS=$(test_cflags)
+testsuite_memory_memicmp_CFLAGS=$(test_cflags)
+testsuite_memory_memicmp_l_CFLAGS=$(test_cflags)
+testsuite_memory_memmove_CFLAGS=$(test_cflags)
+testsuite_memory_memmove_s_CFLAGS=$(test_cflags)
+testsuite_memory_memset_CFLAGS=$(test_cflags)
+testsuite_string_strcat_CFLAGS=$(test_cflags)
+testsuite_string_strcat_s_CFLAGS=$(test_cflags)
+testsuite_string_strchr_CFLAGS=$(test_cflags)
+testsuite_string_strcmp_CFLAGS=$(test_cflags)
+testsuite_string_strcoll_CFLAGS=$(test_cflags)
+testsuite_string_strcoll_l_CFLAGS=$(test_cflags)
+testsuite_string_strcpy_CFLAGS=$(test_cflags)
+testsuite_string_strcpy_s_CFLAGS=$(test_cflags)
+testsuite_string_strcspn_CFLAGS=$(test_cflags)
+testsuite_string_strdup_CFLAGS=$(test_cflags)
+testsuite_string_stricmp_CFLAGS=$(test_cflags)
+testsuite_string_stricmp_l_CFLAGS=$(test_cflags)
+testsuite_string_strlen_CFLAGS=$(test_cflags)
+testsuite_string_strncat_CFLAGS=$(test_cflags)
+testsuite_string_strncat_s_CFLAGS=$(test_cflags)
+testsuite_string_strncmp_CFLAGS=$(test_cflags)
+testsuite_string_strncpy_CFLAGS=$(test_cflags)
+testsuite_string_strncpy_s_CFLAGS=$(test_cflags)
+testsuite_string_strnlen_CFLAGS=$(test_cflags)
+testsuite_string_strpbrk_CFLAGS=$(test_cflags)
+testsuite_string_strrchr_CFLAGS=$(test_cflags)
+testsuite_string_strspn_CFLAGS=$(test_cflags)
+testsuite_string_tolower_CFLAGS=$(test_cflags)
+testsuite_string_toupper_CFLAGS=$(test_cflags)
+testsuite_string__strdate_CFLAGS=$(test_cflags)
+testsuite_string__strdate_s_CFLAGS=$(test_cflags)
+testsuite_string__stricoll_CFLAGS=$(test_cflags)
+testsuite_string__stricoll_l_CFLAGS=$(test_cflags)
+testsuite_string__strlwr_CFLAGS=$(test_cflags)
+testsuite_string__strlwr_s_l_CFLAGS=$(test_cflags)
+testsuite_string__strncoll_CFLAGS=$(test_cflags)
+testsuite_string__strncoll_l_CFLAGS=$(test_cflags)
+testsuite_string__strnicmp_CFLAGS=$(test_cflags)
+testsuite_string__strnicmp_l_CFLAGS=$(test_cflags)
+testsuite_string__strnicoll_CFLAGS=$(test_cflags)
+testsuite_string__strnicoll_l_CFLAGS=$(test_cflags)
+testsuite_string__strnset_CFLAGS=$(test_cflags)
+testsuite_string__strnset_s_CFLAGS=$(test_cflags)
+testsuite_string__strrev_CFLAGS=$(test_cflags)
+testsuite_string__strset_CFLAGS=$(test_cflags)
+testsuite_string__strset_s_CFLAGS=$(test_cflags)
+testsuite_string__strtime_CFLAGS=$(test_cflags)
+testsuite_string__strtime_s_CFLAGS=$(test_cflags)
+testsuite_string__strupr_CFLAGS=$(test_cflags)
+testsuite_string__strupr_s_l_CFLAGS=$(test_cflags)
+testsuite_string___strncnt_CFLAGS=$(test_cflags)
+testsuite_time_strdate_CFLAGS=$(test_cflags)
+testsuite_time_strdate_s_CFLAGS=$(test_cflags)
+testsuite_time_strtime_CFLAGS=$(test_cflags)
+testsuite_time_strtime_s_CFLAGS=$(test_cflags)
+testsuite_dir_chmkrmdir1_LDFLAG=$(test_ldflag)
+testsuite_dir_wchmkrmdir1_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbalnum_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbalnum_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbalpha_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbalpha_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbgraph_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbgraph_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbkalnum_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbkalnum_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbkana_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbkana_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbkprint_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbkprint_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbkpunct_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbkpunct_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbblead_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbblead_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbprint_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbprint_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbpunct_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbpunct_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbtrail_LDFLAG=$(test_ldflag)
+testsuite_mbstring__ismbbtrail_l_LDFLAG=$(test_ldflag)
+testsuite_mbstring__mbbtype_LDFLAG=$(test_ldflag)
+testsuite_mbstring__mbbtype_l_LDFLAG=$(test_ldflag)
+testsuite_memory_memccpy_LDFLAG=$(test_ldflag)
+testsuite_memory_memchr_LDFLAG=$(test_ldflag)
+testsuite_memory_memcmp_LDFLAG=$(test_ldflag)
+testsuite_memory_memcpy_LDFLAG=$(test_ldflag)
+testsuite_memory_memcpy_s_LDFLAG=$(test_ldflag)
+testsuite_memory_memicmp_LDFLAG=$(test_ldflag)
+testsuite_memory_memicmp_l_LDFLAG=$(test_ldflag)
+testsuite_memory_memmove_LDFLAG=$(test_ldflag)
+testsuite_memory_memmove_s_LDFLAG=$(test_ldflag)
+testsuite_memory_memset_LDFLAG=$(test_ldflag)
+testsuite_string_strcat_LDFLAG=$(test_ldflag)
+testsuite_string_strcat_s_LDFLAG=$(test_ldflag)
+testsuite_string_strchr_LDFLAG=$(test_ldflag)
+testsuite_string_strcmp_LDFLAG=$(test_ldflag)
+testsuite_string_strcoll_LDFLAG=$(test_ldflag)
+testsuite_string_strcoll_l_LDFLAG=$(test_ldflag)
+testsuite_string_strcpy_LDFLAG=$(test_ldflag)
+testsuite_string_strcpy_s_LDFLAG=$(test_ldflag)
+testsuite_string_strcspn_LDFLAG=$(test_ldflag)
+testsuite_string_strdup_LDFLAG=$(test_ldflag)
+testsuite_string_stricmp_LDFLAG=$(test_ldflag)
+testsuite_string_stricmp_l_LDFLAG=$(test_ldflag)
+testsuite_string_strlen_LDFLAG=$(test_ldflag)
+testsuite_string_strncat_LDFLAG=$(test_ldflag)
+testsuite_string_strncat_s_LDFLAG=$(test_ldflag)
+testsuite_string_strncmp_LDFLAG=$(test_ldflag)
+testsuite_string_strncpy_LDFLAG=$(test_ldflag)
+testsuite_string_strncpy_s_LDFLAG=$(test_ldflag)
+testsuite_string_strnlen_LDFLAG=$(test_ldflag)
+testsuite_string_strpbrk_LDFLAG=$(test_ldflag)
+testsuite_string_strrchr_LDFLAG=$(test_ldflag)
+testsuite_string_strspn_LDFLAG=$(test_ldflag)
+testsuite_string_tolower_LDFLAG=$(test_ldflag)
+testsuite_string_toupper_LDFLAG=$(test_ldflag)
+testsuite_string__strdate_LDFLAG=$(test_ldflag)
+testsuite_string__strdate_s_LDFLAG=$(test_ldflag)
+testsuite_string__stricoll_LDFLAG=$(test_ldflag)
+testsuite_string__stricoll_l_LDFLAG=$(test_ldflag)
+testsuite_string__strlwr_LDFLAG=$(test_ldflag)
+testsuite_string__strlwr_s_l_LDFLAG=$(test_ldflag)
+testsuite_string__strncoll_LDFLAG=$(test_ldflag)
+testsuite_string__strncoll_l_LDFLAG=$(test_ldflag)
+testsuite_string__strnicmp_LDFLAG=$(test_ldflag)
+testsuite_string__strnicmp_l_LDFLAG=$(test_ldflag)
+testsuite_string__strnicoll_LDFLAG=$(test_ldflag)
+testsuite_string__strnicoll_l_LDFLAG=$(test_ldflag)
+testsuite_string__strnset_LDFLAG=$(test_ldflag)
+testsuite_string__strnset_s_LDFLAG=$(test_ldflag)
+testsuite_string__strrev_LDFLAG=$(test_ldflag)
+testsuite_string__strset_LDFLAG=$(test_ldflag)
+testsuite_string__strset_s_LDFLAG=$(test_ldflag)
+testsuite_string__strtime_LDFLAG=$(test_ldflag)
+testsuite_string__strtime_s_LDFLAG=$(test_ldflag)
+testsuite_string__strupr_LDFLAG=$(test_ldflag)
+testsuite_string__strupr_s_l_LDFLAG=$(test_ldflag)
+testsuite_string___strncnt_LDFLAG=$(test_ldflag)
+testsuite_time_strdate_LDFLAG=$(test_ldflag)
+testsuite_time_strdate_s_LDFLAG=$(test_ldflag)
+testsuite_time_strtime_LDFLAG=$(test_ldflag)
+testsuite_time_strtime_s_LDFLAG=$(test_ldflag)
+testsuite_dir_chmkrmdir1_LDADD=$(test_ldadd)
+testsuite_dir_wchmkrmdir1_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbalnum_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbalnum_l_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbalpha_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbalpha_l_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbgraph_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbgraph_l_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbkalnum_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbkalnum_l_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbkana_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbkana_l_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbkprint_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbkprint_l_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbkpunct_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbkpunct_l_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbblead_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbblead_l_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbprint_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbprint_l_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbpunct_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbpunct_l_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbtrail_LDADD=$(test_ldadd)
+testsuite_mbstring__ismbbtrail_l_LDADD=$(test_ldadd)
+testsuite_mbstring__mbbtype_LDADD=$(test_ldadd)
+testsuite_mbstring__mbbtype_l_LDADD=$(test_ldadd)
+testsuite_memory_memccpy_LDADD=$(test_ldadd)
+testsuite_memory_memchr_LDADD=$(test_ldadd)
+testsuite_memory_memcmp_LDADD=$(test_ldadd)
+testsuite_memory_memcpy_LDADD=$(test_ldadd)
+testsuite_memory_memcpy_s_LDADD=$(test_ldadd)
+testsuite_memory_memicmp_LDADD=$(test_ldadd)
+testsuite_memory_memicmp_l_LDADD=$(test_ldadd)
+testsuite_memory_memmove_LDADD=$(test_ldadd)
+testsuite_memory_memmove_s_LDADD=$(test_ldadd)
+testsuite_memory_memset_LDADD=$(test_ldadd)
+testsuite_string_strcat_LDADD=$(test_ldadd)
+testsuite_string_strcat_s_LDADD=$(test_ldadd)
+testsuite_string_strchr_LDADD=$(test_ldadd)
+testsuite_string_strcmp_LDADD=$(test_ldadd)
+testsuite_string_strcoll_LDADD=$(test_ldadd)
+testsuite_string_strcoll_l_LDADD=$(test_ldadd)
+testsuite_string_strcpy_LDADD=$(test_ldadd)
+testsuite_string_strcpy_s_LDADD=$(test_ldadd)
+testsuite_string_strcspn_LDADD=$(test_ldadd)
+testsuite_string_strdup_LDADD=$(test_ldadd)
+testsuite_string_stricmp_LDADD=$(test_ldadd)
+testsuite_string_stricmp_l_LDADD=$(test_ldadd)
+testsuite_string_strlen_LDADD=$(test_ldadd)
+testsuite_string_strncat_LDADD=$(test_ldadd)
+testsuite_string_strncat_s_LDADD=$(test_ldadd)
+testsuite_string_strncmp_LDADD=$(test_ldadd)
+testsuite_string_strncpy_LDADD=$(test_ldadd)
+testsuite_string_strncpy_s_LDADD=$(test_ldadd)
+testsuite_string_strnlen_LDADD=$(test_ldadd)
+testsuite_string_strpbrk_LDADD=$(test_ldadd)
+testsuite_string_strrchr_LDADD=$(test_ldadd)
+testsuite_string_strspn_LDADD=$(test_ldadd)
+testsuite_string_tolower_LDADD=$(test_ldadd)
+testsuite_string_toupper_LDADD=$(test_ldadd)
+testsuite_string__strdate_LDADD=$(test_ldadd)
+testsuite_string__strdate_s_LDADD=$(test_ldadd)
+testsuite_string__stricoll_LDADD=$(test_ldadd)
+testsuite_string__stricoll_l_LDADD=$(test_ldadd)
+testsuite_string__strlwr_LDADD=$(test_ldadd)
+testsuite_string__strlwr_s_l_LDADD=$(test_ldadd)
+testsuite_string__strncoll_LDADD=$(test_ldadd)
+testsuite_string__strncoll_l_LDADD=$(test_ldadd)
+testsuite_string__strnicmp_LDADD=$(test_ldadd)
+testsuite_string__strnicmp_l_LDADD=$(test_ldadd)
+testsuite_string__strnicoll_LDADD=$(test_ldadd)
+testsuite_string__strnicoll_l_LDADD=$(test_ldadd)
+testsuite_string__strnset_LDADD=$(test_ldadd)
+testsuite_string__strnset_s_LDADD=$(test_ldadd)
+testsuite_string__strrev_LDADD=$(test_ldadd)
+testsuite_string__strset_LDADD=$(test_ldadd)
+testsuite_string__strset_s_LDADD=$(test_ldadd)
+testsuite_string__strtime_LDADD=$(test_ldadd)
+testsuite_string__strtime_s_LDADD=$(test_ldadd)
+testsuite_string__strupr_LDADD=$(test_ldadd)
+testsuite_string__strupr_s_l_LDADD=$(test_ldadd)
+testsuite_string___strncnt_LDADD=$(test_ldadd)
+testsuite_time_strdate_LDADD=$(test_ldadd)
+testsuite_time_strdate_s_LDADD=$(test_ldadd)
+testsuite_time_strtime_LDADD=$(test_ldadd)
+testsuite_time_strtime_s_LDADD=$(test_ldadd)

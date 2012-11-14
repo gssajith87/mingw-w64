@@ -32,5 +32,4 @@ AC_CHECK_HEADERS([windows.h])
 AM_CONDITIONAL([MSVC_MODE], [ test "x$am_cv_CC_dependencies_compiler_type" = "xmsvc7" ])
 
 AC_CONFIG_FILES([Makefile])
-#AC_CONFIG_FILES([testsuite/Makefile])
 AC_OUTPUT

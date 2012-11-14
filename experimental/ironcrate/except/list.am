@@ -1,0 +1,4 @@
+libironcrate_a_SOURCES += \
+except/__ic_excpt_act_table.c \
+except/__ic_excpt_act_table_num.c \
+except/__ic_excpt_act_table_sz.c

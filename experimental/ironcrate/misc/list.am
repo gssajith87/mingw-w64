@@ -1,0 +1,4 @@
+libironcrate_a_SOURCES += \
+misc/ic_rand.c \
+misc/ic_rand_s.c \
+misc/ic_srand.c

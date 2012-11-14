@@ -1,0 +1,9 @@
+libironcrate_a_SOURCES += \
+sort/ic_bsearch.c \
+sort/ic_bsearch_s.c \
+sort/ic_qsort.c \
+sort/ic_qsort_s.c \
+sort/_ic_lfind.c \
+sort/_ic_lfind_s.c \
+sort/_ic_lsearch.c \
+sort/_ic_lsearch_s.c
