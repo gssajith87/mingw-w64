@@ -45,6 +45,7 @@ import_idl() {
 # headers
 for f in \
 	corerror.h \
+	knownfolders.h \
 	mscat.h \
 	propkey.h \
 	propkeydef.h \
