@@ -65,12 +65,14 @@ for f in \
 	audiopolicy \
 	axcore \
 	axextend \
+	ctfutb \
 	devicetopology \
 	downloadmgr \
 	endpointvolume \
 	fusion \
 	mmdeviceapi \
 	mscoree \
+	msctf \
 	objectarray \
 	optary \
 	propsys \
