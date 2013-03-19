@@ -47,12 +47,6 @@
       <th><label for="username">User Name</label></th>
       <td><input name="username"></td>
     </tr>
-    {% if authz.needAuthForm('forceBuild') %}
-      <tr>
-        <th><label for="passwd">Password</label></th>
-        <td><input name="passwd" type="password"></td>
-      </tr>
-    {% endif %}
 
     {% set i = 1 %}
     {% for k,v in properties|dictsort %}
