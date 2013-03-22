@@ -39,13 +39,13 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              command=["echo", gConfig.get("libraries", "mpc")],
                              doStepIf=lambda step: (not step.build.getProperties().has_key("mpc_version")) ))
     self.addStep(SetProperty(property="binutils_branch",
-                             command=["echo", WithProperties("%(binutils_branch:-trunk)s")]))
+                             command=["echo", Property("binutils_branch", default="trunk")]))
     self.addStep(SetProperty(property="gcc_branch",
-                             command=["echo", WithProperties("%(gcc_branch:-trunk)s")]))
+                             command=["echo", Property("gcc_branch", default="trunk")]))
     self.addStep(SetProperty(property="mingw_branch",
-                             command=["echo", WithProperties("%(mingw_branch:-trunk)s")]))
+                             command=["echo", Property("mingw_branch", default="trunk")]))
     self.addStep(SetProperty(property="filename",
-                             command=["echo", WithProperties("%(src_archive:-mingw-w64-src.tar.bz2)s")]))
+                             command=["echo", Property("src_archive", default="mingw-w64-src.tar.bz2")]))
     self.addStep(SetProperty(property="srcname_format",
                              command=["echo", "mingw-w64-src%(datestamp:-)s.tar.bz2"],
                              doStepIf=lambda step: (not step.build.getProperties().has_key("srcname_format")) ))
@@ -53,7 +53,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
 
     if self.clobber:
       self.addStep(ShellCommand(name="clobber",
-                                command=["rm", "-rfv", "build", "src", WithProperties("%(filename)s")],
+                                command=["rm", "-rfv", "build", "src", Property("filename")],
                                 haltOnFailure=False,
                                 description=["clobber all"],
                                 descriptionDone=["clobbered"]))
@@ -86,8 +86,8 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          description=["binutils", "pull"],
                          descriptionDone=["pulled", "binutils"],
                          command=["make", "-f", "mingw-makefile", "binutils-pull"],
-                         env={"BINUTILS_REVISION": WithProperties("%(binutils_revision:-head)s"),
-                              "BINUTILS_BRANCH"  : WithProperties("%(binutils_branch)s")}))
+                         env={"BINUTILS_REVISION": Property("binutils_revision", default="head"),
+                              "BINUTILS_BRANCH"  : Property("binutils_branch")}))
 
     self.addStep(ShellCommand(name="binutils-patch",
                               description=["patch", "binutils"],
@@ -106,8 +106,8 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          description=["gcc", "pull"],
                          descriptionDone=["pulled", "gcc"],
                          command=["make", "-f", "mingw-makefile", "gcc-pull"],
-                         env={"GCC_REVISION": WithProperties("%(gcc_revision:-head)s"),
-                              "GCC_BRANCH"  : WithProperties("%(gcc_branch)s")}))
+                         env={"GCC_REVISION": Property("gcc_revision", default="head"),
+                              "GCC_BRANCH"  : Property("gcc_branch")}))
     self.addStep(ShellCommand(name="gcc-patch",
                               description=["patch", "gcc"],
                               descriptionDone=["gcc", "patched"],
@@ -125,12 +125,12 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          description=["gmp", "download"],
                          descriptionDone=["downloaded", "gmp"],
                          command=["make", "-f", "mingw-makefile", "gmp-download"],
-                         env={"GMP_VERSION": WithProperties("%(gmp_version)s")}))
+                         env={"GMP_VERSION": Property("gmp_version")}))
     self.addStep(Compile(name="gmp-extract",
                          description=["gmp", "extract"],
                          descriptionDone=["extracted", "gmp"],
                          command=["make", "-f", "mingw-makefile", "gmp-extract"],
-                         env={"GMP_VERSION": WithProperties("%(gmp_version)s")}))
+                         env={"GMP_VERSION": Property("gmp_version")}))
 
     # Fix gmp (fails to find m4 for flex)
     self.addStep(ShellCommand(name="gmp-patch",
@@ -148,13 +148,13 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          description=["mpfr", "download"],
                          descriptionDone=["downloaded", "mpfr"],
                          command=["make", "-f", "mingw-makefile", "mpfr-download"],
-                         env={"MPFR_VERSION": WithProperties("%(mpfr_version)s")}))
+                         env={"MPFR_VERSION": Property("mpfr_version")}))
 
     self.addStep(Compile(name="mpfr-extract",
                          description=["mpfr", "extract"],
                          descriptionDone=["extracted", "mpfr"],
                          command=["make", "-f", "mingw-makefile", "mpfr-extract"],
-                         env={"MPFR_VERSION": WithProperties("%(mpfr_version)s")}))
+                         env={"MPFR_VERSION": Property("mpfr_version")}))
 
     self.addStep(ShellCommand(name="mpfr-patch",
                               description=["patch", "mpfr"],
@@ -173,13 +173,13 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          description=["mpc", "download"],
                          descriptionDone=["downloaded", "mpc"],
                          command=["make", "-f", "mingw-makefile", "mpc-download"],
-                         env={"MPC_VERSION": WithProperties("%(mpc_version)s")}))
+                         env={"MPC_VERSION": Property("mpc_version")}))
 
     self.addStep(Compile(name="mpc-extract",
                          description=["mpc", "extract"],
                          descriptionDone=["extracted", "mpc"],
                          command=["make", "-f", "mingw-makefile", "mpc-extract"],
-                         env={"MPC_VERSION": WithProperties("%(mpc_version)s")}))
+                         env={"MPC_VERSION": Property("mpc_version")}))
 
     self.addStep(ShellCommand(name="mpc-patch",
                               description=["patch", "mpc"],
@@ -198,8 +198,8 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          description=["mingw", "pull"],
                          descriptionDone=["pulled", "mingw"],
                          command=["make", "-f", "mingw-makefile", "mingw-pull"],
-                         env={"MINGW_REVISION": WithProperties("%(mingw_revision:-head)s"),
-                              "MINGW_BRANCH"  : WithProperties("%(mingw_branch)s")}))
+                         env={"MINGW_REVISION": Property("mingw_revision", default="head"),
+                              "MINGW_BRANCH"  : Property("mingw_branch")}))
 
     self.addStep(ShellCommand(name="mingw-patch",
                               description=["patch", "mingw"],
@@ -250,12 +250,12 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                          description=["tarball", "package"],
                          descriptionDone=["packaged", "tarball"],
                          command=["make", "-f", "mingw-makefile", "src-archive"],
-                         env={"SRC_ARCHIVE": WithProperties("%(filename)s")}))
+                         env={"SRC_ARCHIVE": Property("filename")}))
 
     # upload the tarball to the master
     self.addStep(FileUpload(name="src-upload",
-                            slavesrc=WithProperties("%(filename)s"),
-                            masterdest=WithProperties("%(filename)s")))
+                            slavesrc=Property("filename"),
+                            masterdest=Property("filename")))
 
     # trigger upload
     self.addStep(Trigger(name="src-publish",
