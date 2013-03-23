@@ -308,7 +308,6 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                  "mingw_config_args":    Property("mingw_config_args"),
                                  "gcc_revision":         Property("gcc_revision"),
                                  "mingw_revision":       Property("mingw_revision"),
-                                 "destname_format":      Property("destname_format"),
                                  "masterdir":            Property("masterdir"),
                                  "path":                 Property("path"),
                                  "src_archive":          Property("filename"),
