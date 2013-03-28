@@ -10,7 +10,7 @@ from buildbot.steps.source import CVS, SVN
 from buildbot.steps.shell import Configure, Compile, ShellCommand, WithProperties, SetProperty
 from buildbot.steps.transfer import FileDownload, FileUpload
 from buildbot.steps.trigger import Trigger
-from scripts.buildsteps import M64CVS, M64NightlyRev, SubversionRevProperty, TriggerBuilders, WithPropertiesRecursive
+from scripts.buildsteps import M64CVS, M64NightlyRev, SubversionRevProperty, WithPropertiesRecursive
 
 from ConfigParser import RawConfigParser as ConfigParser
 gConfig = ConfigParser()

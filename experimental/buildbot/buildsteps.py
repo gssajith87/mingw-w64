@@ -75,31 +75,6 @@ class SetPropertyConditional(SetProperty):
                 return SKIPPED
         SetProperty.start(self)
 
-class TriggerBuilders(Trigger):
-    """Trigger a schedulre.Triggerable with the builders specified in a property"""
-    def __init__(self, propertyName="schedulerNames", **kwargs):
-        Trigger.__init__(self, **kwargs)
-        self.propertyName = propertyName
-        self.addFactoryArguments(propertyName=propertyName)
-
-    def start(self):
-        # save a back up of properties to copy
-        old_copy_properties = self.copy_properties
-
-        # and remove anything that we don't have
-        properties = self.build.getProperties()
-        self.copy_properties = [p for p in old_copy_properties if p in properties]
-
-        if self.build.getProperties().has_key(self.propertyName):
-            self.schedulerNames = self.build.getProperty(self.propertyName).split(",")
-
-        result = Trigger.start(self)
-
-        # restore the old copy_properties
-        self.copy_properties = old_copy_properties
-
-        return result
-
 class M64NightlyRev(SetPropertyConditional):
     """Sets the revision based on the gcc daily time stamp"""
     def __init__(self, **kwargs):
