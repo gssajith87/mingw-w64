@@ -286,7 +286,6 @@ class NightlySrcPackageFactory(factory.BuildFactory):
 
     # trigger building
     self.addStep(Trigger(name="start-build",
-                         propertyName="builders",
                          schedulerNames=["trigger-linux-x86_64-x86_64",
                                          "trigger-linux-x86_64-x86",
                                          "trigger-linux-x86-x86_64",
