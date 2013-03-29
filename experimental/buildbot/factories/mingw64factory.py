@@ -63,7 +63,7 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(SetProperty(property="mpfr_config_args",
                              command=["echo", Property("mpfr_config_args"), self.mpfrConfigExtraArgs]))
     self.addStep(SetProperty(property="mpc_config_args",
-                             command=["echo", Property("mpc_config_args", self.mpcConfigExtraArgs]))
+                             command=["echo", Property("mpc_config_args"), self.mpcConfigExtraArgs]))
 
     self.addStep(SetProperty(command=["echo", self.file_extension],
                              property="file_extension"))
