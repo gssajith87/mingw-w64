@@ -6,6 +6,7 @@
 
 import buildbot, os
 from buildbot.process import factory
+from buildbot.process.properties import Property
 from buildbot.steps.source import CVS, SVN
 from buildbot.steps.shell import Configure, Compile, ShellCommand, WithProperties, SetProperty
 from buildbot.steps.transfer import FileDownload, FileUpload
