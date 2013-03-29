@@ -53,36 +53,26 @@ class Mingw64Factory(factory.BuildFactory):
                              command=["echo", self.target]))
 
     self.addStep(SetProperty(property="gcc_config_args",
-                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
-                                      WithProperties("%%(gcc_config_args:-%s)s" % (self.gccConfigExtraArgs))]))
+                             command=["echo", Property("gcc_config_args"), self.gccConfigExtraArgs]))
     self.addStep(SetProperty(property="mingw_config_args",
-                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
-                                      WithProperties("%%(mingw_config_args:-%s)s" % (self.crtConfigExtraArgs))]))
+                             command=["echo", Property("mingw_config_args"), self.crtConfigExtraArgs]))
     self.addStep(SetProperty(property="binutils_config_args",
-                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
-                                      WithProperties("%%(binutils_config_args:-%s)s" % (self.binutilsConfigExtraArgs))]))
+                             command=["echo", Property("binutils_config_args"), self.binutilsConfigExtraArgs]))
     self.addStep(SetProperty(property="gmp_config_args",
-                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
-                                      WithProperties("%%(gmp_config_args:-%s)s" % (self.gmpConfigExtraArgs))]))
+                             command=["echo", Property("gmp_config_args"), self.gmpConfigExtraArgs]))
     self.addStep(SetProperty(property="mpfr_config_args",
-                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
-                                      WithProperties("%%(mpfr_config_args:-%s)s" % (self.mpfrConfigExtraArgs))]))
+                             command=["echo", Property("mpfr_config_args"), self.mpfrConfigExtraArgs]))
     self.addStep(SetProperty(property="mpc_config_args",
-                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
-                                      WithProperties("%%(mpc_config_args:-%s)s" % (self.mpcConfigExtraArgs))]))
+                             command=["echo", Property("mpc_config_args", self.mpcConfigExtraArgs]))
 
     self.addStep(SetProperty(property="gcc_branch",
-                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
-                                      WithProperties("%(gcc_branch:-trunk)s")]))
+                             command=["echo", Property("gcc_branch", default="trunk")]))
     self.addStep(SetProperty(property="gcc_revision",
-                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
-                                      WithProperties("%(gcc_revision:-head)s")]))
+                             command=["echo", Property("gcc_revision", default="head")]))
     self.addStep(SetProperty(property="mingw_revision",
-                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
-                                      WithProperties("%(mingw_revision:-head)s")]))
+                             command=["echo", Property("mingw_revision", default="head")]))
     self.addStep(SetProperty(property="binutils_revision",
-                             command=["python", "-c", "import sys ; print ' '.join(sys.argv[1:])",
-                                      WithProperties("%(binutils_revision:-)s")]))
+                             command=["echo", Property("binutils_revision", default="head")]))
 
     self.addStep(SetProperty(command=["echo", self.file_extension],
                              property="file_extension"))
