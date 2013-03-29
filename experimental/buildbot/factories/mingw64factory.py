@@ -96,7 +96,7 @@ class Mingw64Factory(factory.BuildFactory):
                              command=["echo", WithPropertiesRecursive(WithProperties("%(filename_format)s"))],
                              doStepIf=lambda step: (not step.build.getProperties().has_key("filename")) ))
     self.addStep(SetProperty(property="destname_format",
-                             command=["echo", WithProperties("mingw-%(target-os)s-bin_%(host_cpu)s-%(host_os)s%(host-extra:-)s%(datestamp:-)s.%(file_extension)s")],
+                             command=["echo", "mingw-%(target-os)s-bin_%(host_cpu)s-%(host_os)s%(host-extra:-)s%(datestamp:-)s.%(file_extension)s"],
                              doStepIf=lambda step: (not step.build.getProperties().has_key("destname_format")) ))
     self.addStep(SetProperty(property="destname",
                              command=["echo", WithPropertiesRecursive(WithProperties("%(destname_format)s"))],
