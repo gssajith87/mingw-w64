@@ -65,15 +65,6 @@ class Mingw64Factory(factory.BuildFactory):
     self.addStep(SetProperty(property="mpc_config_args",
                              command=["echo", Property("mpc_config_args", self.mpcConfigExtraArgs]))
 
-    self.addStep(SetProperty(property="gcc_branch",
-                             command=["echo", Property("gcc_branch", default="trunk")]))
-    self.addStep(SetProperty(property="gcc_revision",
-                             command=["echo", Property("gcc_revision", default="head")]))
-    self.addStep(SetProperty(property="mingw_revision",
-                             command=["echo", Property("mingw_revision", default="head")]))
-    self.addStep(SetProperty(property="binutils_revision",
-                             command=["echo", Property("binutils_revision", default="head")]))
-
     self.addStep(SetProperty(command=["echo", self.file_extension],
                              property="file_extension"))
 
