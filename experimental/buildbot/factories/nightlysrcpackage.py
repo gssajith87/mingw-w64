@@ -32,13 +32,13 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              command=["bash", "-c", "builtin pwd"]))
     self.addStep(SetProperty(property="gmp_version",
                              command=["echo", gConfig.get("libraries", "gmp")],
-                             doStepIf=lambda step: (not step.build.getProperties().has_key("gmp_version")) ))
+                             doStepIf=lambda step: (not step.build.hasProperty("gmp_version")) ))
     self.addStep(SetProperty(property="mpfr_version",
                              command=["echo", gConfig.get("libraries", "mpfr")],
-                             doStepIf=lambda step: (not step.build.getProperties().has_key("mpfr_version")) ))
+                             doStepIf=lambda step: (not step.build.hasProperty("mpfr_version")) ))
     self.addStep(SetProperty(property="mpc_version",
                              command=["echo", gConfig.get("libraries", "mpc")],
-                             doStepIf=lambda step: (not step.build.getProperties().has_key("mpc_version")) ))
+                             doStepIf=lambda step: (not step.build.hasProperty("mpc_version")) ))
     self.addStep(SetProperty(property="binutils_branch",
                              command=["echo", Property("binutils_branch", default="trunk")]))
     self.addStep(SetProperty(property="gcc_branch",
@@ -49,7 +49,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              command=["echo", Property("src_archive", default="mingw-w64-src.tar.bz2")]))
     self.addStep(SetProperty(property="srcname_format",
                              command=["echo", "mingw-w64-src%(datestamp:-)s.tar.bz2"],
-                             doStepIf=lambda step: (not step.build.getProperties().has_key("srcname_format")) ))
+                             doStepIf=lambda step: (not step.build.hasProperty("srcname_format")) ))
     #self.addStep(M64NightlyRev)
 
     if self.clobber:
@@ -225,8 +225,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                                        config_dir=WithProperties("%(basedir:-.)s")))
     self.addStep(SetProperty(property="datestamp",
                              command=["date", "-u", "+_%Y%m%d"],
-                             doStepIf=lambda step: ("datestamp" not in step.build.getProperties()) or
-                                                   (step.getProperty("datestamp") == "")))
+                             doStepIf=lambda step: (not step.getProperty("datestamp") == "")))
     self.addStep(ShellCommand(name="mingw-datestamp",
                               workdir="build/src/mingw/mingw-w64-crt",
                               description=["writing", "buildstamp"],
@@ -242,7 +241,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                               workdir="build/src/gcc/src/gcc",
                               description=["writing", "version", "string"],
                               descriptionDone=["version", "string", "written"],
-                              doStepIf=lambda step: ( (step.build.getProperties().has_key("release_build")) and (step.getProperty("release_build")) ),
+                              doStepIf=lambda step: step.getProperty("release_build"),
                               command=["bash", "-c", WithProperties("""echo '%(release_gcc_ver:-)s' > BASE-VER && echo > DEV-PHASE """)]))
     # make the tarball
     self.addStep(SetProperty(property="destname",
@@ -260,8 +259,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
 
     # trigger upload
     self.addStep(Trigger(name="src-publish",
-                         doStepIf=lambda step: ("is_nightly" in step.build.getProperties()) and
-                                               step.build.getProperty("is_nightly"),
+                         doStepIf=lambda step: step.build.getProperty("is_nightly"),
                          schedulerNames=["sourceforge-upload"],
                          waitForFinish=True, # needed for the builders
                          set_properties={"masterdir":  WithProperties("%(masterdir)s"),
@@ -277,8 +275,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
     # over the buildbot connection).  Note that if the "path" property is set,
     # we use that as an override instead.
     self.addStep(SetProperty(property="src_url",
-                             doStepIf=lambda step: ("is_nightly" in step.build.getProperties()) and
-                                                   step.build.getProperty("is_nightly"),
+                             doStepIf=lambda step: step.build.getProperty("is_nightly"),
                              command=["echo",
                                       WithProperties("http://downloads.sourceforge.net/project/%s/%%(path:-%s)s/%%(destname)s" %
                                                       (gConfig.get("sourceforge", "group_id"),
