@@ -40,11 +40,14 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                              command=["echo", gConfig.get("libraries", "mpc")],
                              doStepIf=lambda step: (not step.build.hasProperty("mpc_version")) ))
     self.addStep(SetProperty(property="binutils_branch",
-                             command=["echo", Property("binutils_branch", default="trunk")]))
+                             command=["echo", "trunk"],
+                             doStepIf=lambda step: (not step.build.hasProperty("binutils_branch")) ))
     self.addStep(SetProperty(property="gcc_branch",
-                             command=["echo", Property("gcc_branch", default="trunk")]))
+                             command=["echo", "trunk"],
+                             doStepIf=lambda step: (not step.build.hasProperty("gcc_branch")) ))
     self.addStep(SetProperty(property="mingw_branch",
-                             command=["echo", Property("mingw_branch", default="trunk")]))
+                             command=["echo", "trunk"],
+                             doStepIf=lambda step: (not step.build.hasProperty("mingw_branch")) ))
     self.addStep(SetProperty(property="filename",
                              command=["echo", Property("src_archive", default="mingw-w64-src.tar.bz2")]))
     self.addStep(SetProperty(property="srcname_format",
