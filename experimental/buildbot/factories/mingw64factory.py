@@ -54,17 +54,17 @@ class Mingw64Factory(factory.BuildFactory):
                              command=["echo", self.target]))
 
     self.addStep(SetProperty(property="gcc_config_args",
-                             command=["echo", Property("gcc_config_args"), self.gccConfigExtraArgs]))
+                             command=["echo", Property("gcc_config_args", default=""), self.gccConfigExtraArgs]))
     self.addStep(SetProperty(property="mingw_config_args",
-                             command=["echo", Property("mingw_config_args"), self.crtConfigExtraArgs]))
+                             command=["echo", Property("mingw_config_args", default=""), self.crtConfigExtraArgs]))
     self.addStep(SetProperty(property="binutils_config_args",
-                             command=["echo", Property("binutils_config_args"), self.binutilsConfigExtraArgs]))
+                             command=["echo", Property("binutils_config_args", default=""), self.binutilsConfigExtraArgs]))
     self.addStep(SetProperty(property="gmp_config_args",
-                             command=["echo", Property("gmp_config_args"), self.gmpConfigExtraArgs]))
+                             command=["echo", Property("gmp_config_args", default=""), self.gmpConfigExtraArgs]))
     self.addStep(SetProperty(property="mpfr_config_args",
-                             command=["echo", Property("mpfr_config_args"), self.mpfrConfigExtraArgs]))
+                             command=["echo", Property("mpfr_config_args", default=""), self.mpfrConfigExtraArgs]))
     self.addStep(SetProperty(property="mpc_config_args",
-                             command=["echo", Property("mpc_config_args"), self.mpcConfigExtraArgs]))
+                             command=["echo", Property("mpc_config_args", default=""), self.mpcConfigExtraArgs]))
 
     self.addStep(SetProperty(command=["echo", self.file_extension],
                              property="file_extension"))
