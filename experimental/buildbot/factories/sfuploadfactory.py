@@ -6,6 +6,7 @@
 
 import buildbot
 from buildbot.process import factory
+from buildbot.process.properties import Property
 from buildbot.steps.source import CVS, SVN
 from buildbot.steps.shell import Configure, Compile, ShellCommand, WithProperties, SetProperty
 from buildbot.steps.transfer import FileDownload, FileUpload
@@ -16,6 +17,16 @@ class SourceForgeUploadFactory(factory.BuildFactory):
 
     factory.BuildFactory.__init__(self, **kwargs)
 
+    self.addStep(SetProperty(property="optionTargetOs",
+                             doStepIf=lambda step: step.build.hasProperty("target-os"),
+                             command=["echo", "--os", Property("target-os")] ))
+    self.addStep(SetProperty(property="optionPath",
+                             doStepIf=lambda step: step.build.hasProperty("path"),
+                             command=["echo", "--path", Property("path")] ))
+    self.addStep(SetProperty(property="optionDatestamp",
+                             doStepIf=lambda step: step.build.hasProperty("datestamp"),
+                             command=["echo", "--datestamp", Property("datestamp")] ))
+
     # this assumes the following properties have been set:
     # masterdir - the path to the master configuration (has tarballs + scripts + passwords)
     # filename  - the name of the file to upload (relative to masterdir)
@@ -23,23 +34,20 @@ class SourceForgeUploadFactory(factory.BuildFactory):
     self.addStep(ShellCommand(name="sfupload",
                               description=["uploading"],
                               descriptionDone=["upload"],
-                              doStepIf=lambda step: (step.build.getProperties().has_key("is_nightly") and step.build.getProperty("is_nightly") ),
-                              workdir=WithProperties("%(masterdir)s"),
+                              doStepIf=lambda step: (step.build.getProperty("is_nightly")),
+                              workdir=Property("masterdir"),
                               command=["scripts/upload.py",
-                                       WithProperties("%(filename)s"),
-                                       WithProperties("%(destname)s"),
-                                       WithProperties("%(target-os:+--os)s"),
-                                       WithProperties("%(target-os:-)s"),
-                                       WithProperties("%(path:+--path)s"),
-                                       WithProperties("%(path:-)s"),
-                                       WithProperties("%(datestamp:+--datestamp)s"),
-                                       WithProperties("%(datestamp:-)s")],
+                                       Property("filename"),
+                                       Property("destname"),
+                                       Property("optionTargetOs", default=""),
+                                       Property("optionPath", default=""),
+                                       Property("optionDatestamp", default="")],
                               haltOnFailure=True))
 
     self.addStep(ShellCommand(name="uploadComplete",
                               description=["removing", "temporary", "file"],
                               descriptionDone=["temporary", "file", "removed"],
-                              doStepIf=lambda step: (step.build.getProperties().has_key("is_nightly") and step.build.getProperty("is_nightly") ),
-                              workdir=WithProperties("%(masterdir)s"),
-                              command=["rm", "-fv", WithProperties("%(filename)s")]))
+                              doStepIf=lambda step: (step.build.getProperty("is_nightly")),
+                              workdir=Property("masterdir"),
+                              command=["rm", "-fv", Property("filename")]))
 
