@@ -18,14 +18,14 @@ class SourceForgeUploadFactory(factory.BuildFactory):
     factory.BuildFactory.__init__(self, **kwargs)
 
     self.addStep(SetProperty(property="optionTargetOs",
-                             doStepIf=lambda step: step.build.hasProperty("target-os"),
-                             command=["echo", "--os", Property("target-os")] ))
+                             doStepIf=lambda step: step.build.getProperty("target-os"),
+                             command=["echo", "--os"] ))
     self.addStep(SetProperty(property="optionPath",
-                             doStepIf=lambda step: step.build.hasProperty("path"),
-                             command=["echo", "--path", Property("path")] ))
+                             doStepIf=lambda step: step.build.getProperty("path"),
+                             command=["echo", "--path"] ))
     self.addStep(SetProperty(property="optionDatestamp",
-                             doStepIf=lambda step: step.build.hasProperty("datestamp"),
-                             command=["echo", "--datestamp", Property("datestamp")] ))
+                             doStepIf=lambda step: step.build.getProperty("datestamp"),
+                             command=["echo", "--datestamp"] ))
 
     # this assumes the following properties have been set:
     # masterdir - the path to the master configuration (has tarballs + scripts + passwords)
@@ -39,9 +39,9 @@ class SourceForgeUploadFactory(factory.BuildFactory):
                               command=["scripts/upload.py",
                                        Property("filename"),
                                        Property("destname"),
-                                       Property("optionTargetOs", default=""),
-                                       Property("optionPath", default=""),
-                                       Property("optionDatestamp", default="")],
+                                       Property("optionTargetOs", default=""), Property("target-os", default=""),
+                                       Property("optionPath", default=""), Property("path", default=""),
+                                       Property("optionDatestamp", default=""), Property("datestamp", default="")],
                               haltOnFailure=True))
 
     self.addStep(ShellCommand(name="uploadComplete",
