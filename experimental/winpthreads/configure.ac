@@ -16,6 +16,10 @@ AC_CANONICAL_HOST
 # Checks for programs.
 AC_NO_EXECUTABLES
 AC_PROG_CC
+AC_PROG_RANLIB
+AM_PROG_AS
+AM_PROG_AR
+
 # Libtool 2.4 should check them correctly
 # AC_CHECK_TOOLS([AR],[ar],[:])
 AC_CHECK_TOOLS([RC],[windres],[:])
