@@ -3,15 +3,11 @@ ACLOCAL_AMFLAGS = -I m4
 
 lib_LTLIBRARIES = libwinpthread.la
 lib_LIBRARIES =
+fakelib_LIBRARIES = libgcc.a  libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a libpthread.a
 fakelibdir = fakelibs
-fakelib = $(fakelibdir)/libgcc.a $(fakelibdir)/libgcc_s.a $(fakelibdir)/libgcc.dll.a $(fakelibdir)/libgcc_s.dll.a \
-           $(fakelibdir)/libgcc_eh.a $(fakelibdir)/libpthread.a
-
-clean-local:
-	-rm -rf $(fakelibdir)
 
 libwinpthread_la_CPPFLAGS = -I$(srcdir)/include -DIN_WINPTHREAD
-libwinpthread_la_LDFLAGS = -no-undefined -version-info 1:0:0 -L$(fakelibdir)
+libwinpthread_la_LDFLAGS = -no-undefined -version-info 1:0:0
 
 libwinpthread_la_SOURCES = \
   src/barrier.h  src/cond.h  src/misc.h  src/mutex.h  src/rwlock.h  src/spinlock.h  src/thread.h  src/ref.h  src/sem.h \
@@ -33,40 +29,12 @@ noinst_LTLIBRARIES = libdummy.la
 
 libwinpthread_la_LIBADD = libdummy.la
 
-dll_dependency.o: src/dll_dependency.S
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-
-dll_math.o: src/dll_math.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-
-$(fakelibdir):
-	mkdir -p $@
-
-$(fakelib): $(fakelibdir)
-
-$(fakelibdir)/libgcc.a: dll_dependency.o dll_math.o
-	$(AR) cru $@ dll_dependency.o dll_math.o
-	touch $@
-
-$(fakelibdir)/libgcc.dll.a: $(fakelibdir)/libgcc.a
-	cp $(fakelibdir)/libgcc.a $@
-	touch $@
-
-$(fakelibdir)/libgcc_s.a: $(fakelibdir)/libgcc.a
-	$(AR) cru $@
-	touch $@
-
-$(fakelibdir)/libgcc_s.dll.a: $(fakelibdir)/libgcc.a
-	$(AR) cru $@
-	touch $@
-
-$(fakelibdir)/libgcc_eh.a:
-	$(AR) cru $@
-	touch $@
-
-$(fakelibdir)/libpthread.a:
-	$(AR) cru $@
-	touch $@
+libgcc_a_SOURCES = src/dll_dependency.S src/dll_math.c
+libgcc_dll_a_SOURCES = src/dll_dependency.S src/dll_math.c
+libgcc_s_a_SOURCES =
+libgcc_s_dll_a_SOURCES =
+libgcc_eh_a_SOURCES =
+libpthread_a_SOURCES =
 
 BUILT_SOURCES = dummy.c
 
