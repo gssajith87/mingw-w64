@@ -13,8 +13,9 @@ libwinpthread_la_SOURCES = \
   src/winpthread_internal.h  src/clock.c src/nanosleep.c src/version.rc
 
 noinst_LIBRARIES = libgcc.a  libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a libpthread.a
-libgcc_a_SOURCES = src/dll_dependency.S src/dll_math.c
-libgcc_dll_a_SOURCES = src/dll_dependency.S src/dll_math.c
+libgccsrc = src/libgcc/dll_dependency.S src/libgcc/dll_math.c
+libgcc_a_SOURCES = $(libgccsrc)
+libgcc_dll_a_SOURCES = $(libgccsrc)
 libgcc_s_a_SOURCES =
 libgcc_s_dll_a_SOURCES =
 libgcc_eh_a_SOURCES =
