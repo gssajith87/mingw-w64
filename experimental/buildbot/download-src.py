@@ -41,9 +41,10 @@ import sys
 import threading
 import time
 import urllib
-import urllib.request as request
+try:
+  from urllib.request import FancyURLOpener
 except ImportError:
-  import urllib as request
+  import urllib import FancyURLOpener
 
 class ProgressReporter(threading.Thread):
   """Dumb progress reporter; just keeps printing once a second to prevent
@@ -61,10 +62,10 @@ class ProgressReporter(threading.Thread):
       sys.stdout.flush()
       time.sleep(self.interval)
 
-class CustomURLopener(request.FancyURLopener):
+class CustomURLopener(FancyURLopener):
   def __init__(self, not_found_tries=30, not_found_delay=60,
                      *args, **kwargs):
-    request.FancyURLopener.__init__(self, *args, **kwargs)
+    FancyURLopener.__init__(self, *args, **kwargs)
     self.tries = 0
     self.total_tries = not_found_tries
     self.not_found_delay = not_found_delay
@@ -77,7 +78,7 @@ class CustomURLopener(request.FancyURLopener):
   def http_error(self, url, fp, errcode, errmsg, headers, data=None):
     if (errcode != 404):
       self.found = True
-    return request.FancyURLopener.http_error(self, url, fp, errcode, errmsg, headers, data)
+    return FancyURLopener.http_error(self, url, fp, errcode, errmsg, headers, data)
 
   def http_error_404(self, url, fp, errcode, errmsg, headers, data=None):
     if self.found:
