@@ -44,7 +44,7 @@ import urllib
 try:
   from urllib.request import FancyURLOpener
 except ImportError:
-  import urllib import FancyURLOpener
+  from urllib import FancyURLOpener
 
 class ProgressReporter(threading.Thread):
   """Dumb progress reporter; just keeps printing once a second to prevent
