@@ -58,9 +58,10 @@ subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
 	$(srcdir)/config.h.in $(top_srcdir)/build-aux/depcomp \
-	$(include_HEADERS) COPYING build-aux/config.guess \
-	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
-	build-aux/missing build-aux/ltmain.sh \
+	$(include_HEADERS) COPYING build-aux/ar-lib \
+	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
+	build-aux/install-sh build-aux/missing build-aux/ltmain.sh \
+	$(top_srcdir)/build-aux/ar-lib \
 	$(top_srcdir)/build-aux/config.guess \
 	$(top_srcdir)/build-aux/config.sub \
 	$(top_srcdir)/build-aux/install-sh \
@@ -106,18 +107,41 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(includedir)"
-LIBRARIES = $(lib_LIBRARIES)
+am__installdirs = "$(DESTDIR)$(fakelibdir)" "$(DESTDIR)$(libdir)" \
+	"$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
+LIBRARIES = $(fakelib_LIBRARIES) $(lib_LIBRARIES)
 ARFLAGS = cru
 AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
+libgcc_a_AR = $(AR) $(ARFLAGS)
+libgcc_a_LIBADD =
+am__dirstamp = $(am__leading_dot)dirstamp
+am_libgcc_a_OBJECTS = src/dll_dependency.$(OBJEXT) \
+	src/dll_math.$(OBJEXT)
+libgcc_a_OBJECTS = $(am_libgcc_a_OBJECTS)
+libgcc_dll_a_AR = $(AR) $(ARFLAGS)
+libgcc_dll_a_LIBADD =
+am_libgcc_dll_a_OBJECTS = src/dll_dependency.$(OBJEXT) \
+	src/dll_math.$(OBJEXT)
+libgcc_dll_a_OBJECTS = $(am_libgcc_dll_a_OBJECTS)
+libgcc_eh_a_AR = $(AR) $(ARFLAGS)
+libgcc_eh_a_LIBADD =
+am_libgcc_eh_a_OBJECTS =
+libgcc_eh_a_OBJECTS = $(am_libgcc_eh_a_OBJECTS)
+libgcc_s_a_AR = $(AR) $(ARFLAGS)
+libgcc_s_a_LIBADD =
+am_libgcc_s_a_OBJECTS =
+libgcc_s_a_OBJECTS = $(am_libgcc_s_a_OBJECTS)
+libgcc_s_dll_a_AR = $(AR) $(ARFLAGS)
+libgcc_s_dll_a_LIBADD =
+am_libgcc_s_dll_a_OBJECTS =
+libgcc_s_dll_a_OBJECTS = $(am_libgcc_s_dll_a_OBJECTS)
 libpthread_a_AR = $(AR) $(ARFLAGS)
 libpthread_a_LIBADD =
-libpthread_a_SOURCES = libpthread.c
-libpthread_a_OBJECTS = libpthread.$(OBJEXT)
+am_libpthread_a_OBJECTS =
+libpthread_a_OBJECTS = $(am_libpthread_a_OBJECTS)
 libpthread_dll_a_AR = $(AR) $(ARFLAGS)
 libpthread_dll_a_LIBADD =
 libpthread_dll_a_SOURCES = libpthread.dll.c
@@ -131,7 +155,6 @@ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
 libwinpthread_la_DEPENDENCIES = libdummy.la
-am__dirstamp = $(am__leading_dot)dirstamp
 am_libwinpthread_la_OBJECTS = src/libwinpthread_la-barrier.lo \
 	src/libwinpthread_la-cond.lo src/libwinpthread_la-misc.lo \
 	src/libwinpthread_la-mutex.lo src/libwinpthread_la-rwlock.lo \
@@ -161,6 +184,16 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
+CPPASCOMPILE = $(CCAS) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CCASFLAGS) $(CCASFLAGS)
+LTCPPASCOMPILE = $(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CCAS) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CCASFLAGS) $(CCASFLAGS)
+AM_V_CPPAS = $(am__v_CPPAS_@AM_V@)
+am__v_CPPAS_ = $(am__v_CPPAS_@AM_DEFAULT_V@)
+am__v_CPPAS_0 = @echo "  CPPAS   " $@;
+am__v_CPPAS_1 = 
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -179,9 +212,15 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = libpthread.c libpthread.dll.c $(libdummy_la_SOURCES) \
+SOURCES = $(libgcc_a_SOURCES) $(libgcc_dll_a_SOURCES) \
+	$(libgcc_eh_a_SOURCES) $(libgcc_s_a_SOURCES) \
+	$(libgcc_s_dll_a_SOURCES) $(libpthread_a_SOURCES) \
+	libpthread.dll.c $(libdummy_la_SOURCES) \
 	$(libwinpthread_la_SOURCES)
-DIST_SOURCES = libpthread.c libpthread.dll.c $(libdummy_la_SOURCES) \
+DIST_SOURCES = $(libgcc_a_SOURCES) $(libgcc_dll_a_SOURCES) \
+	$(libgcc_eh_a_SOURCES) $(libgcc_s_a_SOURCES) \
+	$(libgcc_s_dll_a_SOURCES) $(libpthread_a_SOURCES) \
+	libpthread.dll.c $(libdummy_la_SOURCES) \
 	$(libwinpthread_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -238,6 +277,9 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CC = @CC@
+CCAS = @CCAS@
+CCASDEPMODE = @CCASDEPMODE@
+CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPP = @CPP@
@@ -353,12 +395,10 @@ AM_CFLAGS = -Wall -DWIN32_LEAN_AND_MEAN
 ACLOCAL_AMFLAGS = -I m4
 lib_LTLIBRARIES = libwinpthread.la
 lib_LIBRARIES = $(am__append_1) $(am__append_2)
+fakelib_LIBRARIES = libgcc.a  libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a libpthread.a
 fakelibdir = fakelibs
-fakelib = $(fakelibdir)/libgcc.a $(fakelibdir)/libgcc_s.a $(fakelibdir)/libgcc.dll.a $(fakelibdir)/libgcc_s.dll.a \
-           $(fakelibdir)/libgcc_eh.a $(fakelibdir)/libpthread.a
-
 libwinpthread_la_CPPFLAGS = -I$(srcdir)/include -DIN_WINPTHREAD
-libwinpthread_la_LDFLAGS = -no-undefined -version-info 1:0:0 -L$(fakelibdir)
+libwinpthread_la_LDFLAGS = -no-undefined -version-info 1:0:0
 libwinpthread_la_SOURCES = \
   src/barrier.h  src/cond.h  src/misc.h  src/mutex.h  src/rwlock.h  src/spinlock.h  src/thread.h  src/ref.h  src/sem.h \
   src/barrier.c  src/cond.c  src/misc.c  src/mutex.c  src/rwlock.c  src/spinlock.c  src/thread.c  src/ref.c  src/sem.c  src/sched.c \
@@ -368,13 +408,19 @@ include_HEADERS = include/pthread.h include/sched.h include/semaphore.h include/
 DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
 noinst_LTLIBRARIES = libdummy.la
 libwinpthread_la_LIBADD = libdummy.la
+libgcc_a_SOURCES = src/dll_dependency.S src/dll_math.c
+libgcc_dll_a_SOURCES = src/dll_dependency.S src/dll_math.c
+libgcc_s_a_SOURCES = 
+libgcc_s_dll_a_SOURCES = 
+libgcc_eh_a_SOURCES = 
+libpthread_a_SOURCES = 
 BUILT_SOURCES = dummy.c
 libdummy_la_SOURCES = dummy.c
 all: $(BUILT_SOURCES) config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj .rc
+.SUFFIXES: .S .c .lo .o .obj .rc
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -424,6 +470,37 @@ $(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
+install-fakelibLIBRARIES: $(fakelib_LIBRARIES)
+	@$(NORMAL_INSTALL)
+	@list='$(fakelib_LIBRARIES)'; test -n "$(fakelibdir)" || list=; \
+	list2=; for p in $$list; do \
+	  if test -f $$p; then \
+	    list2="$$list2 $$p"; \
+	  else :; fi; \
+	done; \
+	test -z "$$list2" || { \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(fakelibdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(fakelibdir)" || exit 1; \
+	  echo " $(INSTALL_DATA) $$list2 '$(DESTDIR)$(fakelibdir)'"; \
+	  $(INSTALL_DATA) $$list2 "$(DESTDIR)$(fakelibdir)" || exit $$?; }
+	@$(POST_INSTALL)
+	@list='$(fakelib_LIBRARIES)'; test -n "$(fakelibdir)" || list=; \
+	for p in $$list; do \
+	  if test -f $$p; then \
+	    $(am__strip_dir) \
+	    echo " ( cd '$(DESTDIR)$(fakelibdir)' && $(RANLIB) $$f )"; \
+	    ( cd "$(DESTDIR)$(fakelibdir)" && $(RANLIB) $$f ) || exit $$?; \
+	  else :; fi; \
+	done
+
+uninstall-fakelibLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(fakelib_LIBRARIES)'; test -n "$(fakelibdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(fakelibdir)'; $(am__uninstall_files_from_dir)
+
+clean-fakelibLIBRARIES:
+	-test -z "$(fakelib_LIBRARIES)" || rm -f $(fakelib_LIBRARIES)
 install-libLIBRARIES: $(lib_LIBRARIES)
 	@$(NORMAL_INSTALL)
 	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
@@ -455,6 +532,36 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
+src/$(am__dirstamp):
+	@$(MKDIR_P) src
+	@: > src/$(am__dirstamp)
+src/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/$(DEPDIR)
+	@: > src/$(DEPDIR)/$(am__dirstamp)
+src/dll_dependency.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/dll_math.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+libgcc.a: $(libgcc_a_OBJECTS) $(libgcc_a_DEPENDENCIES) $(EXTRA_libgcc_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libgcc.a
+	$(AM_V_AR)$(libgcc_a_AR) libgcc.a $(libgcc_a_OBJECTS) $(libgcc_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libgcc.a
+libgcc.dll.a: $(libgcc_dll_a_OBJECTS) $(libgcc_dll_a_DEPENDENCIES) $(EXTRA_libgcc_dll_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libgcc.dll.a
+	$(AM_V_AR)$(libgcc_dll_a_AR) libgcc.dll.a $(libgcc_dll_a_OBJECTS) $(libgcc_dll_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libgcc.dll.a
+libgcc_eh.a: $(libgcc_eh_a_OBJECTS) $(libgcc_eh_a_DEPENDENCIES) $(EXTRA_libgcc_eh_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libgcc_eh.a
+	$(AM_V_AR)$(libgcc_eh_a_AR) libgcc_eh.a $(libgcc_eh_a_OBJECTS) $(libgcc_eh_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libgcc_eh.a
+libgcc_s.a: $(libgcc_s_a_OBJECTS) $(libgcc_s_a_DEPENDENCIES) $(EXTRA_libgcc_s_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libgcc_s.a
+	$(AM_V_AR)$(libgcc_s_a_AR) libgcc_s.a $(libgcc_s_a_OBJECTS) $(libgcc_s_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libgcc_s.a
+libgcc_s.dll.a: $(libgcc_s_dll_a_OBJECTS) $(libgcc_s_dll_a_DEPENDENCIES) $(EXTRA_libgcc_s_dll_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libgcc_s.dll.a
+	$(AM_V_AR)$(libgcc_s_dll_a_AR) libgcc_s.dll.a $(libgcc_s_dll_a_OBJECTS) $(libgcc_s_dll_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libgcc_s.dll.a
 @COPY_STATIC_FALSE@libpthread.a: $(libpthread_a_OBJECTS) $(libpthread_a_DEPENDENCIES) $(EXTRA_libpthread_a_DEPENDENCIES) 
 @COPY_STATIC_FALSE@	$(AM_V_at)-rm -f libpthread.a
 @COPY_STATIC_FALSE@	$(AM_V_AR)$(libpthread_a_AR) libpthread.a $(libpthread_a_OBJECTS) $(libpthread_a_LIBADD)
@@ -511,12 +618,6 @@ clean-noinstLTLIBRARIES:
 	}
 libdummy.la: $(libdummy_la_OBJECTS) $(libdummy_la_DEPENDENCIES) $(EXTRA_libdummy_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(LINK)  $(libdummy_la_OBJECTS) $(libdummy_la_LIBADD) $(LIBS)
-src/$(am__dirstamp):
-	@$(MKDIR_P) src
-	@: > src/$(am__dirstamp)
-src/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) src/$(DEPDIR)
-	@: > src/$(DEPDIR)/$(am__dirstamp)
 src/libwinpthread_la-barrier.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/libwinpthread_la-cond.lo: src/$(am__dirstamp) \
@@ -554,8 +655,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dummy.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libpthread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libpthread.dll.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/dll_dependency.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/dll_math.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-barrier.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-clock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-cond.Plo@am__quote@
@@ -568,6 +670,30 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-sem.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-spinlock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-thread.Plo@am__quote@
+
+.S.o:
+@am__fastdepCCAS_TRUE@	$(AM_V_CPPAS)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCCAS_TRUE@	$(CPPASCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCCAS_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepCCAS_FALSE@	$(AM_V_CPPAS)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCCAS_FALSE@	DEPDIR=$(DEPDIR) $(CCASDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCCAS_FALSE@	$(AM_V_CPPAS@am__nodep@)$(CPPASCOMPILE) -c -o $@ $<
+
+.S.obj:
+@am__fastdepCCAS_TRUE@	$(AM_V_CPPAS)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCCAS_TRUE@	$(CPPASCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCCAS_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepCCAS_FALSE@	$(AM_V_CPPAS)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCCAS_FALSE@	DEPDIR=$(DEPDIR) $(CCASDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCCAS_FALSE@	$(AM_V_CPPAS@am__nodep@)$(CPPASCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.S.lo:
+@am__fastdepCCAS_TRUE@	$(AM_V_CPPAS)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
+@am__fastdepCCAS_TRUE@	$(LTCPPASCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCCAS_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
+@AMDEP_TRUE@@am__fastdepCCAS_FALSE@	$(AM_V_CPPAS)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCCAS_FALSE@	DEPDIR=$(DEPDIR) $(CCASDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCCAS_FALSE@	$(AM_V_CPPAS@am__nodep@)$(LTCPPASCOMPILE) -c -o $@ $<
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -928,7 +1054,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LIBRARIES) $(LTLIBRARIES) $(HEADERS) config.h
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(fakelibdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -967,8 +1093,8 @@ maintainer-clean-generic:
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-generic clean-libLIBRARIES clean-libLTLIBRARIES \
-	clean-libtool clean-local clean-noinstLTLIBRARIES \
+clean-am: clean-fakelibLIBRARIES clean-generic clean-libLIBRARIES \
+	clean-libLTLIBRARIES clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -990,7 +1116,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-includeHEADERS
+install-data-am: install-fakelibLIBRARIES install-includeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -1038,14 +1164,14 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES \
-	uninstall-libLTLIBRARIES
+uninstall-am: uninstall-fakelibLIBRARIES uninstall-includeHEADERS \
+	uninstall-libLIBRARIES uninstall-libLTLIBRARIES
 
 .MAKE: all check install install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--refresh check check-am clean \
-	clean-cscope clean-generic clean-libLIBRARIES \
-	clean-libLTLIBRARIES clean-libtool clean-local \
+	clean-cscope clean-fakelibLIBRARIES clean-generic \
+	clean-libLIBRARIES clean-libLTLIBRARIES clean-libtool \
 	clean-noinstLTLIBRARIES cscope cscopelist-am ctags ctags-am \
 	dist dist-all dist-bzip2 dist-gzip dist-lzip dist-shar \
 	dist-tarZ dist-xz dist-zip distcheck distclean \
@@ -1053,58 +1179,23 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES \
 	distclean-libtool distclean-tags distcleancheck distdir \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-includeHEADERS install-info \
-	install-info-am install-libLIBRARIES install-libLTLIBRARIES \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-includeHEADERS uninstall-libLIBRARIES \
-	uninstall-libLTLIBRARIES
+	install-dvi-am install-exec install-exec-am \
+	install-fakelibLIBRARIES install-html install-html-am \
+	install-includeHEADERS install-info install-info-am \
+	install-libLIBRARIES install-libLTLIBRARIES install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-fakelibLIBRARIES uninstall-includeHEADERS \
+	uninstall-libLIBRARIES uninstall-libLTLIBRARIES
 
-
-clean-local:
-	-rm -rf $(fakelibdir)
 
 .rc.lo:
 	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=CC --mode=compile $(RC) @RCFLAGS@ $(RCFLAGS) -i $< -o $@
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status libtool
-
-dll_dependency.o: src/dll_dependency.S
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-
-dll_math.o: src/dll_math.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-
-$(fakelibdir):
-	mkdir -p $@
-
-$(fakelibdir)/libgcc.a: $(fakelibdir) dll_dependency.o dll_math.o
-	$(AR) cru $@ dll_dependency.o dll_math.o
-	touch $@
-
-$(fakelibdir)/libgcc.dll.a: $(fakelibdir) $(fakelibdir)/libgcc.a
-	cp $(fakelibdir)/libgcc.a $@
-	touch $@
-
-$(fakelibdir)/libgcc_s.a: $(fakelibdir) $(fakelibdir)/libgcc.a
-	$(AR) cru $@
-	touch $@
-
-$(fakelibdir)/libgcc_s.dll.a: $(fakelibdir) $(fakelibdir)/libgcc.a
-	$(AR) cru $@
-	touch $@
-
-$(fakelibdir)/libgcc_eh.a:
-	$(AR) cru $@
-	touch $@
-
-$(fakelibdir)/libpthread.a:
-	$(AR) cru $@
-	touch $@
 
 # Force libgcc dummy build
 dummy.c: $(fakelib)
