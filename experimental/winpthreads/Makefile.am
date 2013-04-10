@@ -25,12 +25,9 @@ libdummy_la_SOURCES = dummy.c
 
 lib_LIBRARIES =
 
+# Tell libtool how to use the resource compiler
 .rc.lo:
 	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=RC --mode=compile $(RC) $(RCFLAGS) -i $< -o $@
-
-LIBTOOL_DEPS = @LIBTOOL_DEPS@
-libtool: $(LIBTOOL_DEPS)
-	$(SHELL) ./config.status libtool
 
 # Force libgcc dummy build
 BUILT_SOURCES = dummy.c
