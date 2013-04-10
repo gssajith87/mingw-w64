@@ -22,10 +22,11 @@ AM_PROG_AR
 
 # Libtool 2.4 should check them correctly
 # AC_CHECK_TOOLS([AR],[ar],[:])
-AC_CHECK_TOOLS([RC],[windres],[:])
 
 # Libtool
 LT_INIT([win32-dll])
+LT_LANG([Windows Resource])
+
 AC_SUBST([LIBTOOL_DEPS])
 AC_SUBST([LT_OBJDIR],$lt_cv_objdir)
 
