@@ -41,6 +41,9 @@ import sys
 import threading
 import time
 import urllib
+import urllib.request as request
+except ImportError:
+  import urllib as request
 
 class ProgressReporter(threading.Thread):
   """Dumb progress reporter; just keeps printing once a second to prevent
@@ -58,10 +61,10 @@ class ProgressReporter(threading.Thread):
       sys.stdout.flush()
       time.sleep(self.interval)
 
-class CustomURLopener(urllib.FancyURLopener):
+class CustomURLopener(request.FancyURLopener):
   def __init__(self, not_found_tries=30, not_found_delay=60,
                      *args, **kwargs):
-    urllib.FancyURLopener.__init__(self, *args, **kwargs)
+    request.FancyURLopener.__init__(self, *args, **kwargs)
     self.tries = 0
     self.total_tries = not_found_tries
     self.not_found_delay = not_found_delay
@@ -74,7 +77,7 @@ class CustomURLopener(urllib.FancyURLopener):
   def http_error(self, url, fp, errcode, errmsg, headers, data=None):
     if (errcode != 404):
       self.found = True
-    return urllib.FancyURLopener.http_error(self, url, fp, errcode, errmsg, headers, data)
+    return request.FancyURLopener.http_error(self, url, fp, errcode, errmsg, headers, data)
 
   def http_error_404(self, url, fp, errcode, errmsg, headers, data=None):
     if self.found:
@@ -82,9 +85,9 @@ class CustomURLopener(urllib.FancyURLopener):
     self.tries = self.tries + 1
     if self.tries >= self.total_tries:
       # we've run out of retries
-      print "HTTP 404: http:%s [try %d of %d]" % (url, self.tries, self.total_tries)
+      print("HTTP 404: http:%s [try %d of %d]" % (url, self.tries, self.total_tries))
       return None
-    print "HTTP 404: http:%s [try %d of %d - retrying]" % (url, self.tries, self.total_tries)
+    print("HTTP 404: http:%s [try %d of %d - retrying]" % (url, self.tries, self.total_tries))
     time.sleep(self.not_found_delay)
     # retry
     void = fp.read()
@@ -94,7 +97,7 @@ class CustomURLopener(urllib.FancyURLopener):
   def http_error_default(self, url, fp, errcode, errmsg, headers):
     # don't deal with 404 here; however, _do_ raise an exception, so we can be
     # caught and dealt with in main()
-    urllib.URLopener.http_error_default(self, url, fp, errcode, errmsg, headers)
+    request.URLopener.http_error_default(self, url, fp, errcode, errmsg, headers)
 
 def main(argv):
   retry_count = RETRIES_OTHER
@@ -102,14 +105,14 @@ def main(argv):
 
   if len(argv) != 3:
     sys.stderr.write("Unexpect number of arguments\n")
-    print __doc__ % (argv[0])
+    print(__doc__ % (argv[0]))
     return -1
 
   url = sys.argv[1].replace(" ", "%20")
   dest = sys.argv[2]
   if not re.match("(?:https?|ftp)://", url):
     msg = "URL %s does not use a whitelisted protocol" % (url)
-    print msg
+    print(msg)
     raise RuntimeError(msg)
 
   thread = ProgressReporter(interval=PROGRESS_INTERVAL)
@@ -126,11 +129,11 @@ def main(argv):
           else:
             local_size = 0
           if remote_size != local_size:
-            raise IOError, "download incomplete (%s/%s bytes)" % (local_size, remote_size)
-        print "...Done"
+            raise IOError("download incomplete (%s/%s bytes)" % (local_size, remote_size))
+        print("...Done")
         return 0
         break
-      except IOError, error:
+      except IOError as error:
         if error.args[0] == 'http error' and error.args[1] == 404:
           # the fact that we got 404 means we shouldn't continue
           break
@@ -139,9 +142,9 @@ def main(argv):
                                         retry_count,
                                         attempt < retry_count and " - retrying" or "")
           if error.args[0] == 'http error':
-            print "HTTP Error %d: %s %s" % (error.args[1], error.args[2], retry)
+            print("HTTP Error %d: %s %s" % (error.args[1], error.args[2], retry))
           else: 
-            print "IO error: %s %s" % (str(error), retry)
+            print("IO error: %s %s" % (str(error), retry))
           sys.stdout.flush()
           if attempt < retry_count:
             time.sleep(retry_delay)
