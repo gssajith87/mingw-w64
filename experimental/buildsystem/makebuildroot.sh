@@ -15,7 +15,7 @@ out=/dev/null
 #Third party packages
 gmpver=gmp-5.1.1
 gmp=ftp://ftp.gnu.org/gnu/gmp/${gmpver}.tar.bz2
-mpfrver=mpfr-3.0.0
+mpfrver=mpfr-3.1.2
 mpfr=http://www.mpfr.org/mpfr-current/${mpfrver}.tar.bz2
 mpcver=mpc-0.8.2
 mpc=http://www.multiprecision.org/mpc/download/${mpcver}.tar.gz
@@ -123,7 +123,7 @@ RT=root-$HST-$BITS
 PF=`pwd`/$RT
 BD=`pwd`/build
 DIRS="$PF $PF/$TGT $BD $BD/binutils $BD/binutils/build-$HST-$BITS $BD/gcc-svn
-      $BD/gcc-svn/build-$HST-$BITS $BD/mingw $BD/mingw/build-$HST-$BITS"
+      $BD/gcc-svn/build-$HST-$BITS $BD/mingw $BD/mingw/build-crt-$HST-$BITS $BD/mingw/build-headers-$HST-$BITS"
 baseopts="--prefix=$PF --with-sysroot=$PF --target=$TGT"
 
 if [[ $update == "true" ]]; then
@@ -156,13 +156,15 @@ if [[ $update == "true" ]]; then
 
   echo "Downloading crt and headers.." && cd $BD/mingw
   svn -q co https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/trunk .
-  dest=$PF/$TGT/include
-  [ -d $dest ] && echo $dest already exists || ( cp -prf mingw-w64-headers/include $dest && find $dest -name ".svn" | xargs rm -rf )
 
-  echo "Root setup complete."
+  echo "Sources ready."
 fi
 
 if [[ $build == "true" ]]; then
+  echo "Installing headers.."  && cd $BD/mingw/build-headers-$HST-$BITS
+  _configure_args="--prefix=$PF/$TGT --host=$TGT"
+  ../mingw-w64-headers/configure $_configure_args > $out && make -s $j > $out && make install > $out || exit 1
+
   echo "Compiling binutils.." && cd $BD/binutils/build-$HST-$BITS
   ../src/configure $baseopts > $out && make -s $j > $out && make install > $out || exit 1
 
@@ -171,7 +173,7 @@ if [[ $build == "true" ]]; then
   export PATH=$PF/bin:$PATH
 
   echo "Compiling crt.." && cd $BD/mingw/build-$HST-$BITS
-  _configure_args="--prefix=$PF --with-sysroot=$PF --host=$TGT"
+  _configure_args="--prefix=$PF/$TGT --with-sysroot=$PF/$TGT --host=$TGT"
   if [[ "$BITS" == "32" ]] ; then
     _configure_args="$_configure_args --enable-lib32 --disable-lib64"
   fi
