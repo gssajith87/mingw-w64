@@ -19,7 +19,7 @@ include_HEADERS = include/pthread.h include/sched.h include/semaphore.h include/
 DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
 
 .rc.lo:
-	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=CC --mode=compile $(RC) @RCFLAGS@ $(RCFLAGS) -i $< -o $@
+	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=RC --mode=compile $(RC) $(RCFLAGS) -i $< -o $@
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)

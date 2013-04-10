@@ -345,7 +345,6 @@ abs_top_srcdir = @abs_top_srcdir@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
-ac_ct_RC = @ac_ct_RC@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -1193,7 +1192,7 @@ uninstall-am: uninstall-fakelibLIBRARIES uninstall-includeHEADERS \
 
 
 .rc.lo:
-	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=CC --mode=compile $(RC) @RCFLAGS@ $(RCFLAGS) -i $< -o $@
+	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=RC --mode=compile $(RC) $(RCFLAGS) -i $< -o $@
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status libtool
 
