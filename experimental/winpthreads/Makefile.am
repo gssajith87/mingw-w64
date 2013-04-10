@@ -42,19 +42,21 @@ dll_math.o: src/dll_math.c
 $(fakelibdir):
 	mkdir -p $@
 
-$(fakelibdir)/libgcc.a: $(fakelibdir) dll_dependency.o dll_math.o
+$(fakelib): $(fakelibdir)
+
+$(fakelibdir)/libgcc.a: dll_dependency.o dll_math.o
 	$(AR) cru $@ dll_dependency.o dll_math.o
 	touch $@
 
-$(fakelibdir)/libgcc.dll.a: $(fakelibdir) $(fakelibdir)/libgcc.a
+$(fakelibdir)/libgcc.dll.a: $(fakelibdir)/libgcc.a
 	cp $(fakelibdir)/libgcc.a $@
 	touch $@
 
-$(fakelibdir)/libgcc_s.a: $(fakelibdir) $(fakelibdir)/libgcc.a
+$(fakelibdir)/libgcc_s.a: $(fakelibdir)/libgcc.a
 	$(AR) cru $@
 	touch $@
 
-$(fakelibdir)/libgcc_s.dll.a: $(fakelibdir) $(fakelibdir)/libgcc.a
+$(fakelibdir)/libgcc_s.dll.a: $(fakelibdir)/libgcc.a
 	$(AR) cru $@
 	touch $@
 
