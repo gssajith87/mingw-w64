@@ -107,9 +107,9 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(fakelibdir)" "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
-LIBRARIES = $(fakelib_LIBRARIES) $(lib_LIBRARIES)
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" \
+	"$(DESTDIR)$(includedir)"
+LIBRARIES = $(lib_LIBRARIES) $(noinst_LIBRARIES)
 ARFLAGS = cru
 AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
@@ -393,28 +393,29 @@ top_srcdir = @top_srcdir@
 AM_CFLAGS = -Wall -DWIN32_LEAN_AND_MEAN
 ACLOCAL_AMFLAGS = -I m4
 lib_LTLIBRARIES = libwinpthread.la
-lib_LIBRARIES = $(am__append_1) $(am__append_2)
-fakelib_LIBRARIES = libgcc.a  libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a libpthread.a
-fakelibdir = fakelibs
+include_HEADERS = include/pthread.h include/sched.h include/semaphore.h include/pthread_unistd.h include/pthread_time.h include/pthread_compat.h
 libwinpthread_la_CPPFLAGS = -I$(srcdir)/include -DIN_WINPTHREAD
 libwinpthread_la_LDFLAGS = -no-undefined -version-info 1:0:0
+libwinpthread_la_LIBADD = libdummy.la
 libwinpthread_la_SOURCES = \
   src/barrier.h  src/cond.h  src/misc.h  src/mutex.h  src/rwlock.h  src/spinlock.h  src/thread.h  src/ref.h  src/sem.h \
   src/barrier.c  src/cond.c  src/misc.c  src/mutex.c  src/rwlock.c  src/spinlock.c  src/thread.c  src/ref.c  src/sem.c  src/sched.c \
   src/winpthread_internal.h  src/clock.c src/nanosleep.c src/version.rc
 
-include_HEADERS = include/pthread.h include/sched.h include/semaphore.h include/pthread_unistd.h include/pthread_time.h include/pthread_compat.h
-DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
-noinst_LTLIBRARIES = libdummy.la
-libwinpthread_la_LIBADD = libdummy.la
+noinst_LIBRARIES = libgcc.a  libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a libpthread.a
 libgcc_a_SOURCES = src/dll_dependency.S src/dll_math.c
 libgcc_dll_a_SOURCES = src/dll_dependency.S src/dll_math.c
 libgcc_s_a_SOURCES = 
 libgcc_s_dll_a_SOURCES = 
 libgcc_eh_a_SOURCES = 
 libpthread_a_SOURCES = 
-BUILT_SOURCES = dummy.c
+noinst_LTLIBRARIES = libdummy.la
 libdummy_la_SOURCES = dummy.c
+lib_LIBRARIES = $(am__append_1) $(am__append_2)
+
+# Force libgcc dummy build
+BUILT_SOURCES = dummy.c
+DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
 all: $(BUILT_SOURCES) config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -469,37 +470,6 @@ $(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
-install-fakelibLIBRARIES: $(fakelib_LIBRARIES)
-	@$(NORMAL_INSTALL)
-	@list='$(fakelib_LIBRARIES)'; test -n "$(fakelibdir)" || list=; \
-	list2=; for p in $$list; do \
-	  if test -f $$p; then \
-	    list2="$$list2 $$p"; \
-	  else :; fi; \
-	done; \
-	test -z "$$list2" || { \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(fakelibdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(fakelibdir)" || exit 1; \
-	  echo " $(INSTALL_DATA) $$list2 '$(DESTDIR)$(fakelibdir)'"; \
-	  $(INSTALL_DATA) $$list2 "$(DESTDIR)$(fakelibdir)" || exit $$?; }
-	@$(POST_INSTALL)
-	@list='$(fakelib_LIBRARIES)'; test -n "$(fakelibdir)" || list=; \
-	for p in $$list; do \
-	  if test -f $$p; then \
-	    $(am__strip_dir) \
-	    echo " ( cd '$(DESTDIR)$(fakelibdir)' && $(RANLIB) $$f )"; \
-	    ( cd "$(DESTDIR)$(fakelibdir)" && $(RANLIB) $$f ) || exit $$?; \
-	  else :; fi; \
-	done
-
-uninstall-fakelibLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@list='$(fakelib_LIBRARIES)'; test -n "$(fakelibdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(fakelibdir)'; $(am__uninstall_files_from_dir)
-
-clean-fakelibLIBRARIES:
-	-test -z "$(fakelib_LIBRARIES)" || rm -f $(fakelib_LIBRARIES)
 install-libLIBRARIES: $(lib_LIBRARIES)
 	@$(NORMAL_INSTALL)
 	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
@@ -531,6 +501,9 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
+
+clean-noinstLIBRARIES:
+	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
 src/$(am__dirstamp):
 	@$(MKDIR_P) src
 	@: > src/$(am__dirstamp)
@@ -1053,7 +1026,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LIBRARIES) $(LTLIBRARIES) $(HEADERS) config.h
 installdirs:
-	for dir in "$(DESTDIR)$(fakelibdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1092,8 +1065,8 @@ maintainer-clean-generic:
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-fakelibLIBRARIES clean-generic clean-libLIBRARIES \
-	clean-libLTLIBRARIES clean-libtool clean-noinstLTLIBRARIES \
+clean-am: clean-generic clean-libLIBRARIES clean-libLTLIBRARIES \
+	clean-libtool clean-noinstLIBRARIES clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -1115,7 +1088,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-fakelibLIBRARIES install-includeHEADERS
+install-data-am: install-includeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -1163,14 +1136,14 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-fakelibLIBRARIES uninstall-includeHEADERS \
-	uninstall-libLIBRARIES uninstall-libLTLIBRARIES
+uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES \
+	uninstall-libLTLIBRARIES
 
 .MAKE: all check install install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--refresh check check-am clean \
-	clean-cscope clean-fakelibLIBRARIES clean-generic \
-	clean-libLIBRARIES clean-libLTLIBRARIES clean-libtool \
+	clean-cscope clean-generic clean-libLIBRARIES \
+	clean-libLTLIBRARIES clean-libtool clean-noinstLIBRARIES \
 	clean-noinstLTLIBRARIES cscope cscopelist-am ctags ctags-am \
 	dist dist-all dist-bzip2 dist-gzip dist-lzip dist-shar \
 	dist-tarZ dist-xz dist-zip distcheck distclean \
@@ -1178,26 +1151,23 @@ uninstall-am: uninstall-fakelibLIBRARIES uninstall-includeHEADERS \
 	distclean-libtool distclean-tags distcleancheck distdir \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am \
-	install-fakelibLIBRARIES install-html install-html-am \
-	install-includeHEADERS install-info install-info-am \
-	install-libLIBRARIES install-libLTLIBRARIES install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am \
-	uninstall-fakelibLIBRARIES uninstall-includeHEADERS \
-	uninstall-libLIBRARIES uninstall-libLTLIBRARIES
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-includeHEADERS install-info \
+	install-info-am install-libLIBRARIES install-libLTLIBRARIES \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-includeHEADERS uninstall-libLIBRARIES \
+	uninstall-libLTLIBRARIES
 
 
 .rc.lo:
 	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=RC --mode=compile $(RC) $(RCFLAGS) -i $< -o $@
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status libtool
-
-# Force libgcc dummy build
-dummy.c: $(fakelib)
+dummy.c:
 	echo "static int __attribute__((unused)) dummy;" > $@
 @COPY_SHARED_TRUE@libpthread.dll.a: libwinpthread.la
 @COPY_SHARED_TRUE@	cp -p $(LT_OBJDIR)/libwinpthread.dll.a $@
