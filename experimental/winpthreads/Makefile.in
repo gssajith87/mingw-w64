@@ -118,13 +118,13 @@ am__v_AR_1 =
 libgcc_a_AR = $(AR) $(ARFLAGS)
 libgcc_a_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_libgcc_a_OBJECTS = src/dll_dependency.$(OBJEXT) \
-	src/dll_math.$(OBJEXT)
+am__objects_1 = src/libgcc/dll_dependency.$(OBJEXT) \
+	src/libgcc/dll_math.$(OBJEXT)
+am_libgcc_a_OBJECTS = $(am__objects_1)
 libgcc_a_OBJECTS = $(am_libgcc_a_OBJECTS)
 libgcc_dll_a_AR = $(AR) $(ARFLAGS)
 libgcc_dll_a_LIBADD =
-am_libgcc_dll_a_OBJECTS = src/dll_dependency.$(OBJEXT) \
-	src/dll_math.$(OBJEXT)
+am_libgcc_dll_a_OBJECTS = $(am__objects_1)
 libgcc_dll_a_OBJECTS = $(am_libgcc_dll_a_OBJECTS)
 libgcc_eh_a_AR = $(AR) $(ARFLAGS)
 libgcc_eh_a_LIBADD =
@@ -307,7 +307,6 @@ LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
-LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
@@ -403,8 +402,9 @@ libwinpthread_la_SOURCES = \
   src/winpthread_internal.h  src/clock.c src/nanosleep.c src/version.rc
 
 noinst_LIBRARIES = libgcc.a  libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a libpthread.a
-libgcc_a_SOURCES = src/dll_dependency.S src/dll_math.c
-libgcc_dll_a_SOURCES = src/dll_dependency.S src/dll_math.c
+libgccsrc = src/libgcc/dll_dependency.S src/libgcc/dll_math.c
+libgcc_a_SOURCES = $(libgccsrc)
+libgcc_dll_a_SOURCES = $(libgccsrc)
 libgcc_s_a_SOURCES = 
 libgcc_s_dll_a_SOURCES = 
 libgcc_eh_a_SOURCES = 
@@ -504,16 +504,16 @@ clean-libLIBRARIES:
 
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-src/$(am__dirstamp):
-	@$(MKDIR_P) src
-	@: > src/$(am__dirstamp)
-src/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) src/$(DEPDIR)
-	@: > src/$(DEPDIR)/$(am__dirstamp)
-src/dll_dependency.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/dll_math.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
+src/libgcc/$(am__dirstamp):
+	@$(MKDIR_P) src/libgcc
+	@: > src/libgcc/$(am__dirstamp)
+src/libgcc/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/libgcc/$(DEPDIR)
+	@: > src/libgcc/$(DEPDIR)/$(am__dirstamp)
+src/libgcc/dll_dependency.$(OBJEXT): src/libgcc/$(am__dirstamp) \
+	src/libgcc/$(DEPDIR)/$(am__dirstamp)
+src/libgcc/dll_math.$(OBJEXT): src/libgcc/$(am__dirstamp) \
+	src/libgcc/$(DEPDIR)/$(am__dirstamp)
 libgcc.a: $(libgcc_a_OBJECTS) $(libgcc_a_DEPENDENCIES) $(EXTRA_libgcc_a_DEPENDENCIES) 
 	$(AM_V_at)-rm -f libgcc.a
 	$(AM_V_AR)$(libgcc_a_AR) libgcc.a $(libgcc_a_OBJECTS) $(libgcc_a_LIBADD)
@@ -590,6 +590,12 @@ clean-noinstLTLIBRARIES:
 	}
 libdummy.la: $(libdummy_la_OBJECTS) $(libdummy_la_DEPENDENCIES) $(EXTRA_libdummy_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(LINK)  $(libdummy_la_OBJECTS) $(libdummy_la_LIBADD) $(LIBS)
+src/$(am__dirstamp):
+	@$(MKDIR_P) src
+	@: > src/$(am__dirstamp)
+src/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/$(DEPDIR)
+	@: > src/$(DEPDIR)/$(am__dirstamp)
 src/libwinpthread_la-barrier.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/libwinpthread_la-cond.lo: src/$(am__dirstamp) \
@@ -622,14 +628,13 @@ mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f src/*.$(OBJEXT)
 	-rm -f src/*.lo
+	-rm -f src/libgcc/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dummy.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libpthread.dll.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/dll_dependency.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/dll_math.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-barrier.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-clock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-cond.Plo@am__quote@
@@ -642,6 +647,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-sem.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-spinlock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-thread.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libgcc/$(DEPDIR)/dll_dependency.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/libgcc/$(DEPDIR)/dll_math.Po@am__quote@
 
 .S.o:
 @am__fastdepCCAS_TRUE@	$(AM_V_CPPAS)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -1058,6 +1065,8 @@ distclean-generic:
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
 	-rm -f src/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/$(am__dirstamp)
+	-rm -f src/libgcc/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/libgcc/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -1071,7 +1080,7 @@ clean-am: clean-generic clean-libLIBRARIES clean-libLTLIBRARIES \
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf ./$(DEPDIR) src/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) src/$(DEPDIR) src/libgcc/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -1119,7 +1128,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf ./$(DEPDIR) src/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) src/$(DEPDIR) src/libgcc/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1163,10 +1172,9 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES \
 	uninstall-libLTLIBRARIES
 
 
+# Tell libtool how to use the resource compiler
 .rc.lo:
 	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=RC --mode=compile $(RC) $(RCFLAGS) -i $< -o $@
-libtool: $(LIBTOOL_DEPS)
-	$(SHELL) ./config.status libtool
 dummy.c:
 	echo "static int __attribute__((unused)) dummy;" > $@
 @COPY_SHARED_TRUE@libpthread.dll.a: libwinpthread.la
