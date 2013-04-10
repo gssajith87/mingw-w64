@@ -27,7 +27,6 @@ AM_PROG_AR
 LT_INIT([win32-dll])
 LT_LANG([Windows Resource])
 
-AC_SUBST([LIBTOOL_DEPS])
 AC_SUBST([LT_OBJDIR],$lt_cv_objdir)
 
 AM_CONDITIONAL( [COPY_SHARED], [test "x$enable_shared" = xyes] )
