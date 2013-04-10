@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([mingw-w64-libpthread], [1.0], [mingw-w64-public@lists.sf.net])
+AC_INIT([mingw-w64-winpthread], [1.0], [mingw-w64-public@lists.sf.net])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/spinlock.c])
 AC_CONFIG_MACRO_DIR([m4])
