@@ -40,11 +40,11 @@ import re
 import sys
 import threading
 import time
-import urllib
+#import urllib
 try:
-  from urllib.request import FancyURLOpener
+  from urllib.request import FancyURLopener
 except ImportError:
-  from urllib import FancyURLOpener
+  from urllib import FancyURLopener
 
 class ProgressReporter(threading.Thread):
   """Dumb progress reporter; just keeps printing once a second to prevent
