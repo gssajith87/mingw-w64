@@ -29,8 +29,10 @@ LT_LANG([Windows Resource])
 
 AC_SUBST([LT_OBJDIR],$lt_cv_objdir)
 
-AM_CONDITIONAL( [COPY_SHARED], [test "x$enable_shared" = xyes] )
-AM_CONDITIONAL( [COPY_STATIC], [test "x$enable_static" = xyes] )
+AS_VAR_IF([enable_shared], [yes], [AS_VAR_SET([copy_shared])])
+AS_VAR_IF([enable_static], [yes], [AS_VAR_SET([copy_static])])
+AM_CONDITIONAL( [COPY_SHARED], [AS_VAR_TEST_SET([copy_shared])] )
+AM_CONDITIONAL( [COPY_STATIC], [AS_VAR_TEST_SET([copy_static])] )
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lpthread':
