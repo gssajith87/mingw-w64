@@ -6,7 +6,6 @@ lib_LTLIBRARIES = libwinpthread.la
 include_HEADERS = include/pthread.h include/sched.h include/semaphore.h include/pthread_unistd.h include/pthread_time.h include/pthread_compat.h
 libwinpthread_la_CPPFLAGS = -I$(srcdir)/include -DIN_WINPTHREAD
 libwinpthread_la_LDFLAGS = -no-undefined -version-info 1:0:0
-libwinpthread_la_LIBADD = libdummy.la
 libwinpthread_la_SOURCES = \
   src/barrier.h  src/cond.h  src/misc.h  src/mutex.h  src/rwlock.h  src/spinlock.h  src/thread.h  src/ref.h  src/sem.h \
   src/barrier.c  src/cond.c  src/misc.c  src/mutex.c  src/rwlock.c  src/spinlock.c  src/thread.c  src/ref.c  src/sem.c  src/sched.c \
@@ -21,19 +20,11 @@ libgcc_s_dll_a_SOURCES =
 libgcc_eh_a_SOURCES =
 libpthread_a_SOURCES =
 
-noinst_LTLIBRARIES = libdummy.la
-libdummy_la_SOURCES = dummy.c
-
 lib_LIBRARIES =
 
 # Tell libtool how to use the resource compiler
 .rc.lo:
 	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=RC --mode=compile $(RC) $(RCFLAGS) -i $< -o $@
-
-# Force libgcc dummy build
-BUILT_SOURCES = dummy.c
-dummy.c:
-	echo "static int __attribute__((unused)) dummy;" > $@
 
 if COPY_SHARED
 lib_LIBRARIES += libpthread.dll.a

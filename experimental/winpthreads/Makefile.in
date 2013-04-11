@@ -146,15 +146,8 @@ libpthread_dll_a_AR = $(AR) $(ARFLAGS)
 libpthread_dll_a_LIBADD =
 libpthread_dll_a_SOURCES = libpthread.dll.c
 libpthread_dll_a_OBJECTS = libpthread.dll.$(OBJEXT)
-LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES)
-libdummy_la_LIBADD =
-am_libdummy_la_OBJECTS = dummy.lo
-libdummy_la_OBJECTS = $(am_libdummy_la_OBJECTS)
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
-am__v_lt_1 = 
-libwinpthread_la_DEPENDENCIES = libdummy.la
+LTLIBRARIES = $(lib_LTLIBRARIES)
+libwinpthread_la_LIBADD =
 am_libwinpthread_la_OBJECTS = src/libwinpthread_la-barrier.lo \
 	src/libwinpthread_la-cond.lo src/libwinpthread_la-misc.lo \
 	src/libwinpthread_la-mutex.lo src/libwinpthread_la-rwlock.lo \
@@ -164,6 +157,10 @@ am_libwinpthread_la_OBJECTS = src/libwinpthread_la-barrier.lo \
 	src/libwinpthread_la-clock.lo \
 	src/libwinpthread_la-nanosleep.lo src/version.lo
 libwinpthread_la_OBJECTS = $(am_libwinpthread_la_OBJECTS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 libwinpthread_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(AM_CFLAGS) $(CFLAGS) $(libwinpthread_la_LDFLAGS) $(LDFLAGS) \
@@ -215,13 +212,11 @@ am__v_CCLD_1 =
 SOURCES = $(libgcc_a_SOURCES) $(libgcc_dll_a_SOURCES) \
 	$(libgcc_eh_a_SOURCES) $(libgcc_s_a_SOURCES) \
 	$(libgcc_s_dll_a_SOURCES) $(libpthread_a_SOURCES) \
-	libpthread.dll.c $(libdummy_la_SOURCES) \
-	$(libwinpthread_la_SOURCES)
+	libpthread.dll.c $(libwinpthread_la_SOURCES)
 DIST_SOURCES = $(libgcc_a_SOURCES) $(libgcc_dll_a_SOURCES) \
 	$(libgcc_eh_a_SOURCES) $(libgcc_s_a_SOURCES) \
 	$(libgcc_s_dll_a_SOURCES) $(libpthread_a_SOURCES) \
-	libpthread.dll.c $(libdummy_la_SOURCES) \
-	$(libwinpthread_la_SOURCES)
+	libpthread.dll.c $(libwinpthread_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -395,7 +390,6 @@ lib_LTLIBRARIES = libwinpthread.la
 include_HEADERS = include/pthread.h include/sched.h include/semaphore.h include/pthread_unistd.h include/pthread_time.h include/pthread_compat.h
 libwinpthread_la_CPPFLAGS = -I$(srcdir)/include -DIN_WINPTHREAD
 libwinpthread_la_LDFLAGS = -no-undefined -version-info 1:0:0
-libwinpthread_la_LIBADD = libdummy.la
 libwinpthread_la_SOURCES = \
   src/barrier.h  src/cond.h  src/misc.h  src/mutex.h  src/rwlock.h  src/spinlock.h  src/thread.h  src/ref.h  src/sem.h \
   src/barrier.c  src/cond.c  src/misc.c  src/mutex.c  src/rwlock.c  src/spinlock.c  src/thread.c  src/ref.c  src/sem.c  src/sched.c \
@@ -409,14 +403,9 @@ libgcc_s_a_SOURCES =
 libgcc_s_dll_a_SOURCES = 
 libgcc_eh_a_SOURCES = 
 libpthread_a_SOURCES = 
-noinst_LTLIBRARIES = libdummy.la
-libdummy_la_SOURCES = dummy.c
 lib_LIBRARIES = $(am__append_1) $(am__append_2)
-
-# Force libgcc dummy build
-BUILT_SOURCES = dummy.c
 DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
-all: $(BUILT_SOURCES) config.h
+all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
@@ -577,19 +566,6 @@ clean-libLTLIBRARIES:
 	  echo rm -f $${locs}; \
 	  rm -f $${locs}; \
 	}
-
-clean-noinstLTLIBRARIES:
-	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
-	@list='$(noinst_LTLIBRARIES)'; \
-	locs=`for p in $$list; do echo $$p; done | \
-	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
-	      sort -u`; \
-	test -z "$$locs" || { \
-	  echo rm -f $${locs}; \
-	  rm -f $${locs}; \
-	}
-libdummy.la: $(libdummy_la_OBJECTS) $(libdummy_la_DEPENDENCIES) $(EXTRA_libdummy_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(LINK)  $(libdummy_la_OBJECTS) $(libdummy_la_LIBADD) $(LIBS)
 src/$(am__dirstamp):
 	@$(MKDIR_P) src
 	@: > src/$(am__dirstamp)
@@ -633,7 +609,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dummy.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libpthread.dll.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-barrier.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-clock.Plo@am__quote@
@@ -1029,15 +1004,13 @@ distcleancheck: distclean
 	       $(distcleancheck_listfiles) ; \
 	       exit 1; } >&2
 check-am: all-am
-check: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) check-am
+check: check-am
 all-am: Makefile $(LIBRARIES) $(LTLIBRARIES) $(HEADERS) config.h
 installdirs:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) install-am
+install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -1071,12 +1044,10 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
 clean-am: clean-generic clean-libLIBRARIES clean-libLTLIBRARIES \
-	clean-libtool clean-noinstLIBRARIES clean-noinstLTLIBRARIES \
-	mostlyclean-am
+	clean-libtool clean-noinstLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -1148,35 +1119,32 @@ ps-am:
 uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES \
 	uninstall-libLTLIBRARIES
 
-.MAKE: all check install install-am install-strip
+.MAKE: all install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--refresh check check-am clean \
 	clean-cscope clean-generic clean-libLIBRARIES \
 	clean-libLTLIBRARIES clean-libtool clean-noinstLIBRARIES \
-	clean-noinstLTLIBRARIES cscope cscopelist-am ctags ctags-am \
-	dist dist-all dist-bzip2 dist-gzip dist-lzip dist-shar \
-	dist-tarZ dist-xz dist-zip distcheck distclean \
-	distclean-compile distclean-generic distclean-hdr \
-	distclean-libtool distclean-tags distcleancheck distdir \
-	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-includeHEADERS install-info \
-	install-info-am install-libLIBRARIES install-libLTLIBRARIES \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-includeHEADERS uninstall-libLIBRARIES \
-	uninstall-libLTLIBRARIES
+	cscope cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
+	dist-gzip dist-lzip dist-shar dist-tarZ dist-xz dist-zip \
+	distcheck distclean distclean-compile distclean-generic \
+	distclean-hdr distclean-libtool distclean-tags distcleancheck \
+	distdir distuninstallcheck dvi dvi-am html html-am info \
+	info-am install install-am install-data install-data-am \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-includeHEADERS \
+	install-info install-info-am install-libLIBRARIES \
+	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-am uninstall uninstall-am uninstall-includeHEADERS \
+	uninstall-libLIBRARIES uninstall-libLTLIBRARIES
 
 
 # Tell libtool how to use the resource compiler
 .rc.lo:
 	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=RC --mode=compile $(RC) $(RCFLAGS) -i $< -o $@
-dummy.c:
-	echo "static int __attribute__((unused)) dummy;" > $@
 @COPY_SHARED_TRUE@libpthread.dll.a: libwinpthread.la
 @COPY_SHARED_TRUE@	cp -p $(LT_OBJDIR)/libwinpthread.dll.a $@
 @COPY_SHARED_TRUE@	touch $@
