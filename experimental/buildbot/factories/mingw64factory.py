@@ -339,8 +339,24 @@ class Mingw64MingwFactory(Mingw64Factory):
   host_os = "mingw"
   file_extension = "zip"
   #gccConfigExtraArgs = "--enable-bootstrap"
+
+  wineslaves=['arch-mingw32']
   def __init__(self, **kwargs):
     Mingw64Factory.__init__(self, **kwargs)
+
+  def _step_AdditionalProperties(self):
+    self.addStep(SetProperty(name="modifying configures",
+                             doStepIf=lambda step: (step.getProperty("slavename") in self.wineslaves),
+                             property="gcc_config_args",
+                             command=["echo", Property("gcc_config_args", default=""), "--build=i686-w64-mingw32"]))
+    self.addStep(SetProperty(name="modifying configures",
+                             doStepIf=lambda step: (step.getProperty("slavename") in self.wineslaves),
+                             property="binutils_config_args",
+                             command=["echo", Property("binutils_config_args", default=""), "--build=i686-w64-mingw32"]))
+    self.addStep(SetProperty(name="modifying configures",
+                             doStepIf=lambda step: (step.getProperty("slavename") in self.wineslaves),
+                             property="mingw_config_args",
+                             command=["echo", Property("mingw_config_args", default=""), "--build=i686-w64-mingw32"]))
 
   def _step_Archive(self):
     # make the tarball
