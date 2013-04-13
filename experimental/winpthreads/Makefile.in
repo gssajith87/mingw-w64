@@ -52,8 +52,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@COPY_SHARED_TRUE@am__append_1 = libpthread.dll.a
-@COPY_STATIC_TRUE@am__append_2 = libpthread.a
+@COPY_STATIC_TRUE@am__append_1 = libpthread.a
+@COPY_SHARED_TRUE@am__append_2 = libpthread.dll.a
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
@@ -123,7 +123,6 @@ am__objects_1 = src/libgcc/dll_dependency.$(OBJEXT) \
 am_libgcc_a_OBJECTS = $(am__objects_1)
 libgcc_a_OBJECTS = $(am_libgcc_a_OBJECTS)
 libpthread_a_AR = $(AR) $(ARFLAGS)
-libpthread_a_LIBADD =
 am_libpthread_a_OBJECTS =
 libpthread_a_OBJECTS = $(am_libpthread_a_OBJECTS)
 libpthread_dll_a_AR = $(AR) $(ARFLAGS)
@@ -376,15 +375,17 @@ libwinpthread_la_SOURCES = \
   src/barrier.c  src/cond.c  src/misc.c  src/mutex.c  src/rwlock.c  src/spinlock.c  src/thread.c  src/ref.c  src/sem.c  src/sched.c \
   src/winpthread_internal.h  src/clock.c src/nanosleep.c src/version.rc
 
-noinst_LIBRARIES = libgcc.a  #libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a libpthread.a
+noinst_LIBRARIES = libgcc.a  #libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a
 libgccsrc = src/libgcc/dll_dependency.S src/libgcc/dll_math.c
 libgcc_a_SOURCES = $(libgccsrc)
 libgcc_dll_a_SOURCES = $(libgccsrc)
 libgcc_s_a_SOURCES = 
 libgcc_s_dll_a_SOURCES = 
 libgcc_eh_a_SOURCES = 
-libpthread_a_SOURCES = 
 lib_LIBRARIES = $(am__append_1) $(am__append_2)
+@COPY_STATIC_TRUE@libpthread_a_LIBADD = $(LT_OBJDIR)/libwinpthread.a
+@COPY_STATIC_TRUE@libpthread_a_DEPENDENCIES = libwinpthread.la
+@COPY_STATIC_TRUE@libpthread_a_SOURCES = 
 DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -488,10 +489,10 @@ libgcc.a: $(libgcc_a_OBJECTS) $(libgcc_a_DEPENDENCIES) $(EXTRA_libgcc_a_DEPENDEN
 	$(AM_V_at)-rm -f libgcc.a
 	$(AM_V_AR)$(libgcc_a_AR) libgcc.a $(libgcc_a_OBJECTS) $(libgcc_a_LIBADD)
 	$(AM_V_at)$(RANLIB) libgcc.a
-@COPY_STATIC_FALSE@libpthread.a: $(libpthread_a_OBJECTS) $(libpthread_a_DEPENDENCIES) $(EXTRA_libpthread_a_DEPENDENCIES) 
-@COPY_STATIC_FALSE@	$(AM_V_at)-rm -f libpthread.a
-@COPY_STATIC_FALSE@	$(AM_V_AR)$(libpthread_a_AR) libpthread.a $(libpthread_a_OBJECTS) $(libpthread_a_LIBADD)
-@COPY_STATIC_FALSE@	$(AM_V_at)$(RANLIB) libpthread.a
+libpthread.a: $(libpthread_a_OBJECTS) $(libpthread_a_DEPENDENCIES) $(EXTRA_libpthread_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libpthread.a
+	$(AM_V_AR)$(libpthread_a_AR) libpthread.a $(libpthread_a_OBJECTS) $(libpthread_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libpthread.a
 @COPY_SHARED_FALSE@libpthread.dll.a: $(libpthread_dll_a_OBJECTS) $(libpthread_dll_a_DEPENDENCIES) $(EXTRA_libpthread_dll_a_DEPENDENCIES) 
 @COPY_SHARED_FALSE@	$(AM_V_at)-rm -f libpthread.dll.a
 @COPY_SHARED_FALSE@	$(AM_V_AR)$(libpthread_dll_a_AR) libpthread.dll.a $(libpthread_dll_a_OBJECTS) $(libpthread_dll_a_LIBADD)
@@ -1113,9 +1114,6 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES \
 @COPY_SHARED_TRUE@libpthread.dll.a: libwinpthread.la
 @COPY_SHARED_TRUE@	cp -p $(LT_OBJDIR)/libwinpthread.dll.a $@
 @COPY_SHARED_TRUE@	touch $@
-@COPY_STATIC_TRUE@libpthread.a: libwinpthread.la
-@COPY_STATIC_TRUE@	cp -p $(LT_OBJDIR)/libwinpthread.a $@
-@COPY_STATIC_TRUE@	touch $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
