@@ -126,9 +126,8 @@ libpthread_a_AR = $(AR) $(ARFLAGS)
 am_libpthread_a_OBJECTS =
 libpthread_a_OBJECTS = $(am_libpthread_a_OBJECTS)
 libpthread_dll_a_AR = $(AR) $(ARFLAGS)
-libpthread_dll_a_LIBADD =
-libpthread_dll_a_SOURCES = libpthread.dll.c
-libpthread_dll_a_OBJECTS = libpthread.dll.$(OBJEXT)
+am_libpthread_dll_a_OBJECTS =
+libpthread_dll_a_OBJECTS = $(am_libpthread_dll_a_OBJECTS)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libwinpthread_la_LIBADD =
 am_libwinpthread_la_OBJECTS = src/libwinpthread_la-barrier.lo \
@@ -192,10 +191,10 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libgcc_a_SOURCES) $(libpthread_a_SOURCES) libpthread.dll.c \
-	$(libwinpthread_la_SOURCES)
+SOURCES = $(libgcc_a_SOURCES) $(libpthread_a_SOURCES) \
+	$(libpthread_dll_a_SOURCES) $(libwinpthread_la_SOURCES)
 DIST_SOURCES = $(libgcc_a_SOURCES) $(libpthread_a_SOURCES) \
-	libpthread.dll.c $(libwinpthread_la_SOURCES)
+	$(libpthread_dll_a_SOURCES) $(libwinpthread_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -386,6 +385,9 @@ lib_LIBRARIES = $(am__append_1) $(am__append_2)
 @COPY_STATIC_TRUE@libpthread_a_LIBADD = $(LT_OBJDIR)/libwinpthread.a
 @COPY_STATIC_TRUE@libpthread_a_DEPENDENCIES = libwinpthread.la
 @COPY_STATIC_TRUE@libpthread_a_SOURCES = 
+@COPY_SHARED_TRUE@libpthread_dll_a_LIBADD = $(LT_OBJDIR)/libwinpthread.dll.a
+@COPY_SHARED_TRUE@libpthread_dll_a_DEPENDENCIES = libwinpthread.la
+@COPY_SHARED_TRUE@libpthread_dll_a_SOURCES = 
 DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -493,10 +495,10 @@ libpthread.a: $(libpthread_a_OBJECTS) $(libpthread_a_DEPENDENCIES) $(EXTRA_libpt
 	$(AM_V_at)-rm -f libpthread.a
 	$(AM_V_AR)$(libpthread_a_AR) libpthread.a $(libpthread_a_OBJECTS) $(libpthread_a_LIBADD)
 	$(AM_V_at)$(RANLIB) libpthread.a
-@COPY_SHARED_FALSE@libpthread.dll.a: $(libpthread_dll_a_OBJECTS) $(libpthread_dll_a_DEPENDENCIES) $(EXTRA_libpthread_dll_a_DEPENDENCIES) 
-@COPY_SHARED_FALSE@	$(AM_V_at)-rm -f libpthread.dll.a
-@COPY_SHARED_FALSE@	$(AM_V_AR)$(libpthread_dll_a_AR) libpthread.dll.a $(libpthread_dll_a_OBJECTS) $(libpthread_dll_a_LIBADD)
-@COPY_SHARED_FALSE@	$(AM_V_at)$(RANLIB) libpthread.dll.a
+libpthread.dll.a: $(libpthread_dll_a_OBJECTS) $(libpthread_dll_a_DEPENDENCIES) $(EXTRA_libpthread_dll_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libpthread.dll.a
+	$(AM_V_AR)$(libpthread_dll_a_AR) libpthread.dll.a $(libpthread_dll_a_OBJECTS) $(libpthread_dll_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libpthread.dll.a
 
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
@@ -575,7 +577,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libpthread.dll.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-barrier.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-clock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libwinpthread_la-cond.Plo@am__quote@
@@ -1017,7 +1018,7 @@ clean-am: clean-generic clean-libLIBRARIES clean-libLTLIBRARIES \
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf ./$(DEPDIR) src/$(DEPDIR) src/libgcc/$(DEPDIR)
+	-rm -rf src/$(DEPDIR) src/libgcc/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -1065,7 +1066,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf ./$(DEPDIR) src/$(DEPDIR) src/libgcc/$(DEPDIR)
+	-rm -rf src/$(DEPDIR) src/libgcc/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1111,9 +1112,6 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLIBRARIES \
 # Tell libtool how to use the resource compiler
 .rc.lo:
 	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=RC --mode=compile $(RC) $(RCFLAGS) -i $< -o $@
-@COPY_SHARED_TRUE@libpthread.dll.a: libwinpthread.la
-@COPY_SHARED_TRUE@	cp -p $(LT_OBJDIR)/libwinpthread.dll.a $@
-@COPY_SHARED_TRUE@	touch $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

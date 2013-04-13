@@ -21,6 +21,7 @@ libgcc_s_dll_a_SOURCES =
 libgcc_eh_a_SOURCES =
 
 lib_LIBRARIES = 
+
 if COPY_STATIC
 lib_LIBRARIES += libpthread.a
 libpthread_a_LIBADD = $(LT_OBJDIR)/libwinpthread.a
@@ -28,16 +29,16 @@ libpthread_a_DEPENDENCIES = libwinpthread.la
 libpthread_a_SOURCES =
 endif
 
+if COPY_SHARED
+lib_LIBRARIES += libpthread.dll.a
+libpthread_dll_a_LIBADD = $(LT_OBJDIR)/libwinpthread.dll.a
+libpthread_dll_a_DEPENDENCIES = libwinpthread.la
+libpthread_dll_a_SOURCES =
+endif
+
 # Tell libtool how to use the resource compiler
 .rc.lo:
 	$(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --tag=RC --mode=compile $(RC) $(RCFLAGS) -i $< -o $@
-
-if COPY_SHARED
-lib_LIBRARIES += libpthread.dll.a
-libpthread.dll.a: libwinpthread.la
-	cp -p $(LT_OBJDIR)/libwinpthread.dll.a $@
-	touch $@
-endif
 
 DISTCHECK_CONFIGURE_FLAGS = --host=$(host_triplet)
 
