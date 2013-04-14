@@ -12,7 +12,7 @@ libwinpthread_la_SOURCES = \
   src/barrier.c  src/cond.c  src/misc.c  src/mutex.c  src/rwlock.c  src/spinlock.c  src/thread.c  src/ref.c  src/sem.c  src/sched.c \
   src/winpthread_internal.h  src/clock.c src/nanosleep.c src/version.rc
 
-noinst_LIBRARIES = libgcc.a  #libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a
+noinst_LIBRARIES = libgcc.a  libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a
 libgccsrc = src/libgcc/dll_dependency.S src/libgcc/dll_math.c
 libgcc_a_SOURCES = $(libgccsrc)
 libgcc_dll_a_SOURCES = $(libgccsrc)
