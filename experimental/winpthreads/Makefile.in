@@ -118,14 +118,9 @@ am__v_AR_1 =
 libgcc_a_AR = $(AR) $(ARFLAGS)
 libgcc_a_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-am__objects_1 = src/libgcc/dll_dependency.$(OBJEXT) \
+am_libgcc_a_OBJECTS = src/libgcc/dll_dependency.$(OBJEXT) \
 	src/libgcc/dll_math.$(OBJEXT)
-am_libgcc_a_OBJECTS = $(am__objects_1)
 libgcc_a_OBJECTS = $(am_libgcc_a_OBJECTS)
-libgcc_dll_a_AR = $(AR) $(ARFLAGS)
-libgcc_dll_a_LIBADD =
-am_libgcc_dll_a_OBJECTS = $(am__objects_1)
-libgcc_dll_a_OBJECTS = $(am_libgcc_dll_a_OBJECTS)
 libgcc_eh_a_AR = $(AR) $(ARFLAGS)
 libgcc_eh_a_LIBADD =
 am_libgcc_eh_a_OBJECTS =
@@ -134,10 +129,6 @@ libgcc_s_a_AR = $(AR) $(ARFLAGS)
 libgcc_s_a_LIBADD =
 am_libgcc_s_a_OBJECTS =
 libgcc_s_a_OBJECTS = $(am_libgcc_s_a_OBJECTS)
-libgcc_s_dll_a_AR = $(AR) $(ARFLAGS)
-libgcc_s_dll_a_LIBADD =
-am_libgcc_s_dll_a_OBJECTS =
-libgcc_s_dll_a_OBJECTS = $(am_libgcc_s_dll_a_OBJECTS)
 libpthread_a_AR = $(AR) $(ARFLAGS)
 am_libpthread_a_OBJECTS =
 libpthread_a_OBJECTS = $(am_libpthread_a_OBJECTS)
@@ -207,13 +198,11 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libgcc_a_SOURCES) $(libgcc_dll_a_SOURCES) \
-	$(libgcc_eh_a_SOURCES) $(libgcc_s_a_SOURCES) \
-	$(libgcc_s_dll_a_SOURCES) $(libpthread_a_SOURCES) \
+SOURCES = $(libgcc_a_SOURCES) $(libgcc_eh_a_SOURCES) \
+	$(libgcc_s_a_SOURCES) $(libpthread_a_SOURCES) \
 	$(libpthread_dll_a_SOURCES) $(libwinpthread_la_SOURCES)
-DIST_SOURCES = $(libgcc_a_SOURCES) $(libgcc_dll_a_SOURCES) \
-	$(libgcc_eh_a_SOURCES) $(libgcc_s_a_SOURCES) \
-	$(libgcc_s_dll_a_SOURCES) $(libpthread_a_SOURCES) \
+DIST_SOURCES = $(libgcc_a_SOURCES) $(libgcc_eh_a_SOURCES) \
+	$(libgcc_s_a_SOURCES) $(libpthread_a_SOURCES) \
 	$(libpthread_dll_a_SOURCES) $(libwinpthread_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -394,12 +383,9 @@ libwinpthread_la_SOURCES = \
   src/barrier.c  src/cond.c  src/misc.c  src/mutex.c  src/rwlock.c  src/spinlock.c  src/thread.c  src/ref.c  src/sem.c  src/sched.c \
   src/winpthread_internal.h  src/clock.c src/nanosleep.c src/version.rc
 
-noinst_LIBRARIES = libgcc.a  libgcc.dll.a  libgcc_eh.a  libgcc_s.a  libgcc_s.dll.a
-libgccsrc = src/libgcc/dll_dependency.S src/libgcc/dll_math.c
-libgcc_a_SOURCES = $(libgccsrc)
-libgcc_dll_a_SOURCES = $(libgccsrc)
+noinst_LIBRARIES = libgcc.a  libgcc_eh.a  libgcc_s.a
+libgcc_a_SOURCES = src/libgcc/dll_dependency.S src/libgcc/dll_math.c
 libgcc_s_a_SOURCES = 
-libgcc_s_dll_a_SOURCES = 
 libgcc_eh_a_SOURCES = 
 lib_LIBRARIES = $(am__append_1) $(am__append_2)
 @COPY_STATIC_TRUE@libpthread_a_LIBADD = $(LT_OBJDIR)/libwinpthread.a
@@ -511,10 +497,6 @@ libgcc.a: $(libgcc_a_OBJECTS) $(libgcc_a_DEPENDENCIES) $(EXTRA_libgcc_a_DEPENDEN
 	$(AM_V_at)-rm -f libgcc.a
 	$(AM_V_AR)$(libgcc_a_AR) libgcc.a $(libgcc_a_OBJECTS) $(libgcc_a_LIBADD)
 	$(AM_V_at)$(RANLIB) libgcc.a
-libgcc.dll.a: $(libgcc_dll_a_OBJECTS) $(libgcc_dll_a_DEPENDENCIES) $(EXTRA_libgcc_dll_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f libgcc.dll.a
-	$(AM_V_AR)$(libgcc_dll_a_AR) libgcc.dll.a $(libgcc_dll_a_OBJECTS) $(libgcc_dll_a_LIBADD)
-	$(AM_V_at)$(RANLIB) libgcc.dll.a
 libgcc_eh.a: $(libgcc_eh_a_OBJECTS) $(libgcc_eh_a_DEPENDENCIES) $(EXTRA_libgcc_eh_a_DEPENDENCIES) 
 	$(AM_V_at)-rm -f libgcc_eh.a
 	$(AM_V_AR)$(libgcc_eh_a_AR) libgcc_eh.a $(libgcc_eh_a_OBJECTS) $(libgcc_eh_a_LIBADD)
@@ -523,10 +505,6 @@ libgcc_s.a: $(libgcc_s_a_OBJECTS) $(libgcc_s_a_DEPENDENCIES) $(EXTRA_libgcc_s_a_
 	$(AM_V_at)-rm -f libgcc_s.a
 	$(AM_V_AR)$(libgcc_s_a_AR) libgcc_s.a $(libgcc_s_a_OBJECTS) $(libgcc_s_a_LIBADD)
 	$(AM_V_at)$(RANLIB) libgcc_s.a
-libgcc_s.dll.a: $(libgcc_s_dll_a_OBJECTS) $(libgcc_s_dll_a_DEPENDENCIES) $(EXTRA_libgcc_s_dll_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f libgcc_s.dll.a
-	$(AM_V_AR)$(libgcc_s_dll_a_AR) libgcc_s.dll.a $(libgcc_s_dll_a_OBJECTS) $(libgcc_s_dll_a_LIBADD)
-	$(AM_V_at)$(RANLIB) libgcc_s.dll.a
 libpthread.a: $(libpthread_a_OBJECTS) $(libpthread_a_DEPENDENCIES) $(EXTRA_libpthread_a_DEPENDENCIES) 
 	$(AM_V_at)-rm -f libpthread.a
 	$(AM_V_AR)$(libpthread_a_AR) libpthread.a $(libpthread_a_OBJECTS) $(libpthread_a_LIBADD)
