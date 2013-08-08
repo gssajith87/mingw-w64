@@ -194,6 +194,7 @@ static uint32_t dec64_to_mpd(mpd_context_t * ctx, mpd_t *result, const _Decimal6
     significand = in.t1.mantissa  * ((in.t1.sign) ? -1 : 1);
   }
   exp_part -= 398; /* exp bias */
+  printf("AAAA %I64dE%I64d\n", significand,exp_part);
   dec_to_mpd_conv(ctx, result, significand, exp_part);
   return 0;
 }
@@ -228,9 +229,10 @@ static _Decimal32 mpd_to_dec32(mpd_t *in){
   exp_part = in->exp + (uint32_t)mpd_trail_zeros(in) + 101LL; /* rough guess? */
   in->exp = 0;
   bases = mpd_sizeinbase(in, UINT16_MAX+1);
-  bases_data = mpd_callocfunc(bases < 2 ? 2 : bases,sizeof(uint16_t));
+  bases_data = __mingw_dfp_get_globals()->mpd_callocfunc(bases < 2 ? 2 : bases,sizeof(uint16_t));
   mpd_qexport_u16(bases_data,bases,UINT16_MAX+1,in,&status);
   significand = bases_data[0] | (uint32_t)bases_data[1] << 16 ;
+  __mingw_dfp_get_globals()->mpd_free(bases_data);
   ret.t0.sign = mpd_isnegative(in);
   if((significand & (0x7ULL << 21)) == (0x1ULL << 23)) { /* 100 MSB? */
     ret.t2.bits = 0x3;
@@ -257,10 +259,10 @@ static _Decimal64 mpd_to_dec64(mpd_t *in){
   exp_part = in->exp + (uint64_t)mpd_trail_zeros(in) + 398LL; /* rough guess? */
   in->exp = 0;
   bases = mpd_sizeinbase(in, UINT16_MAX+1);
-  bases_data = mpd_callocfunc(bases < 4 ? 4 : bases,sizeof(uint16_t));
+  bases_data = __mingw_dfp_get_globals()->mpd_callocfunc(bases < 4 ? 4 : bases,sizeof(uint16_t));
   mpd_qexport_u16(bases_data,bases,UINT16_MAX+1,in,&status);
   significand = bases_data[0] | (uint64_t)bases_data[1] << 16 | (uint64_t)bases_data[2] << 32 | (uint64_t)bases_data[3] << 48;
-  mpd_free(bases_data);
+  __mingw_dfp_get_globals()->mpd_free(bases_data);
   ret.t0.sign = mpd_isnegative(in);
   if((significand & (0x7ULL << 51)) == (0x1ULL << 53)) { /* 100 MSB? */
     ret.t2.bits = 0x3;
@@ -286,11 +288,11 @@ static _Decimal128 mpd_to_dec128(mpd_t *in){
   exp_part = in->exp + (uint64_t)mpd_trail_zeros(in) + 6176LL; /* rough guess? */
   in->exp = 0;
   bases = mpd_sizeinbase(in, UINT16_MAX+1);
-  bases_data = mpd_callocfunc(bases < 8 ? 8 : bases,sizeof(uint16_t));
+  bases_data = __mingw_dfp_get_globals()->mpd_callocfunc(bases < 8 ? 8 : bases,sizeof(uint16_t));
   mpd_qexport_u16(bases_data,bases,UINT16_MAX+1,in,&status);
   significand[0] = bases_data[0] | (uint64_t)bases_data[1] << 16 | (uint64_t)bases_data[2] << 32 | (uint64_t)bases_data[3] << 48;
   significand[1] = bases_data[4] | (uint64_t)bases_data[5] << 16 | (uint64_t)bases_data[6] << 32 | (uint64_t)bases_data[7] << 48;
-  mpd_free(bases_data);
+  __mingw_dfp_get_globals()->mpd_free(bases_data);
   ret.t0.sign = mpd_isnegative(in);
   if((significand[1] & (0x7ULL << 57)) == (0x1ULL << 49)) { /* 100 MSB? */
     ret.t2.bits = 0x3;
@@ -340,10 +342,11 @@ int main(){
 
   _Decimal128 ddd128 = mpd_to_dec128(result3);
   printf ("Compare is %d\n", memcmp(&ddd128,&dec128,sizeof(_Decimal128)));
-  printf ("0x%I64x\n0x%I64x\n", *((uint64_t *)(void *)&ddd128), *((uint64_t *)(void *)&dec128));
+  printf ("0x%I64d\n0x%I64x\n", *((uint64_t *)(void *)&ddd128), *((uint64_t *)(void *)&dec128));
 
   mpd_del(result1);
   mpd_del(result2);
   mpd_del(result3);
+  print_dec64(&dec64);
   return 0;
 }
