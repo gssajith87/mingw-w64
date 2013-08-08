@@ -1327,42 +1327,20 @@ void __pformat_float( long double x, __pformat_t *stream )
   __pformat_fcvt_release( value );
 }
 
-/* FIXME: There has got to be a simpler way to do this */
-static void dec128_to_mpd_conv(mpd_context_t * ctx, mpd_t *result, const uint64_t significand_low, const int64_t significand_high, const int64_t exponent_part){
-  uint32_t status = 0;
-  mpd_t *ten, *sig1, *sig2, *stemp, *sig, *s64, *exp_pow, *exp_partmpd;
-  ten = mpd_qnew();
-  s64 = mpd_qnew();
-  sig1 = mpd_qnew();
-  sig2 = mpd_qnew();
-  stemp = mpd_qnew();
-  sig = mpd_qnew();
-  exp_pow = mpd_qnew();
-  exp_partmpd = mpd_qnew();
-  mpd_qset_i64(ten,10LL,ctx,&status);
-  /* 2^64 */
-  mpd_qset_string(s64,"18446744073709551616",ctx,&status);
-  mpd_qset_u64(sig1,significand_low,ctx,&status);
-  mpd_qset_i64(sig2,significand_high,ctx,&status);
-  mpd_qmul(stemp,sig2,s64,ctx,&status);
-  mpd_qadd(sig,stemp,sig1,ctx,&status);
-  mpd_qset_i64(exp_partmpd,exponent_part,ctx,&status);
-  mpd_qpow(exp_pow,ten,exp_partmpd,ctx,&status);
-  mpd_qmul(result,sig,exp_pow,ctx,&status);
-  mpd_del(ten);
-  mpd_del(sig1);
-  mpd_del(sig2);
-  mpd_del(sig);
-  mpd_del(stemp);
-  mpd_del(s64);
-  mpd_del(exp_pow);
-  mpd_del(exp_partmpd);
-}
+typedef struct decimal128_decode {
+  int64_t significand[2];
+  int32_t exponent;
+  char sig[35]; /* up to 34 digits, null term'ed */
+  char exp[6]; /* null termninated */
+  int exp_neg;
+} decimal128_decode;
 
-static uint32_t dec128_to_mpd(mpd_context_t * ctx, mpd_t *result, const _Decimal128 deci){
-  int64_t significand2, exp_part;
-  uint64_t significand1;
-  ud128 in = {.d = deci};
+static uint32_t dec128_decode(decimal128_decode *result, const _Decimal128 deci){
+  int64_t significand2;
+  int64_t significand1;
+  int32_t exp_part;
+  ud128 in;
+  in.d = deci;
 
   if(in.t0.bits == 0x3){ /*case 11 */
     /* should not enter here */
@@ -1374,44 +1352,50 @@ static uint32_t dec128_to_mpd(mpd_context_t * ctx, mpd_t *result, const _Decimal
     significand1 = in.t1.mantissaL;
     significand2 = in.t1.mantissaH  * ((in.t1.sign) ? -1 : 1);
   }
-
   exp_part -= 6176; /* exp bias */
-  dec128_to_mpd_conv(ctx, result, significand1, significand2, exp_part);
+
+  result->significand[0] = significand1;
+  result->significand[1] = significand2; /* higher */
+  result->exponent = exp_part;
+  result->exp_neg = (exp_part < 0) ? 1 : 0;
+
+  memset(result->exp,0,6);
+  if(exp_part < 0) exp_part *= -1;
+  uint64_t bcd = 0;
+  while(exp_part){
+    bcd |= ((0x1<<31) & exp_part) ? 1 : 0;
+    for(int i = 15; i >= 0; i--){
+      int ishift = i * 4;
+      if((bcd & (0xf << ishift )) >> ishift > 4u) bcd += (3 << ishift);
+    }
+    exp_part <<= 1;
+    bcd <<= 1;
+  }
+  for(int i = 4; i>= 0; i--){
+    int ishift = i * 4;
+    result->exp[4-i] = '0' + ((bcd & (0xf << ishift)) >> ishift);
+  }
+
+  /* delete 0s */
+  while(result->exp[0] == '0') memmove(result->exp, result->exp+1, sizeof(result->exp));
+  if(result->exp_neg) {
+    memmove(result->exp+1, result->exp, sizeof(result->exp) - 1);
+    result->exp[0] = '-';
+  }
+  result->exp[sizeof(result->exp) - 1] = '\0';
+
   return 0;
 }
 
 static
 void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
-  __pformat_intarg_t argval;
-  uint64_t exp_part, bases;
-  uint16_t *bases_data;
-  mpd_context_t ctx;
-  mpd_t *mp;
-  uint32_t status = 0;
-
-  mpd_ieee_context(&ctx, 160);
-  mp = mpd_qnew();
-  if(!mp) abort();
-  dec128_to_mpd(&ctx, mp, x);
-
-  /* save exponent */
-  exp_part = mp->exp;
-  mp->exp = 0;
-
-  /* Get mantissa */
-  bases = mpd_sizeinbase(mp, 10);
-  bases_data = __mingw_dfp_get_globals()->mpd_callocfunc(bases, sizeof(uint16_t));
-  mpd_qexport_u16(bases_data,bases,10,mp,&status);
-
-  for (mpd_ssize_t i = bases; i < mpd_trail_zeros(mp); i--){
-    __pformat_putc( '0' + bases_data[i], stream);
-  }
-  __mingw_dfp_get_globals()->mpd_free(bases_data);
-  mpd_del(mp);
+  decimal128_decode in;
+  dec128_decode(&in,x);
   const char *s = "[__pformat_efloat_decimal]";
   /*if( stream->precision < 0 )
     stream->precision = 6;*/
-  __pformat_putchars( s, strlen( s ), stream );
+  __pformat_putc( ('E' | (stream->flags & PFORMAT_XCASE)), stream );
+  __pformat_putchars( in.exp, strlen( in.exp ), stream );
 }
 
 static
