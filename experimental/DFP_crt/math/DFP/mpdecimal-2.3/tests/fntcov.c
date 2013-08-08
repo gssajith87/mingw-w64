@@ -109,9 +109,9 @@ main(void)
             }
         }
 
-        mpd_free(fntresult);
-        mpd_free(kresult);
-        mpd_free(kfntresult);
+        __mingw_dfp_get_globals()->mpd_free(fntresult);
+        __mingw_dfp_get_globals()->mpd_free(kresult);
+        __mingw_dfp_get_globals()->mpd_free(kfntresult);
 
         for (blen = 1200; blen <= alen; blen += 1000) {
 
@@ -126,9 +126,9 @@ main(void)
                 }
             }
 
-            mpd_free(fntresult);
-            mpd_free(kresult);
-            mpd_free(kfntresult);
+            __mingw_dfp_get_globals()->mpd_free(fntresult);
+            __mingw_dfp_get_globals()->mpd_free(kresult);
+            __mingw_dfp_get_globals()->mpd_free(kfntresult);
         }
     }
 
@@ -153,9 +153,9 @@ main(void)
             }
         }
 
-        mpd_free(fntresult);
-        mpd_free(kresult);
-        mpd_free(kfntresult);
+        __mingw_dfp_get_globals()->mpd_free(fntresult);
+        __mingw_dfp_get_globals()->mpd_free(kresult);
+        __mingw_dfp_get_globals()->mpd_free(kfntresult);
 
         for (blen = 1200; blen <= alen; blen += 1000) {
 
@@ -174,9 +174,9 @@ main(void)
                 }
             }
 
-            mpd_free(fntresult);
-            mpd_free(kresult);
-            mpd_free(kfntresult);
+            __mingw_dfp_get_globals()->mpd_free(fntresult);
+            __mingw_dfp_get_globals()->mpd_free(kresult);
+            __mingw_dfp_get_globals()->mpd_free(kfntresult);
         }
     }
 
@@ -195,7 +195,7 @@ main(void)
             mpd_set_alloc(&ctx);
 
             if (fntresult != NULL) {
-                mpd_free(fntresult);
+                __mingw_dfp_get_globals()->mpd_free(fntresult);
                 if (alloc_idx < alloc_fail) {
                     break;
                 }
@@ -208,7 +208,7 @@ main(void)
             mpd_set_alloc(&ctx);
 
             if (fntresult != NULL) {
-                mpd_free(fntresult);
+                __mingw_dfp_get_globals()->mpd_free(fntresult);
                 if (alloc_idx < alloc_fail) {
                     break;
                 }
@@ -221,7 +221,7 @@ main(void)
             mpd_set_alloc(&ctx);
 
             if (kresult != NULL) {
-                mpd_free(kresult);
+                __mingw_dfp_get_globals()->mpd_free(kresult);
                 if (alloc_idx < alloc_fail) {
                     break;
                 }
@@ -234,7 +234,7 @@ main(void)
             mpd_set_alloc(&ctx);
 
             if (kresult != NULL) {
-                mpd_free(kresult);
+                __mingw_dfp_get_globals()->mpd_free(kresult);
                 if (alloc_idx < alloc_fail) {
                     break;
                 }
@@ -247,7 +247,7 @@ main(void)
             mpd_set_alloc(&ctx);
 
             if (kfntresult != NULL) {
-                mpd_free(kfntresult);
+                __mingw_dfp_get_globals()->mpd_free(kfntresult);
                 if (alloc_idx < alloc_fail) {
                     break;
                 }
@@ -260,7 +260,7 @@ main(void)
             mpd_set_alloc(&ctx);
 
             if (kfntresult != NULL) {
-                mpd_free(kfntresult);
+                __mingw_dfp_get_globals()->mpd_free(kfntresult);
                 if (alloc_idx < alloc_fail) {
                     break;
                 }
@@ -268,8 +268,8 @@ main(void)
         }
     }
 
-    mpd_free(a);
-    mpd_free(b);
+    __mingw_dfp_get_globals()->mpd_free(a);
+    __mingw_dfp_get_globals()->mpd_free(b);
 
 
     /* Huge numbers */

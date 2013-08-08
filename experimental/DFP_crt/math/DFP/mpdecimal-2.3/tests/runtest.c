@@ -867,7 +867,7 @@ _cp_MpdCtx(char **token, char *(*func)(const mpd_t *, int), mpd_context_t *ctx)
 
 	/* compare the calculated result to the expected result */
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp, op, token[0]);
 
 	/* Allocation failures */
@@ -884,7 +884,7 @@ _cp_MpdCtx(char **token, char *(*func)(const mpd_t *, int), mpd_context_t *ctx)
 		}
 	}
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp, op, token[0]);
 }
 
@@ -962,11 +962,12 @@ _cp_MpdFmtCtx(char **token, char *(*func)(const mpd_t *, const char *, mpd_conte
 	calc = func(tmp, fmt, ctx);
 
 	if (calc == NULL) {
-		calc = strdup("NULL");
+		calc = __mingw_dfp_get_globals()->mpd_callocfunc(1,5);
+		memcpy(calc,"NULL",4);
 	}
 	/* compare the calculated result to the expected result */
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp, op1, token[0]);
 
 	/* Allocation failures */
@@ -984,10 +985,11 @@ _cp_MpdFmtCtx(char **token, char *(*func)(const mpd_t *, const char *, mpd_conte
 		ASSERT(calc == NULL)
 	}
 	if (calc == NULL) {
-		calc = strdup("NULL");
+		calc = __mingw_dfp_get_globals()->mpd_callocfunc(1,5);
+		memcpy(calc,"NULL",4);
 	}
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp, op1, token[0]);
 
 	free(fmt);
@@ -1075,7 +1077,7 @@ _Res_Op_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, mpd_context_t *)
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp, op, token[0]);
 
 	/* Allocation failures */
@@ -1101,7 +1103,7 @@ _Res_Op_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, mpd_context_t *)
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp, op, token[0]);
 
 
@@ -1116,7 +1118,7 @@ _Res_Op_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, mpd_context_t *)
 
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	/* Allocation failures */
 	incr = 1;
@@ -1140,7 +1142,7 @@ _Res_Op_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, mpd_context_t *)
 	}
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 }
 
 /* Test a binary function */
@@ -1176,7 +1178,7 @@ _Res_Binop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t *
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -1205,7 +1207,7 @@ _Res_Binop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t *
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -1223,7 +1225,7 @@ _Res_Binop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t *
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp2, op2, token[0]);
 
 	/* Allocation failures */
@@ -1250,7 +1252,7 @@ _Res_Binop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t *
 	}
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp2, op2, token[0]);
 
 
@@ -1267,7 +1269,7 @@ _Res_Binop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t *
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 
 	/* Allocation failures */
@@ -1294,7 +1296,7 @@ _Res_Binop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t *
 	}
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 }
 
@@ -1341,7 +1343,7 @@ _Res_EqualBinop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mp
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp, op, token[0]);
 
 	/* Allocation failures */
@@ -1362,7 +1364,7 @@ _Res_EqualBinop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mp
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp, op, token[0]);
 
 
@@ -1375,7 +1377,7 @@ _Res_EqualBinop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mp
 
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	/* Allocation failures */
 	for (alloc_fail = 1; alloc_fail < INT_MAX; alloc_fail++) {
@@ -1393,7 +1395,7 @@ _Res_EqualBinop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mp
 	}
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 }
 
 /* Test a binary function with a binary result */
@@ -1443,11 +1445,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 
 	calc = mpd_to_sci(result1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(result2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
@@ -1479,11 +1481,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 	}
 	calc = mpd_to_sci(result1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(result2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
@@ -1503,11 +1505,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(result2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -1537,11 +1539,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 	}
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(result2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -1560,11 +1562,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 
 	calc = mpd_to_sci(result1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -1594,11 +1596,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 	}
 	calc = mpd_to_sci(result1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -1617,11 +1619,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(result2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp1, op1, token[0]);
 
@@ -1651,11 +1653,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 	}
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(result2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp1, op1, token[0]);
 
@@ -1674,11 +1676,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 
 	calc = mpd_to_sci(result1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp1, op1, token[0]);
 
@@ -1708,11 +1710,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 	}
 	calc = mpd_to_sci(result1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp1, op1, token[0]);
 
@@ -1730,11 +1732,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	/* Allocation failures */
 	incr = 1;
@@ -1761,11 +1763,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 	}
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 
 	/* result1 == tmp2, result2 == tmp1 */
@@ -1781,11 +1783,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	/* Allocation failures */
 	incr = 1;
@@ -1812,11 +1814,11 @@ _Binres_Binop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t *, co
 	}
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 }
 
 /* Test a binary function with a binary result; equal operands */
@@ -1862,11 +1864,11 @@ _Binres_EqualBinop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t 
 
 	calc = mpd_to_sci(result1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(result2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp, op, token[0]);
 
@@ -1890,11 +1892,11 @@ _Binres_EqualBinop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t 
 	}
 	calc = mpd_to_sci(result1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(result2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	check_equalmem(tmp, op, token[0]);
 
@@ -1909,11 +1911,11 @@ _Binres_EqualBinop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t 
 
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(result2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	/* Allocation failures */
 	for (alloc_fail = 1; alloc_fail < INT_MAX; alloc_fail++) {
@@ -1934,11 +1936,11 @@ _Binres_EqualBinop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(result2, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 
 	/* result2 == tmp */
@@ -1951,11 +1953,11 @@ _Binres_EqualBinop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t 
 
 	calc = mpd_to_sci(result1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	/* Allocation failures */
 	for (alloc_fail = 1; alloc_fail < INT_MAX; alloc_fail++) {
@@ -1976,11 +1978,11 @@ _Binres_EqualBinop_Ctx(char *token[], void (*func)(mpd_t *, mpd_t*, const mpd_t 
 	}
 	calc = mpd_to_sci(result1, 1);
 	compare_expected(calc, expected1, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected2, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 }
 
 /* Test a ternary function */
@@ -2018,7 +2020,7 @@ _Res_Ternop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 	check_equalmem(tmp3, op3, token[0]);
@@ -2050,7 +2052,7 @@ _Res_Ternop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 	check_equalmem(tmp3, op3, token[0]);
@@ -2071,7 +2073,7 @@ _Res_Ternop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp2, op2, token[0]);
 	check_equalmem(tmp3, op3, token[0]);
 
@@ -2101,7 +2103,7 @@ _Res_Ternop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp2, op2, token[0]);
 	check_equalmem(tmp3, op3, token[0]);
 
@@ -2121,7 +2123,7 @@ _Res_Ternop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp3, op3, token[0]);
 
@@ -2151,7 +2153,7 @@ _Res_Ternop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp3, op3, token[0]);
 
@@ -2171,7 +2173,7 @@ _Res_Ternop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(tmp3, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -2201,7 +2203,7 @@ _Res_Ternop_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp3, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 }
@@ -2237,7 +2239,7 @@ _Res_EqEqOp_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -2261,7 +2263,7 @@ _Res_EqEqOp_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -2277,7 +2279,7 @@ _Res_EqEqOp_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp2, op2, token[0]);
 
 	/* Allocation failures */
@@ -2299,7 +2301,7 @@ _Res_EqEqOp_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp2, op2, token[0]);
 
 
@@ -2314,7 +2316,7 @@ _Res_EqEqOp_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 
 	/* Allocation failures */
@@ -2336,7 +2338,7 @@ _Res_EqEqOp_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 }
 
@@ -2371,7 +2373,7 @@ _Res_EqOpEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -2395,7 +2397,7 @@ _Res_EqOpEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -2411,7 +2413,7 @@ _Res_EqOpEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp2, op2, token[0]);
 
 	/* Allocation failures */
@@ -2433,7 +2435,7 @@ _Res_EqOpEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp2, op2, token[0]);
 
 
@@ -2448,7 +2450,7 @@ _Res_EqOpEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 
 	/* Allocation failures */
@@ -2470,7 +2472,7 @@ _Res_EqOpEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 }
 
@@ -2505,7 +2507,7 @@ _Res_OpEqEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -2529,7 +2531,7 @@ _Res_OpEqEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 	check_equalmem(tmp2, op2, token[0]);
 
@@ -2545,7 +2547,7 @@ _Res_OpEqEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp2, op2, token[0]);
 
 	/* Allocation failures */
@@ -2567,7 +2569,7 @@ _Res_OpEqEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp2, op2, token[0]);
 
 
@@ -2582,7 +2584,7 @@ _Res_OpEqEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 
 	/* Allocation failures */
@@ -2604,7 +2606,7 @@ _Res_OpEqEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 }
 
@@ -2637,7 +2639,7 @@ _Res_EqEqEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp, op, token[0]);
 
 	/* Allocation failures */
@@ -2658,7 +2660,7 @@ _Res_EqEqEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp, op, token[0]);
 
 
@@ -2671,7 +2673,7 @@ _Res_EqEqEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	/* Allocation failures */
 	for (alloc_fail = 1; alloc_fail < INT_MAX; alloc_fail++) {
@@ -2690,7 +2692,7 @@ _Res_EqEqEq_Ctx(char *token[], void (*func)(mpd_t *, const mpd_t *, const mpd_t 
 	}
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 }
 
 /*
@@ -2729,7 +2731,7 @@ _Int_Res_Binop_Ctx(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -2757,7 +2759,7 @@ _Int_Res_Binop_Ctx(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -2777,7 +2779,7 @@ _Int_Res_Binop_Ctx(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -2803,7 +2805,7 @@ _Int_Res_Binop_Ctx(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_
 	}
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -2823,7 +2825,7 @@ _Int_Res_Binop_Ctx(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -2849,7 +2851,7 @@ _Int_Res_Binop_Ctx(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_
 	}
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -2892,7 +2894,7 @@ _Int_Res_EqualBinop_Ctx(char *token[], int (*func)(mpd_t *, const mpd_t *, const
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -2917,7 +2919,7 @@ _Int_Res_EqualBinop_Ctx(char *token[], int (*func)(mpd_t *, const mpd_t *, const
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -2934,7 +2936,7 @@ _Int_Res_EqualBinop_Ctx(char *token[], int (*func)(mpd_t *, const mpd_t *, const
 
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -2957,7 +2959,7 @@ _Int_Res_EqualBinop_Ctx(char *token[], int (*func)(mpd_t *, const mpd_t *, const
 	}
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3001,7 +3003,7 @@ _Int_Res_Binop(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_t *)
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3029,7 +3031,7 @@ _Int_Res_Binop(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_t *)
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3049,7 +3051,7 @@ _Int_Res_Binop(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_t *)
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3075,7 +3077,7 @@ _Int_Res_Binop(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_t *)
 	}
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3094,7 +3096,7 @@ _Int_Res_Binop(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_t *)
 
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3120,7 +3122,7 @@ _Int_Res_Binop(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd_t *)
 	}
 	calc = mpd_to_sci(tmp2, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3164,7 +3166,7 @@ _Int_Res_EqualBinop(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3189,7 +3191,7 @@ _Int_Res_EqualBinop(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3206,7 +3208,7 @@ _Int_Res_EqualBinop(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd
 
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3229,7 +3231,7 @@ _Int_Res_EqualBinop(char *token[], int (*func)(mpd_t *, const mpd_t *, const mpd
 	}
 	calc = mpd_to_sci(tmp, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	snprintf(buf, 11, "%d", int_result);
 	if (int_result != INT_MAX) { /* NaN cases are skipped for the int_retval */
 		compare_expected(buf, expected, expstatus, token[0], ctx);
@@ -3527,7 +3529,7 @@ _Res_Op_Lsize_Ctx(int skip, char *token[], void (*func)(mpd_t *, const mpd_t *, 
 
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 
 	/* Allocation failures */
@@ -3548,7 +3550,7 @@ _Res_Op_Lsize_Ctx(int skip, char *token[], void (*func)(mpd_t *, const mpd_t *, 
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 	check_equalmem(tmp1, op1, token[0]);
 
 
@@ -3561,7 +3563,7 @@ _Res_Op_Lsize_Ctx(int skip, char *token[], void (*func)(mpd_t *, const mpd_t *, 
 
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 
 	/* Allocation failures */
 	for (alloc_fail = 1; alloc_fail < INT_MAX; alloc_fail++) {
@@ -3580,7 +3582,7 @@ _Res_Op_Lsize_Ctx(int skip, char *token[], void (*func)(mpd_t *, const mpd_t *, 
 	}
 	calc = mpd_to_sci(tmp1, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	free(calc);
+	__mingw_dfp_get_globals()->mpd_free(calc);
 }
 
 static void
@@ -3619,8 +3621,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
 
-	mpd_free(calc);
-	mpd_free(data16);
+	__mingw_dfp_get_globals()->mpd_free(calc);
+	__mingw_dfp_get_globals()->mpd_free(data16);
 
 	/* Allocation failures */
 	base = (1<<15);
@@ -3653,8 +3655,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	mpd_free(calc);
-	mpd_free(data16);
+	__mingw_dfp_get_globals()->mpd_free(calc);
+	__mingw_dfp_get_globals()->mpd_free(data16);
 
 
 	base = (1U<<16);
@@ -3669,8 +3671,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
 
-	mpd_free(calc);
-	mpd_free(data16);
+	__mingw_dfp_get_globals()->mpd_free(calc);
+	__mingw_dfp_get_globals()->mpd_free(data16);
 
 
 	base = 9999;
@@ -3685,8 +3687,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
 
-	mpd_free(calc);
-	mpd_free(data16);
+	__mingw_dfp_get_globals()->mpd_free(calc);
+	__mingw_dfp_get_globals()->mpd_free(data16);
 
 
 #ifdef RT_EXT_BASECONV
@@ -3706,8 +3708,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 		calc = mpd_to_sci(result, 1);
 		compare_expected(calc, expected, expstatus, token[0], ctx);
 
-		mpd_free(calc);
-		mpd_free(data16);
+		__mingw_dfp_get_globals()->mpd_free(calc);
+		__mingw_dfp_get_globals()->mpd_free(data16);
 	}
 
 #ifdef RT_EXT_BASECONV
@@ -3729,8 +3731,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 		calc = mpd_to_sci(result, 1);
 		compare_expected(calc, expected, expstatus, token[0], ctx);
 
-		mpd_free(calc);
-		mpd_free(data16);
+		__mingw_dfp_get_globals()->mpd_free(calc);
+		__mingw_dfp_get_globals()->mpd_free(data16);
 	}
 
 
@@ -3746,8 +3748,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
 
-	mpd_free(calc);
-	mpd_free(data32);
+	__mingw_dfp_get_globals()->mpd_free(calc);
+	__mingw_dfp_get_globals()->mpd_free(data32);
 
 	/* Allocation failures */
 	base = 1000000000;
@@ -3780,8 +3782,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 	}
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
-	mpd_free(calc);
-	mpd_free(data32);
+	__mingw_dfp_get_globals()->mpd_free(calc);
+	__mingw_dfp_get_globals()->mpd_free(data32);
 
 
 	base = (1<<30);
@@ -3796,8 +3798,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 	calc = mpd_to_sci(result, 1);
 	compare_expected(calc, expected, expstatus, token[0], ctx);
 
-	mpd_free(calc);
-	mpd_free(data32);
+	__mingw_dfp_get_globals()->mpd_free(calc);
+	__mingw_dfp_get_globals()->mpd_free(data32);
 
 	for (i = 2; i <= 16; i++) {
 
@@ -3813,8 +3815,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 		calc = mpd_to_sci(result, 1);
 		compare_expected(calc, expected, expstatus, token[0], ctx);
 
-		mpd_free(calc);
-		mpd_free(data32);
+		__mingw_dfp_get_globals()->mpd_free(calc);
+		__mingw_dfp_get_globals()->mpd_free(data32);
 	}
 
 	for (i = 0; i < 100; i++) {
@@ -3833,8 +3835,8 @@ _Baseconv(char *token[], mpd_context_t *ctx)
 		calc = mpd_to_sci(result, 1);
 		compare_expected(calc, expected, expstatus, token[0], ctx);
 
-		mpd_free(calc);
-		mpd_free(data32);
+		__mingw_dfp_get_globals()->mpd_free(calc);
+		__mingw_dfp_get_globals()->mpd_free(data32);
 	}
 }
 
@@ -4505,8 +4507,8 @@ doit(char *filename)
 		freetoken(token);
 	}
 
-	mpd_free(line);
-	mpd_free(tmpline);
+	__mingw_dfp_get_globals()->mpd_free(line);
+	__mingw_dfp_get_globals()->mpd_free(tmpline);
 	if (file != stdin) {
 		fclose(file);
 	}
@@ -4539,9 +4541,9 @@ int main(int argc, char **argv)
 
 		/* DON'T do this in a real program. You have to be sure
 		 * that no previously allocated decimals will ever be used. */
-		MPD_MINALLOC = ma;
+		__mingw_dfp_get_globals()->MPD_MINALLOC = ma;
 		if (n == 2) {
-			fprintf(stderr, "minalloc: %" PRI_mpd_ssize_t "\n", MPD_MINALLOC);
+			fprintf(stderr, "minalloc: %" PRI_mpd_ssize_t "\n", __mingw_dfp_get_globals()->MPD_MINALLOC);
 		}
 
 		op = mpd_qnew();
@@ -4576,7 +4578,7 @@ int main(int argc, char **argv)
 	}
 
 	/* Valgrind */
-	mpd_del(&mpd_ln10);
+	mpd_del(&__mingw_dfp_get_globals()->mpd_ln10);
 
 	return have_fail;
 }

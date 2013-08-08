@@ -37,6 +37,7 @@
 #include "mptypes.h"
 #include "typearith.h"
 #include "transpose.h"
+#include "malloc_fail.h"
 
 
 
@@ -153,7 +154,7 @@ swap_halfrows_pow2_c(uint8_t *matrix, mpd_size_t rows, mpd_size_t cols, int dir)
 		}
 	}
 
-	mpd_free(done);
+	__mingw_dfp_get_globals()->mpd_free(done);
 	return 1;
 }
 
@@ -341,9 +342,9 @@ testit_uint(void (* func)(mpd_uint_t *, mpd_size_t, mpd_size_t), mpd_size_t rows
 
 
 out:
-	if (a) mpd_free(a);
-	if (src) mpd_free(src);
-	if (dest) mpd_free(dest);
+	if (a) __mingw_dfp_get_globals()->mpd_free(a);
+	if (src) __mingw_dfp_get_globals()->mpd_free(src);
+	if (dest) __mingw_dfp_get_globals()->mpd_free(dest);
 	return ret;
 
 error:
@@ -401,9 +402,9 @@ testit_uchar(void (* func)(uint8_t *, mpd_size_t, mpd_size_t), mpd_size_t rows, 
 
 
 out:
-	if (a) mpd_free(a);
-	if (src) mpd_free(src);
-	if (dest) mpd_free(dest);
+	if (a) __mingw_dfp_get_globals()->mpd_free(a);
+	if (src) __mingw_dfp_get_globals()->mpd_free(src);
+	if (dest) __mingw_dfp_get_globals()->mpd_free(dest);
 	return ret;
 
 error:

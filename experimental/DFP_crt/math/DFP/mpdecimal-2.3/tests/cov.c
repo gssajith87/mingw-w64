@@ -9,7 +9,7 @@
 
 /* This file contains coverage tests for rarely exercised code paths. */
 
-#ifndef _MSC_VER
+#ifndef _MSVC_VER
   #include <inttypes.h>
   #define ASSERT(p) if (!(p)) {abort();}
   mpd_uint_t mpd_qsshiftr(mpd_t *result, const mpd_t *a, mpd_ssize_t n);
@@ -22,17 +22,16 @@
   #error "insufficient buffer length"
 #endif
 
+static void
+test_traphandler(mpd_context_t *ctx UNUSED)
+{
+	;
+}
 
 static void mpd_testcontext(mpd_context_t *ctx)
 {
 	mpd_defaultcontext(ctx);
 	ctx->prec = 28;
-}
-
-static void
-test_traphandler(mpd_context_t *ctx UNUSED)
-{
-	;
 }
 
 #ifndef LEGACY_COMPILER
@@ -76,7 +75,7 @@ getset_##TYPE(                                             \
         snprintf(buf, BUFSIZE, "%" FMTSPEC, x);            \
         s = mpd_to_sci(a, 0);                              \
         ASSERT(strcmp(s, buf) == 0)                        \
-        mpd_free(s);                                       \
+        __mingw_dfp_get_globals()->mpd_free(s);                                       \
 }
 
 TEST_GETSET_INTTYPE(mpd_ssize_t, PRI_mpd_ssize_t)
@@ -261,8 +260,8 @@ arith_##TYPE(                                                                 \
         s2 = mpd_to_sci(tmp, 0);                                              \
                                                                               \
         ASSERT(strcmp(s1, s2) == 0)                                           \
-        mpd_free(s1);                                                         \
-        mpd_free(s2);                                                         \
+        __mingw_dfp_get_globals()->mpd_free(s1);                                                         \
+        __mingw_dfp_get_globals()->mpd_free(s2);                                                         \
 }
 
 TEST_ARITH_INTTYPE(mpd_ssize_t, PRI_mpd_ssize_t)
@@ -393,25 +392,27 @@ test_context(void)
 {
 	mpd_context_t ctx;
 	mpd_ssize_t ssize;
+    void (* mpd_dflt_traphandler)(mpd_context_t *);
 
 	/* context.c */
-	mpd_traphandler = test_traphandler;
+	mpd_dflt_traphandler = __mingw_dfp_get_globals()->mpd_traphandler;
+	__mingw_dfp_get_globals()->mpd_traphandler = test_traphandler;
 	mpd_init(&ctx, MPD_MAX_PREC+1);
 	ASSERT(ctx.status&MPD_Invalid_context)
 	ASSERT(ctx.newtrap == MPD_Invalid_context)
-	mpd_traphandler = mpd_dflt_traphandler;
+	__mingw_dfp_get_globals()->mpd_traphandler = mpd_dflt_traphandler;
 
 	mpd_init(&ctx, 100);
-	ASSERT(MPD_MINALLOC_MIN <= MPD_MINALLOC &&
-	       MPD_MINALLOC <= MPD_MINALLOC_MAX)
+	ASSERT(MPD_MINALLOC_MIN <= __mingw_dfp_get_globals()->MPD_MINALLOC &&
+	       __mingw_dfp_get_globals()->MPD_MINALLOC <= MPD_MINALLOC_MAX)
 
 	fprintf(stderr, "  This warning is part of the coverage test: ");
-	ssize = MPD_MINALLOC;
+	ssize = __mingw_dfp_get_globals()->MPD_MINALLOC;
 	mpd_setminalloc(2000);
-	ASSERT(MPD_MINALLOC == ssize)
+	ASSERT(__mingw_dfp_get_globals()->MPD_MINALLOC == ssize)
 
 	/* DON'T do this */
-	MPD_MINALLOC = MPD_MINALLOC_MIN;
+	__mingw_dfp_get_globals()->MPD_MINALLOC = MPD_MINALLOC_MIN;
 
 	mpd_basiccontext(&ctx);
 	ASSERT(mpd_getprec(&ctx) == 9)
@@ -525,7 +526,7 @@ test_attributes(void)
 	ASSERT(mpd_isdynamic_data(&a))
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "-2.3854727e+1875") == 0)
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	/* switch to dynamic data, zero new memory */
 	mpd_set_string(&b, "123456789", &ctx);
@@ -580,37 +581,37 @@ test_shift(void)
 	mpd_qsshiftr(&a, &a, 0);
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "123456789123456789") == 0)
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	mpd_set_string(&a, "0", &ctx);
 	mpd_qsshiftr(&a, &a, 0);
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "0") == 0)
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	mpd_set_string(&a, "123", &ctx);
 	mpd_qsshiftr(&a, &a, 7);
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "0") == 0)
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	mpd_set_string(&a, "123456789123456789", &ctx);
 	mpd_qsshiftr(&b, &a, 0);
 	s = mpd_to_sci(&b, 0);
 	ASSERT(strcmp(s, "123456789123456789") == 0)
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	mpd_set_string(&a, "0", &ctx);
 	mpd_qsshiftr(&b, &a, 0);
 	s = mpd_to_sci(&b, 0);
 	ASSERT(strcmp(s, "0") == 0)
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	mpd_set_string(&a, "123", &ctx);
 	mpd_qsshiftr(&b, &a, 7);
 	s = mpd_to_sci(&b, 0);
 	ASSERT(strcmp(s, "0") == 0)
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	/* mpd_qrotate */
 	ctx.traps = 0;
@@ -629,6 +630,7 @@ static void
 test_check_nans(void)
 {
 	mpd_context_t ctx;
+	void (* mpd_dflt_traphandler)(mpd_context_t *);
 	mpd_uint_t adata[MPD_MINALLOC_MAX];
 	mpd_uint_t bdata[MPD_MINALLOC_MAX];
 	mpd_t a = {MPD_STATIC|MPD_STATIC_DATA, 0, 0, 0, MPD_MINALLOC_MAX, adata};
@@ -648,14 +650,15 @@ test_check_nans(void)
 	ASSERT(!mpd_check_nan(&b, &a, &ctx))
 	ASSERT(ctx.status == 0)
 
-	mpd_traphandler = test_traphandler;
+	mpd_dflt_traphandler = __mingw_dfp_get_globals()->mpd_traphandler;
+	__mingw_dfp_get_globals()->mpd_traphandler = test_traphandler;
 	ctx.status = 0;
 	mpd_set_string(&a, "sNaN", &ctx);
 	mpd_set_string(&b, "1", &ctx);
 	ASSERT(mpd_check_nans(&b, &a, &b, &ctx))
 	ASSERT(ctx.status == MPD_Invalid_operation)
 	ASSERT(mpd_isqnan(&b))
-	mpd_traphandler = mpd_dflt_traphandler;
+	__mingw_dfp_get_globals()->mpd_traphandler = mpd_dflt_traphandler;
 
 	ctx.status = 0;
 	mpd_set_string(&a, "2", &ctx);
@@ -687,7 +690,7 @@ test_finalize_round(void)
 	s = mpd_to_sci(&a, 1);
 	ASSERT(strcmp(s, "8.8987E+201") == 0)
 	ASSERT(ctx.status == (MPD_Rounded|MPD_Inexact))
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	/* apply_round_excess, apply_round_fit */
 	ctx.prec =  MPD_RDIGITS + 1;
@@ -701,7 +704,7 @@ test_finalize_round(void)
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "1.0000000000000000000e-99") == 0)
 	ASSERT(ctx.status == (MPD_Underflow|MPD_Subnormal|MPD_Rounded|MPD_Inexact))
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	ctx.status = 0;
 	mpd_set_string(&a, "99999999999999999999e79", &ctx);
@@ -710,14 +713,14 @@ test_finalize_round(void)
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "1.0000000000000000000e+99") == 0)
 	ASSERT(ctx.status == (MPD_Rounded|MPD_Inexact))
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 #else
 	ctx.status = 0;
 	mpd_set_string(&a, "9999999999e-109", &ctx);
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "1.000000000e-99") == 0)
 	ASSERT(ctx.status == (MPD_Underflow|MPD_Subnormal|MPD_Rounded|MPD_Inexact))
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	ctx.status = 0;
 	mpd_set_string(&a, "9999999999e89", &ctx);
@@ -726,7 +729,7 @@ test_finalize_round(void)
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "1.000000000e+99") == 0)
 	ASSERT(ctx.status == (MPD_Rounded|MPD_Inexact))
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 #endif
 
 	mpd_del(&a);
@@ -741,9 +744,11 @@ test_baseconv(void)
 	mpd_t a = {MPD_STATIC|MPD_STATIC_DATA, 0, 0, 0, MPD_MINALLOC_MAX, adata};
 	uint32_t u32data;
 	uint16_t u16data;
+	void (* mpd_dflt_traphandler)(mpd_context_t *);
 
 	mpd_testcontext(&ctx);
-	mpd_traphandler = test_traphandler;
+	mpd_dflt_traphandler = __mingw_dfp_get_globals()->mpd_traphandler;
+	__mingw_dfp_get_globals()->mpd_traphandler = test_traphandler;
 
 	/* special or non-integer values */
 	mpd_set_string(&a, "inf", &ctx);
@@ -792,7 +797,7 @@ test_baseconv(void)
 	mpd_import_u32(&a, &u32data, MPD_SIZE_MAX/(sizeof (mpd_uint_t))+1, MPD_POS, 2, &ctx);
 	ASSERT(ctx.status & MPD_Invalid_operation)
 
-	mpd_traphandler = mpd_dflt_traphandler;
+	__mingw_dfp_get_globals()->mpd_traphandler = mpd_dflt_traphandler;
 	mpd_del(&a);
 }
 
@@ -822,7 +827,7 @@ test_set_string(void)
 	snprintf(buf, BUFSIZE, "1E+%" PRI_mpd_ssize_t, (mpd_ssize_t)MPD_MAX_EMAX-5);
 	ASSERT(strcmp(t, buf) == 0)
 	ASSERT(ctx.status == 0)
-	mpd_free(t);
+	__mingw_dfp_get_globals()->mpd_free(t);
 
 	ctx.status = 0;
 	ctx.prec = MPD_MAX_PREC;
@@ -832,7 +837,7 @@ test_set_string(void)
 	t = mpd_to_sci(&a, 1);
 	ASSERT(strcmp(t, "Infinity") == 0)
 	ASSERT(ctx.status == (MPD_Inexact|MPD_Overflow|MPD_Rounded))
-	mpd_free(t);
+	__mingw_dfp_get_globals()->mpd_free(t);
 
 	ctx.status = 0;
 	ctx.prec = MPD_MAX_PREC;
@@ -842,7 +847,7 @@ test_set_string(void)
 	snprintf(buf, BUFSIZE, "1E%" PRI_mpd_ssize_t, mpd_etiny(&ctx));
 	ASSERT(strcmp(t, buf) == 0)
 	ASSERT(ctx.status == (MPD_Subnormal|MPD_Rounded))
-	mpd_free(t);
+	__mingw_dfp_get_globals()->mpd_free(t);
 
 	ctx.status = 0;
 	ctx.prec = 28;
@@ -851,7 +856,7 @@ test_set_string(void)
 	t = mpd_to_sci(&a, 1);
 	ASSERT(strcmp(t, "-Infinity") == 0)
 	ASSERT(ctx.status == (MPD_Overflow|MPD_Rounded|MPD_Inexact))
-	mpd_free(t);
+	__mingw_dfp_get_globals()->mpd_free(t);
 
 	ctx.status = 0;
 	ctx.prec = 28;
@@ -863,7 +868,7 @@ test_set_string(void)
 	ASSERT(ctx.status == (MPD_Subnormal|MPD_Inexact|
 	                      MPD_Clamped|MPD_Underflow|
 	                      MPD_Rounded))
-	mpd_free(t);
+	__mingw_dfp_get_globals()->mpd_free(t);
 
 	ctx.status = 0;
 	n = snprintf(buf, BUFSIZE, "1e%s", "184467440737095516161");
@@ -871,7 +876,7 @@ test_set_string(void)
 	t = mpd_to_sci(&a, 1);
 	ASSERT(strcmp(t, "Infinity") == 0)
 	ASSERT(ctx.status == (MPD_Inexact|MPD_Overflow|MPD_Rounded))
-	mpd_free(t);
+	__mingw_dfp_get_globals()->mpd_free(t);
 
 	ctx.status = 0;
 	n = snprintf(buf, BUFSIZE, "-1e%s", "-184467440737095516161");
@@ -882,7 +887,7 @@ test_set_string(void)
 	ASSERT(ctx.status == (MPD_Subnormal|MPD_Inexact|
 	                      MPD_Clamped|MPD_Underflow|
 	                      MPD_Rounded))
-	mpd_free(t);
+	__mingw_dfp_get_globals()->mpd_free(t);
 
 
 	/* Exponent and precision limits: requires large amounts of memory. */
@@ -909,7 +914,7 @@ test_set_string(void)
 		t = mpd_to_sci(&a, 1);
 		ASSERT(strcmp(t, "Infinity") == 0)
 		ASSERT(ctx.status == (MPD_Inexact|MPD_Overflow|MPD_Rounded))
-		mpd_free(t);
+		__mingw_dfp_get_globals()->mpd_free(t);
 
 	}
 
@@ -922,7 +927,7 @@ test_set_string(void)
 		t = mpd_to_sci(&a, 1);
 		ASSERT(strcmp(t, "Infinity") == 0)
 		ASSERT(ctx.status == (MPD_Inexact|MPD_Overflow|MPD_Rounded))
-		mpd_free(t);
+		__mingw_dfp_get_globals()->mpd_free(t);
 	}
 
 	/* .000...0001e425000000 -> 1 */
@@ -934,7 +939,7 @@ test_set_string(void)
 		t = mpd_to_sci(&a, 1);
 		ASSERT(strcmp(t, "1") == 0)
 		ASSERT(ctx.status == 0)
-		mpd_free(t);
+		__mingw_dfp_get_globals()->mpd_free(t);
 	}
 
 	/* .000...0001e850000000 -> 1 */
@@ -947,7 +952,7 @@ test_set_string(void)
 		snprintf(buf, BUFSIZE, "1E+%" PRI_mpd_ssize_t, (mpd_ssize_t)MPD_MAX_EMAX);
 		ASSERT(strcmp(t, buf) == 0)
 		ASSERT(ctx.status == 0)
-		mpd_free(t);
+		__mingw_dfp_get_globals()->mpd_free(t);
 	}
 
 	/* .000...0005e424999999 -> 0.5 */
@@ -961,7 +966,7 @@ test_set_string(void)
 		t = mpd_to_sci(&a, 1);
 		ASSERT(strcmp(t, "0.5") == 0)
 		ASSERT(ctx.status == 0)
-		mpd_free(t);
+		__mingw_dfp_get_globals()->mpd_free(t);
 	}
 
 	/* .000...0001e-2147483648 -> 0E-849999999 */
@@ -978,7 +983,7 @@ test_set_string(void)
 		ASSERT(ctx.status == (MPD_Subnormal|MPD_Inexact|
 		                      MPD_Clamped|MPD_Underflow|
 		                      MPD_Rounded))
-		mpd_free(t);
+		__mingw_dfp_get_globals()->mpd_free(t);
 	}
 
 	/* .000...0001e-184467440737095516161 -> 0E-849999999 */
@@ -995,7 +1000,7 @@ test_set_string(void)
 		ASSERT(ctx.status == (MPD_Subnormal|MPD_Inexact|
 		                      MPD_Clamped|MPD_Underflow|
 		                      MPD_Rounded))
-		mpd_free(t);
+		__mingw_dfp_get_globals()->mpd_free(t);
 
 	}
 
@@ -1026,7 +1031,7 @@ test_set_string(void)
 		snprintf(buf, BUFSIZE, "1E%" PRI_mpd_ssize_t, mpd_etiny(&ctx));
 		ASSERT(strcmp(t, buf) == 0)
 		ASSERT(ctx.status == (MPD_Subnormal|MPD_Rounded))
-		mpd_free(t);
+		__mingw_dfp_get_globals()->mpd_free(t);
 	}
 
 	/* Too many fraction digits: .000...0001e184467440737095516161 -> NaN */
@@ -1043,7 +1048,7 @@ test_set_string(void)
 		t = mpd_to_sci(&a, 1);
 		ASSERT(strcmp(t, "NaN") == 0)
 		ASSERT(ctx.status == MPD_Conversion_syntax)
-		mpd_free(t);
+		__mingw_dfp_get_globals()->mpd_free(t);
 	}
 
 	/* Exactly MPD_MAX_PREC digits */
@@ -1057,7 +1062,7 @@ test_set_string(void)
 		t = mpd_to_sci(&a, 0);
 		if (t != NULL) {
 			ASSERT(strcmp(t, s) == 0)
-			mpd_free(t);
+			__mingw_dfp_get_globals()->mpd_free(t);
 		}
 	}
 
@@ -1349,7 +1354,7 @@ test_misc(void)
 	mpd_signcpy(&b, &a);
 	s = mpd_to_sci(&b, 0);
 	ASSERT(strcmp(s, "-3"))
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	/* maxcoeff */
 	ctx.prec = 28;
@@ -1359,7 +1364,7 @@ test_misc(void)
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "9999999999999999999999999999e2025"))
 	ASSERT(ctx.status == 0)
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	/* canonical */
 	ctx.status = 0;
@@ -1369,8 +1374,8 @@ test_misc(void)
 	t = mpd_to_sci(&b, 0);
 	ASSERT(strcmp(s, t) == 0)
 	ASSERT(ctx.status == 0)
-	mpd_free(s);
-	mpd_free(t);
+	__mingw_dfp_get_globals()->mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(t);
 
 	/* mpd_msword */
 	mpd_set_string(&a, "2.3854727e+1875", &ctx);
@@ -1386,7 +1391,7 @@ test_misc(void)
 	s = mpd_to_sci(&a, 1);
 	ASSERT(strcmp(s, "NaN") == 0)
 	ASSERT(ctx.status == MPD_Invalid_operation)
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	/* CONFIG_64: Over/Underflow in power */
 	ctx.status = 0;
@@ -1396,7 +1401,7 @@ test_misc(void)
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "Infinity") == 0)
 	ASSERT(ctx.status == (MPD_Rounded|MPD_Overflow|MPD_Inexact))
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	ctx.status = 0;
 	mpd_set_string(&a, "1.000000001", &ctx);
@@ -1406,7 +1411,7 @@ test_misc(void)
 	snprintf(buf, BUFSIZE, "0E%" PRI_mpd_ssize_t, mpd_etiny(&ctx));
 	ASSERT(strcmp(s, buf) == 0)
 	ASSERT(ctx.status == (MPD_Underflow|MPD_Rounded|MPD_Clamped|MPD_Inexact|MPD_Subnormal))
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 	ctx.status = 0;
 	mpd_set_string(&a, "2.2122163", &ctx);
@@ -1415,7 +1420,7 @@ test_misc(void)
 	s = mpd_to_sci(&a, 0);
 	ASSERT(strcmp(s, "Infinity") == 0)
 	ASSERT(ctx.status == (MPD_Rounded|MPD_Overflow|MPD_Inexact))
-	mpd_free(s);
+	__mingw_dfp_get_globals()->mpd_free(s);
 
 #if defined(CONFIG_32) && !defined(LEGACY_COMPILER)
 	/* Allocation failure in mpd_set_u64 */
@@ -1486,7 +1491,7 @@ main(void)
 	test_output();
 
 	/* Valgrind */
-	mpd_del(&mpd_ln10);
+	mpd_del(&__mingw_dfp_get_globals()->mpd_ln10);
 
 	fprintf(stderr, "\ncov: PASS\n");
 	return 0;

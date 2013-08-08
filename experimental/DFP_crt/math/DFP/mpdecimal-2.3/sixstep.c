@@ -87,7 +87,7 @@ six_step_fnt(mpd_uint_t *a, mpd_size_t n, int modnum)
 	}
 
 	if (!transpose_pow2(a, C, R)) {
-		mpd_free(tparams);
+		__mingw_dfp_get_globals()->mpd_free(tparams);
 		return 0;
 	}
 
@@ -110,7 +110,7 @@ six_step_fnt(mpd_uint_t *a, mpd_size_t n, int modnum)
 
 
 	if (C != R) {
-		mpd_free(tparams);
+		__mingw_dfp_get_globals()->mpd_free(tparams);
 		if ((tparams = _mpd_init_fnt_params(C, -1, modnum)) == NULL) {
 			return 0;
 		}
@@ -118,7 +118,7 @@ six_step_fnt(mpd_uint_t *a, mpd_size_t n, int modnum)
 	for (x = a; x < a+n; x += C) {
 		fnt_dif2(x, C, tparams);
 	}
-	mpd_free(tparams);
+	__mingw_dfp_get_globals()->mpd_free(tparams);
 
 
 #if 0
@@ -176,7 +176,7 @@ inv_six_step_fnt(mpd_uint_t *a, mpd_size_t n, int modnum)
 	}
 
 	if (!transpose_pow2(a, R, C)) {
-		mpd_free(tparams);
+		__mingw_dfp_get_globals()->mpd_free(tparams);
 		return 0;
 	}
 
@@ -199,7 +199,7 @@ inv_six_step_fnt(mpd_uint_t *a, mpd_size_t n, int modnum)
 
 
 	if (R != C) {
-		mpd_free(tparams);
+		__mingw_dfp_get_globals()->mpd_free(tparams);
 		if ((tparams = _mpd_init_fnt_params(R, 1, modnum)) == NULL) {
 			return 0;
 		}
@@ -207,7 +207,7 @@ inv_six_step_fnt(mpd_uint_t *a, mpd_size_t n, int modnum)
 	for (x = a; x < a+n; x += R) {
 		fnt_dif2(x, R, tparams);
 	}
-	mpd_free(tparams);
+	__mingw_dfp_get_globals()->mpd_free(tparams);
 
 	if (!transpose_pow2(a, C, R)) {
 		return 0;

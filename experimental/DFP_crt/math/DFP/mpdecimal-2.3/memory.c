@@ -32,37 +32,6 @@
 #include "typearith.h"
 #include "memory.h"
 
-#ifndef _WIN32_LEAN_AND_MEAN
-#define _WIN32_LEAN_AND_MEAN 1
-#endif
-#include <windows.h>
-
-static void * default_mpd_malloc (size_t size){
-  return HeapAlloc(GetProcessHeap(),0,size);
-}
-
-static void * default_mpd_realloc (void *ptr, size_t size){
-  if(size == 0) {
-    HeapFree(GetProcessHeap(),0,ptr);
-    return NULL;
-  }
-  return HeapReAlloc(GetProcessHeap(),0,ptr,size);
-}
-
-static void * default_mpd_calloc (size_t nmemb, size_t size){
-  return HeapAlloc(GetProcessHeap(),HEAP_ZERO_MEMORY,nmemb * size);
-}
-
-static void default_mpd_free (void *ptr){
-  HeapFree(GetProcessHeap(),0,ptr);
-}
-
-__thread mpd_ssize_t MPD_MINALLOC = MPD_MINALLOC_MIN;
-__thread void *(* mpd_mallocfunc)(size_t size) = default_mpd_malloc;
-__thread void *(* mpd_reallocfunc)(void *ptr, size_t size) = default_mpd_realloc;
-__thread void *(* mpd_callocfunc)(size_t nmemb, size_t size) = default_mpd_calloc;
-__thread void (* mpd_free)(void *ptr) = default_mpd_free;
-
 /* emulate calloc if it is not available */
 void *
 mpd_callocfunc_em(size_t nmemb, size_t size)
@@ -76,7 +45,7 @@ mpd_callocfunc_em(size_t nmemb, size_t size)
 	}
 #endif
 	req = mul_size_t((mpd_size_t)nmemb, (mpd_size_t)size);
-	if ((ptr = mpd_mallocfunc(req)) == NULL) {
+	if ((ptr = __mingw_dfp_get_globals()->mpd_mallocfunc(req)) == NULL) {
 		return NULL;
 	}
 	/* used on uint32_t or uint64_t */
@@ -94,7 +63,7 @@ mpd_alloc(mpd_size_t nmemb, mpd_size_t size)
 	mpd_size_t req;
 
 	req = mul_size_t(nmemb, size);
-	if ((ptr = mpd_mallocfunc(req)) == NULL) {
+	if ((ptr = __mingw_dfp_get_globals()->mpd_mallocfunc(req)) == NULL) {
 		return NULL;
 	}
 
@@ -107,7 +76,7 @@ mpd_calloc(mpd_size_t nmemb, mpd_size_t size)
 {
 	void *ptr;
 
-	if ((ptr = mpd_callocfunc(nmemb, size)) == NULL) {
+	if ((ptr = __mingw_dfp_get_globals()->mpd_callocfunc(nmemb, size)) == NULL) {
 		return NULL;
 	}
 
@@ -122,7 +91,7 @@ mpd_realloc(void *ptr, mpd_size_t nmemb, mpd_size_t size, uint8_t *err)
 	mpd_size_t req;
 
 	req = mul_size_t(nmemb, size);
-	if ((new = mpd_reallocfunc(ptr, req)) == NULL) {
+	if ((new = __mingw_dfp_get_globals()->mpd_reallocfunc(ptr, req)) == NULL) {
 		*err = 1;
 		return ptr;
 	}
@@ -139,7 +108,7 @@ mpd_sh_alloc(mpd_size_t struct_size, mpd_size_t nmemb, mpd_size_t size)
 
 	req = mul_size_t(nmemb, size);
 	req = add_size_t(req, struct_size);
-	if ((ptr = mpd_mallocfunc(req)) == NULL) {
+	if ((ptr = __mingw_dfp_get_globals()->mpd_mallocfunc(req)) == NULL) {
 		return NULL;
 	}
 
@@ -155,13 +124,13 @@ mpd_qnew_size(mpd_ssize_t size)
 {
 	mpd_t *result;
 
-	size = (size < MPD_MINALLOC) ? MPD_MINALLOC : size;
+	size = (size < __mingw_dfp_get_globals()->MPD_MINALLOC) ? __mingw_dfp_get_globals()->MPD_MINALLOC : size;
 
 	if ((result = mpd_alloc(1, sizeof *result)) == NULL) {
 		return NULL;
 	}
 	if ((result->data = mpd_alloc(size, sizeof *result->data)) == NULL) {
-		mpd_free(result);
+		__mingw_dfp_get_globals()->mpd_free(result);
 		return NULL;
 	}
 
@@ -180,7 +149,7 @@ mpd_qnew_size(mpd_ssize_t size)
 mpd_t *
 mpd_qnew(void)
 {
-	return mpd_qnew_size(MPD_MINALLOC);
+	return mpd_qnew_size(__mingw_dfp_get_globals()->MPD_MINALLOC);
 }
 
 /* Allocate new decimal. Caller can check for NULL or MPD_Malloc_error.

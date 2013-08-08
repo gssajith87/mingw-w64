@@ -51,7 +51,7 @@
 #error Only BID DFP supported!
 #endif
 
-#if !defined(__BYTE_ORDER__) || (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+#if (__BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__) || (__FLOAT_WORD_ORDER__ != __ORDER_LITTLE_ENDIAN__)
 #error Only little endian supported!
 #endif
 

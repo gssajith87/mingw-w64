@@ -99,7 +99,7 @@ static void _mpd_qbarrett_divmod(mpd_t *q, mpd_t *r, const mpd_t *a,
 static inline void _mpd_qpow_uint(mpd_t *result, mpd_t *base, mpd_uint_t exp,
                 uint8_t resultsign, const mpd_context_t *ctx, uint32_t *status);
 
-static mpd_uint_t mpd_qsshiftr(mpd_t *result, const mpd_t *a, mpd_ssize_t n);
+mpd_uint_t mpd_qsshiftr(mpd_t *result, const mpd_t *a, mpd_ssize_t n);
 
 
 /******************************************************************************/
@@ -432,10 +432,10 @@ ALWAYS_INLINE void
 mpd_del(mpd_t *dec)
 {
 	if (mpd_isdynamic_data(dec)) {
-		mpd_free(dec->data);
+		__mingw_dfp_get_globals()->mpd_free(dec->data);
 	}
 	if (mpd_isdynamic(dec)) {
-		mpd_free(dec);
+		__mingw_dfp_get_globals()->mpd_free(dec);
 	}
 }
 
@@ -460,7 +460,7 @@ mpd_qresize(mpd_t *result, mpd_ssize_t size, uint32_t *status)
 			return mpd_switch_to_dyn(result, size, status);
 		}
 	}
-	else if (size != result->alloc && size >= MPD_MINALLOC) {
+	else if (size != result->alloc && size >= __mingw_dfp_get_globals()->MPD_MINALLOC) {
 		return mpd_realloc_dyn(result, size, status);
 	}
 
@@ -480,7 +480,7 @@ mpd_qresize_zero(mpd_t *result, mpd_ssize_t size, uint32_t *status)
 			return mpd_switch_to_dyn_zero(result, size, status);
 		}
 	}
-	else if (size != result->alloc && size >= MPD_MINALLOC) {
+	else if (size != result->alloc && size >= __mingw_dfp_get_globals()->MPD_MINALLOC) {
 		if (!mpd_realloc_dyn(result, size, status)) {
 			return 0;
 		}
@@ -503,12 +503,12 @@ mpd_minalloc(mpd_t *result)
 	assert(!mpd_isconst_data(result)); /* illegal operation for a const */
 	assert(!mpd_isshared_data(result)); /* illegal operation for a shared */
 
-	if (!mpd_isstatic_data(result) && result->alloc > MPD_MINALLOC) {
+	if (!mpd_isstatic_data(result) && result->alloc > __mingw_dfp_get_globals()->MPD_MINALLOC) {
 		uint8_t err = 0;
-		result->data = mpd_realloc(result->data, MPD_MINALLOC,
+		result->data = mpd_realloc(result->data, __mingw_dfp_get_globals()->MPD_MINALLOC,
 		                           sizeof *result->data, &err);
 		if (!err) {
-			result->alloc = MPD_MINALLOC;
+			result->alloc = __mingw_dfp_get_globals()->MPD_MINALLOC;
 		}
 	}
 }
@@ -4059,56 +4059,20 @@ ln_schedule_prec(mpd_ssize_t klist[MPD_MAX_PREC_LOG2], mpd_ssize_t maxprec,
 	return i-1;
 }
 
-/* Two word initial approximations for ln(10) */
-#ifdef CONFIG_64
-#if MPD_RDIGITS != 19
-  #error "mpdecimal.c: MPD_RDIGITS must be 19."
-#endif
-static __thread mpd_uint_t mpd_ln10_data[MPD_MINALLOC_MAX] = {
-  179914546843642076, 2302585092994045684
-};
-static __thread mpd_uint_t mpd_ln10_init[2] = {
-  179914546843642076, 2302585092994045684
-};
-__thread mpd_t mpd_ln10 = {
-    .flags = MPD_STATIC|MPD_STATIC_DATA,
-    .exp = -(2*MPD_RDIGITS-1),
-    .digits = 2*MPD_RDIGITS,
-	.len = 2,
-	.alloc = MPD_MINALLOC_MAX,
-	.data = (mpd_uint_t [2]){179914546843642076, 2302585092994045684}
-};
-#else
-#if MPD_RDIGITS != 9
-  #error "mpdecimal.c: MPD_RDIGITS must be 9."
-#endif
-static __thread mpd_uint_t mpd_ln10_data[MPD_MINALLOC_MAX] = {299404568, 230258509};
-static __thread mpd_uint_t mpd_ln10_init[2] = {299404568, 230258509};
-__thread mpd_t mpd_ln10 = {
-    .flags = MPD_STATIC|MPD_STATIC_DATA,
-    .exp = -(2*MPD_RDIGITS-1),
-    .digits = 2*MPD_RDIGITS,
-	.len = 2,
-	.alloc = MPD_MINALLOC_MAX,
-	.data = (mpd_uint_t [MPD_MINALLOC_MAX]){299404568, 230258509}
-};
-#endif
-/* mpd_ln10 is cached in order to speed up computations */
-
 static void
 mpd_reset_ln10(void)
 {
-	if (mpd_isdynamic_data(&mpd_ln10)) {
-		mpd_free(mpd_ln10.data);
+	if (mpd_isdynamic_data(&__mingw_dfp_get_globals()->mpd_ln10)) {
+		__mingw_dfp_get_globals()->mpd_free(__mingw_dfp_get_globals()->mpd_ln10.data);
 	}
-	mpd_ln10.data = mpd_ln10_data;
-	mpd_ln10_data[0] = mpd_ln10_init[0];
-	mpd_ln10_data[1] = mpd_ln10_init[1];
-	mpd_ln10.flags = MPD_STATIC|MPD_STATIC_DATA;
-	mpd_ln10.exp = -(2*MPD_RDIGITS-1);
-	mpd_ln10.digits = 2*MPD_RDIGITS;
-	mpd_ln10.len = 2;
-	mpd_ln10.alloc = MPD_MINALLOC_MAX;
+	__mingw_dfp_get_globals()->mpd_ln10.data = __mingw_dfp_get_globals()->mpd_ln10_data;
+	__mingw_dfp_get_globals()->mpd_ln10_data[0] = __mingw_dfp_get_globals()->mpd_ln10_init[0];
+	__mingw_dfp_get_globals()->mpd_ln10_data[1] = __mingw_dfp_get_globals()->mpd_ln10_init[1];
+	__mingw_dfp_get_globals()->mpd_ln10.flags = MPD_STATIC|MPD_STATIC_DATA;
+	__mingw_dfp_get_globals()->mpd_ln10.exp = -(2*MPD_RDIGITS-1);
+	__mingw_dfp_get_globals()->mpd_ln10.digits = 2*MPD_RDIGITS;
+	__mingw_dfp_get_globals()->mpd_ln10.len = 2;
+	__mingw_dfp_get_globals()->mpd_ln10.alloc = MPD_MINALLOC_MAX;
 }
 
 /*
@@ -4127,17 +4091,18 @@ mpd_update_ln10(mpd_ssize_t maxprec, uint32_t *status)
 	mpd_ssize_t klist[MPD_MAX_PREC_LOG2];
 	int i;
 
-	if (mpd_isspecial(&mpd_ln10)) {
+	/* FIXME: WHY DOES THIS BAD RESULTS IF USING TLS? */
+	if (mpd_isspecial(&__mingw_dfp_get_globals()->mpd_ln10)) {
 		mpd_reset_ln10();
 	}
 
-	if (mpd_ln10.digits > maxprec) {
+	if (__mingw_dfp_get_globals()->mpd_ln10.digits > maxprec) {
 		/* shift to smaller cannot fail */
-		mpd_qshiftr_inplace(&mpd_ln10, mpd_ln10.digits-maxprec);
-		mpd_ln10.exp = -(mpd_ln10.digits-1);
+		mpd_qshiftr_inplace(&__mingw_dfp_get_globals()->mpd_ln10, __mingw_dfp_get_globals()->mpd_ln10.digits-maxprec);
+		__mingw_dfp_get_globals()->mpd_ln10.exp = -(__mingw_dfp_get_globals()->mpd_ln10.digits-1);
 		return;
 	}
-	else if (mpd_ln10.digits == maxprec) {
+	else if (__mingw_dfp_get_globals()->mpd_ln10.digits == maxprec) {
 		return;
 	}
 
@@ -4145,16 +4110,16 @@ mpd_update_ln10(mpd_ssize_t maxprec, uint32_t *status)
 	mpd_maxcontext(&varcontext);
 	varcontext.round = MPD_ROUND_TRUNC;
 
-	i = ln_schedule_prec(klist, maxprec+2, mpd_ln10.digits);
+	i = ln_schedule_prec(klist, maxprec+2, __mingw_dfp_get_globals()->mpd_ln10.digits);
 	for (; i >= 0; i--) {
 		varcontext.prec = 2*klist[i]+3;
-		mpd_ln10.flags ^= MPD_NEG;
-		_mpd_qexp(&tmp, &mpd_ln10, &varcontext, status);
-		mpd_ln10.flags ^= MPD_NEG;
+		__mingw_dfp_get_globals()->mpd_ln10.flags ^= MPD_NEG;
+		_mpd_qexp(&tmp, &__mingw_dfp_get_globals()->mpd_ln10, &varcontext, status);
+		__mingw_dfp_get_globals()->mpd_ln10.flags ^= MPD_NEG;
 		mpd_qmul(&tmp, &static10, &tmp, &varcontext, status);
 		mpd_qsub(&tmp, &tmp, &one, &maxcontext, status);
-		mpd_qadd(&mpd_ln10, &mpd_ln10, &tmp, &maxcontext, status);
-		if (mpd_isspecial(&mpd_ln10)) {
+		mpd_qadd(&__mingw_dfp_get_globals()->mpd_ln10, &__mingw_dfp_get_globals()->mpd_ln10, &tmp, &maxcontext, status);
+		if (mpd_isspecial(&__mingw_dfp_get_globals()->mpd_ln10)) {
 			break;
 		}
 	}
@@ -4162,7 +4127,7 @@ mpd_update_ln10(mpd_ssize_t maxprec, uint32_t *status)
 	mpd_del(&tmp);
 	varcontext.prec = maxprec;
 	varcontext.round = MPD_ROUND_HALF_EVEN;
-	mpd_qfinalize(&mpd_ln10, &varcontext, status);
+	mpd_qfinalize(&__mingw_dfp_get_globals()->mpd_ln10, &varcontext, status);
 }
 
 /* Initial approximations for the ln() iteration */
@@ -4350,7 +4315,7 @@ _mpd_qln(mpd_t *result, const mpd_t *a, const mpd_context_t *ctx,
 
 postloop:
 	mpd_update_ln10(maxprec+2, status);
-	mpd_qmul_ssize(&tmp, &mpd_ln10, t, &maxcontext, status);
+	mpd_qmul_ssize(&tmp, &__mingw_dfp_get_globals()->mpd_ln10, t, &maxcontext, status);
 	varcontext.prec = maxprec+2;
 	mpd_qadd(result, &tmp, z, &varcontext, status);
 
@@ -4474,7 +4439,7 @@ _mpd_qlog10(mpd_t *result, const mpd_t *a, const mpd_context_t *ctx,
 
 	workctx = *ctx;
 	workctx.round = MPD_ROUND_HALF_EVEN;
-	_mpd_qdiv(NO_IDEAL_EXP, result, result, &mpd_ln10, &workctx, status);
+	_mpd_qdiv(NO_IDEAL_EXP, result, result, &__mingw_dfp_get_globals()->mpd_ln10, &workctx, status);
 }
 
 /* log10(a) */
@@ -4857,14 +4822,14 @@ _mpd_kmul(const mpd_uint_t *u, const mpd_uint_t *v,
 
 	m = _kmul_worksize(ulen, MPD_KARATSUBA_BASECASE);
 	if (m && ((w = mpd_calloc(m, sizeof *w)) == NULL)) {
-		mpd_free(result);
+		__mingw_dfp_get_globals()->mpd_free(result);
 		return NULL;
 	}
 
 	_karatsuba_rec(result, u, v, w, ulen, vlen);
 
 
-	if (w) mpd_free(w);
+	if (w) __mingw_dfp_get_globals()->mpd_free(w);
 	return result;
 }
 
@@ -4994,25 +4959,25 @@ _mpd_fntmul(const mpd_uint_t *u, const mpd_uint_t *v,
 
 		memcpy(vtmp, v, vlen * (sizeof *vtmp));
 		if (!fnt_convolute(c1, vtmp, n, P1)) {
-			mpd_free(vtmp);
+			__mingw_dfp_get_globals()->mpd_free(vtmp);
 			goto malloc_error;
 		}
 
 		memcpy(vtmp, v, vlen * (sizeof *vtmp));
 		mpd_uint_zero(vtmp+vlen, n-vlen);
 		if (!fnt_convolute(c2, vtmp, n, P2)) {
-			mpd_free(vtmp);
+			__mingw_dfp_get_globals()->mpd_free(vtmp);
 			goto malloc_error;
 		}
 
 		memcpy(vtmp, v, vlen * (sizeof *vtmp));
 		mpd_uint_zero(vtmp+vlen, n-vlen);
 		if (!fnt_convolute(c3, vtmp, n, P3)) {
-			mpd_free(vtmp);
+			__mingw_dfp_get_globals()->mpd_free(vtmp);
 			goto malloc_error;
 		}
 
-		mpd_free(vtmp);
+		__mingw_dfp_get_globals()->mpd_free(vtmp);
 	}
 
 	crt3(c1, c2, c3, *rsize);
@@ -5021,12 +4986,12 @@ out:
 #ifdef PPRO
 	mpd_restore_fenv(cw);
 #endif
-	if (c2) mpd_free(c2);
-	if (c3) mpd_free(c3);
+	if (c2) __mingw_dfp_get_globals()->mpd_free(c2);
+	if (c3) __mingw_dfp_get_globals()->mpd_free(c3);
 	return c1;
 
 malloc_error:
-	if (c1) mpd_free(c1);
+	if (c1) __mingw_dfp_get_globals()->mpd_free(c1);
 	c1 = NULL;
 	goto out;
 }
@@ -5056,7 +5021,7 @@ _karatsuba_rec_fnt(mpd_uint_t *c, const mpd_uint_t *a, const mpd_uint_t *b,
 				return 0;
 			}
 			memcpy(c, result, (la+lb) * (sizeof *result));
-			mpd_free(result);
+			__mingw_dfp_get_globals()->mpd_free(result);
 		}
 		return 1;
 	}
@@ -5151,17 +5116,17 @@ _mpd_kmul_fnt(const mpd_uint_t *u, const mpd_uint_t *v,
 
 	m = _kmul_worksize(ulen, 3*(MPD_MAXTRANSFORM_2N/2));
 	if (m && ((w = mpd_calloc(m, sizeof *w)) == NULL)) {
-		mpd_free(result); /* GCOV_UNLIKELY */
+		__mingw_dfp_get_globals()->mpd_free(result); /* GCOV_UNLIKELY */
 		return NULL; /* GCOV_UNLIKELY */
 	}
 
 	if (!_karatsuba_rec_fnt(result, u, v, w, ulen, vlen)) {
-		mpd_free(result);
+		__mingw_dfp_get_globals()->mpd_free(result);
 		result = NULL;
 	}
 
 
-	if (w) mpd_free(w);
+	if (w) __mingw_dfp_get_globals()->mpd_free(w);
 	return result;
 }
 
@@ -5273,7 +5238,7 @@ _mpd_qmul(mpd_t *result, const mpd_t *a, const mpd_t *b,
 	}
 
 	if (mpd_isdynamic_data(result)) {
-		mpd_free(result->data);
+		__mingw_dfp_get_globals()->mpd_free(result->data);
 	}
 	result->data = rdata;
 	result->alloc = rsize;
@@ -7456,7 +7421,7 @@ mpd_qimport_u16(mpd_t *result,
 
 
 finish:
-	mpd_free(usrc);
+	__mingw_dfp_get_globals()->mpd_free(usrc);
 }
 
 /*
@@ -7520,7 +7485,7 @@ mpd_qimport_u32(mpd_t *result,
 
 
 finish:
-	mpd_free(usrc);
+	__mingw_dfp_get_globals()->mpd_free(usrc);
 }
 
 

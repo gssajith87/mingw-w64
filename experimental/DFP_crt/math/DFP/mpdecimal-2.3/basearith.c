@@ -326,7 +326,7 @@ _mpd_basedivmod(mpd_uint_t *q, mpd_uint_t *r,
 	}
 	if (n >= MPD_MINALLOC_MAX) {
 		if ((v = mpd_calloc(n+1, sizeof *v)) == NULL) {
-			mpd_free(u);
+			__mingw_dfp_get_globals()->mpd_free(u);
 			return -1;
 		}
 	}
@@ -393,8 +393,8 @@ _mpd_basedivmod(mpd_uint_t *q, mpd_uint_t *r,
 	}
 
 
-if (u != ustatic) mpd_free(u);
-if (v != vstatic) mpd_free(v);
+if (u != ustatic) __mingw_dfp_get_globals()->mpd_free(u);
+if (v != vstatic) __mingw_dfp_get_globals()->mpd_free(v);
 return retval;
 }
 

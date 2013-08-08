@@ -136,7 +136,7 @@ swap_halfrows_pow2(mpd_uint_t *matrix, mpd_size_t rows, mpd_size_t cols, int dir
 		}
 	}
 
-	mpd_free(done);
+	__mingw_dfp_get_globals()->mpd_free(done);
 	return 1;
 }
 

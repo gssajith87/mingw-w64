@@ -295,6 +295,7 @@ extern "C" {
 #define mpd_qformat_spec __MANGLE_ME(mpd_qformat_spec)
 #define mpd_class __MANGLE_ME(mpd_class)
 #define mpd_format __MANGLE_ME(mpd_format)
+#define mpd_qsshiftr __MANGLE_ME(mpd_qsshiftr)
 
 #define mpd_arith_sign __MANGLE_ME(mpd_arith_sign)
 #define mpd_check_nan __MANGLE_ME(mpd_check_nan)
@@ -664,8 +665,6 @@ typedef struct {
 
 #define MPD_MINALLOC_MIN 2
 #define MPD_MINALLOC_MAX 64
-extern __thread mpd_ssize_t MPD_MINALLOC;
-extern __thread void (* mpd_traphandler)(mpd_context_t *);
 void mpd_dflt_traphandler(mpd_context_t *);
 
 void mpd_setminalloc(mpd_ssize_t n);
@@ -726,8 +725,6 @@ typedef struct {
 
 
 typedef unsigned char uchar;
-extern __thread mpd_t mpd_ln10;
-
 
 /******************************************************************************/
 /*                       Quiet, thread-safe functions                         */
@@ -1147,11 +1144,6 @@ void mpd_copy_flags(mpd_t *result, const mpd_t *a);
 /*                            Memory handling                                 */
 /******************************************************************************/
 
-extern __thread void *(* mpd_mallocfunc)(size_t size);
-extern __thread void *(* mpd_callocfunc)(size_t nmemb, size_t size);
-extern __thread void *(* mpd_reallocfunc)(void *ptr, size_t size);
-extern __thread void (* mpd_free)(void *ptr);
-
 void *mpd_callocfunc_em(size_t nmemb, size_t size);
 
 void *mpd_alloc(mpd_size_t nmemb, mpd_size_t size);
@@ -1171,6 +1163,21 @@ void mpd_minalloc(mpd_t *result);
 
 int mpd_resize(mpd_t *result, mpd_ssize_t size, mpd_context_t *ctx);
 int mpd_resize_zero(mpd_t *result, mpd_ssize_t size, mpd_context_t *ctx);
+
+typedef struct __mingw_dfp_gvars {
+  mpd_ssize_t MPD_MINALLOC;
+  void (* mpd_traphandler)(mpd_context_t *);
+  void (* mpd_dflt_traphandler)(mpd_context_t *);
+  void *(* mpd_mallocfunc)(size_t size);
+  void *(* mpd_callocfunc)(size_t nmemb, size_t size);
+  void *(* mpd_reallocfunc)(void *ptr, size_t size);
+  void (* mpd_free)(void *ptr);
+  mpd_t mpd_ln10;
+  mpd_uint_t mpd_ln10_init[2], mpd_ln10_data[MPD_MINALLOC_MAX], mpd_ln10_data_blob[MPD_MINALLOC_MAX];
+  int minalloc_is_set;
+} __mingw_dfp_gvars;
+
+__mingw_dfp_gvars *__mingw_dfp_get_globals(void);
 
 
 #ifdef __cplusplus

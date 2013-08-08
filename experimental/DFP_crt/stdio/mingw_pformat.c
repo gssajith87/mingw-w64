@@ -61,6 +61,16 @@
 #include <wchar.h>
 #include <math.h>
 
+#ifdef _X86_
+#include "../math/DFP/mpdecimal-2.3/mpdecimal-i686.h"
+#elif defined(__x86_64__)
+#include "../math/DFP/mpdecimal-2.3/mpdecimal-x86_64.h"
+#else
+#error unknown arch for DFP
+#endif
+
+#include "../math/DFP/dfp_internal.h"
+
 /* FIXME: The following belongs in values.h, but current MinGW
  * has nothing useful there!  OTOH, values.h is not a standard
  * header, and it's use may be considered obsolete; perhaps it
@@ -86,34 +96,37 @@
 /* Bit-map constants, defining the internal format control
  * states, which propagate through the flags.
  */
-#define PFORMAT_GROUPED     0x1000
-#define PFORMAT_HASHED      0x0800
-#define PFORMAT_LJUSTIFY    0x0400
-#define PFORMAT_ZEROFILL    0x0200
+#define PFORMAT_GROUPED     0x00001000
+#define PFORMAT_HASHED      0x00000800
+#define PFORMAT_LJUSTIFY    0x00000400
+#define PFORMAT_ZEROFILL    0x00000200
 
 #define PFORMAT_JUSTIFY    (PFORMAT_LJUSTIFY | PFORMAT_ZEROFILL)
 #define PFORMAT_IGNORE      -1
 
-#define PFORMAT_SIGNED      0x01C0
-#define PFORMAT_POSITIVE    0x0100
-#define PFORMAT_NEGATIVE    0x0080
-#define PFORMAT_ADDSPACE    0x0040
+#define PFORMAT_SIGNED      0x000001C0
+#define PFORMAT_POSITIVE    0x00000100
+#define PFORMAT_NEGATIVE    0x00000080
+#define PFORMAT_ADDSPACE    0x00000040
 
-#define PFORMAT_XCASE       0x0020
+#define PFORMAT_XCASE       0x00000020
 
-#define PFORMAT_LDOUBLE     0x0004
+#define PFORMAT_LDOUBLE     0x00000004
+#define PFORMAT_DECIM32     0x00020000
+#define PFORMAT_DECIM64     0x00040000
+#define PFORMAT_DECIM128    0x00080000
 
 /* `%o' format digit extraction mask, and shift count...
  * (These are constant, and do not propagate through the flags).
  */
-#define PFORMAT_OMASK       0x0007
-#define PFORMAT_OSHIFT      0x0003
+#define PFORMAT_OMASK       0x00000007
+#define PFORMAT_OSHIFT      0x00000003
 
 /* `%x' and `%X' format digit extraction mask, and shift count...
  * (These are constant, and do not propagate through the flags).
  */
-#define PFORMAT_XMASK       0x000F
-#define PFORMAT_XSHIFT      0x0004
+#define PFORMAT_XMASK       0x0000000F
+#define PFORMAT_XSHIFT      0x00000004
 
 /* The radix point character, used in floating point formats, is
  * localised on the basis of the active LC_NUMERIC locale category.
@@ -1314,6 +1327,109 @@ void __pformat_float( long double x, __pformat_t *stream )
   __pformat_fcvt_release( value );
 }
 
+/* FIXME: There has got to be a simpler way to do this */
+static void dec128_to_mpd_conv(mpd_context_t * ctx, mpd_t *result, const uint64_t significand_low, const int64_t significand_high, const int64_t exponent_part){
+  uint32_t status = 0;
+  mpd_t *ten, *sig1, *sig2, *stemp, *sig, *s64, *exp_pow, *exp_partmpd;
+  ten = mpd_qnew();
+  s64 = mpd_qnew();
+  sig1 = mpd_qnew();
+  sig2 = mpd_qnew();
+  stemp = mpd_qnew();
+  sig = mpd_qnew();
+  exp_pow = mpd_qnew();
+  exp_partmpd = mpd_qnew();
+  mpd_qset_i64(ten,10LL,ctx,&status);
+  /* 2^64 */
+  mpd_qset_string(s64,"18446744073709551616",ctx,&status);
+  mpd_qset_u64(sig1,significand_low,ctx,&status);
+  mpd_qset_i64(sig2,significand_high,ctx,&status);
+  mpd_qmul(stemp,sig2,s64,ctx,&status);
+  mpd_qadd(sig,stemp,sig1,ctx,&status);
+  mpd_qset_i64(exp_partmpd,exponent_part,ctx,&status);
+  mpd_qpow(exp_pow,ten,exp_partmpd,ctx,&status);
+  mpd_qmul(result,sig,exp_pow,ctx,&status);
+  mpd_del(ten);
+  mpd_del(sig1);
+  mpd_del(sig2);
+  mpd_del(sig);
+  mpd_del(stemp);
+  mpd_del(s64);
+  mpd_del(exp_pow);
+  mpd_del(exp_partmpd);
+}
+
+static uint32_t dec128_to_mpd(mpd_context_t * ctx, mpd_t *result, const _Decimal128 deci){
+  int64_t significand2, exp_part;
+  uint64_t significand1;
+  ud128 in = {.d = deci};
+
+  if(in.t0.bits == 0x3){ /*case 11 */
+    /* should not enter here */
+    exp_part = in.t2.exponent;
+    significand1 = in.t2.mantissaL;
+    significand2 = (in.t2.mantissaH | (0x1ULL << 49)) * ((in.t2.sign) ? -1 : 1);
+  } else {
+    exp_part = in.t1.exponent;
+    significand1 = in.t1.mantissaL;
+    significand2 = in.t1.mantissaH  * ((in.t1.sign) ? -1 : 1);
+  }
+
+  exp_part -= 6176; /* exp bias */
+  dec128_to_mpd_conv(ctx, result, significand1, significand2, exp_part);
+  return 0;
+}
+
+static
+void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
+  __pformat_intarg_t argval;
+  uint64_t exp_part, bases;
+  uint16_t *bases_data;
+  mpd_context_t ctx;
+  mpd_t *mp;
+  uint32_t status = 0;
+
+  mpd_ieee_context(&ctx, 160);
+  mp = mpd_qnew();
+  if(!mp) abort();
+  dec128_to_mpd(&ctx, mp, x);
+
+  /* save exponent */
+  exp_part = mp->exp;
+  mp->exp = 0;
+
+  /* Get mantissa */
+  bases = mpd_sizeinbase(mp, 10);
+  bases_data = __mingw_dfp_get_globals()->mpd_callocfunc(bases, sizeof(uint16_t));
+  mpd_qexport_u16(bases_data,bases,10,mp,&status);
+
+  for (mpd_ssize_t i = bases; i < mpd_trail_zeros(mp); i--){
+    __pformat_putc( '0' + bases_data[i], stream);
+  }
+  __mingw_dfp_get_globals()->mpd_free(bases_data);
+  mpd_del(mp);
+  const char *s = "[__pformat_efloat_decimal]";
+  /*if( stream->precision < 0 )
+    stream->precision = 6;*/
+  __pformat_putchars( s, strlen( s ), stream );
+}
+
+static
+void  __pformat_gfloat_decimal(_Decimal128 x, __pformat_t *stream ){
+  const char *s = "[__pformat_gfloat_decimal]";
+  /*if( stream->precision < 0 )
+    stream->precision = 6;*/
+  __pformat_putchars( s, strlen( s ), stream );
+}
+
+static
+void  __pformat_float_decimal(_Decimal128 x, __pformat_t *stream ){
+  const char *s = "[__pformat_float_decimal]";
+  /*if( stream->precision < 0 )
+    stream->precision = 6;*/
+  __pformat_putchars( s, strlen( s ), stream );
+}
+
 static
 void __pformat_efloat( long double x, __pformat_t *stream )
 {
@@ -2078,7 +2194,20 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * (or lower case for all of these, on fall through from above);
 	     * select lower case mode, and simply fall through...
 	     */
-	    if( stream.flags & PFORMAT_LDOUBLE )
+	    if( stream.flags & PFORMAT_DECIM32 )
+	      /* Is a 32bit decimal float */
+	      __pformat_efloat_decimal((_Decimal128)va_arg( argv, _Decimal32 ), &stream );
+	    else if( stream.flags & PFORMAT_DECIM64 )
+	      /*
+	       * Is a 64bit decimal float
+	       */
+	      __pformat_efloat_decimal((_Decimal128)va_arg( argv, _Decimal64 ), &stream );
+	    else if( stream.flags & PFORMAT_DECIM128 )
+	      /*
+	       * Is a 128bit decimal float
+	       */
+	      __pformat_efloat_decimal(va_arg( argv, _Decimal128 ), &stream );
+	    else if( stream.flags & PFORMAT_LDOUBLE )
 	      /*
 	       * for a `long double' argument...
 	       */
@@ -2105,7 +2234,20 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * Fixed case format using upper case, or lower case on
 	     * fall through from above, for `INF' and `NAN'...
 	     */
-	    if( stream.flags & PFORMAT_LDOUBLE )
+	    if( stream.flags & PFORMAT_DECIM32 )
+	      /* Is a 32bit decimal float */
+	      __pformat_float_decimal((_Decimal128)va_arg( argv, _Decimal32 ), &stream );
+	    else if( stream.flags & PFORMAT_DECIM64 )
+	      /*
+	       * Is a 64bit decimal float
+	       */
+	      __pformat_float_decimal((_Decimal128)va_arg( argv, _Decimal64 ), &stream );
+	    else if( stream.flags & PFORMAT_DECIM128 )
+	      /*
+	       * Is a 128bit decimal float
+	       */
+	      __pformat_float_decimal(va_arg( argv, _Decimal128 ), &stream );
+	    else if( stream.flags & PFORMAT_LDOUBLE )
 	      /*
 	       * for a `long double' argument...
 	       */
@@ -2133,7 +2275,20 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * or on fall through from above, with lower case exponent
 	     * indicator when required...
 	     */
-	    if( stream.flags & PFORMAT_LDOUBLE )
+	    if( stream.flags & PFORMAT_DECIM32 )
+	      /* Is a 32bit decimal float */
+	      __pformat_gfloat_decimal((_Decimal128)va_arg( argv, _Decimal32 ), &stream );
+	    else if( stream.flags & PFORMAT_DECIM64 )
+	      /*
+	       * Is a 64bit decimal float
+	       */
+	      __pformat_gfloat_decimal((_Decimal128)va_arg( argv, _Decimal64 ), &stream );
+	    else if( stream.flags & PFORMAT_DECIM128 )
+	      /*
+	       * Is a 128bit decimal float
+	       */
+	      __pformat_gfloat_decimal(va_arg( argv, _Decimal128 ), &stream );
+	    else if( stream.flags & PFORMAT_LDOUBLE )
 	      /*
 	       * for a `long double' argument...
 	       */
@@ -2282,6 +2437,34 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 
 #	  endif
 	  
+
+	  case 'H':
+	      stream.flags |= PFORMAT_DECIM32;
+	      state = PFORMAT_END;
+	      break;
+
+	  case 'D':
+	    /*
+	     * Interpret the argument as explicitly of a
+	     * `_Decimal64' or `_Decimal128' data type.
+	     */
+	    if( *fmt == 'D' )
+	    {
+	      /* Modifier is `DD'; data type is `_Decimal128' sized...
+	       * Skip the second `D', and set length accordingly.
+	       */
+	      ++fmt;
+	      stream.flags |= PFORMAT_DECIM128;
+	    }
+
+	    else
+	      /* Modifier is `D'; data type is `_Decimal64' sized...
+	       */
+	      stream.flags |= PFORMAT_DECIM64;
+
+	      state = PFORMAT_END;
+	      break;
+
 	  case 'l':
 	    /*
 	     * Interpret the argument as explicitly of a

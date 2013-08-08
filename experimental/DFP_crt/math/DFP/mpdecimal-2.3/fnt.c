@@ -51,7 +51,7 @@ std_fnt(mpd_uint_t *a, mpd_size_t n, int modnum)
 	}
 	fnt_dif2(a, n, tparams);
 
-	mpd_free(tparams);
+	__mingw_dfp_get_globals()->mpd_free(tparams);
 	return 1;
 }
 
@@ -70,7 +70,7 @@ std_inv_fnt(mpd_uint_t *a, mpd_size_t n, int modnum)
 	}
 	fnt_dif2(a, n, tparams);
 
-	mpd_free(tparams);
+	__mingw_dfp_get_globals()->mpd_free(tparams);
 	return 1;
 }
 

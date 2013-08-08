@@ -30,23 +30,83 @@
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
+#include <windows.h>
 
+static DWORD __mingw_dfp_globals;
+static volatile LONG __mingw_dfp_tls_init;
+int __mingwthr_key_dtor (DWORD key, void (*dtor)(void *));
 
-void
+static void * default_mpd_malloc (size_t size){
+  return HeapAlloc(GetProcessHeap(),0,size);
+}
+
+static void * default_mpd_realloc (void *ptr, size_t size){
+  if(size == 0) {
+    HeapFree(GetProcessHeap(),0,ptr);
+    return NULL;
+  }
+  return HeapReAlloc(GetProcessHeap(),0,ptr,size);
+}
+
+static void * default_mpd_calloc (size_t nmemb, size_t size){
+  return HeapAlloc(GetProcessHeap(),HEAP_ZERO_MEMORY,nmemb * size);
+}
+
+static void default_mpd_free (void *ptr){
+  HeapFree(GetProcessHeap(),0,ptr);
+}
+
+static void
 mpd_dflt_traphandler(mpd_context_t *ctx UNUSED)
 {
 	raise(SIGFPE);
 }
 
-__thread void (* mpd_traphandler)(mpd_context_t *) = mpd_dflt_traphandler;
+__mingw_dfp_gvars *__mingw_dfp_get_globals(void){
+  __mingw_dfp_gvars *ret = NULL;
+  if(__sync_bool_compare_and_swap(&__mingw_dfp_tls_init,0,1)){
+    __mingw_dfp_globals = TlsAlloc();
+  }
 
+  ret = TlsGetValue(__mingw_dfp_globals);
+
+  if((GetLastError() == ERROR_SUCCESS) && ret == NULL){
+    ret = default_mpd_calloc(1,sizeof(__mingw_dfp_gvars));
+    TlsSetValue(__mingw_dfp_globals,ret);
+    __mingwthr_key_dtor(__mingw_dfp_globals,default_mpd_free);
+
+    ret->MPD_MINALLOC = MPD_MINALLOC_MAX;
+    ret->mpd_mallocfunc = default_mpd_malloc;
+    ret->mpd_reallocfunc = default_mpd_realloc;
+    ret->mpd_callocfunc = default_mpd_calloc;
+    ret->mpd_free = default_mpd_free;
+    ret->mpd_traphandler = mpd_dflt_traphandler;
+    ret->minalloc_is_set = 0;
+    ret->mpd_ln10.flags = MPD_STATIC|MPD_STATIC_DATA;
+    ret->mpd_ln10.exp = -(2*MPD_RDIGITS-1);
+    ret->mpd_ln10.digits = 2*MPD_RDIGITS;
+    ret->mpd_ln10.len = 2;
+    ret->mpd_ln10.alloc = MPD_MINALLOC_MAX;
+    ret->mpd_ln10.data = ret->mpd_ln10_data_blob;
+/* Two word initial approximations for ln(10) */
+#ifdef CONFIG_64
+    mpd_uint_t mpd_ln10_init[2] = {179914546843642076, 2302585092994045684},
+    mpd_ln10_data[MPD_MINALLOC_MAX] = {179914546843642076, 2302585092994045684};
+#else
+    mpd_uint_t mpd_ln10_init[2] = {299404568, 230258509},
+      mpd_ln10_data[MPD_MINALLOC_MAX] = {299404568, 230258509};
+#endif
+    memcpy(ret->mpd_ln10.data, mpd_ln10_data, sizeof(mpd_uint_t[MPD_MINALLOC_MAX]));
+    memcpy(ret->mpd_ln10_data, mpd_ln10_data, sizeof(mpd_uint_t[MPD_MINALLOC_MAX]));
+    memcpy(ret->mpd_ln10_init, mpd_ln10_init, sizeof(mpd_uint_t[2]));
+  }
+  return ret;
+}
 
 void
-mpd_setminalloc(mpd_ssize_t n)
-{
-	static __thread int minalloc_is_set = 0;
+mpd_setminalloc(mpd_ssize_t n){
 
-	if (minalloc_is_set) {
+	if (__mingw_dfp_get_globals()->minalloc_is_set) {
 		mpd_err_warn("mpd_setminalloc: ignoring request to set "
 		             "MPD_MINALLOC a second time\n");
 		return;
@@ -54,8 +114,8 @@ mpd_setminalloc(mpd_ssize_t n)
 	if (n < MPD_MINALLOC_MIN || n > MPD_MINALLOC_MAX) {
 		mpd_err_fatal("illegal value for MPD_MINALLOC"); /* GCOV_NOT_REACHED */
 	}
-	MPD_MINALLOC = n;
-	minalloc_is_set = 1;
+	__mingw_dfp_get_globals()->MPD_MINALLOC = n;
+	__mingw_dfp_get_globals()->minalloc_is_set = 1;
 }
 
 void
@@ -293,7 +353,7 @@ mpd_addstatus_raise(mpd_context_t *ctx, uint32_t flags)
 	ctx->status |= flags;
 	if (flags&ctx->traps) {
 		ctx->newtrap = (flags&ctx->traps);
-		mpd_traphandler(ctx);
+		__mingw_dfp_get_globals()->mpd_traphandler(ctx);
 	}
 }
 

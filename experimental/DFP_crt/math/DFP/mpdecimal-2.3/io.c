@@ -973,7 +973,7 @@ _mpd_apply_lconv(mpd_mbstr_t *result, char *decstring, mpd_spec_t *spec,
 		if (*spec->dot == '\0') {
 		        /* decimal point must be present */
 			*status |= MPD_Invalid_operation; /* GCOV_NOT_REACHED */
-			mpd_free(decstring); /* GCOV_NOT_REACHED */
+			__mingw_dfp_get_globals()->mpd_free(decstring); /* GCOV_NOT_REACHED */
 			return; /* GCOV_NOT_REACHED */
 		}
 		dp++; dot = spec->dot;
@@ -993,14 +993,14 @@ _mpd_apply_lconv(mpd_mbstr_t *result, char *decstring, mpd_spec_t *spec,
 
 	if ((result->data = mpd_alloc(result->nbytes+1, 1)) == NULL) {
 		*status |= MPD_Malloc_error;
-		mpd_free(decstring);
+		__mingw_dfp_get_globals()->mpd_free(decstring);
 		return;
 	}
 
 	/* Perform actual writes. */
 	_mpd_add_sep_dot(result, intpart, n_int, sign, dot, rest, spec);
 
-	mpd_free(decstring);
+	__mingw_dfp_get_globals()->mpd_free(decstring);
 }
 
 /* Add padding to the formatted string if necessary. */
@@ -1024,7 +1024,7 @@ _mpd_add_pad(mpd_mbstr_t *result, mpd_spec_t *spec, uint32_t *status)
 		                                sizeof *result->data, &err);
 		if (err) {
 			*status |= MPD_Malloc_error;
-			mpd_free(result->data);
+			__mingw_dfp_get_globals()->mpd_free(result->data);
 			result->data = NULL;
 			return;
 		}
@@ -1372,7 +1372,7 @@ mpd_fprint(FILE *file, const mpd_t *dec)
 	decstring = mpd_to_sci(dec, 1);
 	if (decstring != NULL) {
 		fprintf(file, "%s\n", decstring);
-		mpd_free(decstring);
+		__mingw_dfp_get_globals()->mpd_free(decstring);
 	}
 	else {
 		fputs("mpd_fprint: output error\n", file); /* GCOV_NOT_REACHED */
@@ -1387,7 +1387,7 @@ mpd_print(const mpd_t *dec)
 	decstring = mpd_to_sci(dec, 1);
 	if (decstring != NULL) {
 		printf("%s\n", decstring);
-		mpd_free(decstring);
+		__mingw_dfp_get_globals()->mpd_free(decstring);
 	}
 	else {
 		fputs("mpd_fprint: output error\n", stderr); /* GCOV_NOT_REACHED */

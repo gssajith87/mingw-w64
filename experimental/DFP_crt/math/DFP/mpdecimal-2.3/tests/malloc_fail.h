@@ -3,6 +3,7 @@
 
 
 #include <stdio.h>
+#include <inttypes.h>
 
 extern int alloc_count;
 extern int alloc_fail;
@@ -18,6 +19,14 @@ void mpd_set_alloc_count(mpd_context_t *ctx);
 void mpd_set_alloc_fail(mpd_context_t *ctx);
 void mpd_set_alloc(mpd_context_t *ctx);
 
+static inline
+int random(){
+  return rand();
+}
+static inline
+void srandom(unsigned int i){
+  srand(i);
+}
 
 #endif
 

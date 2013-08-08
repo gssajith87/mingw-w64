@@ -41,6 +41,7 @@
 #include "mptypes.h"
 #include "mptest.h"
 #include "umodarith.h"
+#include "malloc_fail.h"
 
 /*
  * These are random tests for the pentium pro modular multiplication functions.
