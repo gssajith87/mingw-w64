@@ -1415,25 +1415,43 @@ void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
   char str_sig[40];
   __pformat_t push_stream = *stream;
   dec128_decode(&in,x);
+  /* precision control */
+  int prec = ( (stream->precision < 0) || (stream->precision > 39) ) ?
+    6 : stream->precision;
+  int max_prec;
 
-  __bigint_to_string(
-    (uint32_t[1]) { (in.exp_neg) ? -in.exponent : in.exponent},
-    1, str_exp, sizeof(str_exp));
-  __bigint_trim_leading_zeroes(str_exp);
-
+  /* Stringify significand */
   __bigint_to_string(
     (uint32_t[4]){in.significand[0] & 0x0ffffffff, in.significand[0] >> 32, in.significand[1] & 0x0ffffffff, in.significand[1] >> 32 },
     4, str_sig, sizeof(str_sig));
   __bigint_trim_leading_zeroes(str_sig);
+  max_prec = strlen(str_sig+1);
 
-  /*if( stream->precision < 0 )
-    stream->precision = 6;*/
   if (in.sig_neg || (stream->flags & PFORMAT_SIGNED)) {
     __pformat_putc( in.sig_neg ? '-' : '+', stream );
     /* stream->width-- */
   }
-  __pformat_puts(str_sig, stream);
+
+  /* Try to canonize exponent */
+  in.exponent += max_prec;
+  in.exp_neg = (in.exponent < 0 ) ? 1 : 0;
+  str_sig[prec+1] = '\0';
+
+  /* s.sss form */
+  __pformat_putc(str_sig[0], stream);
+  __pformat_emit_radix_point(stream);
+  __pformat_puts(str_sig+1, stream);
+  /* Pad with 0s */
+  for(int i = max_prec; i < prec; i++)
+    __pformat_putc('0', stream);
+
   *stream = push_stream;
+
+  /* stringify exponent */
+  __bigint_to_string(
+    (uint32_t[1]) { in.exp_neg ? -in.exponent : in.exponent},
+    1, str_exp, sizeof(str_exp));
+  __bigint_trim_leading_zeroes(str_exp);
 
   __pformat_putc( ('E' | (stream->flags & PFORMAT_XCASE)), stream );
   __pformat_putc( in.exp_neg ? '-' : '+', stream );
