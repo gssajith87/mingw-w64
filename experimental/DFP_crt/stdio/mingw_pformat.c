@@ -1435,17 +1435,20 @@ void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
   /* Try to canonize exponent */
   in.exponent += max_prec;
   in.exp_neg = (in.exponent < 0 ) ? 1 : 0;
-  str_sig[prec+1] = '\0';
 
   /* s.sss form */
   __pformat_putc(str_sig[0], stream);
-  __pformat_emit_radix_point(stream);
-  __pformat_puts(str_sig+1, stream);
-  /* Pad with 0s */
-  for(int i = max_prec; i < prec; i++)
-    __pformat_putc('0', stream);
+  if(prec) {
+    str_sig[prec+1] = '\0';
+    __pformat_emit_radix_point(stream);
+    __pformat_puts(str_sig+1, stream);
+    /* Pad with 0s */
+    for(int i = max_prec; i < prec; i++)
+      __pformat_putc('0', stream);
+  }
 
   *stream = push_stream;
+  stream->precision = 1; /* force puts to emit */
 
   /* stringify exponent */
   __bigint_to_string(
@@ -1456,6 +1459,9 @@ void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
   __pformat_putc( ('E' | (stream->flags & PFORMAT_XCASE)), stream );
   __pformat_putc( in.exp_neg ? '-' : '+', stream );
   __pformat_puts(str_exp, stream);
+
+  /* does it need to be restored? */
+  *stream = push_stream;
 }
 
 static
