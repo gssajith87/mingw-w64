@@ -1330,6 +1330,7 @@ void __pformat_float( long double x, __pformat_t *stream )
 typedef struct decimal128_decode {
   int64_t significand[2];
   int32_t exponent;
+  int sig_neg;
   int exp_neg;
 } decimal128_decode;
 
@@ -1337,26 +1338,29 @@ static uint32_t dec128_decode(decimal128_decode *result, const _Decimal128 deci)
   int64_t significand2;
   int64_t significand1;
   int32_t exp_part;
+  int8_t sig_sign;
   ud128 in;
   in.d = deci;
 
   if(in.t0.bits == 0x3){ /*case 11 */
     /* should not enter here */
+    sig_sign = in.t2.sign;
     exp_part = in.t2.exponent;
     significand1 = in.t2.mantissaL;
-    significand2 = (in.t2.mantissaH | (0x1ULL << 49)) * ((in.t2.sign) ? -1 : 1);
+    significand2 = (in.t2.mantissaH | (0x1ULL << 49));
   } else {
+    sig_sign = in.t1.sign;
     exp_part = in.t1.exponent;
     significand1 = in.t1.mantissaL;
-    significand2 = in.t1.mantissaH  * ((in.t1.sign) ? -1 : 1);
+    significand2 = in.t1.mantissaH;
   }
   exp_part -= 6176; /* exp bias */
-
-  printf("\n[%d]\n",exp_part);
 
   result->significand[0] = significand1;
   result->significand[1] = significand2; /* higher */
   result->exponent = exp_part;
+  result->exp_neg = (exp_part < 0 )? 1 : 0;
+  result->sig_neg = sig_sign;
 
   return 0;
 }
@@ -1408,17 +1412,31 @@ static
 void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
   decimal128_decode in;
   char str_exp[8];
+  char str_sig[40];
+  __pformat_t push_stream = *stream;
   dec128_decode(&in,x);
 
-  __bigint_to_string(in.exponent < 0 ?
-    (uint32_t[1]){-in.exponent} : (uint32_t[1]) {in.exponent},
+  __bigint_to_string(
+    (uint32_t[1]) { (in.exp_neg) ? -in.exponent : in.exponent},
     1, str_exp, sizeof(str_exp));
   __bigint_trim_leading_zeroes(str_exp);
 
+  __bigint_to_string(
+    (uint32_t[4]){in.significand[0] & 0x0ffffffff, in.significand[0] >> 32, in.significand[1] & 0x0ffffffff, in.significand[1] >> 32 },
+    4, str_sig, sizeof(str_sig));
+  __bigint_trim_leading_zeroes(str_sig);
+
   /*if( stream->precision < 0 )
     stream->precision = 6;*/
+  if (in.sig_neg || (stream->flags & PFORMAT_SIGNED)) {
+    __pformat_putc( in.sig_neg ? '-' : '+', stream );
+    /* stream->width-- */
+  }
+  __pformat_puts(str_sig, stream);
+  *stream = push_stream;
+
   __pformat_putc( ('E' | (stream->flags & PFORMAT_XCASE)), stream );
-  __pformat_putc( in.exponent < 0 ? '-' : '+', stream );
+  __pformat_putc( in.exp_neg ? '-' : '+', stream );
   __pformat_puts(str_exp, stream);
 }
 
