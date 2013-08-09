@@ -1330,8 +1330,6 @@ void __pformat_float( long double x, __pformat_t *stream )
 typedef struct decimal128_decode {
   int64_t significand[2];
   int32_t exponent;
-  char sig[35]; /* up to 34 digits, null term'ed */
-  char exp[6]; /* null termninated */
   int exp_neg;
 } decimal128_decode;
 
@@ -1354,48 +1352,74 @@ static uint32_t dec128_decode(decimal128_decode *result, const _Decimal128 deci)
   }
   exp_part -= 6176; /* exp bias */
 
+  printf("\n[%d]\n",exp_part);
+
   result->significand[0] = significand1;
   result->significand[1] = significand2; /* higher */
   result->exponent = exp_part;
-  result->exp_neg = (exp_part < 0) ? 1 : 0;
-
-  memset(result->exp,0,6);
-  if(exp_part < 0) exp_part *= -1;
-  uint64_t bcd = 0;
-  while(exp_part){
-    bcd |= ((0x1<<31) & exp_part) ? 1 : 0;
-    for(int i = 15; i >= 0; i--){
-      int ishift = i * 4;
-      if((bcd & (0xf << ishift )) >> ishift > 4u) bcd += (3 << ishift);
-    }
-    exp_part <<= 1;
-    bcd <<= 1;
-  }
-  for(int i = 4; i>= 0; i--){
-    int ishift = i * 4;
-    result->exp[4-i] = '0' + ((bcd & (0xf << ishift)) >> ishift);
-  }
-
-  /* delete 0s */
-  while(result->exp[0] == '0') memmove(result->exp, result->exp+1, sizeof(result->exp));
-  if(result->exp_neg) {
-    memmove(result->exp+1, result->exp, sizeof(result->exp) - 1);
-    result->exp[0] = '-';
-  }
-  result->exp[sizeof(result->exp) - 1] = '\0';
 
   return 0;
 }
 
+static char * __bigint_trim_leading_zeroes(char *in){
+  char *src = in;
+  while( *++src == '0');
+  /* we want to null terminator too */
+  memmove(in, src, strlen(src) + 1);
+  return in;
+}
+
+static
+void __bigint_to_string(const uint32_t *digits, const uint32_t digitlen, char *buff, const uint32_t bufflen){
+  int64_t digitsize = sizeof(*digits) * 8;
+  int64_t shiftpos = digitlen * digitsize - 1;
+  memset(buff, 0, bufflen);
+
+  while(shiftpos >= 0) {
+    /* increment */
+    for(uint32_t i = 0; i < bufflen - 1; i++){
+      buff[i] += (buff[i] > 4) ? 3 : 0;
+    }
+
+    /* shift left */
+    for(uint32_t i = 0; i < bufflen - 1; i++)
+      buff[i] <<= 1;
+
+    /* shift in */
+    buff[bufflen - 2] |= digits[shiftpos / digitsize] & (0x1 << (shiftpos % digitsize)) ? 1 : 0;
+
+    /* overflow check */
+    for(uint32_t i = bufflen - 1; i > 0; i--){
+      buff[i - 1] |= (buff[i] > 0xf);
+      buff[i] &= 0x0f;
+    }
+
+    shiftpos--;
+  }
+
+  for(uint32_t i = 0; i < bufflen - 1; i++){
+    buff[i] += '0';
+  }
+  buff[bufflen - 1] = '\0';
+}
+
+/* TODO: Handle NAN/INF */
 static
 void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
   decimal128_decode in;
+  char str_exp[8];
   dec128_decode(&in,x);
-  const char *s = "[__pformat_efloat_decimal]";
+
+  __bigint_to_string(in.exponent < 0 ?
+    (uint32_t[1]){-in.exponent} : (uint32_t[1]) {in.exponent},
+    1, str_exp, sizeof(str_exp));
+  __bigint_trim_leading_zeroes(str_exp);
+
   /*if( stream->precision < 0 )
     stream->precision = 6;*/
   __pformat_putc( ('E' | (stream->flags & PFORMAT_XCASE)), stream );
-  __pformat_putchars( in.exp, strlen( in.exp ), stream );
+  __pformat_putc( in.exponent < 0 ? '-' : '+', stream );
+  __pformat_puts(str_exp, stream);
 }
 
 static
