@@ -1463,7 +1463,7 @@ void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
     (uint32_t[1]) { in.exp_neg ? -in.exponent : in.exponent},
     1, str_exp, sizeof(str_exp));
   exp_strlen = strlen(__bigint_trim_leading_zeroes(str_exp));
-  if(!exp_strlen){
+  if(exp_strlen == 0){
     exp_strlen = 1;
     str_exp[0] = '0';
   }
@@ -1492,7 +1492,7 @@ void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
       __pformat_putc('0', stream);
   }
 
-  stream->precision = 1; /* force puts to emit */
+  stream->precision = exp_strlen; /* force puts to emit */
 
   __pformat_putc( ('E' | (stream->flags & PFORMAT_XCASE)), stream );
   __pformat_putc( in.exp_neg ? '-' : '+', stream );
@@ -1552,12 +1552,19 @@ void  __pformat_float_decimal(_Decimal128 x, __pformat_t *stream ){
     1, str_exp, sizeof(str_exp));
   __bigint_trim_leading_zeroes(str_exp);
 
-  if (in.sig_neg || (stream->flags & PFORMAT_SIGNED)) {
-    __pformat_putc( in.sig_neg ? '-' : '+', stream );
-  }
-
   int32_t decimal_place = max_prec + in.exponent;
   int32_t sig_written = 0;
+
+  /*account for . +- */
+  for(int32_t spacers = 0; spacers < stream->width - decimal_place - prec - 2; spacers++)
+    __pformat_putc( ' ', stream );
+
+  if (in.sig_neg || (stream->flags & PFORMAT_SIGNED)) {
+    __pformat_putc( in.sig_neg ? '-' : '+', stream );
+  } else if(stream->width - decimal_place - prec - 1){
+    __pformat_putc( ' ', stream );
+  }
+
   if(decimal_place <= 0){ /* easy mode */
     __pformat_putc( '0', stream );
     points:
@@ -1577,9 +1584,16 @@ void  __pformat_float_decimal(_Decimal128 x, __pformat_t *stream ){
   } else { /* hard mode */
     for(; sig_written < decimal_place; sig_written++){
       __pformat_putc( str_sig[sig_written], stream );
+      if(sig_written == max_prec) break;
     }
+    decimal_place -= sig_written;
+    for(; decimal_place > 0; decimal_place--)
+      __pformat_putc( '0', stream );
     goto points;
   }
+
+  /* does it need to be restored? */
+  *stream = push_stream;
   return;
 }
 
