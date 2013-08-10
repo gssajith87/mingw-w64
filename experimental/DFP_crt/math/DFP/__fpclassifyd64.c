@@ -42,6 +42,7 @@
  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define __STDC_WANT_DEC_FP__ 1
 #include <math.h>
 #include "dfp_internal.h"
 

@@ -56,9 +56,9 @@
 #include "dfp_internal.h"
 #include mpdecimal_header
 
-static const _Decimal32 dec32 = - __DEC32_MAX__;
-static const _Decimal64 dec64 = __DEC64_MAX__;
-static const _Decimal128 dec128 = __DEC128_MAX__;
+static const _Decimal32 dec32 = 0.0DF;
+static const _Decimal64 dec64 = 0.0DD;
+static const _Decimal128 dec128 = 0.0DL;
 
 static void print_mpd(const mpd_t *in){
   printf("----\n");
@@ -109,6 +109,26 @@ static void print_dec64(const _Decimal64 *in){
   }
   printf("----\n");
 }
+
+static void print_dec128(const _Decimal128 *in){
+  ud128 ret;
+  ret.d = *in;
+  printf("----\n");
+  printf("sign %x\n", ret.t0.sign);
+  printf("bits %x\n", ret.t0.bits);
+  printf("flag %x\n", ret.t0.flag);
+  if(ret.t0.bits == 0x3){
+    printf("exp %d\n", ret.t2.exponent);
+    printf("mantissaL %I64u\n", (uint64_t)ret.t2.mantissaL);
+    printf("mantissaH %I64u\n", (uint64_t)ret.t2.mantissaH);
+  } else {
+    printf("exp %d\n", ret.t1.exponent);
+    printf("mantissaL %I64u\n", (uint64_t)ret.t1.mantissaL);
+    printf("mantissaH %I64u\n", (uint64_t)ret.t1.mantissaH);
+  }
+  printf("----\n");
+}
+
 
 static void dec_to_mpd_conv(mpd_context_t * ctx, mpd_t *result, const int64_t significand_low, const int64_t exponent_part){
   uint32_t status = 0;
@@ -348,5 +368,6 @@ int main(){
   mpd_del(result1);
   mpd_del(result2);
   mpd_del(result3);
+  print_dec128(&dec128);
   return 0;
 }

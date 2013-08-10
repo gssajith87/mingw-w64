@@ -76,7 +76,11 @@ lib64/DFP_src_mpdecimal.dfp.obj lib64/DFP_src_mpsignal.dfp.obj lib64/DFP_src_dif
 lib64/DFP_src_io.dfp.obj lib64/DFP_src_memory.dfp.obj lib64/DFP_src_numbertheory.dfp.obj lib64/DFP_src_sixstep.dfp.obj lib64/DFP_src_transpose.dfp.obj
 
 src_dfp_math = \
-math/DFP/__fpclassifyd32.c math/DFP/__fpclassifyd64.c math/DFP/__fpclassifyd128.c
+math/DFP/__fpclassifyd32.c math/DFP/__fpclassifyd64.c math/DFP/__fpclassifyd128.c \
+math/DFP/__isnand32.c math/DFP/__isnand64.c math/DFP/__isnand128.c \
+math/DFP/__signbitd32.c math/DFP/__signbitd64.c math/DFP/__signbitd128.c \
+math/DFP/isinfd32.c math/DFP/isinfd64.c math/DFP/isinfd128.c
+
 else
 obj_dfpsrc32 =
 obj_dfpsrc64 =
