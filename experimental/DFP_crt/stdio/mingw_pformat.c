@@ -71,6 +71,10 @@
 
 #include "../math/DFP/dfp_internal.h"
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 /* FIXME: The following belongs in values.h, but current MinGW
  * has nothing useful there!  OTOH, values.h is not a standard
  * header, and it's use may be considered obsolete; perhaps it

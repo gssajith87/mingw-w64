@@ -64,6 +64,7 @@ lib32/DFP_src_%.dfp.obj: math/DFP/mpdecimal-2.3/%.c
 lib64/DFP_src_%.dfp.obj: math/DFP/mpdecimal-2.3/%.c
 	$(COMPILE) $(CPPFLAGS64) -std=gnu99 -frounding-math -fsignaling-nans -Wno-inline -DCONFIG_64 -DASM -Dmpdecimal_header=\"mpdecimal-x86_64.h\" -c $< -o $@
 
+if EXPERIMENTAL_DFP
 obj_dfpsrc32 = \
 lib32/DFP_src_basearith.dfp.obj lib32/DFP_src_context.dfp.obj lib32/DFP_src_constants.dfp.obj lib32/DFP_src_convolute.dfp.obj lib32/DFP_src_crt.dfp.obj \
 lib32/DFP_src_mpdecimal.dfp.obj lib32/DFP_src_mpsignal.dfp.obj lib32/DFP_src_difradix2.dfp.obj lib32/DFP_src_fnt.dfp.obj lib32/DFP_src_fourstep.dfp.obj \
@@ -73,6 +74,14 @@ obj_dfpsrc64 = \
 lib64/DFP_src_basearith.dfp.obj lib64/DFP_src_context.dfp.obj lib64/DFP_src_constants.dfp.obj lib64/DFP_src_convolute.dfp.obj lib64/DFP_src_crt.dfp.obj \
 lib64/DFP_src_mpdecimal.dfp.obj lib64/DFP_src_mpsignal.dfp.obj lib64/DFP_src_difradix2.dfp.obj lib64/DFP_src_fnt.dfp.obj lib64/DFP_src_fourstep.dfp.obj \
 lib64/DFP_src_io.dfp.obj lib64/DFP_src_memory.dfp.obj lib64/DFP_src_numbertheory.dfp.obj lib64/DFP_src_sixstep.dfp.obj lib64/DFP_src_transpose.dfp.obj
+
+src_dfp_math = \
+math/DFP/__fpclassifyd32.c math/DFP/__fpclassifyd64.c math/DFP/__fpclassifyd128.c
+else
+obj_dfpsrc32 =
+obj_dfpsrc64 =
+src_dfp_math =
+endif
 
 src_libshell32=libsrc/shell32.c
 src_libdinput=libsrc/dinput_kbd.c libsrc/dinput_joy.c libsrc/dinput_joy2.c libsrc/dinput_mouse.c libsrc/dinput_mouse2.c
@@ -485,11 +494,8 @@ lib32_libmingw32_a_SOURCES = $(src_libmingw32)
 
 lib32_LIBRARIES += lib32/libmingwex.a
 lib32_libmingwex_a_CPPFLAGS=$(CPPFLAGS32) $(extra_include) $(AM_CPPFLAGS)
-lib32_libmingwex_a_SOURCES = $(src_libmingwex)
+lib32_libmingwex_a_SOURCES = $(src_libmingwex) $(src_dfp_math)
 lib32_libmingwex_a_LIBADD = $(obj_dfpsrc32)
-if EXPERIMENTAL_DFP
-lib32_libmingwex_a_LIBADD += $(obj_dfpsrc32)
-endif
 
 lib32_LIBRARIES += lib32/libmoldname.a
 lib32_libmoldname_a_CPPFLAGS=$(CPPFLAGS32) $(extra_include) $(AM_CPPFLAGS)
@@ -815,11 +821,8 @@ lib64_libmingw32_a_SOURCES = $(src_libmingw32)
 
 lib64_LIBRARIES += lib64/libmingwex.a
 lib64_libmingwex_a_CPPFLAGS=$(CPPFLAGS64) $(extra_include) $(AM_CPPFLAGS)
-lib64_libmingwex_a_SOURCES = $(src_libmingwex)
-lib64_libmingwex_a_LIBADD =
-if EXPERIMENTAL_DFP
-lib64_libmingwex_a_LIBADD += $(obj_dfpsrc64)
-endif
+lib64_libmingwex_a_SOURCES = $(src_libmingwex) $(src_dfp_math)
+lib64_libmingwex_a_LIBADD = $(obj_dfpsrc64)
 
 lib64_LIBRARIES += lib64/libmoldname.a
 lib64_libmoldname_a_CPPFLAGS=$(CPPFLAGS64) $(extra_include) $(AM_CPPFLAGS)

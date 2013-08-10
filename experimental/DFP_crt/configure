@@ -5373,38 +5373,33 @@ $as_echo "$as_me: WARNING: Building the runtime to use libce with lib32 or lib64
 fi
 fi
 
-case $enable_w32api in #(
-  yes) :
-
-	    LIB64SUFFIXDIR=lib64/w32api
-
-	    LIB32SUFFIXDIR=lib/w32api
-
-	 ;; #(
-  *) :
-    case $host_cpu in #(
+case $host_cpu in #(
   x86_64) :
 
-	    LIB64SUFFIXDIR=lib
-
-	    LIB32SUFFIXDIR=lib32
- ;; #(
+    lib64suffx=lib
+    lib32suffx=lib32 ;; #(
   i*86) :
 
-	    LIB64SUFFIXDIR=lib64
-
-	    LIB32SUFFIXDIR=lib
- ;; #(
+    lib64suffx=lib64
+    lib32suffx=lib ;; #(
   *) :
 
-	    LIB64SUFFIXDIR=lib64
-
-	    LIB32SUFFIXDIR=lib32
-
-	   ;;
-esac
+    lib64suffx=lib64
+    lib32suffx=lib32
  ;;
 esac
+
+if test "x$enable_w32api" = xyes; then :
+
+  lib64suffx=$lib64suffx/w32api
+  lib32suffx=$lib32suffx/w32api
+
+fi
+
+LIB64SUFFIXDIR=$lib64suffx
+
+LIB32SUFFIXDIR=$lib32suffx
+
 
 # Checks for features.
 
@@ -5500,7 +5495,9 @@ fi
 
 case $enable_experimental_dfp in #(
   yes) :
-     ;; #(
+
+$as_echo "#define __EXPERIMENTAL_DFP 1" >>confdefs.h
+ ;; #(
   no) :
      ;; #(
   *) :

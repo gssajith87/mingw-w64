@@ -186,7 +186,7 @@ AC_ARG_ENABLE([experimental-dfp],
   [],
   [enable_experimental_dfp=no])
 AS_CASE([$enable_experimental_dfp],
-  [yes],[],
+  [yes],[AC_DEFINE([__EXPERIMENTAL_DFP],[1],[Build experimental DFP support])],
   [no],[],
   [AC_MSG_ERROR([Please only use --enable-experimental-dfp or --disable-experimental-dfp, without any additional arguments.])])
 AM_CONDITIONAL([EXPERIMENTAL_DFP],[test $enable_experimental_dfp = yes])

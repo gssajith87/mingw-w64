@@ -46,6 +46,7 @@
 #include <math.h>
 #include <fenv.h>
 #include <errno.h>
+#include <inttypes.h>
 
 #ifndef __DECIMAL_BID_FORMAT__
 #error Only BID DFP supported!
