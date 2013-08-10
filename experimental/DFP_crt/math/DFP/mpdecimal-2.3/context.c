@@ -33,7 +33,7 @@
 #include <windows.h>
 
 static DWORD __mingw_dfp_globals;
-static volatile LONG __mingw_dfp_tls_init;
+static LONG __mingw_dfp_tls_init;
 int __mingwthr_key_dtor (DWORD key, void (*dtor)(void *));
 
 static void * default_mpd_malloc (size_t size){
@@ -67,6 +67,7 @@ __mingw_dfp_gvars *__mingw_dfp_get_globals(void){
   if(__sync_bool_compare_and_swap(&__mingw_dfp_tls_init,0,1)){
     __mingw_dfp_globals = TlsAlloc();
   }
+  __sync_synchronize();
 
   ret = TlsGetValue(__mingw_dfp_globals);
 
@@ -94,7 +95,7 @@ __mingw_dfp_gvars *__mingw_dfp_get_globals(void){
     mpd_ln10_data[MPD_MINALLOC_MAX] = {179914546843642076, 2302585092994045684};
 #else
     mpd_uint_t mpd_ln10_init[2] = {299404568, 230258509},
-      mpd_ln10_data[MPD_MINALLOC_MAX] = {299404568, 230258509};
+    mpd_ln10_data[MPD_MINALLOC_MAX] = {299404568, 230258509};
 #endif
     memcpy(ret->mpd_ln10.data, mpd_ln10_data, sizeof(mpd_uint_t[MPD_MINALLOC_MAX]));
     memcpy(ret->mpd_ln10_data, mpd_ln10_data, sizeof(mpd_uint_t[MPD_MINALLOC_MAX]));
