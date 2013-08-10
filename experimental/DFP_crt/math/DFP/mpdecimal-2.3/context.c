@@ -32,8 +32,7 @@
 #include <signal.h>
 #include <windows.h>
 
-static DWORD __mingw_dfp_globals;
-static LONG __mingw_dfp_tls_init;
+static DWORD __mingw_dfp_globals = TLS_OUT_OF_INDEXES;
 int __mingwthr_key_dtor (DWORD key, void (*dtor)(void *));
 
 static void * default_mpd_malloc (size_t size){
@@ -53,7 +52,8 @@ static void * default_mpd_calloc (size_t nmemb, size_t size){
 }
 
 static void default_mpd_free (void *ptr){
-  HeapFree(GetProcessHeap(),0,ptr);
+  if(ptr)
+    HeapFree(GetProcessHeap(),0,ptr);
 }
 
 static void
@@ -62,20 +62,33 @@ mpd_dflt_traphandler(mpd_context_t *ctx UNUSED)
 	raise(SIGFPE);
 }
 
+static void
+clean_tls(void *blob){
+  DWORD idx = ((__mingw_dfp_gvars *)blob)->idx;
+  default_mpd_free(blob);
+  TlsFree(idx);
+}
+
 __mingw_dfp_gvars *__mingw_dfp_get_globals(void){
   __mingw_dfp_gvars *ret = NULL;
-  if(__sync_bool_compare_and_swap(&__mingw_dfp_tls_init,0,1)){
-    __mingw_dfp_globals = TlsAlloc();
+  DWORD tls_get;
+  if(TLS_OUT_OF_INDEXES == __atomic_load_n(&__mingw_dfp_globals, __ATOMIC_ACQUIRE)){
+    DWORD tmpalloc = TlsAlloc();
+    DWORD __no_alloc = TLS_OUT_OF_INDEXES;
+    if(!__atomic_compare_exchange_n(&__mingw_dfp_globals,&__no_alloc,tmpalloc,
+        0, __ATOMIC_RELEASE, __ATOMIC_CONSUME)){
+      TlsFree(tmpalloc);
+    }
   }
-  __sync_synchronize();
 
-  ret = TlsGetValue(__mingw_dfp_globals);
+  tls_get = __atomic_load_n(&__mingw_dfp_globals, __ATOMIC_CONSUME);
+  ret = TlsGetValue(tls_get);
 
   if((GetLastError() == ERROR_SUCCESS) && ret == NULL){
     ret = default_mpd_calloc(1,sizeof(__mingw_dfp_gvars));
-    TlsSetValue(__mingw_dfp_globals,ret);
-    __mingwthr_key_dtor(__mingw_dfp_globals,default_mpd_free);
-
+    TlsSetValue(tls_get,ret);
+    __mingwthr_key_dtor(tls_get,clean_tls);
+    ret->idx = tls_get;
     ret->MPD_MINALLOC = MPD_MINALLOC_MAX;
     ret->mpd_mallocfunc = default_mpd_malloc;
     ret->mpd_reallocfunc = default_mpd_realloc;

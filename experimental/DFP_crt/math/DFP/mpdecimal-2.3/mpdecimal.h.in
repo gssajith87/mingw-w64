@@ -723,6 +723,7 @@ int mpd_resize(mpd_t *result, mpd_ssize_t size, mpd_context_t *ctx);
 int mpd_resize_zero(mpd_t *result, mpd_ssize_t size, mpd_context_t *ctx);
 
 typedef struct __mingw_dfp_gvars {
+  unsigned long idx;
   mpd_ssize_t MPD_MINALLOC;
   void (* mpd_traphandler)(mpd_context_t *);
   void (* mpd_dflt_traphandler)(mpd_context_t *);
