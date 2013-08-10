@@ -368,6 +368,9 @@ int main(){
   mpd_del(result1);
   mpd_del(result2);
   mpd_del(result3);
+
+  print_dec32(&dec32);
+  print_dec64(&dec64);
   print_dec128(&dec128);
   return 0;
 }
