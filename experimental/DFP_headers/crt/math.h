@@ -358,6 +358,9 @@ typedef long double double_t;
   extern int __cdecl __fpclassifyl (long double);
   extern int __cdecl __fpclassifyf (float);
   extern int __cdecl __fpclassify (double);
+  extern int __cdecl __fpclassifyd32 (_Decimal32);
+  extern int __cdecl __fpclassifyd64 (_Decimal64);
+  extern int __cdecl __fpclassifyd128 (_Decimal128);
 
 #ifndef __CRT__NO_INLINE
   __CRT_INLINE int __cdecl __fpclassifyl (long double x) {
@@ -408,9 +411,28 @@ typedef long double double_t;
   }
 #endif
 
-#define fpclassify(x) (sizeof (x) == sizeof (float) ? __fpclassifyf (x)	  \
-  : sizeof (x) == sizeof (double) ? __fpclassify (x) \
-  : __fpclassifyl (x))
+
+#define fpclassify(x) \
+__builtin_choose_expr (                                         \
+  __builtin_types_compatible_p (typeof (x), double),            \
+    __fpclassify(x),                                            \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), float),         \
+        __fpclassifyf(x),                                       \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), long double),   \
+        __fpclassifyl(x),                                       \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), _Decimal32),    \
+        __fpclassifyd32(x),                                     \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), _Decimal64),    \
+        __fpclassifyd64(x),                                     \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), _Decimal128),   \
+        __fpclassifyd128(x),                                    \
+__builtin_trap()))))))
+
 
 /* 7.12.3.2 */
 #define isfinite(x) ((fpclassify(x) & FP_NAN) == 0)
