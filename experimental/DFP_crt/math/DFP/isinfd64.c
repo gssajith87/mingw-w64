@@ -49,5 +49,5 @@
 int __cdecl isinfd64(_Decimal64 _X){
    ud64 in;
    in.d = _X;
-   return (in.t0.bits == 0b11 && (in.t0.flag >> 1) == 0b110) ? 1 : 0;
+   return (in.t0.bits == 0b11 && (in.t0.flag | 1) == 0b1101) ? 1 : 0;
 }

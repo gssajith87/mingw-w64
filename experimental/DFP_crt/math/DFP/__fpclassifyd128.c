@@ -55,7 +55,7 @@ int __cdecl __fpclassifyd128 (_Decimal128 x){
   ret |= (in.t0.bits != 0b11 && in.t1.exponent == 6175 && in.t1.mantissaL == 0 && in.t1.mantissaH == 0) ? FP_ZERO : 0;
   ret |= (in.t0.bits != 0b11 && in.t1.exponent == 0 ) ||
          (in.t0.bits == 0b11 && in.t2.exponent == 0 ) ? FP_SUBNORMAL : 0;
-  ret |= isinfd32(x) ? FP_INFINITE : 0;
+  ret |= isinfd128(x) ? FP_INFINITE : 0;
 
   return ret;
 }

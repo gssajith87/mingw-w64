@@ -49,6 +49,6 @@
 int __cdecl isinfd128(_Decimal128 _X){
    ud128 in;
    in.d = _X;
-   return (in.t0.bits == 0b11 && (in.t0.flag >> 1) == 0b110) ? 1 : 0;
+   return (in.t0.bits == 0b11 && (in.t0.flag | 1) == 0b1101) ? 1 : 0;
 }
 
