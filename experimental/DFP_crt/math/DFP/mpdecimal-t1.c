@@ -177,6 +177,8 @@ static uint32_t dec128_to_mpd(mpd_context_t * ctx, mpd_t *result, const _Decimal
     significand2 = in.t1.mantissaH  * ((in.t1.sign) ? -1 : 1);
   }
 
+  printf("%I64d %I64d\n", significand1, significand2);
+
   exp_part -= 6176; /* exp bias */
   dec128_to_mpd_conv(ctx, result, significand1, significand2, exp_part);
   return 0;
@@ -194,7 +196,6 @@ static uint32_t dec64_to_mpd(mpd_context_t * ctx, mpd_t *result, const _Decimal6
     significand = in.t1.mantissa  * ((in.t1.sign) ? -1 : 1);
   }
   exp_part -= 398; /* exp bias */
-  printf("AAAA %I64dE%I64d\n", significand,exp_part);
   dec_to_mpd_conv(ctx, result, significand, exp_part);
   return 0;
 }
@@ -347,6 +348,5 @@ int main(){
   mpd_del(result1);
   mpd_del(result2);
   mpd_del(result3);
-  print_dec64(&dec64);
   return 0;
 }
