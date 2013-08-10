@@ -1422,28 +1422,30 @@ void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
   decimal128_decode in;
   char str_exp[8];
   char str_sig[40];
+  __pformat_t push_stream = *stream;
   int floatclass = __fpclassifyd128(x);
+
+  /* precision control */
+  int32_t prec = ( (stream->precision < 0) || (stream->precision > 38) ) ?
+    6 : stream->precision;
+  int32_t max_prec;
+  int32_t exp_strlen;
+
   dec128_decode(&in,x);
 
   if((floatclass & FP_INFINITE) == FP_INFINITE){
     stream->precision = 3;
     if(stream->flags & PFORMAT_SIGNED)
       __pformat_putc( in.sig_neg ? '-' : '+', stream );
-    __pformat_puts("Inf", stream);
+    __pformat_puts( (stream->flags & PFORMAT_XCASE) ? "inf" : "INF", stream);
     return;
   } else if(floatclass & FP_NAN){
     stream->precision = 3;
     if(stream->flags & PFORMAT_SIGNED)
       __pformat_putc( in.sig_neg ? '-' : '+', stream );
-    __pformat_puts("NaN", stream);
+    __pformat_puts( (stream->flags & PFORMAT_XCASE) ? "nan" : "NAN", stream);
     return;
   }
-
-  __pformat_t push_stream = *stream;
-  /* precision control */
-  int prec = ( (stream->precision < 0) || (stream->precision > 38) ) ?
-    6 : stream->precision;
-  int max_prec;
 
   /* Stringify significand */
   __bigint_to_string(
@@ -1452,38 +1454,49 @@ void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
   __bigint_trim_leading_zeroes(str_sig);
   max_prec = strlen(str_sig+1);
 
-  if (in.sig_neg || (stream->flags & PFORMAT_SIGNED)) {
-    __pformat_putc( in.sig_neg ? '-' : '+', stream );
-    /* stream->width-- */
-  }
-
   /* Try to canonize exponent */
   in.exponent += max_prec;
   in.exp_neg = (in.exponent < 0 ) ? 1 : 0;
-
-  /* s.sss form */
-  __pformat_putc(str_sig[0], stream);
-  if(prec) {
-    str_sig[prec+1] = '\0';
-    __pformat_emit_radix_point(stream);
-    __pformat_puts(str_sig+1, stream);
-    /* Pad with 0s */
-    for(int i = max_prec; i < prec; i++)
-      __pformat_putc('0', stream);
-  }
-
-  *stream = push_stream;
-  stream->precision = 1; /* force puts to emit */
 
   /* stringify exponent */
   __bigint_to_string(
     (uint32_t[1]) { in.exp_neg ? -in.exponent : in.exponent},
     1, str_exp, sizeof(str_exp));
-  __bigint_trim_leading_zeroes(str_exp);
+  exp_strlen = strlen(__bigint_trim_leading_zeroes(str_exp));
+  if(!exp_strlen){
+    exp_strlen = 1;
+    str_exp[0] = '0';
+  }
+
+  /* account for dot, +-e */
+  for(int32_t spacers = 0; spacers < stream->width - max_prec - exp_strlen - 4; spacers++)
+    __pformat_putc( ' ', stream );
+
+  /* optional sign */
+  if (in.sig_neg || (stream->flags & PFORMAT_SIGNED)) {
+    __pformat_putc( in.sig_neg ? '-' : '+', stream );
+  } else if( stream->width - max_prec - exp_strlen - 4 > 0 ) {
+    __pformat_putc( ' ', stream );
+  }
+  *stream = push_stream;
+  stream->width = 0;
+  /* s.sss form */
+  __pformat_putc(str_sig[0], stream);
+  if(prec) {
+    /* str_sig[prec+1] = '\0';*/
+    __pformat_emit_radix_point(stream);
+    __pformat_putchars(str_sig+1, prec, stream);
+
+    /* Pad with 0s */
+    for(int i = max_prec; i < prec; i++)
+      __pformat_putc('0', stream);
+  }
+
+  stream->precision = 1; /* force puts to emit */
 
   __pformat_putc( ('E' | (stream->flags & PFORMAT_XCASE)), stream );
   __pformat_putc( in.exp_neg ? '-' : '+', stream );
-  __pformat_puts(str_exp, stream);
+  __pformat_putchars(str_exp, exp_strlen,stream);
 
   /* does it need to be restored? */
   *stream = push_stream;
@@ -1499,10 +1512,75 @@ void  __pformat_gfloat_decimal(_Decimal128 x, __pformat_t *stream ){
 
 static
 void  __pformat_float_decimal(_Decimal128 x, __pformat_t *stream ){
-  const char *s = "[__pformat_float_decimal]";
-  /*if( stream->precision < 0 )
-    stream->precision = 6;*/
-  __pformat_putchars( s, strlen( s ), stream );
+  decimal128_decode in;
+  char str_exp[8];
+  char str_sig[40];
+  __pformat_t push_stream = *stream;
+  int floatclass = __fpclassifyd128(x);
+
+  /* precision control */
+  int prec = ( (stream->precision < 0) || (stream->precision > 38) ) ?
+    6 : stream->precision;
+  int max_prec;
+
+  dec128_decode(&in,x);
+
+  if((floatclass & FP_INFINITE) == FP_INFINITE){
+    stream->precision = 3;
+    if(stream->flags & PFORMAT_SIGNED)
+      __pformat_putc( in.sig_neg ? '-' : '+', stream );
+    __pformat_puts( (stream->flags & PFORMAT_XCASE) ? "inf" : "INF", stream);
+    return;
+  } else if(floatclass & FP_NAN){
+    stream->precision = 3;
+    if(stream->flags & PFORMAT_SIGNED)
+      __pformat_putc( in.sig_neg ? '-' : '+', stream );
+    __pformat_puts( (stream->flags & PFORMAT_XCASE) ? "nan" : "NAN", stream);
+    return;
+  }
+
+  /* Stringify significand */
+  __bigint_to_string(
+    (uint32_t[4]){in.significand[0] & 0x0ffffffff, in.significand[0] >> 32, in.significand[1] & 0x0ffffffff, in.significand[1] >> 32 },
+    4, str_sig, sizeof(str_sig));
+  __bigint_trim_leading_zeroes(str_sig);
+  max_prec = strlen(str_sig);
+
+  /* stringify exponent */
+  __bigint_to_string(
+    (uint32_t[1]) { in.exp_neg ? -in.exponent : in.exponent},
+    1, str_exp, sizeof(str_exp));
+  __bigint_trim_leading_zeroes(str_exp);
+
+  if (in.sig_neg || (stream->flags & PFORMAT_SIGNED)) {
+    __pformat_putc( in.sig_neg ? '-' : '+', stream );
+  }
+
+  int32_t decimal_place = max_prec + in.exponent;
+  int32_t sig_written = 0;
+  if(decimal_place <= 0){ /* easy mode */
+    __pformat_putc( '0', stream );
+    points:
+    __pformat_emit_radix_point(stream);
+    for(int32_t written = 0; written <= prec; written++){
+      if(decimal_place < 0){ /* leading 0s */
+        decimal_place++;
+        __pformat_putc( '0', stream );
+      /* significand */
+      } else if ( sig_written <= max_prec ){
+        __pformat_putc( str_sig[sig_written], stream );
+        sig_written++;
+      } else { /* trailing 0s */
+        __pformat_putc( '0', stream );
+      }
+    }
+  } else { /* hard mode */
+    for(; sig_written < decimal_place; sig_written++){
+      __pformat_putc( str_sig[sig_written], stream );
+    }
+    goto points;
+  }
+  return;
 }
 
 static
