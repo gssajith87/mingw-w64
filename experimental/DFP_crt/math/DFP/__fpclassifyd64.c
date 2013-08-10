@@ -51,12 +51,11 @@ int __cdecl __fpclassifyd64 (_Decimal64 x){
   in.d = x;
   int ret = 0;
 
-  ret |= (in.t0.bits == 0b11 && in.t0.flag == 0b1110) ? FP_NAN : 0;
-  ret |= (in.t0.bits == 0b11 && in.t0.flag == 0b1111) ? FP_NAN : 0;
+  ret |= isnand64(x) ? FP_NAN : 0;
   ret |= (in.t0.bits != 0b11 && in.t1.exponent == 397 && in.t1.mantissa == 0) ? FP_ZERO : 0;
   ret |= (in.t0.bits != 0b11 && in.t1.exponent == 0 ) ||
          (in.t0.bits == 0b11 && in.t2.exponent == 0 ) ? FP_SUBNORMAL : 0;
-  ret |= (in.t0.bits == 0b11 && (in.t0.flag >> 1) == 0b110) ? FP_INFINITE : 0;
+  ret |= isinfd32(x) ? FP_INFINITE : 0;
 
   return ret;
 }

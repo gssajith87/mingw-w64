@@ -50,6 +50,11 @@
  ******************************************************************
  *
  */
+
+#ifndef __STDC_WANT_DEC_FP__
+#define __STDC_WANT_DEC_FP__ 1
+#endif
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <stddef.h>
@@ -1417,10 +1422,26 @@ void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
   decimal128_decode in;
   char str_exp[8];
   char str_sig[40];
-  __pformat_t push_stream = *stream;
+  int floatclass = __fpclassifyd128(x);
   dec128_decode(&in,x);
+
+  if((floatclass & FP_INFINITE) == FP_INFINITE){
+    stream->precision = 3;
+    if(stream->flags & PFORMAT_SIGNED)
+      __pformat_putc( in.sig_neg ? '-' : '+', stream );
+    __pformat_puts("Inf", stream);
+    return;
+  } else if(floatclass & FP_NAN){
+    stream->precision = 3;
+    if(stream->flags & PFORMAT_SIGNED)
+      __pformat_putc( in.sig_neg ? '-' : '+', stream );
+    __pformat_puts("NaN", stream);
+    return;
+  }
+
+  __pformat_t push_stream = *stream;
   /* precision control */
-  int prec = ( (stream->precision < 0) || (stream->precision > 39) ) ?
+  int prec = ( (stream->precision < 0) || (stream->precision > 38) ) ?
     6 : stream->precision;
   int max_prec;
 
