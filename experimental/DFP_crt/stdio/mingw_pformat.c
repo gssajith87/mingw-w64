@@ -362,18 +362,20 @@ void __bigint_to_stringx(const uint32_t *digits, const uint32_t digitlen, char *
 /* LSB first, octet version */
 static
 void __bigint_to_stringo(const uint32_t *digits, const uint32_t digitlen, char *buff, const uint32_t bufflen){
-  uint32_t bits = sizeof(*digits) * 8 * digitlen;
+  const uint32_t digitsize = sizeof(*digits) * 8;
+  const uint32_t bits = digitsize * digitlen;
   uint32_t pos = bufflen - 2;
   uint32_t reg = 0;
-
-  for(uint32_t i = 0; i < bits; i++){
+  for(uint32_t i = 0; i <= bits; i++){
     if( i && i % 3 == 0){
       buff[pos] = '0' + reg;
       reg = 0;
       if(!pos) break; /* sanity check */
       pos--;
     }
-    reg |= (digits[ i / (sizeof(*digits) * 8)] & (0x1 << (i % (sizeof(*digits) * 8)))) >> (i - (i % 3));
+    uint32_t shiftpos = i % (sizeof(*digits) * 8);
+    reg >>= 1;
+    reg |= (digits[ i / (sizeof(*digits) * 8)] & (0x1 << shiftpos)) ? 4 : 0;
   }
   if(pos < bufflen - 1)
     memset(buff,'0', pos + 1);
