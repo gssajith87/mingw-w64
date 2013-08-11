@@ -51,8 +51,8 @@
  *
  */
 
-#ifndef __STDC_WANT_DEC_FP__
-#define __STDC_WANT_DEC_FP__ 1
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -64,27 +64,38 @@
 #include <limits.h>
 #include <locale.h>
 #include <wchar.h>
-#include <math.h>
 
-#ifdef _X86_
-#include "../math/DFP/mpdecimal-2.3/mpdecimal-i686.h"
-#elif defined(__x86_64__)
-#include "../math/DFP/mpdecimal-2.3/mpdecimal-x86_64.h"
-#else
-#error unknown arch for DFP
+#ifdef __EXPERIMENTAL_DFP
+#ifndef __STDC_WANT_DEC_FP__
+#define __STDC_WANT_DEC_FP__ 1
 #endif
 
 #include "../math/DFP/dfp_internal.h"
+#endif /* __EXPERIMENTAL_DFP */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include <math.h>
 
 /* FIXME: The following belongs in values.h, but current MinGW
  * has nothing useful there!  OTOH, values.h is not a standard
  * header, and it's use may be considered obsolete; perhaps it
  * is better to just keep these definitions here.
  */
+
+#pragma pack(push,1)
+typedef struct __attribute__((gcc_struct)) __tI128 {
+  int64_t digits[2];
+} __tI128;
+
+typedef struct __attribute__((gcc_struct)) __tI128_2 {
+  uint32_t digits32[4];
+} __tI128_2;
+
+typedef union __attribute__((gcc_struct)) __uI128 {
+  __tI128 t128;
+  __tI128_2 t128_2;
+} __uI128;
+#pragma pack(pop)
+
 #ifndef _VALUES_H
 /*
  * values.h
@@ -96,7 +107,7 @@
 
 #define _TYPEBITS(type)     (sizeof(type) * CHAR_BIT)
 
-#define LLONGBITS           _TYPEBITS(long long)
+#define LLONGBITS           _TYPEBITS(__tI128)
 
 #endif /* !defined _VALUES_H -- end of file */
 
@@ -121,9 +132,12 @@
 #define PFORMAT_XCASE       0x00000020
 
 #define PFORMAT_LDOUBLE     0x00000004
+
+#ifdef __EXPERIMENTAL_DFP
 #define PFORMAT_DECIM32     0x00020000
 #define PFORMAT_DECIM64     0x00040000
 #define PFORMAT_DECIM128    0x00080000
+#endif
 
 /* `%o' format digit extraction mask, and shift count...
  * (These are constant, and do not propagate through the flags).
@@ -221,7 +235,8 @@ typedef union
   unsigned char           __pformat_uchar_t;
   signed short            __pformat_short_t;
   signed char             __pformat_char_t;
-  void *		  __pformat_ptr_t;
+  void *                  __pformat_ptr_t;
+  __uI128                 __pformat_u128_t;
 } __pformat_intarg_t;
 
 typedef enum
@@ -245,6 +260,7 @@ typedef enum
   PFORMAT_LENGTH_SHORT,
   PFORMAT_LENGTH_LONG,
   PFORMAT_LENGTH_LLONG,
+  PFORMAT_LENGTH_LLONG128,
   PFORMAT_LENGTH_CHAR
 } __pformat_length_t;
 /*
@@ -253,6 +269,7 @@ typedef enum
  * collapse this to a simple assignment.
  */
 #define __pformat_arg_length( type )    \
+  sizeof( type ) == sizeof( __tI128 )   ? PFORMAT_LENGTH_LLONG128 : \
   sizeof( type ) == sizeof( long long ) ? PFORMAT_LENGTH_LLONG : \
   sizeof( type ) == sizeof( long )      ? PFORMAT_LENGTH_LONG  : \
   sizeof( type ) == sizeof( short )     ? PFORMAT_LENGTH_SHORT : \
@@ -278,6 +295,90 @@ typedef struct
   int            quota;
   int            expmin;
 } __pformat_t;
+
+/* trim leading, leave at least n characters */
+static char * __bigint_trim_leading_zeroes(char *in, int n){
+  char *src = in;
+  int len = strlen(in);
+  while( len > n && *++src == '0') len--;
+
+  /* we want to null terminator too */
+  memmove(in, src, strlen(src) + 1);
+  return in;
+}
+
+/* LSB first */
+static
+void __bigint_to_string(const uint32_t *digits, const uint32_t digitlen, char *buff, const uint32_t bufflen){
+  int64_t digitsize = sizeof(*digits) * 8;
+  int64_t shiftpos = digitlen * digitsize - 1;
+  memset(buff, 0, bufflen);
+
+  while(shiftpos >= 0) {
+    /* increment */
+    for(uint32_t i = 0; i < bufflen - 1; i++){
+      buff[i] += (buff[i] > 4) ? 3 : 0;
+    }
+
+    /* shift left */
+    for(uint32_t i = 0; i < bufflen - 1; i++)
+      buff[i] <<= 1;
+
+    /* shift in */
+    buff[bufflen - 2] |= digits[shiftpos / digitsize] & (0x1 << (shiftpos % digitsize)) ? 1 : 0;
+
+    /* overflow check */
+    for(uint32_t i = bufflen - 1; i > 0; i--){
+      buff[i - 1] |= (buff[i] > 0xf);
+      buff[i] &= 0x0f;
+    }
+    shiftpos--;
+  }
+
+  for(uint32_t i = 0; i < bufflen - 1; i++){
+    buff[i] += '0';
+  }
+  buff[bufflen - 1] = '\0';
+}
+
+/* LSB first, hex version */
+static
+void __bigint_to_stringx(const uint32_t *digits, const uint32_t digitlen, char *buff, const uint32_t bufflen, int upper){
+  int32_t stride = sizeof(*digits) * 2;
+  uint32_t lastpos = 0;
+
+  for(uint32_t i = 0; i < digitlen * stride; i++){
+    int32_t buffpos = bufflen - i - 2;
+    buff[buffpos] = (digits[ i / stride ] & (0xf << 4 * (i % stride))) >> ( 4 * (i % stride));
+    buff[buffpos] += (buff[buffpos] > 9) ? ((upper) ? 0x7 : 0x27) : 0;
+    buff[buffpos] += '0';
+    lastpos = buffpos;
+    if(buffpos == 0) break; /* sanity check */
+  }
+  memset(buff, '0', lastpos);
+  buff[bufflen - 1] = '\0';
+}
+
+/* LSB first, octet version */
+static
+void __bigint_to_stringo(const uint32_t *digits, const uint32_t digitlen, char *buff, const uint32_t bufflen){
+  uint32_t bits = sizeof(*digits) * 8 * digitlen;
+  uint32_t pos = bufflen - 2;
+  uint32_t reg = 0;
+
+  for(uint32_t i = 0; i < bits; i++){
+    if( i && i % 3 == 0){
+      buff[pos] = '0' + reg;
+      reg = 0;
+      if(!pos) break; /* sanity check */
+      pos--;
+    }
+    reg |= (digits[ i / (sizeof(*digits) * 8)] & (0x1 << (i % (sizeof(*digits) * 8)))) >> (i - (i % 3));
+  }
+  if(pos < bufflen - 1)
+    memset(buff,'0', pos + 1);
+  buff[bufflen - 1] = '\0';
+}
 
 static
 void __pformat_putc( int c, __pformat_t *stream )
@@ -521,21 +622,26 @@ void __pformat_int( __pformat_intarg_t value, __pformat_t *stream )
    * formatted as a decimal number, to the `__pformat()' output queue;
    * output will be truncated, if any specified quota is exceeded.
    */
-  char buf[__pformat_int_bufsiz(1, PFORMAT_OSHIFT, stream)];
+  int32_t bufflen = __pformat_int_bufsiz(1, PFORMAT_OSHIFT, stream);
+  char tmp_buff[bufflen];
+  char buf[bufflen];
   char *p = buf; int precision;
 
   if( stream->flags & PFORMAT_NEGATIVE )
   {
     /* The input value might be negative, (i.e. it is a signed value)...
      */
-    if( value.__pformat_llong_t < 0LL )
+    if( value.__pformat_u128_t.t128.digits[1] < 0) {
       /*
        * It IS negative, but we want to encode it as unsigned,
        * displayed with a leading minus sign, so convert it...
        */
-      value.__pformat_llong_t = -value.__pformat_llong_t;
-
-    else
+      /* two's complement */
+      value.__pformat_u128_t.t128.digits[0] = ~value.__pformat_u128_t.t128.digits[0];
+      value.__pformat_u128_t.t128.digits[1] = ~value.__pformat_u128_t.t128.digits[1];
+      value.__pformat_u128_t.t128.digits[0] += 1;
+      value.__pformat_u128_t.t128.digits[1] += (!value.__pformat_u128_t.t128.digits[0]) ? 1 : 0;
+    } else
       /* It is unequivocally a POSITIVE value, so turn off the
        * request to prefix it with a minus sign...
        */
@@ -544,19 +650,20 @@ void __pformat_int( __pformat_intarg_t value, __pformat_t *stream )
 
   /* Encode the input value for display...
    */
-  while( value.__pformat_ullong_t )
-  {
-    /* decomposing it into its constituent decimal digits,
-     * in order from least significant to most significant, using
-     * the local buffer as a LIFO queue in which to store them. 
-     */
-    if (p != buf && (stream->flags & PFORMAT_GROUPED) != 0 && stream->thousands_chr != 0
-        && ((p - buf) % 4) == 3)
+  __bigint_to_string(value.__pformat_u128_t.t128_2.digits32,
+    4, tmp_buff, bufflen);
+  __bigint_trim_leading_zeroes(tmp_buff,1);
+
+  memset(p,0,bufflen);
+  for(int32_t i = strlen(tmp_buff) - 1; i >= 0; i--){
+  if ( i && (stream->flags & PFORMAT_GROUPED) != 0 && stream->thousands_chr != 0
+        && (i % 4) == 3)
       {
         *p++ = ',';
       }
-    *p++ = '0' + (unsigned char)(value.__pformat_ullong_t % 10LL);
-    value.__pformat_ullong_t /= 10LL;
+      *p++ = tmp_buff[i];
+    if( i > bufflen - 1) break; /* sanity chec */
+    if(  tmp_buff[i] == '\0' ) break; /* end */
   }
 
   if(  (stream->precision > 0)
@@ -654,21 +761,21 @@ void __pformat_xint( int fmt, __pformat_intarg_t value, __pformat_t *stream )
   int width;
   int mask = (fmt == 'o') ? PFORMAT_OMASK : PFORMAT_XMASK;
   int shift = (fmt == 'o') ? PFORMAT_OSHIFT : PFORMAT_XSHIFT;
-  char buf[__pformat_int_bufsiz(2, shift, stream)];
+  int bufflen = __pformat_int_bufsiz(2, shift, stream);
+  char buf[bufflen];
+  char tmp_buf[bufflen];
   char *p = buf;
 
-  while( value.__pformat_ullong_t )
-  {
-    /* Encode the specified non-zero input value as a sequence of digits,
-     * in the appropriate `base' encoding and in reverse digit order, each
-     * encoded in its printable ASCII form, with no leading zeros, using
-     * the local buffer as a LIFO queue in which to store them.
-     */
-    char *q;
-    if( (*(q = p++) = '0' + (value.__pformat_ullong_t & mask)) > '9' )
-      *q = (*q + 'A' - '9' - 1) | (fmt & PFORMAT_XCASE);
-    value.__pformat_ullong_t >>= shift;
+  if(fmt == 'o'){
+    __bigint_to_stringo(value.__pformat_u128_t.t128_2.digits32,4,tmp_buf,bufflen);
+  } else {
+    __bigint_to_stringx(value.__pformat_u128_t.t128_2.digits32,4,tmp_buf,bufflen, !(fmt & PFORMAT_XCASE));
   }
+  __bigint_trim_leading_zeroes(tmp_buf,0);
+
+  memset(buf,0,bufflen);
+  for(int32_t i = strlen(tmp_buf); i >= 0; i--)
+    *p++ = tmp_buf[i];
 
   if( p == buf )
     /*
@@ -1336,6 +1443,8 @@ void __pformat_float( long double x, __pformat_t *stream )
   __pformat_fcvt_release( value );
 }
 
+#ifdef __EXPERIMENTAL_DFP
+
 typedef struct decimal128_decode {
   int64_t significand[2];
   int32_t exponent;
@@ -1372,51 +1481,6 @@ static uint32_t dec128_decode(decimal128_decode *result, const _Decimal128 deci)
   result->sig_neg = sig_sign;
 
   return 0;
-}
-
-/* trim leading, leave at least n characters */
-static char * __bigint_trim_leading_zeroes(char *in, int n){
-  char *src = in;
-  int len = strlen(in);
-  while( len > n && *++src == '0') len--;
-
-  /* we want to null terminator too */
-  memmove(in, src, strlen(src) + 1);
-  return in;
-}
-
-static
-void __bigint_to_string(const uint32_t *digits, const uint32_t digitlen, char *buff, const uint32_t bufflen){
-  int64_t digitsize = sizeof(*digits) * 8;
-  int64_t shiftpos = digitlen * digitsize - 1;
-  memset(buff, 0, bufflen);
-
-  while(shiftpos >= 0) {
-    /* increment */
-    for(uint32_t i = 0; i < bufflen - 1; i++){
-      buff[i] += (buff[i] > 4) ? 3 : 0;
-    }
-
-    /* shift left */
-    for(uint32_t i = 0; i < bufflen - 1; i++)
-      buff[i] <<= 1;
-
-    /* shift in */
-    buff[bufflen - 2] |= digits[shiftpos / digitsize] & (0x1 << (shiftpos % digitsize)) ? 1 : 0;
-
-    /* overflow check */
-    for(uint32_t i = bufflen - 1; i > 0; i--){
-      buff[i - 1] |= (buff[i] > 0xf);
-      buff[i] &= 0x0f;
-    }
-
-    shiftpos--;
-  }
-
-  for(uint32_t i = 0; i < bufflen - 1; i++){
-    buff[i] += '0';
-  }
-  buff[bufflen - 1] = '\0';
 }
 
 static
@@ -1599,6 +1663,8 @@ void  __pformat_gfloat_decimal(_Decimal128 x, __pformat_t *stream ){
   if(in.exponent > prec) __pformat_efloat_decimal(x,stream);
   else __pformat_float_decimal(x,stream);
 }
+
+#endif /* __EXPERIMENTAL_DFP */
 
 static
 void __pformat_efloat( long double x, __pformat_t *stream )
@@ -2234,21 +2300,24 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	    /*
 	     * Unsigned integer values; octal, decimal or hexadecimal format...
 	     */
-	    if( length == PFORMAT_LENGTH_LLONG )
+        argval.__pformat_u128_t.t128.digits[1] = 0LL; /* no sign extend needed */
+	    if( length == PFORMAT_LENGTH_LLONG128 )
+	      argval.__pformat_u128_t.t128 = va_arg( argv, __tI128 );
+	    else if( length == PFORMAT_LENGTH_LLONG ) {
 	      /*
 	       * with an `unsigned long long' argument, which we
 	       * process `as is'...
 	       */
 	      argval.__pformat_ullong_t = va_arg( argv, unsigned long long );
 
-	    else if( length == PFORMAT_LENGTH_LONG )
+	    } else if( length == PFORMAT_LENGTH_LONG ) {
 	      /*
 	       * or with an `unsigned long', which we promote to
 	       * `unsigned long long'...
 	       */
 	      argval.__pformat_ullong_t = va_arg( argv, unsigned long );
 
-	    else
+	    } else
 	    { /* or for any other size, which will have been promoted
 	       * to `unsigned int', we select only the appropriately sized
 	       * least significant segment, and again promote to the same
@@ -2293,20 +2362,21 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * and be prepared to handle negative numbers.
 	     */
 	    stream.flags |= PFORMAT_NEGATIVE;
-
-	    if( length == PFORMAT_LENGTH_LLONG )
+	    if( length == PFORMAT_LENGTH_LLONG128 ) {
+	      argval.__pformat_u128_t.t128 = va_arg( argv, __tI128 );
+          goto skip_sign; /* skip sign extend */
+	    } else
+	    if( length == PFORMAT_LENGTH_LLONG ){
 	      /*
 	       * The argument is a `long long' type...
 	       */
 	      argval.__pformat_llong_t = va_arg( argv, long long );
-
-	    else if( length == PFORMAT_LENGTH_LONG )
+	    } else if( length == PFORMAT_LENGTH_LONG ) {
 	      /*
 	       * or here, a `long' type...
 	       */
 	      argval.__pformat_llong_t = va_arg( argv, long );
-
-	    else
+	    } else
 	    { /* otherwise, it's an `int' type...
 	       */
 	      argval.__pformat_llong_t = va_arg( argv, int );
@@ -2324,6 +2394,8 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	    
 	    /* In any case, all share a common handler...
 	     */
+        argval.__pformat_u128_t.t128.digits[1] = (argval.__pformat_llong_t < 0) ? -1LL : 0LL;
+        skip_sign:
 	    __pformat_int( argval, &stream );
 	    goto format_scan;
 
@@ -2364,6 +2436,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * (or lower case for all of these, on fall through from above);
 	     * select lower case mode, and simply fall through...
 	     */
+#ifdef __EXPERIMENTAL_DFP
 	    if( stream.flags & PFORMAT_DECIM32 )
 	      /* Is a 32bit decimal float */
 	      __pformat_efloat_decimal((_Decimal128)va_arg( argv, _Decimal32 ), &stream );
@@ -2377,7 +2450,9 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	       * Is a 128bit decimal float
 	       */
 	      __pformat_efloat_decimal(va_arg( argv, _Decimal128 ), &stream );
-	    else if( stream.flags & PFORMAT_LDOUBLE )
+	    else
+#endif /* __EXPERIMENTAL_DFP */
+	    if( stream.flags & PFORMAT_LDOUBLE )
 	      /*
 	       * for a `long double' argument...
 	       */
@@ -2404,6 +2479,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * Fixed case format using upper case, or lower case on
 	     * fall through from above, for `INF' and `NAN'...
 	     */
+#ifdef __EXPERIMENTAL_DFP
 	    if( stream.flags & PFORMAT_DECIM32 )
 	      /* Is a 32bit decimal float */
 	      __pformat_float_decimal((_Decimal128)va_arg( argv, _Decimal32 ), &stream );
@@ -2417,7 +2493,9 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	       * Is a 128bit decimal float
 	       */
 	      __pformat_float_decimal(va_arg( argv, _Decimal128 ), &stream );
-	    else if( stream.flags & PFORMAT_LDOUBLE )
+	    else
+#endif /* __EXPERIMENTAL_DFP */
+	    if( stream.flags & PFORMAT_LDOUBLE )
 	      /*
 	       * for a `long double' argument...
 	       */
@@ -2445,6 +2523,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * or on fall through from above, with lower case exponent
 	     * indicator when required...
 	     */
+#ifdef __EXPERIMENTAL_DFP
 	    if( stream.flags & PFORMAT_DECIM32 )
 	      /* Is a 32bit decimal float */
 	      __pformat_gfloat_decimal((_Decimal128)va_arg( argv, _Decimal32 ), &stream );
@@ -2458,7 +2537,9 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	       * Is a 128bit decimal float
 	       */
 	      __pformat_gfloat_decimal(va_arg( argv, _Decimal128 ), &stream );
-	    else if( stream.flags & PFORMAT_LDOUBLE )
+	    else
+#endif /* __EXPERIMENTAL_DFP */
+	   if( stream.flags & PFORMAT_LDOUBLE )
 	      /*
 	       * for a `long double' argument...
 	       */
@@ -2577,7 +2658,10 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	       * The MSVCRT implementation of the printf() family of
 	       * functions explicitly uses...
 	       */
-	      if( (fmt[0] == '6') && (fmt[1] == '4') )
+	      if( (fmt[0] == '1') && (fmt[1] == '2') && (fmt[2] == '8')){
+	        length = PFORMAT_LENGTH_LLONG128;
+	        fmt += 3;
+	      } else if( (fmt[0] == '6') && (fmt[1] == '4') )
 	      {
 		/* I64' instead of `ll',
 		 * when referring to `long long' integer types...
@@ -2607,7 +2691,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 
 #	  endif
 	  
-
+#ifdef __EXPERIMENTAL_DFP
 	  case 'H':
 	      stream.flags |= PFORMAT_DECIM32;
 	      state = PFORMAT_END;
@@ -2634,7 +2718,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 
 	      state = PFORMAT_END;
 	      break;
-
+#endif /* __EXPERIMENTAL_DFP */
 	  case 'l':
 	    /*
 	     * Interpret the argument as explicitly of a
