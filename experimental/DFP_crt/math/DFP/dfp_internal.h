@@ -115,7 +115,7 @@ DFP = -1^s x tttt x [ 10 ^ (eeee - (6176(base10))]
 
 */
 #pragma pack(push,1)
-#define structpack __attribute((gcc_struct))
+#define structpack __attribute__((gcc_struct))
 
 typedef struct structpack type0d32 {
   uint64_t blob:25;
