@@ -373,9 +373,8 @@ void __bigint_to_stringo(const uint32_t *digits, const uint32_t digitlen, char *
       if(!pos) break; /* sanity check */
       pos--;
     }
-    uint32_t shiftpos = i % (sizeof(*digits) * 8);
     reg >>= 1;
-    reg |= (digits[ i / (sizeof(*digits) * 8)] & (0x1 << shiftpos)) ? 4 : 0;
+    reg |= (digits[ i / digitsize] & (0x1 << (i % digitsize))) ? 4 : 0;
   }
   if(pos < bufflen - 1)
     memset(buff,'0', pos + 1);
@@ -761,7 +760,7 @@ void __pformat_xint( int fmt, __pformat_intarg_t value, __pformat_t *stream )
    * digits of the formatted value, in preparation for output.
    */
   int width;
-  int mask = (fmt == 'o') ? PFORMAT_OMASK : PFORMAT_XMASK;
+  /* int mask = (fmt == 'o') ? PFORMAT_OMASK : PFORMAT_XMASK;*/
   int shift = (fmt == 'o') ? PFORMAT_OSHIFT : PFORMAT_XSHIFT;
   int bufflen = __pformat_int_bufsiz(2, shift, stream);
   char buf[bufflen];
