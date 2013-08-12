@@ -363,18 +363,17 @@ void __bigint_to_stringx(const uint32_t *digits, const uint32_t digitlen, char *
 static
 void __bigint_to_stringo(const uint32_t *digits, const uint32_t digitlen, char *buff, const uint32_t bufflen){
   const uint32_t digitsize = sizeof(*digits) * 8;
-  const uint32_t bits = digitsize * digitlen;
+  const uint64_t bits = digitsize * digitlen;
   uint32_t pos = bufflen - 2;
   uint32_t reg = 0;
   for(uint32_t i = 0; i <= bits; i++){
-    if( i && i % 3 == 0){
+    reg |= (digits[ i / digitsize] & (0x1 << (i % digitsize))) ? 1 << (i % 3) : 0;
+    if( (i && ( i + 1) % 3 == 0) || (i + 1) == bits){ /* make sure all is committed after last bit */
       buff[pos] = '0' + reg;
       reg = 0;
       if(!pos) break; /* sanity check */
       pos--;
     }
-    reg >>= 1;
-    reg |= (digits[ i / digitsize] & (0x1 << (i % digitsize))) ? 4 : 0;
   }
   if(pos < bufflen - 1)
     memset(buff,'0', pos + 1);
