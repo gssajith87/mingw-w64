@@ -5537,7 +5537,7 @@ $as_echo_n "checking whether to enable experimental features... " >&6; }
 if test "${enable_experimental+set}" = set; then :
   enableval=$enable_experimental; experimental_features=$enable_experimental
 else
-  experimental_features=""
+  experimental_features="no"
 fi
 
 
@@ -5559,6 +5559,8 @@ case $arg in #(
     enable_dfp=yes; enable_printf128=yes; enable_registeredprintf=yes;  ;; #(
   yes) :
     enable_dfp=yes; enable_printf128=yes; enable_registeredprintf=yes;  ;; #(
+  no) :
+    enable_dfp=no; enable_printf128=no; enable_registeredprintf=no;  ;; #(
   *) :
     as_fn_error $? "Unknown option \"$experiment\"" "$LINENO" 5
  ;;

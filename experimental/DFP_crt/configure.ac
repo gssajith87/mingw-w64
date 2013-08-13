@@ -185,7 +185,7 @@ AC_ARG_ENABLE([experimental],
   [AS_HELP_STRING([--enable-experimental],
     [Enable experimental features, valid options are comma separated combination of all, dfp, printf128, registeredprintf. Refer to experimental.txt for descriptions.])],
     [experimental_features=$enable_experimental],
-    [experimental_features=""])
+    [experimental_features="no"])
 
 enable_dfp=no
 enable_printf128=no
@@ -200,6 +200,7 @@ AS_CASE([$arg],
   [registeredprintf],[enable_registeredprintf=yes],
   [all], [enable_dfp=yes; enable_printf128=yes; enable_registeredprintf=yes; ],
   [yes], [enable_dfp=yes; enable_printf128=yes; enable_registeredprintf=yes; ],
+  [no],  [enable_dfp=no; enable_printf128=no; enable_registeredprintf=no; ],
   [AC_MSG_ERROR([Unknown option \"$experiment\"])]
 )
 done
