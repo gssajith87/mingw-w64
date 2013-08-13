@@ -65,13 +65,13 @@
 #include <locale.h>
 #include <wchar.h>
 
-#ifdef __EXPERIMENTAL_DFP
+#ifdef __ENABLE_DFP
 #ifndef __STDC_WANT_DEC_FP__
 #define __STDC_WANT_DEC_FP__ 1
 #endif
 
 #include "../math/DFP/dfp_internal.h"
-#endif /* __EXPERIMENTAL_DFP */
+#endif /* __ENABLE_DFP */
 
 #include <math.h>
 
@@ -133,7 +133,7 @@ typedef union __attribute__((gcc_struct)) __uI128 {
 
 #define PFORMAT_LDOUBLE     0x00000004
 
-#ifdef __EXPERIMENTAL_DFP
+#ifdef __ENABLE_DFP
 #define PFORMAT_DECIM32     0x00020000
 #define PFORMAT_DECIM64     0x00040000
 #define PFORMAT_DECIM128    0x00080000
@@ -1443,7 +1443,7 @@ void __pformat_float( long double x, __pformat_t *stream )
   __pformat_fcvt_release( value );
 }
 
-#ifdef __EXPERIMENTAL_DFP
+#ifdef __ENABLE_DFP
 
 typedef struct decimal128_decode {
   int64_t significand[2];
@@ -1635,7 +1635,7 @@ void  __pformat_float_decimal(_Decimal128 x, __pformat_t *stream ){
         __pformat_putc( str_sig[sig_written], stream );
         sig_written++;
       } else { /* trailing 0s */
-        __pformat_putc( 'T', stream );
+        __pformat_putc( '0', stream );
       }
     }
   } else { /* hard mode */
@@ -1664,7 +1664,7 @@ void  __pformat_gfloat_decimal(_Decimal128 x, __pformat_t *stream ){
   else __pformat_float_decimal(x,stream);
 }
 
-#endif /* __EXPERIMENTAL_DFP */
+#endif /* __ENABLE_DFP */
 
 static
 void __pformat_efloat( long double x, __pformat_t *stream )
@@ -2436,7 +2436,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * (or lower case for all of these, on fall through from above);
 	     * select lower case mode, and simply fall through...
 	     */
-#ifdef __EXPERIMENTAL_DFP
+#ifdef __ENABLE_DFP
 	    if( stream.flags & PFORMAT_DECIM32 )
 	      /* Is a 32bit decimal float */
 	      __pformat_efloat_decimal((_Decimal128)va_arg( argv, _Decimal32 ), &stream );
@@ -2451,7 +2451,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	       */
 	      __pformat_efloat_decimal(va_arg( argv, _Decimal128 ), &stream );
 	    else
-#endif /* __EXPERIMENTAL_DFP */
+#endif /* __ENABLE_DFP */
 	    if( stream.flags & PFORMAT_LDOUBLE )
 	      /*
 	       * for a `long double' argument...
@@ -2479,7 +2479,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * Fixed case format using upper case, or lower case on
 	     * fall through from above, for `INF' and `NAN'...
 	     */
-#ifdef __EXPERIMENTAL_DFP
+#ifdef __ENABLE_DFP
 	    if( stream.flags & PFORMAT_DECIM32 )
 	      /* Is a 32bit decimal float */
 	      __pformat_float_decimal((_Decimal128)va_arg( argv, _Decimal32 ), &stream );
@@ -2494,7 +2494,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	       */
 	      __pformat_float_decimal(va_arg( argv, _Decimal128 ), &stream );
 	    else
-#endif /* __EXPERIMENTAL_DFP */
+#endif /* __ENABLE_DFP */
 	    if( stream.flags & PFORMAT_LDOUBLE )
 	      /*
 	       * for a `long double' argument...
@@ -2523,7 +2523,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * or on fall through from above, with lower case exponent
 	     * indicator when required...
 	     */
-#ifdef __EXPERIMENTAL_DFP
+#ifdef __ENABLE_DFP
 	    if( stream.flags & PFORMAT_DECIM32 )
 	      /* Is a 32bit decimal float */
 	      __pformat_gfloat_decimal((_Decimal128)va_arg( argv, _Decimal32 ), &stream );
@@ -2538,7 +2538,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	       */
 	      __pformat_gfloat_decimal(va_arg( argv, _Decimal128 ), &stream );
 	    else
-#endif /* __EXPERIMENTAL_DFP */
+#endif /* __ENABLE_DFP */
 	   if( stream.flags & PFORMAT_LDOUBLE )
 	      /*
 	       * for a `long double' argument...
@@ -2691,7 +2691,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 
 #	  endif
 	  
-#ifdef __EXPERIMENTAL_DFP
+#ifdef __ENABLE_DFP
 	  case 'H':
 	      stream.flags |= PFORMAT_DECIM32;
 	      state = PFORMAT_END;
@@ -2718,7 +2718,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 
 	      state = PFORMAT_END;
 	      break;
-#endif /* __EXPERIMENTAL_DFP */
+#endif /* __ENABLE_DFP */
 	  case 'l':
 	    /*
 	     * Interpret the argument as explicitly of a

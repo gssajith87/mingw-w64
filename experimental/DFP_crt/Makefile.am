@@ -59,12 +59,12 @@ _libm_dummy.c:
 src_libm=_libm_dummy.c
 
 lib32/DFP_src_%.dfp.obj: math/DFP/mpdecimal-2.3/%.c
-	$(COMPILE) $(CPPFLAGS32) -std=gnu99 -frounding-math -fsignaling-nans -Wno-inline -DCONFIG_32 -DPPRO -DASM -Dmpdecimal_header=\"mpdecimal-i686.h\" -c $< -o $@
+	$(COMPILE) $(CPPFLAGS32) -std=gnu99 -frounding-math -fsignaling-nans -Wno-inline -DCONFIG_32 -DPPRO -DASM -Dmpdecimal_header=\"mpdecimal-i686.h\" -DUSE_LOCKING_CTOR -c $< -o $@
 
 lib64/DFP_src_%.dfp.obj: math/DFP/mpdecimal-2.3/%.c
-	$(COMPILE) $(CPPFLAGS64) -std=gnu99 -frounding-math -fsignaling-nans -Wno-inline -DCONFIG_64 -DASM -Dmpdecimal_header=\"mpdecimal-x86_64.h\" -c $< -o $@
+	$(COMPILE) $(CPPFLAGS64) -std=gnu99 -frounding-math -fsignaling-nans -Wno-inline -DCONFIG_64 -DASM -Dmpdecimal_header=\"mpdecimal-x86_64.h\" -DUSE_LOCKING_CTOR -c $< -o $@
 
-if EXPERIMENTAL_DFP
+if ENABLE_DFP
 obj_dfpsrc32 = \
 lib32/DFP_src_basearith.dfp.obj lib32/DFP_src_context.dfp.obj lib32/DFP_src_constants.dfp.obj lib32/DFP_src_convolute.dfp.obj lib32/DFP_src_crt.dfp.obj \
 lib32/DFP_src_mpdecimal.dfp.obj lib32/DFP_src_mpsignal.dfp.obj lib32/DFP_src_difradix2.dfp.obj lib32/DFP_src_fnt.dfp.obj lib32/DFP_src_fourstep.dfp.obj \
