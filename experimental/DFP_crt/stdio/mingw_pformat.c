@@ -268,13 +268,24 @@ typedef enum
  * matching index, selected from those above; the compiler should
  * collapse this to a simple assignment.
  */
-#define __pformat_arg_length( type )    \
-  sizeof( type ) == sizeof( __tI128 )   ? PFORMAT_LENGTH_LLONG128 : \
-  sizeof( type ) == sizeof( long long ) ? PFORMAT_LENGTH_LLONG : \
-  sizeof( type ) == sizeof( long )      ? PFORMAT_LENGTH_LONG  : \
-  sizeof( type ) == sizeof( short )     ? PFORMAT_LENGTH_SHORT : \
-  sizeof( type ) == sizeof( char )      ? PFORMAT_LENGTH_CHAR  : \
-  /* should never need this default */    PFORMAT_LENGTH_INT
+
+#define __pformat_arg_length(x) \
+__builtin_choose_expr (                                         \
+  __builtin_types_compatible_p (typeof (x), __tI128),           \
+   PFORMAT_LENGTH_LLONG128,                                     \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), long long),     \
+        PFORMAT_LENGTH_LLONG,                                   \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), long),          \
+        PFORMAT_LENGTH_LONG,                                    \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), short),         \
+        PFORMAT_LENGTH_SHORT,                                   \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), char),          \
+        PFORMAT_LENGTH_CHAR,                                    \
+/* should never need this default */ PFORMAT_LENGTH_INT)))))
 
 typedef struct
 {
@@ -2108,7 +2119,9 @@ void __pformat_emit_xfloat( __pformat_fpreg_t value, __pformat_t *stream )
    */
   stream->width += exp_width;
   stream->flags |= PFORMAT_SIGNED;
-  exponent.__pformat_llong_t = value.__pformat_fpreg_exponent;
+  /* sign extend */
+  exponent.__pformat_u128_t.t128.digits[1] = (value.__pformat_fpreg_exponent < 0) ? -1 : 0;
+  exponent.__pformat_u128_t.t128.digits[0] = value.__pformat_fpreg_exponent;
   __pformat_int( exponent, stream );
 }
 
