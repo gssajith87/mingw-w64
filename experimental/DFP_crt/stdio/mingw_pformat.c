@@ -307,6 +307,7 @@ static char * __bigint_trim_leading_zeroes(char *in, int n){
   return in;
 }
 
+#if defined(__ENABLE_PRINTF128) || defined(__ENABLE_DFP)
 /* LSB first */
 static
 void __bigint_to_string(const uint32_t *digits, const uint32_t digitlen, char *buff, const uint32_t bufflen){
@@ -379,6 +380,7 @@ void __bigint_to_stringo(const uint32_t *digits, const uint32_t digitlen, char *
     memset(buff,'0', pos + 1);
   buff[bufflen - 1] = '\0';
 }
+#endif /* defined(__ENABLE_PRINTF128) || defined(__ENABLE_DFP) */
 
 static
 void __pformat_putc( int c, __pformat_t *stream )
@@ -631,6 +633,7 @@ void __pformat_int( __pformat_intarg_t value, __pformat_t *stream )
   {
     /* The input value might be negative, (i.e. it is a signed value)...
      */
+#ifdef __ENABLE_PRINTF128
     if( value.__pformat_u128_t.t128.digits[1] < 0) {
       /*
        * It IS negative, but we want to encode it as unsigned,
@@ -665,6 +668,22 @@ void __pformat_int( __pformat_intarg_t value, __pformat_t *stream )
     if( i > bufflen - 1) break; /* sanity chec */
     if(  tmp_buff[i] == '\0' ) break; /* end */
   }
+#else
+while( value.__pformat_ullong_t )
+  {
+    /* decomposing it into its constituent decimal digits,
+     * in order from least significant to most significant, using
+     * the local buffer as a LIFO queue in which to store them. 
+     */
+    if (p != buf && (stream->flags & PFORMAT_GROUPED) != 0 && stream->thousands_chr != 0
+        && ((p - buf) % 4) == 3)
+      {
+        *p++ = ',';
+      }
+    *p++ = '0' + (unsigned char)(value.__pformat_ullong_t % 10LL);
+    value.__pformat_ullong_t /= 10LL;
+  }
+#endif
 
   if(  (stream->precision > 0)
   &&  ((precision = stream->precision - (p - buf)) > 0)  )
@@ -765,7 +784,7 @@ void __pformat_xint( int fmt, __pformat_intarg_t value, __pformat_t *stream )
   char buf[bufflen];
   char tmp_buf[bufflen];
   char *p = buf;
-
+#ifdef __ENABLE_PRINTF128
   if(fmt == 'o'){
     __bigint_to_stringo(value.__pformat_u128_t.t128_2.digits32,4,tmp_buf,bufflen);
   } else {
@@ -776,6 +795,20 @@ void __pformat_xint( int fmt, __pformat_intarg_t value, __pformat_t *stream )
   memset(buf,0,bufflen);
   for(int32_t i = strlen(tmp_buf); i >= 0; i--)
     *p++ = tmp_buf[i];
+#else
+  while( value.__pformat_ullong_t )
+  {
+    /* Encode the specified non-zero input value as a sequence of digits,
+     * in the appropriate `base' encoding and in reverse digit order, each
+     * encoded in its printable ASCII form, with no leading zeros, using
+     * the local buffer as a LIFO queue in which to store them.
+     */
+    char *q;
+    if( (*(q = p++) = '0' + (value.__pformat_ullong_t & mask)) > '9' )
+      *q = (*q + 'A' - '9' - 1) | (fmt & PFORMAT_XCASE);
+    value.__pformat_ullong_t >>= shift;
+  }
+#endif
 
   if( p == buf )
     /*
@@ -2658,6 +2691,7 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	       * The MSVCRT implementation of the printf() family of
 	       * functions explicitly uses...
 	       */
+#ifdef __ENABLE_PRINTF128
 	      if( (fmt[0] == '1') && (fmt[1] == '2') && (fmt[2] == '8')){
 	        length = PFORMAT_LENGTH_LLONG128;
 	        fmt += 3;
@@ -2668,9 +2702,9 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 		 */
 		length = PFORMAT_LENGTH_LLONG;
 		fmt += 2;
-	      }
-
-	      else if( (fmt[0] == '3') && (fmt[1] == '2') )
+	      } else
+#endif
+	      if( (fmt[0] == '3') && (fmt[1] == '2') )
 	      {
 		/* and `I32' instead of `l',
 		 * when referring to `long' integer types...
