@@ -1,0 +1,37 @@
+EXPERIMENTAL FEATURES
+=====================
+
+Feature:     dfp
+Status:      Partially implemented, usable, considered unstable
+Description: DFP printf support
+  Decimal floating point (IEEE 754-2008) printf support. Used for precision mathematics, up to 34 digits.
+  New length modifiers "H" (_Decimal32), "D" (_Decimal64) and "DD" (_Decimal128) for "%E", "%e", "%F", "%f", "%G", "%g".
+  Modifiers for "%A" and locale grouping is not yet implemented.
+
+Feature:     printf128
+Status:      Implemented, usable
+Description: 128-bit printf support
+  Support for decoding integers greater than 64-bit was required and implemented for DFP printf support.
+  Support for decoding other integers came free.
+  New length modifiers "I128" for C99 "%I" vendor extension, implemented for "%o", "%u", "%i", "%d", "%X" and "%x".
+  Use "%I128x" to print __int128 values. On 32-bit platforms where __int128 is unavailable,
+  use packed structures with 2 64-bit integers, with the first [0] as LSB word and [1] as MSB word.
+
+Feature:     registeredprintf
+Status:      Not implemented yet, development under-way
+Description: Glibc/uClibc style Custom printf formatting callback support
+  Allows custom formats and modifiers for __mingw_printf family. Normal MSVCRT printf family is unaffected.
+  Maximum of 16 new modifiers per application.
+  Maximum of 64 new formats per application.
+
+
+PLANNED FEATURES
+================
+
+Feature:     dfpmath
+Status:      Not implemented yet
+Description: DFP support in math.h functions, only classifiers are implemented.
+
+Feature:     dfpscanf
+Status:      Not implemented yet
+Description: DFP support in __mingw_scanf family. mpdecimal can interpret string, a matter of adding the right adapters.

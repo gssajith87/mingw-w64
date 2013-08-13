@@ -310,9 +310,9 @@ AC_MSG_NOTICE([  C Warning Flags......: $ADD_C_ONLY_WARNING_FLAGS])
 AC_MSG_NOTICE([  C++ Warning Flags....: $ADD_CXX_ONLY_WARNING_FLAGS])
 AC_MSG_NOTICE([  Common Warning Flags.: $ADD_C_CXX_WARNING_FLAGS])
 AC_MSG_NOTICE([])
-AC_MSG_NOTICE([  DFP Math Support.....: $enable_dfp])
+AC_MSG_NOTICE([  DFP printf...........: $enable_dfp])
 AC_MSG_NOTICE([  128-bit printf.......: $enable_printf128])
-AC_MSG_NOTICE([  registered printf....: $enable_registeredprintf])
+AC_MSG_NOTICE([  Custom printf........: $enable_registeredprintf])
 AC_MSG_NOTICE([])
 
 
