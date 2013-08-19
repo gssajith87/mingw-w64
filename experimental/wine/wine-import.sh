@@ -81,6 +81,8 @@ for f in \
 	uiautomationcore \
 	urlhist \
 	wincodec \
+	wmsbuffer \
+	wmsdkidl \
 	wpcapi \
 	xmllite; do
     import_idl $f.idl include
