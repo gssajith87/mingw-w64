@@ -68,7 +68,7 @@ class NightlySrcPackageFactory(factory.BuildFactory):
                               command=["curl",
                                        "-o",
                                        "mingw-makefile",
-                                       "https://mingw-w64.svn.sourceforge.net/svnroot/mingw-w64/experimental/buildsystem/makebuildroot.mk"],
+                                       "https://svn.code.sf.net/p/mingw-w64/code/experimental/buildsystem/makebuildroot.mk"],
                               haltOnFailure=True))
 
 #    self.addStep(SVN(mode="export",
