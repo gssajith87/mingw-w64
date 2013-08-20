@@ -9,6 +9,7 @@ from buildbot.process import factory
 from buildbot.process.properties import Property
 from buildbot.steps.source import CVS, SVN
 from buildbot.steps.shell import Configure, Compile, ShellCommand, WithProperties, SetProperty
+from buildbot.steps.slave import MakeDirectory
 from buildbot.steps.transfer import FileDownload, FileUpload
 from buildbot.steps.trigger import Trigger
 from scripts.buildsteps import M64CVS, M64NightlyRev, WithPropertiesRecursive
@@ -122,11 +123,8 @@ class Mingw64Factory(factory.BuildFactory):
                                 descriptionDone=["clobbered"]))
 
     # force the build/ directory to exist so we can download into it
-    self.addStep(ShellCommand(name="mkdir-build",
-                              description=["mkdir", "build/"],
-                              workdir="build",
-                              command=["echo", ""],
-                              haltOnFailure=True))
+    self.addStep(MakeDirectory(dir="build/build",
+                               haltOnFailure=True))
 
     self.addStep(FileDownload(mastersrc="mingw-makefile",
                               slavedest="mingw-makefile",
