@@ -2346,10 +2346,13 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	    /*
 	     * Unsigned integer values; octal, decimal or hexadecimal format...
 	     */
+#if __ENABLE_PRINTF128
         argval.__pformat_u128_t.t128.digits[1] = 0LL; /* no sign extend needed */
 	    if( length == PFORMAT_LENGTH_LLONG128 )
 	      argval.__pformat_u128_t.t128 = va_arg( argv, __tI128 );
-	    else if( length == PFORMAT_LENGTH_LLONG ) {
+	    else
+#endif
+        if( length == PFORMAT_LENGTH_LLONG ) {
 	      /*
 	       * with an `unsigned long long' argument, which we
 	       * process `as is'...
@@ -2408,34 +2411,36 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	     * and be prepared to handle negative numbers.
 	     */
 	    stream.flags |= PFORMAT_NEGATIVE;
+#if __ENABLE_PRINTF128
 	    if( length == PFORMAT_LENGTH_LLONG128 ) {
 	      argval.__pformat_u128_t.t128 = va_arg( argv, __tI128 );
           goto skip_sign; /* skip sign extend */
 	    } else
+#endif
 	    if( length == PFORMAT_LENGTH_LLONG ){
 	      /*
 	       * The argument is a `long long' type...
 	       */
-	      argval.__pformat_llong_t = va_arg( argv, long long );
+	      argval.__pformat_u128_t.t128.digits[0] = va_arg( argv, long long );
 	    } else if( length == PFORMAT_LENGTH_LONG ) {
 	      /*
 	       * or here, a `long' type...
 	       */
-	      argval.__pformat_llong_t = va_arg( argv, long );
+	      argval.__pformat_u128_t.t128.digits[0] = va_arg( argv, long );
 	    } else
 	    { /* otherwise, it's an `int' type...
 	       */
-	      argval.__pformat_llong_t = va_arg( argv, int );
+	      argval.__pformat_u128_t.t128.digits[0] = va_arg( argv, int );
 	      if( length == PFORMAT_LENGTH_SHORT )
 		/*
 		 * but it was promoted from a `short' type...
 		 */
-		argval.__pformat_llong_t = argval.__pformat_short_t;
+		argval.__pformat_u128_t.t128.digits[0] = argval.__pformat_short_t;
 	      else if( length == PFORMAT_LENGTH_CHAR )
 		/*
 		 * or even from a `char' type...
 		 */
-		argval.__pformat_llong_t = argval.__pformat_char_t;
+		argval.__pformat_u128_t.t128.digits[0] = argval.__pformat_char_t;
 	    }
 	    
 	    /* In any case, all share a common handler...
@@ -2463,7 +2468,8 @@ __pformat (int flags, void *dest, int max, const APICHAR *fmt, va_list argv)
 	      stream.flags |= PFORMAT_ZEROFILL;
 	      stream.precision = 2 * sizeof( uintptr_t );
 	    }
-	    argval.__pformat_ullong_t = va_arg( argv, uintptr_t );
+	    argval.__pformat_u128_t.t128.digits[0] = va_arg( argv, uintptr_t );
+	    argval.__pformat_u128_t.t128.digits[1] = 0;
 	    __pformat_xint( 'x', argval, &stream );
 	    goto format_scan;
 

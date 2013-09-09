@@ -120,16 +120,16 @@ src_libmingwthrd=libsrc/mingwthrd_mt.c
 
 src_libgdiplus=libsrc/gdiplus.c
 
-src_libuuid=libsrc/uuid.c   libsrc/guid_nul.c         libsrc/devguid.c         libsrc/fwp-uuid.c        \
-  libsrc/ativscp-uuid.c     libsrc/atsmedia-uuid.c    libsrc/bth-uuid.c        libsrc/cguid-uuid.c        \
-  libsrc/comcat-uuid.c      libsrc/docobj-uuid.c      libsrc/exdisp-uuid.c     libsrc/extras-uuid.c     libsrc/hlguids-uuid.c      \
-  libsrc/hlink-uuid.c       libsrc/mlang-uuid.c       libsrc/msctf-uuid.c      libsrc/mshtml-uuid.c     libsrc/msxml-uuid.c        \
-  libsrc/netcon-uuid.c      libsrc/objidl-uuid.c      libsrc/oaidl-uuid.c      libsrc/objsafe-uuid.c    libsrc/ocidl-uuid.c        \
-  libsrc/oleacc-uuid.c      libsrc/olectlid-uuid.c    libsrc/oleidl-uuid.c     libsrc/power-uuid.c     \
-  libsrc/urlmon-uuid.c      libsrc/vds-uuid.c         libsrc/virtdisk-uuid.c   \
-  libsrc/wia-uuid.c         libsrc/powrprof-uuid.c    libsrc/usbcamdi-uuid.c   libsrc/usbiodef-uuid.c   libsrc/ntddkbd-uuid.c      \
-  libsrc/ntddmou-uuid.c     libsrc/ntddpar-uuid.c     libsrc/ntddser-uuid.c    libsrc/ntddscsi-uuid.c   libsrc/ntddstor-uuid.c     \
-  libsrc/ntddvdeo-uuid.c    libsrc/dxva-uuid.c        libsrc/mshtmhst-uuid.c
+src_libuuid=\
+  libsrc/ativscp-uuid.c   libsrc/atsmedia-uuid.c  libsrc/bth-uuid.c       libsrc/cguid-uuid.c     libsrc/comcat-uuid.c  \
+  libsrc/devguid.c        libsrc/docobj-uuid.c    libsrc/dxva-uuid.c      libsrc/exdisp-uuid.c    libsrc/extras-uuid.c  \
+  libsrc/fwp-uuid.c       libsrc/guid_nul.c       libsrc/hlguids-uuid.c   libsrc/hlink-uuid.c     libsrc/mlang-uuid.c   \
+  libsrc/msctf-uuid.c     libsrc/mshtmhst-uuid.c  libsrc/mshtml-uuid.c    libsrc/msxml-uuid.c     libsrc/netcon-uuid.c  \
+  libsrc/ntddkbd-uuid.c   libsrc/ntddmou-uuid.c   libsrc/ntddpar-uuid.c   libsrc/ntddscsi-uuid.c  libsrc/ntddser-uuid.c \
+  libsrc/ntddstor-uuid.c  libsrc/ntddvdeo-uuid.c  libsrc/oaidl-uuid.c     libsrc/objidl-uuid.c    libsrc/objsafe-uuid.c \
+  libsrc/ocidl-uuid.c     libsrc/oleacc-uuid.c    libsrc/olectlid-uuid.c  libsrc/oleidl-uuid.c    libsrc/power-uuid.c   \
+  libsrc/powrprof-uuid.c  libsrc/urlmon-uuid.c    libsrc/usbcamdi-uuid.c  libsrc/usbiodef-uuid.c  libsrc/uuid.c         \
+  libsrc/vds-uuid.c       libsrc/virtdisk-uuid.c  libsrc/wia-uuid.c
 
 src_libws2_32=libsrc/ws2_32.c \
   \
@@ -320,6 +320,9 @@ src_intrincs32=\
   intrincs/readfsbyte.c   intrincs/readfsword.c   intrincs/readfsdword.c  \
   intrincs/writefsbyte.c  intrincs/writefsword.c  intrincs/writefsdword.c
 
+winrtlibs=\
+  winrt/libruntimeobject.a
+
 if LIB32
 #########
 # Compiling 32-bit runtime
@@ -327,8 +330,11 @@ if LIB32
 
 lib32dir=$(prefix)/@LIB32SUFFIXDIR@
 crt32dir=$(lib32dir)
+winrtdir=$(lib32dir)
 
-if ! W32API
+winrt_DATA = $(winrtlibs)
+
+if !W32API
 crt32_DATA = \
   lib32/crt1.o    lib32/crt2.o     lib32/crt1u.o   lib32/crt2u.o    lib32/dllcrt1.o    lib32/dllcrt2.o \
   lib32/CRT_fp8.o lib32/CRT_fp10.o lib32/txtmode.o lib32/binmode.o  lib32/crtbegin.o   lib32/crtend.o \
@@ -374,7 +380,7 @@ lib32_libkernel32_a_SOURCES = $(src_intrincs) $(src_intrincs32)
 lib32_libkernel32_a_AR = $(DTLIB32) && $(AR) $(ARFLAGS)
 lib32_libkernel32_a_CPPFLAGS=$(CPPFLAGS32) $(extra_include) $(AM_CPPFLAGS)
 
-if ! W32API
+if !W32API
 lib32_LIBRARIES += lib32/libmsvcrt.a
 lib32_libmsvcrt_a_SOURCES = $(src_msvcrt32) lib32/msvcrt.def.in
 lib32_libmsvcrt_a_AR = $(DTDEF32) lib32/msvcrt.def && $(AR) $(ARFLAGS)
@@ -473,7 +479,7 @@ lib32_libws2_32_a_SOURCES = $(src_libws2_32)
 lib32_libws2_32_a_CPPFLAGS=$(CPPFLAGS32) $(sysincludes)
 lib32_libws2_32_a_AR = $(DTLIB32) && $(AR) $(ARFLAGS)
 
-if ! W32API
+if !W32API
 lib32_LIBRARIES += lib32/libdelayimp.a
 lib32_libdelayimp_a_SOURCES =
 
@@ -604,10 +610,10 @@ lib32_DATA = \
   lib32/libd3dx10.a         lib32/libd3dx11.a         lib32/libd3dcsxd.a   \
   lib32/libd3dcompiler.a    lib32/libwinhttp.a        \
   lib32/libdevmgr.a         lib32/libdevobj.a         lib32/libdevrtl.a    \
-  lib32/libapi-ms-win-core-winrt-string-l1-1-0.a lib32/libruntimeobject.a  \
+  lib32/libapi-ms-win-core-winrt-string-l1-1-0.a \
   lib32/libapi-ms-win-core-winrt-l1-1-0.a
 
-if ! W32API
+if !W32API
 lib32_DATA += lib32/libglut.a lib32/libmsvcp60.a lib32/libmsvcr80.a lib32/libmsvcr90.a lib32/libmsvcr90d.a lib32/libmsvcr100.a lib32/libmsvcr110.a lib32/libcrtdll.a
 endif
 
@@ -662,8 +668,11 @@ if LIB64
 
 lib64dir=$(prefix)/@LIB64SUFFIXDIR@
 crt64dir=$(lib64dir)
+winrtdir=$(lib64dir)
 
-if ! W32API
+winrt_DATA = $(winrtlibs)
+
+if !W32API
 crt64_DATA = \
   lib64/crt1.o    lib64/crt2.o     lib64/crt1u.o   lib64/crt2u.o   lib64/dllcrt1.o lib64/dllcrt2.o \
   lib64/CRT_fp8.o lib64/CRT_fp10.o lib64/txtmode.o lib64/binmode.o lib64/crtbegin.o lib64/crtend.o \
@@ -701,7 +710,7 @@ lib64_libkernel32_a_SOURCES = $(src_intrincs) $(src_intrincs64)
 lib64_libkernel32_a_CPPFLAGS=$(CPPFLAGS64) $(extra_include) $(AM_CPPFLAGS)
 lib64_libkernel32_a_AR = $(DTLIB64) && $(AR) $(ARFLAGS)
 
-if ! W32API
+if !W32API
 lib64_LIBRARIES += lib64/libmsvcrt.a
 lib64_libmsvcrt_a_SOURCES = $(src_msvcrt) lib64/msvcrt.def.in
 lib64_libmsvcrt_a_AR = $(DTDEF64) lib64/msvcrt.def && $(AR) $(ARFLAGS)
@@ -800,7 +809,7 @@ lib64_libws2_32_a_SOURCES = $(src_libws2_32)
 lib64_libws2_32_a_CPPFLAGS=$(CPPFLAGS64) $(sysincludes)
 lib64_libws2_32_a_AR = $(DTLIB64) && $(AR) $(ARFLAGS)
 
-if ! W32API
+if !W32API
 lib64_LIBRARIES += lib64/libdelayimp.a
 lib64_libdelayimp_a_SOURCES =
 
@@ -1113,10 +1122,10 @@ lib64_DATA = \
   lib64/libxapofx.a         lib64/libx3daudio.a       lib64/libd3dx9.a     \
   lib64/libd3dx10.a         lib64/libd3dx11.a         lib64/libd3dcsxd.a   \
   lib64/libd3dcompiler.a    lib64/libwinhttp.a \
-  lib64/libapi-ms-win-core-winrt-string-l1-1-0.a lib64/libruntimeobject.a  \
+  lib64/libapi-ms-win-core-winrt-string-l1-1-0.a \
   lib64/libapi-ms-win-core-winrt-l1-1-0.a
 
-if ! W32API
+if !W32API
 lib64_DATA += lib64/libmsvcp60.a lib64/libmsvcr80.a lib64/libmsvcr90.a lib64/libmsvcr100.a lib64/libmsvcr90d.a lib64/libmsvcr110.a lib64/libcrtdll.a
 endif
 
