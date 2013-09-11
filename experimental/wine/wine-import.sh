@@ -45,7 +45,6 @@ import_idl() {
 # headers
 for f in \
 	corerror.h \
-	knownfolders.h \
 	mscat.h \
 	propkey.h \
 	propkeydef.h \
@@ -61,9 +60,6 @@ done
 
 # IDLs
 for f in \
-	audioclient \
-	audiopolicy \
-	axcore \
 	axextend \
 	ctfutb \
 	devicetopology \
@@ -75,8 +71,6 @@ for f in \
 	msctf \
 	objectarray \
 	optary \
-	propsys \
-	structuredquerycondition \
 	uiautomationclient \
 	uiautomationcore \
 	urlhist \
