@@ -81,20 +81,26 @@
  * is better to just keep these definitions here.
  */
 
-#pragma pack(push,1)
-typedef struct __attribute__((gcc_struct)) __tI128 {
+#include <pshpack1.h>
+/* workaround gcc bug */
+#ifdef __GNUC__
+#define ATTRIB_GCC_STRUCT __attribute__((gcc_struct))
+#else
+#define ATTRIB_GCC_STRUCT
+#endif
+typedef struct ATTRIB_GCC_STRUCT __tI128 {
   int64_t digits[2];
 } __tI128;
 
-typedef struct __attribute__((gcc_struct)) __tI128_2 {
+typedef struct ATTRIB_GCC_STRUCT __tI128_2 {
   uint32_t digits32[4];
 } __tI128_2;
 
-typedef union __attribute__((gcc_struct)) __uI128 {
+typedef union ATTRIB_GCC_STRUCT __uI128 {
   __tI128 t128;
   __tI128_2 t128_2;
 } __uI128;
-#pragma pack(pop)
+#include <poppack.h>
 
 #ifndef _VALUES_H
 /*
@@ -269,6 +275,8 @@ typedef enum
  * collapse this to a simple assignment.
  */
 
+#ifdef __GNUC__
+/* provides for some deadcode elimination via compile time eval */
 #define __pformat_arg_length(x) \
 __builtin_choose_expr (                                         \
   __builtin_types_compatible_p (typeof (x), __tI128),           \
@@ -285,7 +293,16 @@ __builtin_choose_expr (                                         \
     __builtin_choose_expr (                                     \
       __builtin_types_compatible_p (typeof (x), char),          \
         PFORMAT_LENGTH_CHAR,                                    \
-/* should never need this default */ PFORMAT_LENGTH_INT)))))
+  PFORMAT_LENGTH_INT)))))
+#else
+#define __pformat_arg_length( type )    \
+  sizeof( type ) == sizeof( __tI128 )   ? PFORMAT_LENGTH_LLONG128 : \
+  sizeof( type ) == sizeof( long long ) ? PFORMAT_LENGTH_LLONG : \
+  sizeof( type ) == sizeof( long )      ? PFORMAT_LENGTH_LONG  : \
+  sizeof( type ) == sizeof( short )     ? PFORMAT_LENGTH_SHORT : \
+  sizeof( type ) == sizeof( char )      ? PFORMAT_LENGTH_CHAR  : \
+  /* should never need this default */    PFORMAT_LENGTH_INT
+#endif
 
 typedef struct
 {
@@ -636,10 +653,12 @@ void __pformat_int( __pformat_intarg_t value, __pformat_t *stream )
    * output will be truncated, if any specified quota is exceeded.
    */
   int32_t bufflen = __pformat_int_bufsiz(1, PFORMAT_OSHIFT, stream);
-  char tmp_buff[bufflen];
-  char buf[bufflen];
+  char *tmp_buff = NULL;
+  char *buf = NULL;
   char *p = buf; int precision;
 
+  tmp_buff = alloca(bufflen);
+  buf = alloca(bufflen);
   if( stream->flags & PFORMAT_NEGATIVE )
   {
     /* The input value might be negative, (i.e. it is a signed value)...
@@ -792,10 +811,13 @@ void __pformat_xint( int fmt, __pformat_intarg_t value, __pformat_t *stream )
   /* int mask = (fmt == 'o') ? PFORMAT_OMASK : PFORMAT_XMASK;*/
   int shift = (fmt == 'o') ? PFORMAT_OSHIFT : PFORMAT_XSHIFT;
   int bufflen = __pformat_int_bufsiz(2, shift, stream);
-  char buf[bufflen];
-  char tmp_buf[bufflen];
-  char *p = buf;
+  char *buf = NULL;
+  char *tmp_buf = NULL;
+  char *p;
 #ifdef __ENABLE_PRINTF128
+  tmp_buf = alloca(bufflen);
+  buf = alloca(bufflen);
+  p = buf;
   if(fmt == 'o'){
     __bigint_to_stringo(value.__pformat_u128_t.t128_2.digits32,4,tmp_buf,bufflen);
   } else {

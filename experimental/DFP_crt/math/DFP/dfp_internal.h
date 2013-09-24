@@ -50,6 +50,7 @@
 #include <errno.h>
 #include <inttypes.h>
 
+#ifndef _MSC_VER
 #ifndef __DECIMAL_BID_FORMAT__
 #error Only BID DFP supported!
 #endif
@@ -57,6 +58,7 @@
 #if (__BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__) || (__FLOAT_WORD_ORDER__ != __ORDER_LITTLE_ENDIAN__)
 #error Only little endian supported!
 #endif
+#endif /* _MSC_VER */
 
 /* We need to check the BID encoding format
 
@@ -114,8 +116,13 @@ s 11 10eeeeeeeeeeee (100)Ttttttttttttttttttttt tttttttttttttttttttttttttttttt tt
 DFP = -1^s x tttt x [ 10 ^ (eeee - (6176(base10))]
 
 */
-#pragma pack(push,1)
+
+#include <pshpack1.h>
+#ifdef __GNUC__
 #define structpack __attribute__((gcc_struct))
+#else
+#define structpack
+#endif
 
 typedef struct structpack type0d32 {
   uint64_t blob:25;
@@ -189,7 +196,13 @@ typedef struct structpack type2d128 {
   uint32_t sign:1;
 } type2d128;
 
-#pragma pack(pop)
+#ifdef _MSC_VER
+typedef type0d32 _Decimal32;
+typedef type0d64 _Decimal64;
+typedef type0d128 _Decimal128;
+#endif /* _MSC_VER */
+
+#include <poppack.h>
 
 typedef union ud32 {
   _Decimal32 d;
