@@ -112,7 +112,7 @@ cpp_quote("")
   } EXTCONN;
 cpp_quote("")
   DWORD AddConnection ([in] DWORD extconn,[in] DWORD reserved);
-  DWORD ReleaseConnection ([in] DWORD extconn,[in] DWORD reserved,[in] WINBOOL fLastReleaseCloses);
+  DWORD ReleaseConnection ([in] DWORD extconn,[in] DWORD reserved,[in] BOOL fLastReleaseCloses);
 }
 
 cpp_quote("")
@@ -129,10 +129,7 @@ typedef struct tagMULTI_QI {
 
 cpp_quote("")
 [object, local, uuid (00000020-0000-0000-C000-000000000046),
-#if 0 /* current widl doesn't support that */
-  async_uuid (000e0020-0000-0000-C000-000000000046)
-#endif
-]
+async_uuid (000e0020-0000-0000-C000-000000000046)]
 interface IMultiQI : IUnknown {
   HRESULT QueryMultipleInterfaces ([in] ULONG cMQIs,[in, out] MULTI_QI *pMQIs);
 }
@@ -405,7 +402,7 @@ interface IServerSecurity : IUnknown {
   HRESULT QueryBlanket ([out] DWORD *pAuthnSvc,[out] DWORD *pAuthzSvc,[out]OLECHAR **pServerPrincName,[out] DWORD *pAuthnLevel,[out] DWORD *pImpLevel,[out] void **pPrivs,[in, out] DWORD *pCapabilities);
   HRESULT ImpersonateClient ();
   HRESULT RevertToSelf ();
-  WINBOOL IsImpersonating ();
+  BOOL IsImpersonating ();
 }
 
 cpp_quote("")

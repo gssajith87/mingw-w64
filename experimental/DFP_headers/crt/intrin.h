@@ -20,13 +20,13 @@
      is included by intrin.h, as well as various platform sdk headers.
    - Including intrin.h will create definitions/implementations for all available MSVC intrinsics.
    - Including various platforms sdk headers will only include the intrinsics defined in that
-     header.  As of this writing, only winnt.h uses this approach.
+     header.  As of this writing, only winnt.h and winbase.h use this approach.
    - If an application defines its own prototypes for intrinsics (ie without including any
      platform header or intrin.h), the symbols will be resolved from the library.  Since this
      will likely result in the code being invoked via 'call', performance may be degraded.
 
    If you wish to implement intrinsic functions that are defined in intrin.h but are not
-   yet implemented in mingw, see the comments at the top of intrin-impl.h.
+   yet implemented in mingw-w64, see the comments at the top of intrin-impl.h.
 */
 
 #ifndef __INTRIN_H_
@@ -39,6 +39,20 @@
 #endif
 #include <stddef.h>
 #include <psdk_inc/intrin-impl.h>
+
+/*
+ * Intrins shiped with GCC conflict with our versions in C++, because they don't use extern "C"
+ * linkage while our variants use them. We try to work around this by including those headers
+ * here wrapped in extern "C" block. It's still possible that those intrins will get default
+ * C++ linkage (when GCC headers are explicitly included before intrin.h), but at least their
+ * guards will prevent duplicated declarations and avoid conflicts.
+ *
+ * On GCC 4.9 we may always include those headers. On older GCCs, we may do it only if CPU
+ * features used by them are enabled, so we need to check macros like __SSE__ or __MMX__ first.
+ */
+#if __MINGW_GNUC_PREREQ(4, 9)
+#define __MINGW_FORCE_SYS_INTRINS
+#endif
 
 #if defined(__GNUC__) && \
    (defined(__i386__) || defined(__x86_64__))
@@ -64,6 +78,7 @@ extern "C" {
 
 #endif
 
+#ifndef __MINGW_FORCE_SYS_INTRINS
 #ifndef __MMX__
 typedef union __m64 { char v[7]; } __m64;
 #endif
@@ -74,12 +89,13 @@ typedef union __m128 { char v[16]; } __m128;
 typedef union __m128d { char v[16]; } __m128d;
 typedef union __m128i { char v[16]; } __m128i;
 #endif
+#endif
 
 #ifndef WINAPI
 #define WINAPI __stdcall
 #endif
 
-#ifdef __MMX__
+#if defined(__MMX__) || defined(__MINGW_FORCE_SYS_INTRINS)
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -90,7 +106,17 @@ extern "C" {
 #endif
 
 /* NOTE: it's not included by MS version, but we do it to try work around C++/C linkage differences */
-#ifdef __SSE2__
+#if defined(__SSE__) || defined(__MINGW_FORCE_SYS_INTRINS)
+#if defined(__cplusplus)
+extern "C" {
+#endif
+#include <xmmintrin.h>
+#if defined(__cplusplus)
+}
+#endif
+#endif
+
+#if defined(__SSE2__) || defined(__MINGW_FORCE_SYS_INTRINS)
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -100,7 +126,7 @@ extern "C" {
 #endif
 #endif
 
-#ifdef __SSE3__
+#if defined(__SSE3__) || defined(__MINGW_FORCE_SYS_INTRINS)
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -529,7 +555,7 @@ extern "C" {
     __MACHINEIA64(void __yield(void))
     __MACHINEIA64(void __fci(void*))
 
-#if !defined(__GNUC__) || !defined(__MMX__)
+#if !defined(__GNUC__) || (!defined(__MMX__) && !defined(__MINGW_FORCE_SYS_INTRINS))
     __MACHINEX86X_NOX64(void _m_empty(void))
     __MACHINEX86X_NOX64(__m64 _m_from_int(int))
     __MACHINEX86X_NOX64(int _m_to_int(__m64))
@@ -596,6 +622,7 @@ extern "C" {
     __MACHINEX86X_NOX64(__m64 _mm_setr_pi16(short,short,short,short))
     __MACHINEX86X_NOX64(__m64 _mm_setr_pi8(char,char,char,char,char,char,char,char))
 #endif
+#if !defined(__GNUC__) || (!defined(__SSE__) && !defined(__MINGW_FORCE_SYS_INTRINS))
 #pragma push_macro ("_m_pextrw")
 #undef _m_pextrw
     __MACHINEX86X_NOX64(int _m_pextrw(__m64,int))
@@ -605,19 +632,16 @@ extern "C" {
 #undef _m_pinsrw
     __MACHINEX86X_NOX64(__m64 _m_pinsrw(__m64,int,int))
 #pragma pop_macro ("_m_pinsrw")
-#if !defined(__GNUC__) || !defined(__SSE2__)
     __MACHINEX86X_NOX64(__m64 _m_pmaxsw(__m64,__m64))
     __MACHINEX86X_NOX64(__m64 _m_pmaxub(__m64,__m64))
     __MACHINEX86X_NOX64(__m64 _m_pminsw(__m64,__m64))
     __MACHINEX86X_NOX64(__m64 _m_pminub(__m64,__m64))
     __MACHINEX86X_NOX64(int _m_pmovmskb(__m64))
     __MACHINEX86X_NOX64(__m64 _m_pmulhuw(__m64,__m64))
-#endif
 #pragma push_macro ("_m_pshufw")
 #undef _m_pshufw
     __MACHINEX86X_NOX64(__m64 _m_pshufw(__m64,int))
 #pragma pop_macro ("_m_pshufw")
-#if !defined(__GNUC__) || !defined(__SSE2__)
     __MACHINEX86X_NOX64(void _m_maskmovq(__m64,__m64,char*))
     __MACHINEX86X_NOX64(__m64 _m_pavgb(__m64,__m64))
     __MACHINEX86X_NOX64(__m64 _m_pavgw(__m64,__m64))
@@ -625,7 +649,7 @@ extern "C" {
 #endif
     __MACHINEX86X_NOWIN64(__m64 _m_from_float(float))
     __MACHINEX86X_NOWIN64(float _m_to_float(__m64))
-#if !defined(__GNUC__) || !defined(__SSE2__)
+#if !defined(__GNUC__) || (!defined(__SSE__) && !defined(__MINGW_FORCE_SYS_INTRINS))
     __MACHINEX86X_NOIA64(__m128 _mm_add_ss(__m128,__m128))
     __MACHINEX86X_NOIA64(__m128 _mm_add_ps(__m128,__m128))
     __MACHINEX86X_NOIA64(__m128 _mm_sub_ss(__m128,__m128))
@@ -690,12 +714,10 @@ extern "C" {
     __MACHINEX86X_NOWIN64(__m64 _mm_cvtt_ps2pi(__m128))
     __MACHINEX86X_NOIA64(__m128 _mm_cvt_si2ss(__m128,int))
     __MACHINEX86X_NOWIN64(__m128 _mm_cvt_pi2ps(__m128,__m64))
-#endif
 #pragma push_macro ("_mm_shuffle_ps")
 #undef _mm_shuffle_ps
     __MACHINEX86X_NOIA64(__m128 _mm_shuffle_ps(__m128,__m128,int const))
 #pragma pop_macro ("_mm_shuffle_ps")
-#if !defined(__GNUC__) || !defined(__SSE2__)
     __MACHINEX86X_NOIA64(__m128 _mm_unpackhi_ps(__m128,__m128))
     __MACHINEX86X_NOIA64(__m128 _mm_unpacklo_ps(__m128,__m128))
     __MACHINEX86X_NOIA64(__m128 _mm_loadh_pi(__m128,__m64 const*))
@@ -755,7 +777,7 @@ extern "C" {
     __MACHINEX86X_NOWIN64(__m64 _m_pfpnacc(__m64,__m64))
     __MACHINEX86X_NOWIN64(__m64 _m_pi2fw(__m64))
     __MACHINEX86X_NOWIN64(__m64 _m_pswapd(__m64))
-#if !defined(__GNUC__) || !defined(__SSE2__)
+#if !defined(__GNUC__) || (!defined(__SSE2__) && !defined(__MINGW_FORCE_SYS_INTRINS))
     __MACHINEX86X(__m128d _mm_add_sd(__m128d,__m128d))
     __MACHINEX86X(__m128d _mm_add_pd(__m128d,__m128d))
     __MACHINEX86X(__m128d _mm_div_sd(__m128d,__m128d))
@@ -855,11 +877,11 @@ extern "C" {
     __MACHINEX86X(__m128i _mm_add_epi32(__m128i,__m128i))
 #endif
 
-#if !defined(__GNUC__) || !defined(__MMX__)
+#if !defined(__GNUC__) || (!defined(__MMX__) && !defined(__MINGW_FORCE_SYS_INTRINS))
     __MACHINEX86X_NOX64(__m64 _mm_add_si64(__m64,__m64))
 #endif
 
-#if !defined(__GNUC__) || !defined(__SSE2__)
+#if !defined(__GNUC__) || (!defined(__SSE2__) && !defined(__MINGW_FORCE_SYS_INTRINS))
     __MACHINEX86X(__m128i _mm_add_epi64(__m128i,__m128i))
     __MACHINEX86X(__m128i _mm_adds_epi8(__m128i,__m128i))
     __MACHINEX86X(__m128i _mm_adds_epi16(__m128i,__m128i))
@@ -882,10 +904,10 @@ extern "C" {
     __MACHINEX86X(__m128i _mm_sub_epi16(__m128i,__m128i))
     __MACHINEX86X(__m128i _mm_sub_epi32(__m128i,__m128i))
 #endif
-#if !defined(__GNUC__) || !defined(__MMX__)
+#if !defined(__GNUC__) || (!defined(__MMX__) && !defined(__MINGW_FORCE_SYS_INTRINS))
     __MACHINEX86X_NOX64(__m64 _mm_sub_si64(__m64,__m64))
 #endif
-#if !defined(__GNUC__) || !defined(__SSE2__)
+#if !defined(__GNUC__) || (!defined(__SSE2__) && !defined(__MINGW_FORCE_SYS_INTRINS))
     __MACHINEX86X(__m128i _mm_sub_epi64(__m128i,__m128i))
     __MACHINEX86X(__m128i _mm_subs_epi8(__m128i,__m128i))
     __MACHINEX86X(__m128i _mm_subs_epi16(__m128i,__m128i))
@@ -971,9 +993,11 @@ extern "C" {
     __MACHINEX86X(void _mm_lfence(void))
     __MACHINEX86X(void _mm_mfence(void))
     __MACHINEX86X(void _mm_stream_si32(int*,int))
+#endif
+#if !defined(__GNUC__) || (!defined(__SSE__) && !defined(__MINGW_FORCE_SYS_INTRINS))
     __MACHINEX86X(void _mm_pause(void))
 #endif
-#if !defined(__GNUC__) || !defined(__SSE3__)
+#if !defined(__GNUC__) || (!defined(__SSE3__) && !defined(__MINGW_FORCE_SYS_INTRINS))
     __MACHINEX86X(__m128 _mm_addsub_ps(__m128,__m128))
     __MACHINEX86X(__m128d _mm_addsub_pd(__m128d,__m128d))
     __MACHINEX86X(__m128 _mm_hadd_ps(__m128,__m128))
@@ -1020,10 +1044,10 @@ extern "C" {
 #ifndef __GNUC__
     __MACHINEI(__MINGW_EXTENSION unsigned __int64 __rdtsc(void))
 #endif
-    __MACHINEI(void __movsb(unsigned char *,unsigned char const *,size_t))
-    __MACHINEI(void __movsw(unsigned short *,unsigned short const *,size_t))
-    __MACHINEI(void __movsd(unsigned __LONG32 *,unsigned __LONG32 const *,size_t))
-    __MACHINEX64(__MINGW_EXTENSION void __movsq(unsigned long long *,unsigned long long const *,size_t))
+    /* __MACHINEI(void __movsb(unsigned char *,unsigned char const *,size_t)) moved to psdk_inc/intrin-impl.h */
+    /* __MACHINEI(void __movsw(unsigned short *,unsigned short const *,size_t)) moved to psdk_inc/intrin-impl.h */
+    /* __MACHINEI(void __movsd(unsigned __LONG32 *,unsigned __LONG32 const *,size_t)) moved to psdk_inc/intrin-impl.h */
+    /* __MACHINEX64(__MINGW_EXTENSION void __movsq(unsigned long long *,unsigned long long const *,size_t)) moved to psdk_inc/intrin-impl.h */
     /* __MACHINEX64(unsigned char __readgsbyte(unsigned __LONG32 Offset)) moved to psdk_inc/intrin-impl.h */
     /* __MACHINEX64(unsigned short __readgsword(unsigned __LONG32 Offset)) moved to psdk_inc/intrin-impl.h */
     /* __MACHINEX64(unsigned __LONG32 __readgsdword(unsigned __LONG32 Offset)) moved to psdk_inc/intrin-impl.h */
@@ -1045,7 +1069,7 @@ extern "C" {
     /* __MACHINEI(void __outwordstring(unsigned short Port,unsigned short *Buffer,unsigned __LONG32 Count)) moved to psdk_inc/intrin-impl.h */
     /* __MACHINEI(void __outdwordstring(unsigned short Port,unsigned __LONG32 *Buffer,unsigned __LONG32 Count)) moved to psdk_inc/intrin-impl.h */
     __MACHINEI(unsigned int __getcallerseflags())
-#if !defined(__GNUC__) || !defined(__SSE2__)
+#if !defined(__GNUC__) || (!defined(__SSE2__) && !defined(__MINGW_FORCE_SYS_INTRINS))
     __MACHINEX64(__MINGW_EXTENSION __m128i _mm_set_epi64x(__int64 i1,__int64 i0))
     __MACHINEX64(__MINGW_EXTENSION __m128i _mm_set1_epi64x(__int64 i))
     __MACHINEX64(__MINGW_EXTENSION __int64 _mm_cvtsd_si64x(__m128d a))
@@ -1102,10 +1126,10 @@ extern "C" {
     /* __MACHINEW64(__MINGW_EXTENSION unsigned char _BitScanForward64(unsigned __LONG32 *Index,unsigned __int64 Mask)) moved to psdk_inc/intrin-impl.h */
     /* __MACHINEW64(__MINGW_EXTENSION unsigned char _BitScanReverse64(unsigned __LONG32 *Index,unsigned __int64 Mask)) moved to psdk_inc/intrin-impl.h */
     __MACHINEIW64(_CRTIMP wchar_t *__cdecl _wcsset(wchar_t *,wchar_t))
-    __MACHINEW64(__MINGW_EXTENSION unsigned __int64 __shiftleft128(unsigned __int64 LowPart,unsigned __int64 HighPart,unsigned char Shift))
-    __MACHINEW64(__MINGW_EXTENSION unsigned __int64 __shiftright128(unsigned __int64 LowPart,unsigned __int64 HighPart,unsigned char Shift))
-    __MACHINEW64(__MINGW_EXTENSION unsigned __int64 _umul128(unsigned __int64 multiplier,unsigned __int64 multiplicand,unsigned __int64 *highproduct))
-    __MACHINEW64(__MINGW_EXTENSION __int64 _mul128(__int64 multiplier,__int64 multiplicand,__int64 *highproduct))
+    /* __MACHINEW64(__MINGW_EXTENSION unsigned __int64 __shiftleft128(unsigned __int64 LowPart,unsigned __int64 HighPart,unsigned char Shift)) moved to psdk_inc/intrin-impl.h */
+    /* __MACHINEW64(__MINGW_EXTENSION unsigned __int64 __shiftright128(unsigned __int64 LowPart,unsigned __int64 HighPart,unsigned char Shift)) moved to psdk_inc/intrin-impl.h */
+    /* __MACHINEW64(__MINGW_EXTENSION unsigned __int64 _umul128(unsigned __int64 multiplier,unsigned __int64 multiplicand,unsigned __int64 *highproduct)) moved to psdk_inc/intrin-impl.h */
+    /* __MACHINEW64(__MINGW_EXTENSION __int64 _mul128(__int64 multiplier,__int64 multiplicand,__int64 *highproduct)) moved to psdk_inc/intrin-impl.h */
     /* __MACHINEI(void __int2c(void)) moved to psdk_inc/intrin-impl.h */
     /* __MACHINEIW64(void _ReadBarrier(void)) moved to psdk_inc/intrin-impl.h */
     __MACHINEIW64(unsigned char _rotr8(unsigned char value,unsigned char shift))

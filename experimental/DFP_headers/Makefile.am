@@ -63,8 +63,11 @@ IDL_SRCS = \
   include/activprof.idl \
   include/activscp.idl \
   include/audioclient.idl \
+  include/audioendpoints.idl \
   include/audiopolicy.idl \
+  include/control.idl \
   include/ctfutb.idl \
+  include/dbgprop.idl \
   include/docobj.idl \
   include/devicetopology.idl \
   include/downloadmgr.idl \
@@ -73,6 +76,7 @@ IDL_SRCS = \
   include/fusion.idl \
   include/fwptypes.idl \
   include/hstring.idl \
+  include/icodecapi.idl \
   include/iketypes.idl \
   include/inputscope.idl \
   include/inspectable.idl \
@@ -109,7 +113,14 @@ IDL_SRCS = \
   include/unknwnbase.idl \
   include/urlmon.idl \
   include/wincodec.idl \
+  include/wmsbuffer.idl \
+  include/wmsdkidl.idl \
   include/wtypesbase.idl \
+  include/windows.foundation.idl \
+  include/windows.security.cryptography.idl \
+  include/windows.storage.idl \
+  include/windows.storage.streams.idl \
+  include/windows.system.threading.idl \
   include/wmcodecdsp.idl \
   include/wpcapi.idl \
   include/wtypes.idl \
@@ -120,6 +131,7 @@ IDL_SRCS = \
   direct-x/include/d3d10.idl \
   direct-x/include/d3d10_1.idl \
   direct-x/include/d3d11.idl \
+  direct-x/include/d3d11sdklayers.idl \
   direct-x/include/d3dcommon.idl \
   direct-x/include/ddstream.idl \
   direct-x/include/dmodshow.idl \
