@@ -358,9 +358,6 @@ typedef long double double_t;
   extern int __cdecl __fpclassifyl (long double);
   extern int __cdecl __fpclassifyf (float);
   extern int __cdecl __fpclassify (double);
-  extern int __cdecl __fpclassifyd32 (_Decimal32);
-  extern int __cdecl __fpclassifyd64 (_Decimal64);
-  extern int __cdecl __fpclassifyd128 (_Decimal128);
 
 #ifndef __CRT__NO_INLINE
   __CRT_INLINE int __cdecl __fpclassifyl (long double x) {
@@ -447,9 +444,6 @@ __builtin_trap()))))))
   extern int __cdecl __isnan (double);
   extern int __cdecl __isnanf (float);
   extern int __cdecl __isnanl (long double);
-  extern int __cdecl __isnand32(_Decimal32 x);
-  extern int __cdecl __isnand64(_Decimal64 x);
-  extern int __cdecl __isnand128(_Decimal128 x);
 
 #ifndef __CRT__NO_INLINE
   __CRT_INLINE int __cdecl __isnan (double _x)
@@ -501,17 +495,6 @@ __builtin_trap()))))))
       == FP_NAN;
   }
 
-  __CRT_INLINE __cdecl __isnand32(_Decimal32 x){
-    return __builtin_isnand32(x);
-  }
-
-  __CRT_INLINE __cdecl __isnand64(_Decimal64 x){
-    return __builtin_isnand64(x);
-  }
-
-  __CRT_INLINE __cdecl __isnand128(_Decimal128 x){
-    return __builtin_isnand128(x);
-  }
 #endif
 
 #define isnan(x) \
@@ -542,9 +525,6 @@ __builtin_trap()))))))
   extern int __cdecl __signbit (double);
   extern int __cdecl __signbitf (float);
   extern int __cdecl __signbitl (long double);
-  extern int __cdecl __signbitd32 (_Decimal32);
-  extern int __cdecl __signbitd64 (_Decimal64);
-  extern int __cdecl __signbitd128 (_Decimal128);
 #ifndef __CRT__NO_INLINE
   __CRT_INLINE int __cdecl __signbit (double x) {
 #ifdef __x86_64__
@@ -575,18 +555,6 @@ __builtin_trap()))))))
     unsigned short stw;
     __asm__ __volatile__ ("fxam; fstsw %%ax;": "=a" (stw) : "t" (x));
     return stw & 0x0200;
-  }
-
-  __CRT_INLINE int __cdecl __signbitd32 (_Decimal32 x){
-    return __buintin_signbitd32(x);
-  }
-
-  __CRT_INLINE int __cdecl __signbitd64 (_Decimal64 x){
-    return __buintin_signbitd64(x);
-  }
-
-  __CRT_INLINE int __cdecl __signbitd128 (_Decimal128 x){
-    return __buintin_signbitd128(x);
   }
 #endif
 
@@ -1136,6 +1104,43 @@ __MINGW_EXTENSION long long __cdecl llrintl (long double);
 
 #define DEC_INFINITY __builtin_infd32()
 #define DEC_NAN __builtin_nand32("")
+
+  extern int __cdecl __isnand32(_Decimal32 x);
+  extern int __cdecl __isnand64(_Decimal64 x);
+  extern int __cdecl __isnand128(_Decimal128 x);
+  extern int __cdecl __fpclassifyd32 (_Decimal32);
+  extern int __cdecl __fpclassifyd64 (_Decimal64);
+  extern int __cdecl __fpclassifyd128 (_Decimal128);
+  extern int __cdecl __signbitd32 (_Decimal32);
+  extern int __cdecl __signbitd64 (_Decimal64);
+  extern int __cdecl __signbitd128 (_Decimal128);
+
+#ifndef __CRT__NO_INLINE
+  __CRT_INLINE __cdecl __isnand32(_Decimal32 x){
+    return __builtin_isnand32(x);
+  }
+
+  __CRT_INLINE __cdecl __isnand64(_Decimal64 x){
+    return __builtin_isnand64(x);
+  }
+
+  __CRT_INLINE __cdecl __isnand128(_Decimal128 x){
+    return __builtin_isnand128(x);
+  }
+
+  __CRT_INLINE int __cdecl __signbitd32 (_Decimal32 x){
+    return __buintin_signbitd32(x);
+  }
+
+  __CRT_INLINE int __cdecl __signbitd64 (_Decimal64 x){
+    return __buintin_signbitd64(x);
+  }
+
+  __CRT_INLINE int __cdecl __signbitd128 (_Decimal128 x){
+    return __buintin_signbitd128(x);
+  }
+
+#endif
 
 /* Still missing 
 #define HUGE_VAL_D32
