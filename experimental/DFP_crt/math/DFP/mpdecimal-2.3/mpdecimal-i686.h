@@ -665,7 +665,6 @@ typedef struct {
 
 #define MPD_MINALLOC_MIN 2
 #define MPD_MINALLOC_MAX 64
-void mpd_dflt_traphandler(mpd_context_t *);
 
 void mpd_setminalloc(mpd_ssize_t n);
 void mpd_init(mpd_context_t *ctx, mpd_ssize_t prec);
