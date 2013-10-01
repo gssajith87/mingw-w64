@@ -1554,7 +1554,6 @@ void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
   decimal128_decode in;
   char str_exp[8];
   char str_sig[40];
-  __pformat_t push_stream = *stream;
   int floatclass = __fpclassifyd128(x);
 
   /* precision control */
@@ -1628,9 +1627,6 @@ void  __pformat_efloat_decimal(_Decimal128 x, __pformat_t *stream ){
   for(int32_t trailing = 0; trailing < 3 - exp_strlen; trailing++)
     __pformat_putc('0', stream);
   __pformat_putchars(str_exp, exp_strlen,stream);
-
-  /* does it need to be restored? */
-  *stream = push_stream;
 }
 
 static
@@ -1638,7 +1634,6 @@ void  __pformat_float_decimal(_Decimal128 x, __pformat_t *stream ){
   decimal128_decode in;
   char str_exp[8];
   char str_sig[40];
-  __pformat_t push_stream = *stream;
   int floatclass = __fpclassifyd128(x);
 
   /* precision control */
@@ -1715,8 +1710,6 @@ void  __pformat_float_decimal(_Decimal128 x, __pformat_t *stream ){
       goto points;
   }
 
-  /* does it need to be restored? */
-  *stream = push_stream;
   return;
 }
 
