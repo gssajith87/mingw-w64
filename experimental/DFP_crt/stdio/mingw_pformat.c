@@ -113,7 +113,11 @@ typedef union ATTRIB_GCC_STRUCT __uI128 {
 
 #define _TYPEBITS(type)     (sizeof(type) * CHAR_BIT)
 
+#if defined(__ENABLE_PRINTF128) || defined(__ENABLE_DFP)
 #define LLONGBITS           _TYPEBITS(__tI128)
+#else
+#define LLONGBITS           _TYPEBITS(long long)
+#endif
 
 #endif /* !defined _VALUES_H -- end of file */
 
