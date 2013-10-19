@@ -663,7 +663,7 @@ void __pformat_int( __pformat_intarg_t value, __pformat_t *stream )
   int precision;
 
   buf = alloca(bufflen);
-  p = buff;
+  p = buf;
   if( stream->flags & PFORMAT_NEGATIVE )
 #ifdef __ENABLE_PRINTF128
   {
