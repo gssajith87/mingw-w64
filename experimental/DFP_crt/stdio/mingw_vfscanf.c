@@ -67,7 +67,11 @@
 #define USE_GROUP	0x0100
 #define USE_GNU_ALLOC	0x0200
 #define USE_POSIX_ALLOC	0x0400
+#define IS_H			0x0800
+#define IS_D			0x1000
+#define IS_DD			0x2000
 
+#define IS_DFP_FLAG(x) ((x)&(IS_H|IS_D|IS_DD))
 #define IS_ALLOC_USED	(USE_GNU_ALLOC | USE_POSIX_ALLOC)
 
 /* internal stream structure with back-buffer.  */
@@ -461,6 +465,21 @@ __mingw_sformat (_IFP *s, const char *format, va_list argp)
 
       switch (*f)
 	{
+	case 'H':
+	  if ((flags & IS_SUPPRESSED) == 0) {
+	    ++f;
+	    flags |= IS_H;
+	  }
+	case 'D':
+	  ++f;
+	  if ((flags & IS_SUPPRESSED) == 0) {
+	    if((*f == 'D')){
+	      flags |=  IS_DD;
+	      ++f;
+	    } else
+	      flags |= IS_D;
+	  }
+	  break;
 	case 'h':
 	  ++f;
 	  flags |= (*f == 'h' ? IS_C : IS_S);
@@ -565,7 +584,6 @@ __mingw_sformat (_IFP *s, const char *format, va_list argp)
 	      return cleanup_return (rval, &gcollect, pstr, &wbuf);
 	    }
 	  break;
-
 	case 'n':
 	  if ((flags & IS_SUPPRESSED) == 0)
 	    {
@@ -1127,6 +1145,8 @@ __mingw_sformat (_IFP *s, const char *format, va_list argp)
 	case 'f': case 'F':
 	case 'g': case 'G':
 	case 'a': case 'A':
+	  /*if(IS_DFP_FLAG(flags))
+	    return;*/
 	  if (width > 0)
 	    --width;
 	  if ((c = in_ch (s, &read_in)) == EOF)
