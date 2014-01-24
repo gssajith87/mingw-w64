@@ -83,6 +83,7 @@ IDL_SRCS = \
   include/oaidl.idl \
   include/ocidl.idl \
   include/comcat.idl \
+  include/mediaobj.idl \
   include/mfidl.idl \
   include/mfobjects.idl \
   include/mfreadwrite.idl \
@@ -112,6 +113,7 @@ IDL_SRCS = \
   include/unknwn.idl \
   include/unknwnbase.idl \
   include/urlmon.idl \
+  include/wbemcli.idl \
   include/wincodec.idl \
   include/wmsbuffer.idl \
   include/wmsdkidl.idl \

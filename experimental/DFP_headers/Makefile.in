@@ -307,6 +307,7 @@ EXTRA_HEADERS = \
 @HAVE_WIDL_TRUE@  include/oaidl.idl \
 @HAVE_WIDL_TRUE@  include/ocidl.idl \
 @HAVE_WIDL_TRUE@  include/comcat.idl \
+@HAVE_WIDL_TRUE@  include/mediaobj.idl \
 @HAVE_WIDL_TRUE@  include/mfidl.idl \
 @HAVE_WIDL_TRUE@  include/mfobjects.idl \
 @HAVE_WIDL_TRUE@  include/mfreadwrite.idl \
@@ -336,6 +337,7 @@ EXTRA_HEADERS = \
 @HAVE_WIDL_TRUE@  include/unknwn.idl \
 @HAVE_WIDL_TRUE@  include/unknwnbase.idl \
 @HAVE_WIDL_TRUE@  include/urlmon.idl \
+@HAVE_WIDL_TRUE@  include/wbemcli.idl \
 @HAVE_WIDL_TRUE@  include/wincodec.idl \
 @HAVE_WIDL_TRUE@  include/wmsbuffer.idl \
 @HAVE_WIDL_TRUE@  include/wmsdkidl.idl \
