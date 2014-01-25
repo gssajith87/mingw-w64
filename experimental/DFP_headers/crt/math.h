@@ -105,6 +105,16 @@ extern "C" {
     } lh;
   } __mingw_ldbl_type_t;
 
+  typedef union __mingw_fp_types_t
+  {
+    long double *ld;
+    double *d;
+    float *f;
+    __mingw_ldbl_type_t *ldt;
+    __mingw_dbl_type_t *dt;
+    __mingw_flt_type_t *ft;
+  } __mingw_fp_types_t;
+
 #endif
 
 #ifndef _HUGE
@@ -361,18 +371,37 @@ typedef long double double_t;
 
 #ifndef __CRT__NO_INLINE
   __CRT_INLINE int __cdecl __fpclassifyl (long double x) {
+#ifdef __x86_64__
+    __mingw_fp_types_t hlp;
+    unsigned int e;
+    hlp.ld = &x;
+    e = hlp.ldt->lh.sign_exponent & 0x7fff;
+    if (!e)
+      {
+        unsigned int h = hlp.ldt->lh.high;
+        if (!(hlp.ldt->lh.low | h))
+          return FP_ZERO;
+        else if (!(h & 0x80000000))
+          return FP_SUBNORMAL;
+      }
+    else if (e == 0x7fff)
+      return (((hlp.ldt->lh.high & 0x7fffffff) | hlp.ldt->lh.low) == 0 ?
+              FP_INFINITE : FP_NAN);
+    return FP_NORMAL;
+#else
     unsigned short sw;
     __asm__ __volatile__ ("fxam; fstsw %%ax;" : "=a" (sw): "t" (x));
     return sw & (FP_NAN | FP_NORMAL | FP_ZERO );
+#endif
   }
   __CRT_INLINE int __cdecl __fpclassify (double x) {
 #ifdef __x86_64__
-    __mingw_dbl_type_t hlp;
+    __mingw_fp_types_t hlp;
     unsigned int l, h;
 
-    hlp.x = x;
-    h = hlp.lh.high;
-    l = hlp.lh.low | (h & 0xfffff);
+    hlp.d = &x;
+    h = hlp.ldt->lh.high;
+    l = hlp.ldt->lh.low | (h & 0xfffff);
     h &= 0x7ff00000;
     if ((h | l) == 0)
       return FP_ZERO;
@@ -389,16 +418,16 @@ typedef long double double_t;
   }
   __CRT_INLINE int __cdecl __fpclassifyf (float x) {
 #ifdef __x86_64__
-    __mingw_flt_type_t hlp;
+    __mingw_fp_types_t hlp;
 
-    hlp.x = x;
-    hlp.val &= 0x7fffffff;
-    if (hlp.val == 0)
+    hlp.f = &x;
+    hlp.ft->val &= 0x7fffffff;
+    if (hlp.ft->val == 0)
       return FP_ZERO;
-    if (hlp.val < 0x800000)
+    if (hlp.ft->val < 0x800000)
       return FP_SUBNORMAL;
-    if (hlp.val >= 0x7f800000)
-      return (hlp.val > 0x7f800000 ? FP_NAN : FP_INFINITE);
+    if (hlp.ft->val >= 0x7f800000)
+      return (hlp.ft->val > 0x7f800000 ? FP_NAN : FP_INFINITE);
     return FP_NORMAL;
 #else
     unsigned short sw;
@@ -408,6 +437,21 @@ typedef long double double_t;
   }
 #endif
 
+#ifdef __STDC_WANT_DEC_FP__
+#define __dfp_expansion(__call,__fin,x) \
+__builtin_choose_expr (                                  \
+      __builtin_types_compatible_p (typeof (x), _Decimal32),    \
+        __call##d32(x),                                         \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), _Decimal64),    \
+        __call##d64(x),                                         \
+    __builtin_choose_expr (                                     \
+      __builtin_types_compatible_p (typeof (x), _Decimal128),   \
+        __call##d128(x),                                        \
+__fin)))
+#else
+#define __dfp_expansion(__call,__fin,x) __fin
+#endif
 
 #define fpclassify(x) \
 __builtin_choose_expr (                                         \
@@ -419,16 +463,7 @@ __builtin_choose_expr (                                         \
     __builtin_choose_expr (                                     \
       __builtin_types_compatible_p (typeof (x), long double),   \
         __fpclassifyl(x),                                       \
-    __builtin_choose_expr (                                     \
-      __builtin_types_compatible_p (typeof (x), _Decimal32),    \
-        __fpclassifyd32(x),                                     \
-    __builtin_choose_expr (                                     \
-      __builtin_types_compatible_p (typeof (x), _Decimal64),    \
-        __fpclassifyd64(x),                                     \
-    __builtin_choose_expr (                                     \
-      __builtin_types_compatible_p (typeof (x), _Decimal128),   \
-        __fpclassifyd128(x),                                    \
-__builtin_trap()))))))
+    __dfp_expansion(__fpclassify,__builtin_trap(),x))))
 
 
 /* 7.12.3.2 */
@@ -449,12 +484,12 @@ __builtin_trap()))))))
   __CRT_INLINE int __cdecl __isnan (double _x)
   {
 #ifdef __x86_64__
-    __mingw_dbl_type_t hlp;
+    __mingw_fp_types_t hlp;
     int l, h;
 
-    hlp.x = _x;
-    l = hlp.lh.low;
-    h = hlp.lh.high & 0x7fffffff;
+    hlp.d = &_x;
+    l = hlp.dt->lh.low;
+    h = hlp.dt->lh.high & 0x7fffffff;
     h |= (unsigned int) (l | -l) >> 31;
     h = 0x7ff00000 - h;
     return (int) ((unsigned int) h) >> 31;
@@ -470,11 +505,11 @@ __builtin_trap()))))))
   __CRT_INLINE int __cdecl __isnanf (float _x)
   {
 #ifdef __x86_64__
-    __mingw_flt_type_t hlp;
+    __mingw_fp_types_t hlp;
     int i;
     
-    hlp.x = _x;
-    i = hlp.val & 0x7fffffff;
+    hlp.f = &_x;
+    i = hlp.ft->val & 0x7fffffff;
     i = 0x7f800000 - i;
     return (int) (((unsigned int) i) >> 31);
 #else
@@ -488,13 +523,24 @@ __builtin_trap()))))))
 
   __CRT_INLINE int __cdecl __isnanl (long double _x)
   {
+#ifdef __x86_64__
+    __mingw_fp_types_t ld;
+    int xx, signexp;
+
+    ld.ld = &_x;
+    signexp = (ld.ldt->lh.sign_exponent & 0x7fff) << 1;
+    xx = (int) (ld.ldt->lh.low | (ld.ldt->lh.high & 0x7fffffffu)); /* explicit */
+    signexp |= (unsigned int) (xx | (-xx)) >> 31;
+    signexp = 0xfffe - signexp;
+    return (int) ((unsigned int) signexp) >> 16;
+#else
     unsigned short sw;
     __asm__ __volatile__ ("fxam;"
       "fstsw %%ax": "=a" (sw) : "t" (_x));
     return (sw & (FP_NAN | FP_NORMAL | FP_INFINITE | FP_ZERO | FP_SUBNORMAL))
       == FP_NAN;
+#endif
   }
-
 #endif
 
 #define isnan(x) \
@@ -507,16 +553,7 @@ __builtin_choose_expr (                                         \
     __builtin_choose_expr (                                     \
       __builtin_types_compatible_p (typeof (x), long double),   \
         __isnanl(x),                                            \
-    __builtin_choose_expr (                                     \
-      __builtin_types_compatible_p (typeof (x), _Decimal32),    \
-        __isnand32(x),                                          \
-    __builtin_choose_expr (                                     \
-      __builtin_types_compatible_p (typeof (x), _Decimal64),    \
-        __isnand64(x),                                          \
-    __builtin_choose_expr (                                     \
-      __builtin_types_compatible_p (typeof (x), _Decimal128),   \
-        __isnand128(x),                                         \
-__builtin_trap()))))))
+    __dfp_expansion(__isnan,__builtin_trap(),x))))
 
 /* 7.12.3.5 */
 #define isnormal(x) (fpclassify(x) == FP_NORMAL)
@@ -528,10 +565,10 @@ __builtin_trap()))))))
 #ifndef __CRT__NO_INLINE
   __CRT_INLINE int __cdecl __signbit (double x) {
 #ifdef __x86_64__
-    __mingw_dbl_type_t hlp;
+    __mingw_fp_types_t hlp;
     
-    hlp.x = x;
-    return ((hlp.lh.high & 0x80000000) != 0);
+    hlp.d = &x;
+    return ((hlp.dt->lh.high & 0x80000000) != 0);
 #else
     unsigned short stw;
     __asm__ __volatile__ ( "fxam; fstsw %%ax;": "=a" (stw) : "t" (x));
@@ -541,9 +578,9 @@ __builtin_trap()))))))
 
   __CRT_INLINE int __cdecl __signbitf (float x) {
 #ifdef __x86_64__
-    __mingw_flt_type_t hlp;
-    hlp.x = x;
-    return ((hlp.val & 0x80000000) != 0);
+    __mingw_fp_types_t hlp;
+    hlp.f = &x;
+    return ((hlp.ft->val & 0x80000000) != 0);
 #else
     unsigned short stw;
     __asm__ __volatile__ ("fxam; fstsw %%ax;": "=a" (stw) : "t" (x));
@@ -552,9 +589,15 @@ __builtin_trap()))))))
   }
 
   __CRT_INLINE int __cdecl __signbitl (long double x) {
+#ifdef __x86_64__
+    __mingw_fp_types_t ld;
+    ld.ld = &x;
+    return ((ld.ldt->lh.sign_exponent & 0x8000) != 0);
+#else
     unsigned short stw;
     __asm__ __volatile__ ("fxam; fstsw %%ax;": "=a" (stw) : "t" (x));
     return stw & 0x0200;
+#endif
   }
 #endif
 
@@ -568,16 +611,7 @@ __builtin_choose_expr (                                         \
     __builtin_choose_expr (                                     \
       __builtin_types_compatible_p (typeof (x), long double),   \
         __signbitl(x),                                          \
-    __builtin_choose_expr (                                     \
-      __builtin_types_compatible_p (typeof (x), _Decimal32),    \
-        __signbitd32(x),                                        \
-    __builtin_choose_expr (                                     \
-      __builtin_types_compatible_p (typeof (x), _Decimal64),    \
-        __signbitd64(x),                                        \
-    __builtin_choose_expr (                                     \
-      __builtin_types_compatible_p (typeof (x), _Decimal128),   \
-        __signbitd128(x),                                       \
-__builtin_trap()))))))
+     __dfp_expansion(__signbit,__builtin_trap(),x))))
 
 /* 7.12.4 Trigonometric functions: Double in C89 */
   extern float __cdecl sinf(float _X);
@@ -705,12 +739,12 @@ __builtin_trap()))))))
   __CRT_INLINE double __cdecl logb (double x)
   {
 #ifdef __x86_64__
-  __mingw_dbl_type_t hlp;
+  __mingw_fp_types_t hlp;
   int lx, hx;
 
-  hlp.x = x;
-  lx = hlp.lh.low;
-  hx = hlp.lh.high & 0x7fffffff; /* high |x| */
+  hlp.d = &x;
+  lx = hlp.dt->lh.low;
+  hx = hlp.dt->lh.high & 0x7fffffff; /* high |x| */
   if ((hx | lx) == 0)
     return -1.0 / fabs (x);
   if (hx >= 0x7ff00000)
@@ -730,10 +764,10 @@ __builtin_trap()))))))
   {
 #ifdef __x86_64__
     int v;
-    __mingw_flt_type_t hlp;
+    __mingw_fp_types_t hlp;
 
-    hlp.x = x;
-    v = hlp.val & 0x7fffffff;                     /* high |x| */
+    hlp.f = &x;
+    v = hlp.ft->val & 0x7fffffff;                     /* high |x| */
     if (!v)
       return (float)-1.0 / fabsf (x);
     if (v >= 0x7f800000)
