@@ -159,9 +159,11 @@ for f in \
 	d3d10 \
 	d3d10_1 \
 	d3d11 \
+	d3d11sdklayers \
 	d3dcommon \
 	ddstream \
 	dxgi \
+	dxgi1_2 \
 	mediaobj \
 	mmstream \
 	qedit; do
