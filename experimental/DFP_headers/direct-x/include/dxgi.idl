@@ -382,6 +382,7 @@ interface IDXGIFactory : IDXGIObject
 }
 
 [local] HRESULT __stdcall CreateDXGIFactory(REFIID riid, void **factory);
+[local] HRESULT __stdcall CreateDXGIFactory1(REFIID riid, void **factory);
 
 [
     object,
@@ -441,6 +442,18 @@ typedef struct DXGI_ADAPTER_DESC1 {
 interface IDXGIAdapter1 : IDXGIAdapter
 {
     HRESULT GetDesc1([out] DXGI_ADAPTER_DESC1 *pDesc);
+}
+
+[
+    object,
+    uuid(77db970f-6276-48ba-ba28-070143b4392c),
+    local,
+    pointer_default(unique)
+]
+interface IDXGIDevice1 : IDXGIDevice
+{
+    HRESULT SetMaximumFrameLatency([in] UINT MaxLatency);
+    HRESULT GetMaximumFrameLatency([out] UINT *pMaxLatency);
 }
 
 [

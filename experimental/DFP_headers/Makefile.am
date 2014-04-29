@@ -60,8 +60,12 @@ if HAVE_WIDL
 IDL_SRCS = \
   include/activation.idl \
   include/activaut.idl \
+  include/activdbg.idl \
+  include/activdbg100.idl \
   include/activprof.idl \
   include/activscp.idl \
+  include/adhoc.idl \
+  include/alg.idl \
   include/audioclient.idl \
   include/audioendpoints.idl \
   include/audiopolicy.idl \
@@ -73,6 +77,11 @@ IDL_SRCS = \
   include/downloadmgr.idl \
   include/dxva2api.idl \
   include/endpointvolume.idl \
+  include/fsrm.idl \
+  include/fsrmenums.idl \
+  include/fsrmquota.idl \
+  include/fsrmreports.idl \
+  include/fsrmscreen.idl \
   include/fusion.idl \
   include/fwptypes.idl \
   include/hstring.idl \
@@ -91,7 +100,17 @@ IDL_SRCS = \
   include/mmdeviceapi.idl \
   include/mscoree.idl \
   include/msctf.idl \
+  include/msopc.idl \
   include/msxml.idl \
+  include/napcertrelyingparty.idl \
+  include/napcommon.idl \
+  include/napenforcementclient.idl \
+  include/napmanagement.idl \
+  include/napprotocol.idl \
+  include/napservermanagement.idl \
+  include/napsystemhealthagent.idl \
+  include/napsystemhealthvalidator.idl \
+  include/naptypes.idl \
   include/objectarray.idl \
   include/objidl.idl \
   include/objidlbase.idl \
@@ -100,6 +119,9 @@ IDL_SRCS = \
   include/portabledevicetypes.idl \
   include/propidl.idl \
   include/propsys.idl \
+  include/sapi51.idl \
+  include/sapi53.idl \
+  include/sapi54.idl \
   include/sensorsapi.idl \
   include/servprov.idl \
   include/shobjidl.idl \
@@ -114,9 +136,18 @@ IDL_SRCS = \
   include/unknwnbase.idl \
   include/urlmon.idl \
   include/wbemcli.idl \
+  include/wdstptmgmt.idl \
   include/wincodec.idl \
+  include/wmcontainer.idl \
   include/wmsbuffer.idl \
   include/wmsdkidl.idl \
+  include/wsdattachment.idl \
+  include/wsdbase.idl \
+  include/wsdclient.idl \
+  include/wsddisco.idl \
+  include/wsdhost.idl \
+  include/wsdxml.idl \
+  include/wsmandisp.idl \
   include/wtypesbase.idl \
   include/windows.foundation.idl \
   include/windows.security.cryptography.idl \
@@ -127,6 +158,11 @@ IDL_SRCS = \
   include/wpcapi.idl \
   include/wtypes.idl \
   include/xmllite.idl \
+  include/xpsdigitalsignature.idl \
+  include/xpsobjectmodel_1.idl \
+  include/xpsrassvc.idl \
+  include/xpsobjectmodel.idl \
+  include/xpsprint.idl \
   direct-x/include/amstream.idl \
   direct-x/include/amvideo.idl \
   direct-x/include/austream.idl \
@@ -138,6 +174,7 @@ IDL_SRCS = \
   direct-x/include/ddstream.idl \
   direct-x/include/dmodshow.idl \
   direct-x/include/dxgi.idl \
+  direct-x/include/dxgi1_2.idl \
   direct-x/include/mediaobj.idl \
   direct-x/include/medparam.idl \
   direct-x/include/mmstream.idl \

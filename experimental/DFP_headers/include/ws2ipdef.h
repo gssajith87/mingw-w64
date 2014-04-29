@@ -2,10 +2,17 @@
  * This file is part of the mingw-w64 runtime package.
  * No warranty is given; refer to the file DISCLAIMER within this package.
  */
-#ifndef _INC_WS2IPDEF
-#define _INC_WS2IPDEF
+#ifndef _WS2IPDEF_
+#define _WS2IPDEF_
 
+#include <_mingw_unicode.h>
 #include <winapifamily.h>
+
+#ifdef __LP64__
+#pragma push_macro("u_long")
+#undef u_long
+#define u_long __ms_u_long
+#endif
 
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
@@ -117,10 +124,23 @@ typedef struct group_source_req {
 #define IPV6_TCLASS            39
 #define IPV6_RECVTCLASS        40
 
+#define WS2TCPIP_INLINE __CRT_INLINE
+
+int IN6_ADDR_EQUAL(const struct in6_addr *,const struct in6_addr *);
+WS2TCPIP_INLINE int IN6_ADDR_EQUAL(const struct in6_addr *a, const struct in6_addr *b) {
+    return !memcmp(a, b, sizeof(struct in6_addr));
+}
+
+#define IN6_ARE_ADDR_EQUAL IN6_ADDR_EQUAL
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* WINAPI_PARTION_DESKTOP.  */
 
-#endif /*_INC_WS2IPDEF*/
+#ifdef __LP64__
+#pragma pop_macro("u_long")
+#endif
+
+#endif /*_WS2IPDEF_ */

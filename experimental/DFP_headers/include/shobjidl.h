@@ -40341,6 +40341,7 @@ void __RPC_STUB IFrameworkInputPane_Location_Stub(
 
 #endif  /* __IFrameworkInputPane_INTERFACE_DEFINED__ */
 
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 #ifndef PROP_CONTRACT_DELEGATE
 #define PROP_CONTRACT_DELEGATE L"ContractDelegate"
@@ -40358,6 +40359,7 @@ void __RPC_STUB IFrameworkInputPane_Location_Stub(
 #endif
 
   __forceinline HWND GetContractDelegateWindow(HWND hwndSource) { return (HWND)GetPropW(hwndSource, PROP_CONTRACT_DELEGATE); }
+#endif
 #endif
 
 #if NTDDI_VERSION >= NTDDI_WIN8
