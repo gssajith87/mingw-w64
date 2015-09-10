@@ -23,7 +23,7 @@ class ForceBuilderBase(HtmlResource):
   """ Base class for both sorts of force builders """
   addSlash = True
 
-  def __init__(self, builders=[], properties={}):
+  ssssdef __init__(self, builders=[], properties={}):
       HtmlResource.__init__(self)
       self.builders = builders
       self.properties = properties
